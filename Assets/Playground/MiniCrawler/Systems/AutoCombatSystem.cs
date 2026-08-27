@@ -8,18 +8,6 @@ namespace MiniCrawler.Systems
     [DefaultExecutionOrder(0)]
     public class AutoCombatSystem : MonoBehaviour
     {
-        [Header("2.5B Prototype Knockback Validation")]
-        [SerializeField]
-        private bool prototypeKnockbackOnBasicAttack;
-
-        [SerializeField]
-        [Min(0f)]
-        private float prototypeKnockbackDistance = 1.5f;
-
-        [SerializeField]
-        [Min(0f)]
-        private float prototypeKnockbackSpeed = 6f;
-
         private void Update()
         {
             if (SimulationPause.IsPaused)
@@ -106,35 +94,8 @@ namespace MiniCrawler.Systems
                 attackerStats.AttackName
             );
 
-            ApplyPrototypeKnockback(
-                mover.gameObject,
-                target
-            );
-
             attackerStats.AttackTimer =
                 attackerStats.AttackCooldown;
-        }
-
-        private void ApplyPrototypeKnockback(
-            GameObject source,
-            Health target
-        )
-        {
-            // Temporary 2.5B validation hook.
-            //
-            // Basic attacks do not conceptually own
-            // knockback in the final architecture.
-            // This exists only so generic knockback can
-            // be visually validated before abilities exist.
-            if (!prototypeKnockbackOnBasicAttack)
-                return;
-
-            KnockbackResolver.TryApply(
-                source,
-                target,
-                prototypeKnockbackDistance,
-                prototypeKnockbackSpeed
-            );
         }
     }
 }

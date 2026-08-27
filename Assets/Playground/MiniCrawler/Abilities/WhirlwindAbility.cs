@@ -1,3 +1,4 @@
+using MiniCrawler.Combat;
 using MiniCrawler.Core;
 using MiniCrawler.Movement;
 using UnityEngine;
@@ -14,8 +15,29 @@ namespace MiniCrawler.Abilities
         [Min(0.1f)]
         private float activationRadius = 2f;
 
+        [SerializeField]
+        [Min(0f)]
+        private float damage = 10f;
+
+        [SerializeField]
+        [Min(0f)]
+        private float knockbackDistance = 3f;
+
+        [SerializeField]
+        [Min(0f)]
+        private float knockbackSpeed = 8f;
+
         public float ActivationRadius =>
             activationRadius;
+
+        public float Damage =>
+            damage;
+
+        public float KnockbackDistance =>
+            knockbackDistance;
+
+        public float KnockbackSpeed =>
+            knockbackSpeed;
 
         protected override bool CanActivateAbility()
         {
@@ -57,17 +79,106 @@ namespace MiniCrawler.Abilities
 
         protected override bool ExecuteAbility()
         {
-            // 2.6A establishes activation only.
-            //
-            // Damage and knockback are deliberately
-            // added in later 2.6 steps through the
-            // existing generic combat seams.
+            AutoTargetMover mover =
+                GetComponent<AutoTargetMover>();
+
+            if (mover == null)
+                return false;
+
+            Health[] possibleTargets =
+                FindObjectsByType<Health>(
+                    FindObjectsSortMode.None
+                );
+
+            int hitCount = 0;
+            int knockbackCount = 0;
+
+            foreach (
+                Health target in possibleTargets
+            )
+            {
+                if (
+                    !IsValidWhirlwindTarget(
+                        mover,
+                        target
+                    )
+                )
+                {
+                    continue;
+                }
+
+                DamageResolver.ApplyDamage(
+                    gameObject,
+                    target,
+                    damage,
+                    AbilityName
+                );
+
+                hitCount++;
+
+                if (
+                    !target.IsDead &&
+                    KnockbackResolver.TryApply(
+                        gameObject,
+                        target,
+                        knockbackDistance,
+                        knockbackSpeed
+                    )
+                )
+                {
+                    knockbackCount++;
+                }
+            }
+
             Debug.Log(
                 $"[Ability] {name} activated " +
-                $"{AbilityName}."
+                $"{AbilityName}, hit " +
+                $"{hitCount} target(s) and " +
+                $"knocked back " +
+                $"{knockbackCount} target(s)."
             );
 
-            return true;
+            return hitCount > 0;
+        }
+
+        private bool IsValidWhirlwindTarget(
+            AutoTargetMover mover,
+            Health target
+        )
+        {
+            if (
+                target == null ||
+                target.IsDead ||
+                target.gameObject ==
+                    gameObject
+            )
+            {
+                return false;
+            }
+
+            FactionMember faction =
+                target.GetComponent<FactionMember>();
+
+            if (
+                faction == null ||
+                !faction.IsFaction(
+                    mover.TargetFactionId
+                )
+            )
+            {
+                return false;
+            }
+
+            Vector3 offset =
+                target.transform.position -
+                transform.position;
+
+            offset.y = 0f;
+
+            return
+                offset.sqrMagnitude <=
+                activationRadius *
+                activationRadius;
         }
 
         protected override void OnValidate()
@@ -78,6 +189,24 @@ namespace MiniCrawler.Abilities
                 Mathf.Max(
                     0.1f,
                     activationRadius
+                );
+
+            damage =
+                Mathf.Max(
+                    0f,
+                    damage
+                );
+
+            knockbackDistance =
+                Mathf.Max(
+                    0f,
+                    knockbackDistance
+                );
+
+            knockbackSpeed =
+                Mathf.Max(
+                    0f,
+                    knockbackSpeed
                 );
         }
 
