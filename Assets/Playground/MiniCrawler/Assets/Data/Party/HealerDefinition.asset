@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c7a689e672ac6e44b0827e2f2b8ab02, type: 3}
+  m_Name: HealerDefinition
+  m_EditorClassIdentifier: Assembly-CSharp::MiniCrawler.Core.PartyMemberDefinition
+  id: Healer
+  displayName: Healy
+  role: Support
+  description: 
+  portrait: {fileID: 0}
+  actorDefinition: {fileID: 11400000, guid: 93c22df2143a1974c8938b9009f3af77, type: 2}
+  weaponName: Basic Weapon
+  armourName: Basic Armour
+  focusName: Basic Focus
+  damagePerWeaponLevel: 1
+  armourPerArmourLevel: 0.5
+  healthPerArmourLevel: 8
+  healingPerFocusLevel: 2
+  baseUpgradeCost: 5
+  upgradeCostStep: 3
