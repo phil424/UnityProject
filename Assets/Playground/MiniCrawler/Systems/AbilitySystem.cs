@@ -31,8 +31,6 @@ namespace MiniCrawler.Systems
                 ability.TickCooldown(
                     Time.deltaTime
                 );
-
-                ability.TryActivate();
             }
         }
     }

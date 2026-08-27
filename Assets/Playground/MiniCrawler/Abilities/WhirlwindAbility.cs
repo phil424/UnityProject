@@ -46,35 +46,33 @@ namespace MiniCrawler.Abilities
 
             if (
                 mover == null ||
-                !mover.isActiveAndEnabled ||
-                mover.CurrentIntent !=
-                    TargetIntent.Combat
+                !mover.isActiveAndEnabled
             )
             {
                 return false;
             }
 
-            Health target =
-                mover.CurrentTarget;
+            Health[] possibleTargets =
+                FindObjectsByType<Health>(
+                    FindObjectsSortMode.None
+                );
 
-            if (
-                target == null ||
-                target.IsDead
+            foreach (
+                Health target in possibleTargets
             )
             {
-                return false;
+                if (
+                    IsValidWhirlwindTarget(
+                        mover,
+                        target
+                    )
+                )
+                {
+                    return true;
+                }
             }
 
-            Vector3 offset =
-                target.transform.position -
-                transform.position;
-
-            offset.y = 0f;
-
-            return
-                offset.sqrMagnitude <=
-                activationRadius *
-                activationRadius;
+            return false;
         }
 
         protected override bool ExecuteAbility()

@@ -1,5 +1,6 @@
 using System;
 using MiniCrawler.Core;
+using MiniCrawler.Systems;
 using UnityEngine;
 
 namespace MiniCrawler.Abilities
@@ -31,6 +32,13 @@ namespace MiniCrawler.Abilities
         public bool IsReady =>
             cooldownRemaining <= 0f;
 
+        public bool CanActivateNow =>
+            isActiveAndEnabled &&
+            !SimulationPause.IsPaused &&
+            IsOwnerAlive() &&
+            IsReady &&
+            CanActivateAbility();
+
         public event Action<ActorAbility> Activated;
 
         public void TickCooldown(
@@ -48,21 +56,15 @@ namespace MiniCrawler.Abilities
             cooldownRemaining =
                 Mathf.Max(
                     0f,
-                    cooldownRemaining - deltaTime
+                    cooldownRemaining -
+                    deltaTime
                 );
         }
 
         public bool TryActivate()
         {
-            if (
-                !isActiveAndEnabled ||
-                !IsOwnerAlive() ||
-                !IsReady ||
-                !CanActivateAbility()
-            )
-            {
+            if (!CanActivateNow)
                 return false;
-            }
 
             if (!ExecuteAbility())
                 return false;
@@ -92,6 +94,29 @@ namespace MiniCrawler.Abilities
             return
                 health == null ||
                 !health.IsDead;
+        }
+
+        [ContextMenu("Debug/Try Activate")]
+        private void DebugTryActivate()
+        {
+            if (!Application.isPlaying)
+            {
+                Debug.LogWarning(
+                    $"[Ability Debug] {AbilityName} " +
+                    "can only be activated in Play Mode."
+                );
+
+                return;
+            }
+
+            bool activated =
+                TryActivate();
+
+            Debug.Log(
+                $"[Ability Debug] {AbilityName} " +
+                $"activation request " +
+                $"{(activated ? "succeeded" : "was rejected")}."
+            );
         }
 
         protected virtual void OnValidate()
