@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using MiniCrawler.Core;
+using MiniCrawler.Abilities;
 
 namespace MiniCrawler.Progress
 {
@@ -80,6 +81,26 @@ namespace MiniCrawler.Progress
                 return new RunBuild();
 
             return CurrentRun.GetBuild(definition);
+        }
+        
+        public static bool TryAcquireAbility(
+            PartyMemberDefinition definition,
+            AbilityDefinition ability
+        )
+        {
+            if (CurrentRun == null)
+                return false;
+
+            bool acquired =
+                CurrentRun.TryAcquireAbility(
+                    definition,
+                    ability
+                );
+
+            if (acquired)
+                Changed?.Invoke();
+
+            return acquired;
         }
 
         public static bool TryApplyRunUpgrade(

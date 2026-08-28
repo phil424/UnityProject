@@ -148,6 +148,11 @@ namespace MiniCrawler.Systems
                     build
                 );
 
+                PartyAbilityApplicator.Apply(
+                    spawned,
+                    build
+                );
+
                 PartyMemberSpawned?.Invoke(
                     member,
                     spawned

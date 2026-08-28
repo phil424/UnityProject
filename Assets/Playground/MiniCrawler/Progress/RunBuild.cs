@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using MiniCrawler.Abilities;
 
 namespace MiniCrawler.Progress
 {
@@ -12,6 +14,9 @@ namespace MiniCrawler.Progress
     [Serializable]
     public sealed class RunBuild
     {
+        private readonly List<RunAbilityState>
+            abilities = new();
+
         public int WeaponLevel { get; private set; }
         public int ArmourLevel { get; private set; }
         public int FocusLevel { get; private set; }
@@ -20,6 +25,9 @@ namespace MiniCrawler.Progress
         public float MoveSpeedPercentBonus { get; private set; }
         public float AttackSpeedPercentBonus { get; private set; }
         public float FlatArmourBonus { get; private set; }
+
+        public IReadOnlyList<RunAbilityState> Abilities =>
+            abilities;
 
         public int GetLevel(GearSlot slot)
         {
@@ -50,12 +58,87 @@ namespace MiniCrawler.Progress
             }
         }
 
+        public void InitializeStartingAbilities(
+            IEnumerable<AbilityDefinition>
+                startingAbilities
+        )
+        {
+            if (startingAbilities == null)
+                return;
+
+            foreach (
+                AbilityDefinition ability
+                in startingAbilities
+            )
+            {
+                TryAcquireAbility(
+                    ability
+                );
+            }
+        }
+
+        public bool TryAcquireAbility(
+            AbilityDefinition ability
+        )
+        {
+            if (
+                ability == null ||
+                HasAbility(ability)
+            )
+            {
+                return false;
+            }
+
+            abilities.Add(
+                new RunAbilityState(
+                    ability
+                )
+            );
+
+            return true;
+        }
+
+        public bool HasAbility(
+            AbilityDefinition ability
+        )
+        {
+            return
+                GetAbilityState(ability) != null;
+        }
+
+        public RunAbilityState GetAbilityState(
+            AbilityDefinition ability
+        )
+        {
+            if (ability == null)
+                return null;
+
+            foreach (
+                RunAbilityState state
+                in abilities
+            )
+            {
+                if (
+                    state?.Definition != null &&
+                    state.Definition.Id ==
+                        ability.Id
+                )
+                {
+                    return state;
+                }
+            }
+
+            return null;
+        }
+
         public void ApplyRunUpgrade(
             RunUpgradeDefinition upgrade
         )
         {
-            if (upgrade == null ||
-                upgrade.Amount <= 0f)
+            if (
+                upgrade == null ||
+                upgrade.Amount <= 0f
+            )
             {
                 return;
             }
@@ -63,19 +146,23 @@ namespace MiniCrawler.Progress
             switch (upgrade.EffectType)
             {
                 case RunUpgradeEffectType.FlatDamage:
-                    FlatDamageBonus += upgrade.Amount;
+                    FlatDamageBonus +=
+                        upgrade.Amount;
                     break;
 
                 case RunUpgradeEffectType.MoveSpeedPercent:
-                    MoveSpeedPercentBonus += upgrade.Amount;
+                    MoveSpeedPercentBonus +=
+                        upgrade.Amount;
                     break;
 
                 case RunUpgradeEffectType.AttackSpeedPercent:
-                    AttackSpeedPercentBonus += upgrade.Amount;
+                    AttackSpeedPercentBonus +=
+                        upgrade.Amount;
                     break;
 
                 case RunUpgradeEffectType.FlatArmour:
-                    FlatArmourBonus += upgrade.Amount;
+                    FlatArmourBonus +=
+                        upgrade.Amount;
                     break;
             }
         }

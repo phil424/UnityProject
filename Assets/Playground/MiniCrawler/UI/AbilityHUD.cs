@@ -68,8 +68,7 @@ namespace MiniCrawler.UI
                 return;
             }
 
-            ActorAbility[] abilities =
-                actor.GetComponents<ActorAbility>();
+            ActorAbility[] abilities = actor.GetComponentsInChildren<ActorAbility>(false);
 
             foreach (
                 ActorAbility ability in abilities

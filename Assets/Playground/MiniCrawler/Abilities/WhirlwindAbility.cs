@@ -6,8 +6,6 @@ using UnityEngine;
 namespace MiniCrawler.Abilities
 {
     [DisallowMultipleComponent]
-    [RequireComponent(typeof(Health))]
-    [RequireComponent(typeof(AutoTargetMover))]
     public class WhirlwindAbility : ActorAbility
     {
         [Header("Whirlwind")]
@@ -41,8 +39,11 @@ namespace MiniCrawler.Abilities
 
         protected override bool CanActivateAbility()
         {
+            if (Owner == null)
+                return false;
+
             AutoTargetMover mover =
-                GetComponent<AutoTargetMover>();
+                Owner.GetComponent<AutoTargetMover>();
 
             if (
                 mover == null ||
@@ -77,8 +78,11 @@ namespace MiniCrawler.Abilities
 
         protected override bool ExecuteAbility()
         {
+            if (Owner == null)
+                return false;
+
             AutoTargetMover mover =
-                GetComponent<AutoTargetMover>();
+                Owner.GetComponent<AutoTargetMover>();
 
             if (mover == null)
                 return false;
@@ -106,7 +110,7 @@ namespace MiniCrawler.Abilities
                 }
 
                 DamageResolver.ApplyDamage(
-                    gameObject,
+                    Owner,
                     target,
                     damage,
                     AbilityName
@@ -117,7 +121,7 @@ namespace MiniCrawler.Abilities
                 if (
                     !target.IsDead &&
                     KnockbackResolver.TryApply(
-                        gameObject,
+                        Owner,
                         target,
                         knockbackDistance,
                         knockbackSpeed
@@ -129,7 +133,7 @@ namespace MiniCrawler.Abilities
             }
 
             Debug.Log(
-                $"[Ability] {name} activated " +
+                $"[Ability] {Owner.name} activated " +
                 $"{AbilityName}, hit " +
                 $"{hitCount} target(s) and " +
                 $"knocked back " +
@@ -145,10 +149,11 @@ namespace MiniCrawler.Abilities
         )
         {
             if (
+                Owner == null ||
                 target == null ||
                 target.IsDead ||
                 target.gameObject ==
-                    gameObject
+                    Owner
             )
             {
                 return false;
@@ -169,7 +174,7 @@ namespace MiniCrawler.Abilities
 
             Vector3 offset =
                 target.transform.position -
-                transform.position;
+                Owner.transform.position;
 
             offset.y = 0f;
 
@@ -210,8 +215,13 @@ namespace MiniCrawler.Abilities
 
         private void OnDrawGizmosSelected()
         {
+            Vector3 centre =
+                Owner != null
+                    ? Owner.transform.position
+                    : transform.position;
+
             Gizmos.DrawWireSphere(
-                transform.position,
+                centre,
                 activationRadius
             );
         }

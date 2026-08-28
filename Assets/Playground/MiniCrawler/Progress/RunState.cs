@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using MiniCrawler.Core;
+using MiniCrawler.Abilities;
 
 namespace MiniCrawler.Progress
 {
@@ -20,26 +21,24 @@ namespace MiniCrawler.Progress
         public bool HasPendingUpgradeChoice =>
             pendingUpgradeOffers.Count > 0;
 
-        public RunState(
-            RunStartConfiguration configuration
-        )
+        public RunState(RunStartConfiguration configuration)
         {
             if (configuration == null)
                 return;
 
-            foreach (
-                PartyMemberDefinition member
-                in configuration.Party
+            foreach (PartyMemberDefinition member in configuration.Party
             )
             {
-                if (member == null ||
-                    selectedParty.Contains(member))
+                if (member == null || selectedParty.Contains(member))
                 {
                     continue;
                 }
 
                 selectedParty.Add(member);
-                GetBuild(member);
+
+                RunBuild build = GetBuild(member);
+
+                build.InitializeStartingAbilities(member.StartingAbilities);
             }
         }
 
@@ -80,6 +79,23 @@ namespace MiniCrawler.Progress
             }
 
             return build;
+        }
+        
+        public bool TryAcquireAbility(PartyMemberDefinition definition, AbilityDefinition ability)
+        {
+            if (
+                !IsSelected(definition) ||
+                ability == null
+            )
+            {
+                return false;
+            }
+
+            return
+                GetBuild(definition)
+                    .TryAcquireAbility(
+                        ability
+                    );
         }
 
         public bool TryApplyRunUpgrade(

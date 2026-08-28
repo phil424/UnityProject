@@ -5,26 +5,32 @@ using UnityEngine;
 
 namespace MiniCrawler.Abilities
 {
-    [RequireComponent(typeof(Actor))]
     public abstract class ActorAbility : MonoBehaviour
     {
-        [Header("Ability")]
-        [SerializeField]
-        private string abilityName = "Ability";
-
-        [SerializeField]
-        [Min(0.1f)]
-        private float cooldown = 3f;
+        private GameObject owner;
+        private AbilityDefinition definition;
+        private int level = 1;
 
         private float cooldownRemaining;
 
+        public GameObject Owner =>
+            owner;
+
+        public AbilityDefinition Definition =>
+            definition;
+
+        public int Level =>
+            level;
+
         public string AbilityName =>
-            string.IsNullOrWhiteSpace(abilityName)
-                ? GetType().Name
-                : abilityName;
+            definition != null
+                ? definition.DisplayName
+                : GetType().Name;
 
         public float Cooldown =>
-            cooldown;
+            definition != null
+                ? definition.Cooldown
+                : 0f;
 
         public float CooldownRemaining =>
             cooldownRemaining;
@@ -32,7 +38,12 @@ namespace MiniCrawler.Abilities
         public bool IsReady =>
             cooldownRemaining <= 0f;
 
+        public bool IsInitialized =>
+            owner != null &&
+            definition != null;
+
         public bool CanActivateNow =>
+            IsInitialized &&
             isActiveAndEnabled &&
             !SimulationPause.IsPaused &&
             IsOwnerAlive() &&
@@ -40,6 +51,28 @@ namespace MiniCrawler.Abilities
             CanActivateAbility();
 
         public event Action<ActorAbility> Activated;
+
+        public void Initialize(
+            GameObject actorOwner,
+            AbilityDefinition abilityDefinition,
+            int abilityLevel
+        )
+        {
+            owner =
+                actorOwner;
+
+            definition =
+                abilityDefinition;
+
+            level =
+                Mathf.Max(
+                    1,
+                    abilityLevel
+                );
+
+            cooldownRemaining =
+                0f;
+        }
 
         public void TickCooldown(
             float deltaTime
@@ -70,7 +103,7 @@ namespace MiniCrawler.Abilities
                 return false;
 
             cooldownRemaining =
-                cooldown;
+                Cooldown;
 
             Activated?.Invoke(this);
 
@@ -88,8 +121,11 @@ namespace MiniCrawler.Abilities
 
         private bool IsOwnerAlive()
         {
+            if (owner == null)
+                return false;
+
             Health health =
-                GetComponent<Health>();
+                owner.GetComponent<Health>();
 
             return
                 health == null ||
@@ -113,19 +149,12 @@ namespace MiniCrawler.Abilities
                 TryActivate();
 
             Debug.Log(
-                $"[Ability Debug] {AbilityName} " +
-                $"activation request " +
-                $"{(activated ? "succeeded" : "was rejected")}."
+                $"[Ability Debug] {AbilityName} activation request {(activated? "succeeded": "was rejected")}."
             );
         }
 
         protected virtual void OnValidate()
         {
-            cooldown =
-                Mathf.Max(
-                    0.1f,
-                    cooldown
-                );
         }
     }
 }
