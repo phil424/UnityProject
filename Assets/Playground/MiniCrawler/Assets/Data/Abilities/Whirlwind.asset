@@ -15,5 +15,8 @@ MonoBehaviour:
   id: Whirlwind
   displayName: Whirlwind
   icon: {fileID: 0}
-  cooldown: 3
+  maxLevel: 5
+  cooldown:
+    baseValue: 3
+    perLevel: -0.2
   runtimePrefab: {fileID: 7288890253970389497, guid: 62d30b30f240c8349a91cb82af742802, type: 3}

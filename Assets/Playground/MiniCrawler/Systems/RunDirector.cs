@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using MiniCrawler.Progress;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace MiniCrawler.Systems
 {
@@ -20,9 +21,9 @@ namespace MiniCrawler.Systems
 
         [SerializeField] private StageDirector stageDirector;
 
-        [Header("Run Upgrade Rewards")]
-        [SerializeField]
-        private RunUpgradeDefinition[] availableRunUpgrades;
+        [Header("Run Rewards")]
+        [FormerlySerializedAs("availableRunUpgrades")]
+        [SerializeField]private RunRewardDefinition[]availableRunRewards;
 
         [SerializeField, Min(1)]
         private int runUpgradeOfferCount = 3;
@@ -221,10 +222,16 @@ namespace MiniCrawler.Systems
 
         private void GenerateRunUpgradeOffers()
         {
+            RunState runState =
+                RunProgress.CurrentRun;
+
+            if (runState == null)
+                return;
+
             IReadOnlyList<RunUpgradeOffer> offers =
                 RunUpgradeOfferGenerator.Generate(
-                    RunProgress.SelectedParty,
-                    availableRunUpgrades,
+                    runState,
+                    availableRunRewards,
                     runUpgradeOfferCount
                 );
 
@@ -235,7 +242,8 @@ namespace MiniCrawler.Systems
             if (offers.Count <= 0)
             {
                 Debug.LogWarning(
-                    "Level was won but no run upgrade offers could be generated."
+                    "Level was won but no run rewards " +
+                    "could be generated."
                 );
             }
         }

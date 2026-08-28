@@ -6,20 +6,29 @@ namespace MiniCrawler.Progress
     {
         public PartyMemberDefinition Member { get; }
 
-        public RunUpgradeDefinition Upgrade { get; }
+        public RunRewardDefinition Reward { get; }
+
+        // Compatibility for existing stat-upgrade
+        // callers while the reward architecture
+        // becomes more generic.
+        public RunUpgradeDefinition Upgrade =>
+            Reward as RunUpgradeDefinition;
 
         public bool IsValid =>
             Member != null &&
-            Upgrade != null &&
-            Upgrade.Amount > 0f;
+            Reward != null &&
+            Reward.IsConfigured;
 
         public RunUpgradeOffer(
             PartyMemberDefinition member,
-            RunUpgradeDefinition upgrade
+            RunRewardDefinition reward
         )
         {
-            Member = member;
-            Upgrade = upgrade;
+            Member =
+                member;
+
+            Reward =
+                reward;
         }
     }
 }

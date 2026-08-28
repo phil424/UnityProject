@@ -29,7 +29,9 @@ namespace MiniCrawler.Abilities
 
         public float Cooldown =>
             definition != null
-                ? definition.Cooldown
+                ? definition.GetCooldown(
+                    level
+                )
                 : 0f;
 
         public float CooldownRemaining =>
@@ -52,46 +54,25 @@ namespace MiniCrawler.Abilities
 
         public event Action<ActorAbility> Activated;
 
-        public void Initialize(
-            GameObject actorOwner,
-            AbilityDefinition abilityDefinition,
-            int abilityLevel
-        )
+        public void Initialize(GameObject actorOwner, AbilityDefinition abilityDefinition, int abilityLevel)
         {
-            owner =
-                actorOwner;
+            owner = actorOwner;
 
-            definition =
-                abilityDefinition;
+            definition = abilityDefinition;
 
-            level =
-                Mathf.Max(
-                    1,
-                    abilityLevel
-                );
+            level = abilityDefinition != null ? abilityDefinition.ClampLevel(abilityLevel) : Mathf.Max(1, abilityLevel);
 
-            cooldownRemaining =
-                0f;
+            cooldownRemaining = 0f;
         }
 
-        public void TickCooldown(
-            float deltaTime
-        )
+        public void TickCooldown(float deltaTime)
         {
-            if (
-                deltaTime <= 0f ||
-                cooldownRemaining <= 0f
-            )
+            if (deltaTime <= 0f || cooldownRemaining <= 0f)
             {
                 return;
             }
 
-            cooldownRemaining =
-                Mathf.Max(
-                    0f,
-                    cooldownRemaining -
-                    deltaTime
-                );
+            cooldownRemaining = Mathf.Max(0f, cooldownRemaining - deltaTime);
         }
 
         public bool TryActivate()
@@ -102,8 +83,7 @@ namespace MiniCrawler.Abilities
             if (!ExecuteAbility())
                 return false;
 
-            cooldownRemaining =
-                Cooldown;
+            cooldownRemaining = Cooldown;
 
             Activated?.Invoke(this);
 

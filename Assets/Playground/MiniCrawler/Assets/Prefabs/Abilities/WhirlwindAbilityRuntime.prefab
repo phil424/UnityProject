@@ -44,7 +44,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f6f83dffb0d7f941a3b9a7a201a79f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Abilities.WhirlwindAbility
-  activationRadius: 2
-  damage: 10
-  knockbackDistance: 3
-  knockbackSpeed: 8
+  activationRadius:
+    baseValue: 2
+    perLevel: 0.25
+  damage:
+    baseValue: 10
+    perLevel: 5
+  knockbackDistance:
+    baseValue: 3
+    perLevel: 0.5
+  knockbackSpeed:
+    baseValue: 8
+    perLevel: 0.5

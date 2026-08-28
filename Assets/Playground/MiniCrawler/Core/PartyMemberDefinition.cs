@@ -23,7 +23,7 @@ namespace MiniCrawler.Core
         [SerializeField] private ActorDefinition actorDefinition;
         
         [Header("Starting Abilities")]
-        [SerializeField] private List<AbilityDefinition> startingAbilities = new();
+        [SerializeField] private List<AbilityLoadoutEntry> startingAbilities = new();
 
         [Header("Starting Gear")]
         [SerializeField] private string weaponName = "Basic Weapon";
@@ -44,7 +44,7 @@ namespace MiniCrawler.Core
         public string Description => description;
         public Sprite Portrait => portrait;
         public ActorDefinition ActorDefinition => actorDefinition;
-        public IReadOnlyList<AbilityDefinition> StartingAbilities => startingAbilities;
+        public IReadOnlyList<AbilityLoadoutEntry> StartingAbilities => startingAbilities;
 
         public string WeaponName => weaponName;
         public string ArmourName => armourName;

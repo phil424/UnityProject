@@ -18,10 +18,14 @@ namespace MiniCrawler.Abilities
         [SerializeField]
         private Sprite icon;
 
+        [Header("Levels")]
+        [SerializeField]
+        [Min(1)]
+        private int maxLevel = 5;
+
         [Header("Runtime")]
         [SerializeField]
-        [Min(0.1f)]
-        private float cooldown = 3f;
+        private AbilityLevelValue cooldown;
 
         [SerializeField]
         private GameObject runtimePrefab;
@@ -39,11 +43,37 @@ namespace MiniCrawler.Abilities
         public Sprite Icon =>
             icon;
 
-        public float Cooldown =>
-            cooldown;
+        public int MaxLevel =>
+            maxLevel;
 
         public GameObject RuntimePrefab =>
             runtimePrefab;
+
+        public int ClampLevel(
+            int level
+        )
+        {
+            return Mathf.Clamp(
+                level,
+                1,
+                maxLevel
+            );
+        }
+
+        public float GetCooldown(
+            int level
+        )
+        {
+            if (cooldown == null)
+                return 0.1f;
+
+            return Mathf.Max(
+                0.1f,
+                cooldown.Evaluate(
+                    ClampLevel(level)
+                )
+            );
+        }
 
         public ActorAbility CreateRuntime(
             GameObject owner,
@@ -95,7 +125,7 @@ namespace MiniCrawler.Abilities
             ability.Initialize(
                 owner,
                 this,
-                level
+                ClampLevel(level)
             );
 
             return ability;
@@ -106,10 +136,10 @@ namespace MiniCrawler.Abilities
             if (string.IsNullOrWhiteSpace(id))
                 id = name;
 
-            cooldown =
+            maxLevel =
                 Mathf.Max(
-                    0.1f,
-                    cooldown
+                    1,
+                    maxLevel
                 );
         }
     }

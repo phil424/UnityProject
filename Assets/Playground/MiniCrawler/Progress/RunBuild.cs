@@ -58,28 +58,32 @@ namespace MiniCrawler.Progress
             }
         }
 
-        public void InitializeStartingAbilities(
-            IEnumerable<AbilityDefinition>
-                startingAbilities
-        )
+        public void InitializeStartingAbilities(IEnumerable<AbilityLoadoutEntry> startingAbilities)
         {
             if (startingAbilities == null)
                 return;
 
             foreach (
-                AbilityDefinition ability
+                AbilityLoadoutEntry entry
                 in startingAbilities
             )
             {
+                if (
+                    entry == null ||
+                    entry.Ability == null
+                )
+                {
+                    continue;
+                }
+
                 TryAcquireAbility(
-                    ability
+                    entry.Ability,
+                    entry.Level
                 );
             }
         }
 
-        public bool TryAcquireAbility(
-            AbilityDefinition ability
-        )
+        public bool TryAcquireAbility(AbilityDefinition ability, int startingLevel = 1)
         {
             if (
                 ability == null ||
@@ -91,11 +95,19 @@ namespace MiniCrawler.Progress
 
             abilities.Add(
                 new RunAbilityState(
-                    ability
+                    ability,
+                    startingLevel
                 )
             );
 
             return true;
+        }
+        
+        public bool TryIncreaseAbilityLevel(AbilityDefinition ability)
+        {
+            RunAbilityState state = GetAbilityState(ability);
+
+            return state != null && state.TryIncreaseLevel();
         }
 
         public bool HasAbility(

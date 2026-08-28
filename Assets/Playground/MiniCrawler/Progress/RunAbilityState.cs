@@ -1,23 +1,24 @@
 using System;
 using MiniCrawler.Abilities;
-using UnityEngine;
 
 namespace MiniCrawler.Progress
 {
     [Serializable]
     public sealed class RunAbilityState
     {
-        [SerializeField]
         private AbilityDefinition definition;
 
-        [SerializeField]
-        private int level = 1;
+        private int level;
 
         public AbilityDefinition Definition =>
             definition;
 
         public int Level =>
             level;
+
+        public bool IsMaxLevel =>
+            definition == null ||
+            level >= definition.MaxLevel;
 
         public RunAbilityState(
             AbilityDefinition abilityDefinition,
@@ -28,15 +29,29 @@ namespace MiniCrawler.Progress
                 abilityDefinition;
 
             level =
-                Mathf.Max(
-                    1,
-                    startingLevel
-                );
+                definition != null
+                    ? definition.ClampLevel(
+                        startingLevel
+                    )
+                    : 1;
         }
 
-        public void IncreaseLevel()
+        public bool TryIncreaseLevel()
         {
-            level++;
+            if (
+                definition == null ||
+                IsMaxLevel
+            )
+            {
+                return false;
+            }
+
+            level =
+                definition.ClampLevel(
+                    level + 1
+                );
+
+            return true;
         }
     }
 }

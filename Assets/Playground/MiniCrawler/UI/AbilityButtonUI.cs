@@ -100,7 +100,7 @@ namespace MiniCrawler.UI
             {
                 labelText.text =
                     $"{ownerName}\n" +
-                    $"{ability.AbilityName}\n" +
+                    $"{ability.AbilityName} Lv.{ability.Level}\n" +
                     state;
             }
 

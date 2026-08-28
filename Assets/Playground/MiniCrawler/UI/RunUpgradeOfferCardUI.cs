@@ -7,7 +7,8 @@ using UnityEngine.UI;
 namespace MiniCrawler.UI
 {
     [RequireComponent(typeof(Button))]
-    public class RunUpgradeOfferCardUI : MonoBehaviour
+    public class RunUpgradeOfferCardUI :
+        MonoBehaviour
     {
         [Header("Member")]
         [SerializeField]
@@ -16,7 +17,7 @@ namespace MiniCrawler.UI
         [SerializeField]
         private TMP_Text memberNameText;
 
-        [Header("Upgrade")]
+        [Header("Reward")]
         [SerializeField]
         private Image upgradeIconImage;
 
@@ -27,8 +28,11 @@ namespace MiniCrawler.UI
         private TMP_Text descriptionText;
 
         private Button chooseButton;
+
         private RunUpgradeOffer offer;
-        private Action<RunUpgradeOffer> chooseRequested;
+
+        private Action<RunUpgradeOffer>
+            chooseRequested;
 
         private void Awake()
         {
@@ -44,27 +48,34 @@ namespace MiniCrawler.UI
         {
             if (chooseButton != null)
             {
-                chooseButton.onClick.RemoveListener(
-                    HandleChooseClicked
-                );
+                chooseButton.onClick
+                    .RemoveListener(
+                        HandleChooseClicked
+                    );
             }
         }
 
         public void Bind(
             RunUpgradeOffer runUpgradeOffer,
-            Action<RunUpgradeOffer> onChooseRequested
+            Action<RunUpgradeOffer>
+                onChooseRequested
         )
         {
-            offer = runUpgradeOffer;
-            chooseRequested = onChooseRequested;
+            offer =
+                runUpgradeOffer;
+
+            chooseRequested =
+                onChooseRequested;
 
             Refresh();
         }
 
         private void Refresh()
         {
-            if (offer == null ||
-                !offer.IsValid)
+            if (
+                offer == null ||
+                !offer.IsValid
+            )
             {
                 gameObject.SetActive(false);
                 return;
@@ -72,31 +83,33 @@ namespace MiniCrawler.UI
 
             gameObject.SetActive(true);
 
+            RunRewardDefinition reward =
+                offer.Reward;
+
             memberNameText.text =
                 offer.Member.DisplayName;
 
-            RunUpgradeRarity rarity =
-                offer.Upgrade.Rarity;
-
             string rarityLabel =
-                RunUpgradeRarityPresentation.GetLabel(
-                    rarity
-                );
+                RunUpgradeRarityPresentation
+                    .GetLabel(
+                        reward.Rarity
+                    );
 
             Color rarityColor =
-                RunUpgradeRarityPresentation.GetColor(
-                    rarity
-                );
+                RunUpgradeRarityPresentation
+                    .GetColor(
+                        reward.Rarity
+                    );
 
             upgradeNameText.text =
                 $"{rarityLabel} • " +
-                $"{offer.Upgrade.DisplayName}";
+                $"{reward.DisplayName}";
 
             upgradeNameText.color =
                 rarityColor;
 
             descriptionText.text =
-                offer.Upgrade.Description;
+                reward.Description;
 
             if (memberPortraitImage != null)
             {
@@ -110,17 +123,19 @@ namespace MiniCrawler.UI
             if (upgradeIconImage != null)
             {
                 upgradeIconImage.sprite =
-                    offer.Upgrade.Icon;
+                    reward.Icon;
 
                 upgradeIconImage.enabled =
-                    offer.Upgrade.Icon != null;
+                    reward.Icon != null;
             }
         }
 
         private void HandleChooseClicked()
         {
-            if (offer == null ||
-                !offer.IsValid)
+            if (
+                offer == null ||
+                !offer.IsValid
+            )
             {
                 return;
             }

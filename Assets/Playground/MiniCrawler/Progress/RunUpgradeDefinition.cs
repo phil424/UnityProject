@@ -1,16 +1,8 @@
+using MiniCrawler.Core;
 using UnityEngine;
 
 namespace MiniCrawler.Progress
 {
-    public enum RunUpgradeRarity
-    {
-        Common,
-        Uncommon,
-        Rare,
-        Epic,
-        Legendary
-    }
-
     public enum RunUpgradeEffectType
     {
         FlatDamage,
@@ -23,12 +15,18 @@ namespace MiniCrawler.Progress
         fileName = "New Run Upgrade",
         menuName = "Mini Crawler/Run Upgrade"
     )]
-    public class RunUpgradeDefinition : ScriptableObject
+    public class RunUpgradeDefinition :
+        RunRewardDefinition
     {
         [Header("Identity")]
-        [SerializeField] private string id;
-        [SerializeField] private string displayName;
-        [SerializeField] private Sprite icon;
+        [SerializeField]
+        private string id;
+
+        [SerializeField]
+        private string displayName;
+
+        [SerializeField]
+        private Sprite icon;
 
         [Header("Rarity")]
         [SerializeField]
@@ -42,26 +40,26 @@ namespace MiniCrawler.Progress
         [SerializeField]
         private float amount;
 
-        public string Id =>
+        public override string Id =>
             string.IsNullOrWhiteSpace(id)
                 ? name
                 : id;
 
-        public string DisplayName =>
+        public override string DisplayName =>
             string.IsNullOrWhiteSpace(displayName)
                 ? name
                 : displayName;
 
-        public string Description =>
+        public override string Description =>
             RunUpgradeDescriptionFormatter.Format(
                 effectType,
                 amount
             );
 
-        public Sprite Icon =>
+        public override Sprite Icon =>
             icon;
 
-        public RunUpgradeRarity Rarity =>
+        public override RunUpgradeRarity Rarity =>
             rarity;
 
         public RunUpgradeEffectType EffectType =>
@@ -70,12 +68,43 @@ namespace MiniCrawler.Progress
         public float Amount =>
             amount;
 
+        public override bool IsConfigured =>
+            amount > 0f;
+
+        public override bool CanApply(
+            PartyMemberDefinition member,
+            RunBuild build
+        )
+        {
+            return
+                member != null &&
+                build != null &&
+                amount > 0f;
+        }
+
+        public override bool TryApply(
+            PartyMemberDefinition member,
+            RunBuild build
+        )
+        {
+            if (!CanApply(member, build))
+                return false;
+
+            build.ApplyRunUpgrade(this);
+
+            return true;
+        }
+
         private void OnValidate()
         {
             if (string.IsNullOrWhiteSpace(id))
                 id = name;
 
-            amount = Mathf.Max(0f, amount);
+            amount =
+                Mathf.Max(
+                    0f,
+                    amount
+                );
         }
     }
 }

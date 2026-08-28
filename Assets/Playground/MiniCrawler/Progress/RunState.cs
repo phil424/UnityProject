@@ -143,16 +143,27 @@ namespace MiniCrawler.Progress
             RunUpgradeOffer offer
         )
         {
-            if (offer == null ||
-                !pendingUpgradeOffers.Contains(offer))
+            if (
+                offer == null ||
+                !offer.IsValid ||
+                !pendingUpgradeOffers.Contains(offer) ||
+                !IsSelected(offer.Member)
+            )
             {
                 return false;
             }
 
-            if (!TryApplyRunUpgrade(
+            RunBuild build =
+                GetBuild(
+                    offer.Member
+                );
+
+            if (
+                !offer.Reward.TryApply(
                     offer.Member,
-                    offer.Upgrade
-                ))
+                    build
+                )
+            )
             {
                 return false;
             }

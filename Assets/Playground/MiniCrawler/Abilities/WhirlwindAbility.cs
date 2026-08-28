@@ -9,33 +9,25 @@ namespace MiniCrawler.Abilities
     public class WhirlwindAbility : ActorAbility
     {
         [Header("Whirlwind")]
-        [SerializeField]
-        [Min(0.1f)]
-        private float activationRadius = 2f;
+        [SerializeField] private AbilityLevelValue activationRadius;
 
-        [SerializeField]
-        [Min(0f)]
-        private float damage = 10f;
+        [SerializeField] private AbilityLevelValue damage;
 
-        [SerializeField]
-        [Min(0f)]
-        private float knockbackDistance = 3f;
+        [SerializeField] private AbilityLevelValue knockbackDistance;
 
-        [SerializeField]
-        [Min(0f)]
-        private float knockbackSpeed = 8f;
+        [SerializeField] private AbilityLevelValue knockbackSpeed;
 
         public float ActivationRadius =>
-            activationRadius;
+            Mathf.Max(0.1f, activationRadius != null ? activationRadius.Evaluate(Level) : 0.1f);
 
         public float Damage =>
-            damage;
+            Mathf.Max(0f, damage != null ? damage.Evaluate(Level) : 0f);
 
         public float KnockbackDistance =>
-            knockbackDistance;
+            Mathf.Max(0f, knockbackDistance != null ? knockbackDistance.Evaluate(Level) : 0f);
 
         public float KnockbackSpeed =>
-            knockbackSpeed;
+            Mathf.Max(0f, knockbackSpeed != null ? knockbackSpeed.Evaluate(Level) : 0f);
 
         protected override bool CanActivateAbility()
         {
@@ -112,7 +104,7 @@ namespace MiniCrawler.Abilities
                 DamageResolver.ApplyDamage(
                     Owner,
                     target,
-                    damage,
+                    Damage,
                     AbilityName
                 );
 
@@ -123,8 +115,8 @@ namespace MiniCrawler.Abilities
                     KnockbackResolver.TryApply(
                         Owner,
                         target,
-                        knockbackDistance,
-                        knockbackSpeed
+                        KnockbackDistance,
+                        KnockbackSpeed
                     )
                 )
                 {
@@ -180,37 +172,13 @@ namespace MiniCrawler.Abilities
 
             return
                 offset.sqrMagnitude <=
-                activationRadius *
-                activationRadius;
+                ActivationRadius *
+                ActivationRadius;
         }
 
         protected override void OnValidate()
         {
             base.OnValidate();
-
-            activationRadius =
-                Mathf.Max(
-                    0.1f,
-                    activationRadius
-                );
-
-            damage =
-                Mathf.Max(
-                    0f,
-                    damage
-                );
-
-            knockbackDistance =
-                Mathf.Max(
-                    0f,
-                    knockbackDistance
-                );
-
-            knockbackSpeed =
-                Mathf.Max(
-                    0f,
-                    knockbackSpeed
-                );
         }
 
         private void OnDrawGizmosSelected()
@@ -222,7 +190,7 @@ namespace MiniCrawler.Abilities
 
             Gizmos.DrawWireSphere(
                 centre,
-                activationRadius
+                ActivationRadius
             );
         }
     }

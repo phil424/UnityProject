@@ -19,7 +19,8 @@ MonoBehaviour:
   portrait: {fileID: 0}
   actorDefinition: {fileID: 11400000, guid: 8ada63f1fe3585a409f411fbdb0dc2f5, type: 2}
   startingAbilities:
-  - {fileID: 11400000, guid: c7185abc97cb0354e98b28a44789d51f, type: 2}
+  - ability: {fileID: 11400000, guid: c7185abc97cb0354e98b28a44789d51f, type: 2}
+    level: 1
   weaponName: Sword
   armourName: Armour
   focusName: None
