@@ -188,6 +188,27 @@ namespace MiniCrawler.Progress
 
             return purchased;
         }
+        
+        public static int GetAbilityUpgradeCost(PartyMemberDefinition definition, AbilityDefinition ability)
+        {
+            if (CurrentRun == null)
+                return int.MaxValue;
+
+            return CurrentRun.GetAbilityUpgradeCost(definition, ability);
+        }
+
+        public static bool TryBuyAbilityLevel(PartyMemberDefinition definition, AbilityDefinition ability)
+        {
+            if (CurrentRun == null)
+                return false;
+
+            bool purchased = CurrentRun.TryBuyAbilityLevel(definition, ability);
+
+            if (purchased)
+                Changed?.Invoke();
+
+            return purchased;
+        }
 
         public static float GetDamageBonus(
             PartyMemberDefinition definition

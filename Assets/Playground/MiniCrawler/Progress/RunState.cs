@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using MiniCrawler.Core;
 using MiniCrawler.Abilities;
+using UnityEngine;
 
 namespace MiniCrawler.Progress
 {
@@ -12,14 +13,9 @@ namespace MiniCrawler.Progress
 
         public int Currency { get; private set; }
 
-        public IReadOnlyList<PartyMemberDefinition> SelectedParty =>
-            selectedParty;
-
-        public IReadOnlyList<RunUpgradeOffer> PendingUpgradeOffers =>
-            pendingUpgradeOffers;
-
-        public bool HasPendingUpgradeChoice =>
-            pendingUpgradeOffers.Count > 0;
+        public IReadOnlyList<PartyMemberDefinition> SelectedParty => selectedParty;
+        public IReadOnlyList<RunUpgradeOffer> PendingUpgradeOffers => pendingUpgradeOffers;
+        public bool HasPendingUpgradeChoice => pendingUpgradeOffers.Count > 0;
 
         public RunState(RunStartConfiguration configuration)
         {
@@ -206,6 +202,60 @@ namespace MiniCrawler.Progress
             Currency -= cost;
 
             GetBuild(definition).Increase(slot);
+
+            return true;
+        }
+        
+        public int GetAbilityUpgradeCost(PartyMemberDefinition definition, AbilityDefinition ability)
+        {
+            if (
+                !IsSelected(definition) ||
+                ability == null
+            )
+            {
+                return int.MaxValue;
+            }
+
+            RunAbilityState state = GetBuild(definition).GetAbilityState(ability);
+
+            if (
+                state == null ||
+                state.IsMaxLevel
+            )
+            {
+                return int.MaxValue;
+            }
+
+            int completedUpgrades = Mathf.Max(0, state.Level - 1);
+
+            return
+                definition.BaseAbilityUpgradeCost +
+                completedUpgrades *
+                definition.AbilityUpgradeCostStep;
+        }
+
+        public bool TryBuyAbilityLevel(PartyMemberDefinition definition, AbilityDefinition ability)
+        {
+            int cost = GetAbilityUpgradeCost(definition, ability);
+
+            if (
+                cost == int.MaxValue ||
+                Currency < cost
+            )
+            {
+                return false;
+            }
+
+            RunBuild build = GetBuild(definition);
+
+            if (
+                !build.TryIncreaseAbilityLevel(ability)
+            )
+            {
+                return false;
+            }
+
+            Currency -= cost;
 
             return true;
         }

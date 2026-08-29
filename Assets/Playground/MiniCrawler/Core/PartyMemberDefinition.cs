@@ -37,6 +37,10 @@ namespace MiniCrawler.Core
         [SerializeField] private float healingPerFocusLevel = 2f;
         [SerializeField] private int baseUpgradeCost = 5;
         [SerializeField] private int upgradeCostStep = 5;
+        
+        [Header("Ability Upgrade Scaling")]
+        [SerializeField] private int baseAbilityUpgradeCost = 10;
+        [SerializeField] private int abilityUpgradeCostStep = 5;
 
         public string Id => id;
         public string DisplayName => string.IsNullOrWhiteSpace(displayName) ? name : displayName;
@@ -56,6 +60,9 @@ namespace MiniCrawler.Core
         public float HealingPerFocusLevel => healingPerFocusLevel;
         public int BaseUpgradeCost => baseUpgradeCost;
         public int UpgradeCostStep => upgradeCostStep;
+        
+        public int BaseAbilityUpgradeCost => baseAbilityUpgradeCost;
+        public int AbilityUpgradeCostStep => abilityUpgradeCostStep;
 
         public GameObject Prefab => actorDefinition != null ? actorDefinition.Prefab : null;
 
@@ -106,6 +113,9 @@ namespace MiniCrawler.Core
             healingPerFocusLevel = Mathf.Max(0f, healingPerFocusLevel);
             baseUpgradeCost = Mathf.Max(0, baseUpgradeCost);
             upgradeCostStep = Mathf.Max(0, upgradeCostStep);
+            
+            baseAbilityUpgradeCost = Mathf.Max(0, baseAbilityUpgradeCost);
+            abilityUpgradeCostStep = Mathf.Max(0, abilityUpgradeCostStep);
         }
     }
 }
