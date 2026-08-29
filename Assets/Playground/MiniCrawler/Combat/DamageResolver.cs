@@ -6,7 +6,8 @@ namespace MiniCrawler.Combat
 {
     public static class DamageResolver
     {
-        public static event Action<DamageEvent> DamageResolved;
+        public static event Action<DamageEvent>
+            DamageResolved;
 
         public static void ApplyDamage(
             GameObject source,
@@ -15,44 +16,110 @@ namespace MiniCrawler.Combat
             string actionName
         )
         {
-            if (target == null || target.IsDead || incomingDamage <= 0f)
+            if (
+                target == null ||
+                target.IsDead ||
+                incomingDamage <= 0f
+            )
+            {
                 return;
+            }
 
-            CombatStats targetStats = target.GetComponent<CombatStats>();
+            float modifiedIncomingDamage =
+                ApplyOutgoingDamageModifiers(
+                    source,
+                    incomingDamage
+                );
 
-            float armour = targetStats != null
-                ? targetStats.FlatArmour
-                : 0f;
+            CombatStats targetStats =
+                target.GetComponent<CombatStats>();
 
-            float finalDamage = targetStats != null
-                ? targetStats.CalculateDamageTaken(incomingDamage)
-                : incomingDamage;
+            float armour =
+                targetStats != null
+                    ? targetStats.FlatArmour
+                    : 0f;
 
-            float healthBefore = target.CurrentHealth;
+            float finalDamage =
+                targetStats != null
+                    ? targetStats
+                        .CalculateDamageTaken(
+                            modifiedIncomingDamage
+                        )
+                    : modifiedIncomingDamage;
 
-            target.Damage(finalDamage, source);
+            float healthBefore =
+                target.CurrentHealth;
 
-            float healthAfter = target.CurrentHealth;
-
-            DamageEvent damageEvent = new DamageEvent(
-                source,
-                target,
-                actionName,
-                incomingDamage,
-                armour,
+            target.Damage(
                 finalDamage,
-                healthBefore,
-                healthAfter
+                source
             );
 
-            DamageResolved?.Invoke(damageEvent);
+            float healthAfter =
+                target.CurrentHealth;
+
+            DamageEvent damageEvent =
+                new DamageEvent(
+                    source,
+                    target,
+                    actionName,
+                    modifiedIncomingDamage,
+                    armour,
+                    finalDamage,
+                    healthBefore,
+                    healthAfter
+                );
+
+            DamageResolved?.Invoke(
+                damageEvent
+            );
+
+            string sourceName =
+                source != null
+                    ? source.name
+                    : "Unknown";
 
             Debug.Log(
-                $"{source.name} -> {target.name} [{actionName}] | " +
-                $"{incomingDamage:0.##} - {armour:0.##} armour = " +
+                $"{sourceName} -> " +
+                $"{target.name} " +
+                $"[{actionName}] | " +
+                $"{modifiedIncomingDamage:0.##} " +
+                $"- {armour:0.##} armour = " +
                 $"{finalDamage:0.##} | " +
-                $"HP {healthBefore:0.##} -> {healthAfter:0.##}"
+                $"HP {healthBefore:0.##} -> " +
+                $"{healthAfter:0.##}"
             );
+        }
+
+        private static float
+            ApplyOutgoingDamageModifiers(
+                GameObject source,
+                float damage
+            )
+        {
+            if (source == null)
+                return damage;
+
+            RuntimeStatModifiers modifiers =
+                source.GetComponent<
+                    RuntimeStatModifiers
+                >();
+
+            if (modifiers == null)
+                return damage;
+
+            float multiplier =
+                Mathf.Max(
+                    0f,
+                    1f +
+                    modifiers
+                        .OutgoingDamagePercentBonus /
+                    100f
+                );
+
+            return
+                damage *
+                multiplier;
         }
     }
 }

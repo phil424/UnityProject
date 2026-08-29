@@ -1,3 +1,4 @@
+using MiniCrawler.Combat;
 using MiniCrawler.Core;
 using UnityEngine;
 
@@ -12,18 +13,31 @@ namespace MiniCrawler.Movement
 
     [DisallowMultipleComponent]
     [RequireComponent(typeof(Actor))]
-    public class AutoTargetMover : MonoBehaviour
+    public class AutoTargetMover :
+        MonoBehaviour
     {
         [Header("Targeting")]
-        [SerializeField] private string targetFactionId = "Undead";
-        [SerializeField] private float searchRadius = 100f;
+        [SerializeField]
+        private string targetFactionId =
+            "Undead";
+
+        [SerializeField]
+        private float searchRadius = 100f;
 
         [Header("Movement")]
-        [SerializeField] private float moveSpeed = 2f;
-        [SerializeField] private float combatStoppingDistance = 1.2f;
-        [SerializeField] private float supportStoppingDistance = 2f;
+        [SerializeField]
+        private float moveSpeed = 2f;
 
-        private float runMoveSpeedPercentBonus;
+        [SerializeField]
+        private float
+            combatStoppingDistance = 1.2f;
+
+        [SerializeField]
+        private float
+            supportStoppingDistance = 2f;
+
+        private float
+            runMoveSpeedPercentBonus;
 
         public string TargetFactionId =>
             targetFactionId;
@@ -31,9 +45,27 @@ namespace MiniCrawler.Movement
         public float SearchRadius =>
             searchRadius;
 
-        public float MoveSpeed =>
-            moveSpeed *
-            (1f + (runMoveSpeedPercentBonus / 100f));
+        public float MoveSpeed
+        {
+            get
+            {
+                float moveSpeedBonus =
+                    runMoveSpeedPercentBonus +
+                    GetRuntimeMoveSpeedBonus();
+
+                float multiplier =
+                    Mathf.Max(
+                        0f,
+                        1f +
+                        moveSpeedBonus /
+                        100f
+                    );
+
+                return
+                    moveSpeed *
+                    multiplier;
+            }
+        }
 
         public float CombatStoppingDistance =>
             combatStoppingDistance;
@@ -41,12 +73,21 @@ namespace MiniCrawler.Movement
         public float SupportStoppingDistance =>
             supportStoppingDistance;
 
-        public Health CurrentTarget { get; private set; }
+        public Health CurrentTarget
+        {
+            get;
+            private set;
+        }
 
-        public TargetIntent CurrentIntent { get; private set; }
+        public TargetIntent CurrentIntent
+        {
+            get;
+            private set;
+        }
 
         public float CurrentStoppingDistance =>
-            CurrentIntent == TargetIntent.Support
+            CurrentIntent ==
+            TargetIntent.Support
                 ? supportStoppingDistance
                 : combatStoppingDistance;
 
@@ -55,7 +96,10 @@ namespace MiniCrawler.Movement
         )
         {
             runMoveSpeedPercentBonus =
-                Mathf.Max(0f, moveSpeedPercentBonus);
+                Mathf.Max(
+                    0f,
+                    moveSpeedPercentBonus
+                );
         }
 
         public void SetTarget(
@@ -63,7 +107,8 @@ namespace MiniCrawler.Movement
             TargetIntent intent
         )
         {
-            CurrentTarget = target;
+            CurrentTarget =
+                target;
 
             CurrentIntent =
                 target != null
@@ -74,18 +119,51 @@ namespace MiniCrawler.Movement
         public void ClearTarget()
         {
             CurrentTarget = null;
-            CurrentIntent = TargetIntent.None;
+
+            CurrentIntent =
+                TargetIntent.None;
+        }
+
+        private float
+            GetRuntimeMoveSpeedBonus()
+        {
+            RuntimeStatModifiers modifiers =
+                GetComponent<
+                    RuntimeStatModifiers
+                >();
+
+            return
+                modifiers != null
+                    ? modifiers
+                        .MoveSpeedPercentBonus
+                    : 0f;
         }
 
         private void OnValidate()
         {
-            searchRadius = Mathf.Max(0.1f, searchRadius);
-            moveSpeed = Mathf.Max(0f, moveSpeed);
+            searchRadius =
+                Mathf.Max(
+                    0.1f,
+                    searchRadius
+                );
+
+            moveSpeed =
+                Mathf.Max(
+                    0f,
+                    moveSpeed
+                );
+
             combatStoppingDistance =
-                Mathf.Max(0.1f, combatStoppingDistance);
+                Mathf.Max(
+                    0.1f,
+                    combatStoppingDistance
+                );
 
             supportStoppingDistance =
-                Mathf.Max(0.1f, supportStoppingDistance);
+                Mathf.Max(
+                    0.1f,
+                    supportStoppingDistance
+                );
         }
 
         private void OnDrawGizmosSelected()
@@ -99,7 +177,8 @@ namespace MiniCrawler.Movement
             {
                 Gizmos.DrawLine(
                     transform.position,
-                    CurrentTarget.transform.position
+                    CurrentTarget
+                        .transform.position
                 );
             }
         }

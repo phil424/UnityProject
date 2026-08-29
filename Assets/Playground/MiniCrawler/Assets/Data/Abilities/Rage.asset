@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: acb822e4e9f902a459d3037f11c8a3d5, type: 3}
+  m_Name: Rage
+  m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Abilities.AbilityDefinition
+  id: Rage
+  displayName: Rage
+  icon: {fileID: 0}
+  maxLevel: 5
+  cooldown:
+    baseValue: 10
+    perLevel: 0.5
+  runtimePrefab: {fileID: 4783916421021302817, guid: ce2cf27ac9d2c5045858a34c6e6d0792, type: 3}
