@@ -21,6 +21,9 @@ namespace MiniCrawler.Systems
 
         [SerializeField] private StageDirector stageDirector;
 
+        [Header("Setup")]
+        [SerializeField, Min(1)] private int maximumPartySize = 4;
+
         [Header("Run Rewards")]
         [FormerlySerializedAs("availableRunUpgrades")]
         [SerializeField]private RunRewardDefinition[]availableRunRewards;
@@ -28,7 +31,7 @@ namespace MiniCrawler.Systems
         [SerializeField, Min(1)]
         private int runUpgradeOfferCount = 3;
 
-        private readonly RunSetup setup = new();
+        private RunSetup setup;
 
         private RunFlowState state =
             RunFlowState.PreRun;
@@ -51,6 +54,11 @@ namespace MiniCrawler.Systems
         private void Awake()
         {
             Instance = this;
+
+            setup =
+                new RunSetup(
+                    maximumPartySize
+                );
         }
 
         private void Start()

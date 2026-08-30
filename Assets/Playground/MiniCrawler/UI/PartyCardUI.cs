@@ -381,7 +381,7 @@ namespace MiniCrawler.UI
             selectButton.interactable =
                 selected ||
                 setup.SelectedParty.Count <
-                    RunSetup.MaximumPartySize;
+                    setup.MaximumPartySize;
         }
 
         private void RefreshUpgradeButton(

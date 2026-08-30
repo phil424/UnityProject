@@ -6,37 +6,75 @@ namespace MiniCrawler.Progress
 {
     public sealed class RunSetup
     {
-        public const int MaximumPartySize = 4;
-
         public event Action Changed;
 
-        private readonly List<PartyMemberDefinition> selectedParty = new();
+        private readonly List<PartyMemberDefinition>
+            selectedParty = new();
 
-        public IReadOnlyList<PartyMemberDefinition> SelectedParty =>
-            selectedParty;
+        private readonly int maximumPartySize;
 
-        public bool IsSelected(PartyMemberDefinition definition)
+        public IReadOnlyList<PartyMemberDefinition>
+            SelectedParty =>
+                selectedParty;
+
+        public int MaximumPartySize =>
+            maximumPartySize;
+
+        public RunSetup(
+            int maximumPartySize = 4
+        )
         {
-            return definition != null &&
-                   selectedParty.Contains(definition);
+            this.maximumPartySize =
+                Math.Max(
+                    1,
+                    maximumPartySize
+                );
         }
 
-        public bool TogglePartyMember(PartyMemberDefinition definition)
+        public bool IsSelected(
+            PartyMemberDefinition definition
+        )
+        {
+            return
+                definition != null &&
+                selectedParty.Contains(
+                    definition
+                );
+        }
+
+        public bool TogglePartyMember(
+            PartyMemberDefinition definition
+        )
         {
             if (definition == null)
                 return false;
 
-            if (selectedParty.Contains(definition))
+            if (
+                selectedParty.Contains(
+                    definition
+                )
+            )
             {
-                selectedParty.Remove(definition);
+                selectedParty.Remove(
+                    definition
+                );
+
                 Changed?.Invoke();
+
                 return true;
             }
 
-            if (selectedParty.Count >= MaximumPartySize)
+            if (
+                selectedParty.Count >=
+                maximumPartySize
+            )
+            {
                 return false;
+            }
 
-            selectedParty.Add(definition);
+            selectedParty.Add(
+                definition
+            );
 
             Changed?.Invoke();
 
@@ -53,9 +91,12 @@ namespace MiniCrawler.Progress
             Changed?.Invoke();
         }
 
-        public RunStartConfiguration CreateConfiguration()
+        public RunStartConfiguration
+            CreateConfiguration()
         {
-            return new RunStartConfiguration(selectedParty);
+            return new RunStartConfiguration(
+                selectedParty
+            );
         }
     }
 }

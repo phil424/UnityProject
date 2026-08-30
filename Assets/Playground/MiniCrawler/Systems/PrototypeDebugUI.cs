@@ -130,7 +130,7 @@ namespace MiniCrawler.Systems
                 GUILayout.Label(
                     $"Setup Party: " +
                     $"{run.Setup.SelectedParty.Count}/" +
-                    $"{RunSetup.MaximumPartySize}"
+                    $"{run.Setup.MaximumPartySize}"
                 );
 
                 if (RunProgress.HasActiveRun)

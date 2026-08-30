@@ -1,3 +1,4 @@
+using MiniCrawler.Abilities;
 using MiniCrawler.Core;
 using MiniCrawler.Movement;
 using MiniCrawler.Support;
@@ -32,10 +33,24 @@ namespace MiniCrawler.Systems
             if (selfHealth != null && selfHealth.IsDead)
                 return;
 
-            supporter.HealTimer = Mathf.Max(
-                0f,
-                supporter.HealTimer - Time.deltaTime
-            );
+            supporter.HealTimer =
+                Mathf.Max(
+                    0f,
+                    supporter.HealTimer -
+                    Time.deltaTime
+                );
+
+            AbilityExecutionState
+                abilityExecutionState =
+                    supporter.GetComponent<AbilityExecutionState>();
+
+            if (
+                abilityExecutionState != null &&
+                abilityExecutionState.BlocksAutonomousActions
+            )
+            {
+                return;
+            }
 
             AutoTargetMover mover = supporter.GetComponent<AutoTargetMover>();
 

@@ -6811,6 +6811,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Systems.RunDirector
   stageDirector: {fileID: 846909436}
+  maximumPartySize: 4
   availableRunRewards:
   - {fileID: 11400000, guid: 309b8389bb587ba40be86ca876c4a398, type: 2}
   - {fileID: 11400000, guid: 0a8f4aa459b0ed646894d14534dd9d91, type: 2}

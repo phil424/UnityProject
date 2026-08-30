@@ -267,7 +267,7 @@ namespace MiniCrawler.UI
 
             selectedCountText.text =
                 $"Party: {setupPartyCount}/" +
-                $"{RunSetup.MaximumPartySize}";
+                $"{runDirector.Setup.MaximumPartySize}";
 
             upgradeCurrencyText.text =
                 $"Run Currency: {RunProgress.Currency}";

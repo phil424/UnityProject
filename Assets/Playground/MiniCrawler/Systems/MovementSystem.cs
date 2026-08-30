@@ -1,3 +1,4 @@
+using MiniCrawler.Abilities;
 using MiniCrawler.Core;
 using MiniCrawler.Movement;
 using MiniCrawler.Support;
@@ -36,6 +37,21 @@ namespace MiniCrawler.Systems
                         forcedMotion
                     );
 
+                    continue;
+                }
+
+                AbilityExecutionState
+                    abilityExecutionState =
+                        actor.GetComponent<
+                            AbilityExecutionState
+                        >();
+
+                if (
+                    abilityExecutionState != null &&
+                    abilityExecutionState
+                        .BlocksAutonomousActions
+                )
+                {
                     continue;
                 }
 

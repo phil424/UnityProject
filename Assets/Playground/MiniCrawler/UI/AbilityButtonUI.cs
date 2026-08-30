@@ -91,10 +91,8 @@ namespace MiniCrawler.UI
                 return;
             }
 
-            string state =
-                ability.IsReady
-                    ? "READY"
-                    : $"{ability.CooldownRemaining:0.0}s";
+            string state = ability.IsExecuting ? "EXECUTING" : ability.IsReady
+                        ? "READY" : $"{ability.CooldownRemaining:0.0}s";
 
             if (labelText != null)
             {

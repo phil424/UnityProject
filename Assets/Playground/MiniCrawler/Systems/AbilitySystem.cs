@@ -28,7 +28,7 @@ namespace MiniCrawler.Systems
                     continue;
                 }
 
-                ability.TickCooldown(
+                ability.TickRuntime(
                     Time.deltaTime
                 );
             }

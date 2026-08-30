@@ -1,3 +1,4 @@
+using MiniCrawler.Abilities;
 using MiniCrawler.Combat;
 using MiniCrawler.Core;
 using MiniCrawler.Movement;
@@ -52,6 +53,21 @@ namespace MiniCrawler.Systems
                     attackerStats.AttackTimer -
                     Time.deltaTime
                 );
+
+            AbilityExecutionState
+                abilityExecutionState =
+                    mover.GetComponent<
+                        AbilityExecutionState
+                    >();
+
+            if (
+                abilityExecutionState != null &&
+                abilityExecutionState
+                    .BlocksAutonomousActions
+            )
+            {
+                return;
+            }
 
             if (
                 mover.CurrentIntent !=
