@@ -38,6 +38,9 @@ namespace MiniCrawler.Abilities
         [SerializeField]
         private AbilityLevelValue
             knockbackSpeed;
+            
+        [SerializeField]
+        [Range(0f, 89f)] private float knockbackFanAngle = 55f;
 
         private readonly HashSet<Health>
             hitTargets = new();
@@ -94,6 +97,13 @@ namespace MiniCrawler.Abilities
                 Evaluate(
                     knockbackSpeed
                 )
+            );
+            
+        public float KnockbackFanAngle =>
+            Mathf.Clamp(
+                knockbackFanAngle,
+                0f,
+                89f
             );
 
         protected override bool
@@ -363,16 +373,80 @@ namespace MiniCrawler.Abilities
 
                 if (!target.IsDead)
                 {
+                    Vector3 knockbackDirection =
+                        ResolveKnockbackDirection(
+                            target,
+                            segmentStart,
+                            segmentEnd,
+                            hitDistance
+                        );
+
                     KnockbackResolver
                         .TryApplyDirectional(
                             Owner,
                             target,
-                            chargeDirection,
+                            knockbackDirection,
                             KnockbackDistance,
                             KnockbackSpeed
                         );
                 }
             }
+        }
+        
+        private Vector3 ResolveKnockbackDirection(
+            Health target,
+            Vector3 segmentStart,
+            Vector3 segmentEnd,
+            float hitDistance
+        )
+        {
+            if (target == null)
+                return chargeDirection;
+
+            Vector3 closestPoint =
+                ClosestPointOnSegment(
+                    target.transform.position,
+                    segmentStart,
+                    segmentEnd
+                );
+
+            Vector3 lateralDirection =
+                target.transform.position -
+                closestPoint;
+
+            lateralDirection.y = 0f;
+
+            float lateralDistance =
+                lateralDirection.magnitude;
+
+            if (
+                lateralDistance <= 0.0001f ||
+                KnockbackFanAngle <= 0f
+            )
+            {
+                return chargeDirection;
+            }
+
+            float spreadAmount =
+                Mathf.Clamp01(
+                    lateralDistance /
+                    Mathf.Max(
+                        0.0001f,
+                        hitDistance
+                    )
+                );
+
+            float deflection =
+                KnockbackFanAngle *
+                spreadAmount;
+
+            return
+                KnockbackResolver
+                    .ResolveDeflectedDirection(
+                        chargeDirection,
+                        lateralDirection,
+                        deflection
+                    );
         }
 
         private bool IsValidTarget(
@@ -403,12 +477,31 @@ namespace MiniCrawler.Abilities
                 );
         }
 
-        private float
-            DistanceSquaredToSegment(
-                Vector3 point,
-                Vector3 start,
-                Vector3 end
-            )
+        private float DistanceSquaredToSegment(
+            Vector3 point,
+            Vector3 start,
+            Vector3 end
+        )
+        {
+            Vector3 closest =
+                ClosestPointOnSegment(
+                    point,
+                    start,
+                    end
+                );
+
+            point.y = 0f;
+
+            return
+                (point - closest)
+                .sqrMagnitude;
+        }
+
+        private Vector3 ClosestPointOnSegment(
+            Vector3 point,
+            Vector3 start,
+            Vector3 end
+        )
         {
             point.y = 0f;
             start.y = 0f;
@@ -425,9 +518,7 @@ namespace MiniCrawler.Abilities
                 MinimumDirectionSquared
             )
             {
-                return
-                    (point - start)
-                    .sqrMagnitude;
+                return start;
             }
 
             float t =
@@ -439,13 +530,9 @@ namespace MiniCrawler.Abilities
 
             t = Mathf.Clamp01(t);
 
-            Vector3 closest =
+            return
                 start +
                 segment * t;
-
-            return
-                (point - closest)
-                .sqrMagnitude;
         }
 
         private void FaceChargeDirection()

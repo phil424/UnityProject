@@ -85,6 +85,68 @@ namespace MiniCrawler.Movement
             );
         }
 
+        public static Vector3
+            ResolveDeflectedDirection(
+                Vector3 baseDirection,
+                Vector3 outwardDirection,
+                float maxDeflectionDegrees
+            )
+        {
+            baseDirection.y = 0f;
+            outwardDirection.y = 0f;
+
+            if (
+                baseDirection.sqrMagnitude <=
+                MinimumDirectionSquared
+            )
+            {
+                return Vector3.zero;
+            }
+
+            Vector3 normalizedBase =
+                baseDirection.normalized;
+
+            if (
+                outwardDirection.sqrMagnitude <=
+                    MinimumDirectionSquared ||
+                maxDeflectionDegrees <= 0f
+            )
+            {
+                return normalizedBase;
+            }
+
+            Vector3 normalizedOutward =
+                outwardDirection.normalized;
+
+            float signedAngle =
+                Vector3.SignedAngle(
+                    normalizedBase,
+                    normalizedOutward,
+                    Vector3.up
+                );
+
+            float maximumAngle =
+                Mathf.Clamp(
+                    maxDeflectionDegrees,
+                    0f,
+                    180f
+                );
+
+            float deflectedAngle =
+                Mathf.Clamp(
+                    signedAngle,
+                    -maximumAngle,
+                    maximumAngle
+                );
+
+            return
+                Quaternion.AngleAxis(
+                    deflectedAngle,
+                    Vector3.up
+                ) *
+                normalizedBase;
+        }
+
         private static Vector3 ResolveDirection(
             GameObject source,
             Health target

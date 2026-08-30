@@ -57,8 +57,9 @@ MonoBehaviour:
     baseValue: 10
     perLevel: 5
   knockbackDistance:
-    baseValue: 2.5
-    perLevel: 0.5
+    baseValue: 10
+    perLevel: 2
   knockbackSpeed:
-    baseValue: 50
+    baseValue: 15
     perLevel: 5
+  knockbackFanAngle: 55

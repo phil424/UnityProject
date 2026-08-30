@@ -24,6 +24,11 @@ namespace MiniCrawler.Systems
         private float propagationSpeedMultiplier =
             0.5f;
 
+        [SerializeField]
+        [Range(0f, 89f)]
+        private float propagationDeflectionDegrees =
+            35f;
+
         private void Update()
         {
             if (SimulationPause.IsPaused)
@@ -275,7 +280,8 @@ namespace MiniCrawler.Systems
                 sourceMotion,
                 targetHealth,
                 propagationDistanceMultiplier,
-                propagationSpeedMultiplier
+                propagationSpeedMultiplier,
+                propagationDeflectionDegrees
             );
         }
 
@@ -317,6 +323,13 @@ namespace MiniCrawler.Systems
             propagationSpeedMultiplier =
                 Mathf.Clamp01(
                     propagationSpeedMultiplier
+                );
+
+            propagationDeflectionDegrees =
+                Mathf.Clamp(
+                    propagationDeflectionDegrees,
+                    0f,
+                    89f
                 );
         }
     }

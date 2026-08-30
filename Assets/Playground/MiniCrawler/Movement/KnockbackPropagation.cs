@@ -9,7 +9,8 @@ namespace MiniCrawler.Movement
             ForcedMotion sourceMotion,
             Health target,
             float distanceMultiplier,
-            float speedMultiplier
+            float speedMultiplier,
+            float maxDeflectionDegrees
         )
         {
             if (
@@ -73,12 +74,24 @@ namespace MiniCrawler.Movement
                 sourceMotion.Speed *
                 speedMultiplier;
 
+            Vector3 outwardDirection =
+                target.transform.position -
+                sourceMotion.transform.position;
+
+            Vector3 propagatedDirection =
+                KnockbackResolver
+                    .ResolveDeflectedDirection(
+                        sourceMotion.Direction,
+                        outwardDirection,
+                        maxDeflectionDegrees
+                    );
+
             bool applied =
                 KnockbackResolver
                     .TryApplyDirectional(
                         sourceMotion.gameObject,
                         target,
-                        sourceMotion.Direction,
+                        propagatedDirection,
                         propagatedDistance,
                         propagatedSpeed,
                         false
