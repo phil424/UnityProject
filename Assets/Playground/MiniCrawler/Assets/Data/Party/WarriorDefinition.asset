@@ -21,6 +21,8 @@ MonoBehaviour:
   startingAbilities:
   - ability: {fileID: 11400000, guid: c7185abc97cb0354e98b28a44789d51f, type: 2}
     level: 1
+  - ability: {fileID: 11400000, guid: 1be37d506ffc32745b4aa495ddd5a29c, type: 2}
+    level: 1
   weaponName: Sword
   armourName: Armour
   focusName: None
@@ -30,3 +32,5 @@ MonoBehaviour:
   healingPerFocusLevel: 0
   baseUpgradeCost: 5
   upgradeCostStep: 3
+  baseAbilityUpgradeCost: 10
+  abilityUpgradeCostStep: 5

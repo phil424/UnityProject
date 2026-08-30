@@ -221,6 +221,7 @@ GameObject:
   - component: {fileID: 82840393}
   - component: {fileID: 82840392}
   - component: {fileID: 82840395}
+  - component: {fileID: 82840396}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -346,6 +347,21 @@ MonoBehaviour:
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
   m_Version: 2
+--- !u!114 &82840396
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 82840391}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 92fd359b69290f2448998afbc4e5ee5e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Presentation.PartyCameraFollow
+  stageDirector: {fileID: 846909436}
+  followOrigin: {fileID: 1272413006}
+  followSharpness: 8
 --- !u!1 &84369589
 GameObject:
   m_ObjectHideFlags: 0
