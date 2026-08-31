@@ -3832,6 +3832,7 @@ MonoBehaviour:
   enableKnockbackPropagation: 1
   propagationDistanceMultiplier: 0.5
   propagationSpeedMultiplier: 0.5
+  propagationDeflectionDegrees: 35
 --- !u!114 &846909444
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6834,6 +6835,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 4a3d2ccc145bae84ba5a831c074ae501, type: 2}
   - {fileID: 11400000, guid: 971e914b5566b2d4eb1152183e78ba09, type: 2}
   - {fileID: 11400000, guid: 2904d326533f9104fbae33755a5c83cc, type: 2}
+  - {fileID: 11400000, guid: a95be3a71591801438e716ec8239a3db, type: 2}
   runUpgradeOfferCount: 3
 --- !u!1 &1887191011
 GameObject:

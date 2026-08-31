@@ -88,7 +88,7 @@ namespace MiniCrawler.Progress
             return false;
         }
 
-        public bool TryAddEvolution(
+        public bool CanAddEvolution(
             AbilityEvolutionDefinition evolution
         )
         {
@@ -104,6 +104,27 @@ namespace MiniCrawler.Progress
             {
                 return false;
             }
+
+            foreach (
+                AbilityEvolutionDefinition required
+                    in evolution.RequiredEvolutions
+            )
+            {
+                if (!HasEvolution(required))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        public bool TryAddEvolution(
+            AbilityEvolutionDefinition evolution
+        )
+        {
+            if (!CanAddEvolution(evolution))
+                return false;
 
             evolutions.Add(
                 evolution

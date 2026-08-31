@@ -132,13 +132,7 @@ namespace MiniCrawler.Progress
                 return false;
             }
 
-            return
-                build.HasAbility(
-                    evolution.TargetAbility
-                ) &&
-                !build.HasAbilityEvolution(
-                    evolution
-                );
+            return build.CanAcquireAbilityEvolution(evolution);
         }
 
         public override bool TryApply(

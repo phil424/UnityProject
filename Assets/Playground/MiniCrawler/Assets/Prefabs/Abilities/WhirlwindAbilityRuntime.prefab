@@ -56,3 +56,6 @@ MonoBehaviour:
   knockbackSpeed:
     baseValue: 8
     perLevel: 0.5
+  evolutionBehaviours:
+  - evolution: {fileID: 11400000, guid: 331ef608ca8f74340a9c5c92e40b95cd, type: 2}
+    behaviour: 0

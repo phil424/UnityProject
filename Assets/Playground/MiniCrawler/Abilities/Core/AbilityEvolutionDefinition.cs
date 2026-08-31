@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace MiniCrawler.Abilities
@@ -28,6 +29,11 @@ namespace MiniCrawler.Abilities
         [SerializeField]
         private AbilityDefinition targetAbility;
 
+        [Header("Progression")]
+        [SerializeField]
+        private List<AbilityEvolutionDefinition>
+            requiredEvolutions = new();
+
         public string Id =>
             string.IsNullOrWhiteSpace(id)
                 ? name
@@ -49,8 +55,36 @@ namespace MiniCrawler.Abilities
         public AbilityDefinition TargetAbility =>
             targetAbility;
 
+        public IReadOnlyList<
+            AbilityEvolutionDefinition
+        > RequiredEvolutions =>
+            requiredEvolutions;
+
         public bool IsConfigured =>
-            targetAbility != null;
+            targetAbility != null &&
+            HasValidPrerequisites();
+
+        private bool HasValidPrerequisites()
+        {
+            foreach (
+                AbilityEvolutionDefinition required
+                    in requiredEvolutions
+            )
+            {
+                if (
+                    required == null ||
+                    required == this ||
+                    required.TargetAbility == null ||
+                    required.TargetAbility.Id !=
+                        targetAbility.Id
+                )
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
 
         private void OnValidate()
         {
