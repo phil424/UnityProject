@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using MiniCrawler.Core;
 using MiniCrawler.Systems;
 using UnityEngine;
@@ -14,6 +15,8 @@ namespace MiniCrawler.Abilities
 
         private int level = 1;
 
+        private IReadOnlyList<AbilityEvolutionDefinition> evolutions = Array.Empty<AbilityEvolutionDefinition>();
+
         private float cooldownRemaining;
 
         private AbilityExecutionState
@@ -27,6 +30,8 @@ namespace MiniCrawler.Abilities
 
         public int Level =>
             level;
+        
+        public IReadOnlyList<AbilityEvolutionDefinition> Evolutions => evolutions;
 
         public string AbilityName =>
             definition != null
@@ -77,27 +82,20 @@ namespace MiniCrawler.Abilities
         public void Initialize(
             GameObject actorOwner,
             AbilityDefinition abilityDefinition,
-            int abilityLevel
+            int abilityLevel,
+            IReadOnlyList<AbilityEvolutionDefinition> abilityEvolutions = null
         )
         {
             EndExecution();
 
-            owner =
-                actorOwner;
+            owner = actorOwner;
 
-            definition =
-                abilityDefinition;
+            definition = abilityDefinition;
 
-            level =
-                abilityDefinition != null
-                    ? abilityDefinition.ClampLevel(
-                        abilityLevel
-                    )
-                    : Mathf.Max(
-                        1,
-                        abilityLevel
-                    );
+            level = abilityDefinition != null ? abilityDefinition.ClampLevel(abilityLevel) : Mathf.Max(1, abilityLevel);
 
+            evolutions = abilityEvolutions ?? Array.Empty<AbilityEvolutionDefinition>();
+    
             cooldownRemaining = 0f;
         }
 
@@ -105,9 +103,7 @@ namespace MiniCrawler.Abilities
             float deltaTime
         )
         {
-            TickCooldown(
-                deltaTime
-            );
+            TickCooldown(deltaTime);
 
             if (!IsExecuting)
                 return;
@@ -119,29 +115,17 @@ namespace MiniCrawler.Abilities
                 return;
             }
 
-            TickExecution(
-                deltaTime
-            );
+            TickExecution(deltaTime);
         }
 
-        public void TickCooldown(
-            float deltaTime
-        )
+        public void TickCooldown(float deltaTime)
         {
-            if (
-                deltaTime <= 0f ||
-                cooldownRemaining <= 0f
-            )
+            if (deltaTime <= 0f || cooldownRemaining <= 0f)
             {
                 return;
             }
 
-            cooldownRemaining =
-                Mathf.Max(
-                    0f,
-                    cooldownRemaining -
-                    deltaTime
-                );
+            cooldownRemaining = Mathf.Max(0f, cooldownRemaining - deltaTime);
         }
 
         public bool TryActivate()
@@ -164,31 +148,41 @@ namespace MiniCrawler.Abilities
         {
             cooldownRemaining = 0f;
         }
+        
+        public bool HasEvolution(AbilityEvolutionDefinition evolution)
+        {
+            if (evolution == null)
+                return false;
+
+            foreach (AbilityEvolutionDefinition owned in evolutions)
+            {
+                if (owned != null && owned.Id == evolution.Id)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
 
         protected bool BeginExecution(
             bool blockAutonomousActions = true
         )
         {
-            if (
-                !IsInitialized ||
-                IsExecuting
-            )
+            if (!IsInitialized || IsExecuting)
             {
                 return false;
             }
 
             IsExecuting = true;
 
-            BlocksAutonomousActions =
-                blockAutonomousActions;
+            BlocksAutonomousActions = blockAutonomousActions;
 
             if (BlocksAutonomousActions)
             {
                 EnsureExecutionState();
 
-                executionState?.BeginBlocking(
-                    this
-                );
+                executionState?.BeginBlocking(this);
             }
 
             return true;
@@ -199,14 +193,9 @@ namespace MiniCrawler.Abilities
             if (!IsExecuting)
                 return;
 
-            if (
-                BlocksAutonomousActions &&
-                executionState != null
-            )
+            if (BlocksAutonomousActions && executionState != null)
             {
-                executionState.EndBlocking(
-                    this
-                );
+                executionState.EndBlocking(this);
             }
 
             IsExecuting = false;

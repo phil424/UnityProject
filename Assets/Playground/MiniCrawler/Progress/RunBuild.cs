@@ -109,6 +109,54 @@ namespace MiniCrawler.Progress
 
             return state != null && state.TryIncreaseLevel();
         }
+        
+        public bool TryAcquireAbilityEvolution(
+            AbilityEvolutionDefinition evolution
+        )
+        {
+            if (
+                evolution == null ||
+                evolution.TargetAbility == null
+            )
+            {
+                return false;
+            }
+
+            RunAbilityState state =
+                GetAbilityState(
+                    evolution.TargetAbility
+                );
+
+            return
+                state != null &&
+                state.TryAddEvolution(
+                    evolution
+                );
+        }
+
+        public bool HasAbilityEvolution(
+            AbilityEvolutionDefinition evolution
+        )
+        {
+            if (
+                evolution == null ||
+                evolution.TargetAbility == null
+            )
+            {
+                return false;
+            }
+
+            RunAbilityState state =
+                GetAbilityState(
+                    evolution.TargetAbility
+                );
+
+            return
+                state != null &&
+                state.HasEvolution(
+                    evolution
+                );
+        }
 
         public bool HasAbility(
             AbilityDefinition ability

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace MiniCrawler.Abilities
@@ -77,7 +78,8 @@ namespace MiniCrawler.Abilities
 
         public ActorAbility CreateRuntime(
             GameObject owner,
-            int level
+            int level,
+            IReadOnlyList<AbilityEvolutionDefinition> evolutions = null
         )
         {
             if (
@@ -125,7 +127,8 @@ namespace MiniCrawler.Abilities
             ability.Initialize(
                 owner,
                 this,
-                ClampLevel(level)
+                ClampLevel(level),
+                evolutions
             );
 
             return ability;

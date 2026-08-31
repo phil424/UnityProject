@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using MiniCrawler.Abilities;
 
 namespace MiniCrawler.Progress
@@ -10,11 +11,20 @@ namespace MiniCrawler.Progress
 
         private int level;
 
+        private readonly List<
+            AbilityEvolutionDefinition
+        > evolutions = new();
+
         public AbilityDefinition Definition =>
             definition;
 
         public int Level =>
             level;
+
+        public IReadOnlyList<
+            AbilityEvolutionDefinition
+        > Evolutions =>
+            evolutions;
 
         public bool IsMaxLevel =>
             definition == null ||
@@ -50,6 +60,54 @@ namespace MiniCrawler.Progress
                 definition.ClampLevel(
                     level + 1
                 );
+
+            return true;
+        }
+
+        public bool HasEvolution(
+            AbilityEvolutionDefinition evolution
+        )
+        {
+            if (evolution == null)
+                return false;
+
+            foreach (
+                AbilityEvolutionDefinition owned
+                    in evolutions
+            )
+            {
+                if (
+                    owned != null &&
+                    owned.Id == evolution.Id
+                )
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public bool TryAddEvolution(
+            AbilityEvolutionDefinition evolution
+        )
+        {
+            if (
+                definition == null ||
+                evolution == null ||
+                !evolution.IsConfigured ||
+                evolution.TargetAbility == null ||
+                evolution.TargetAbility.Id !=
+                    definition.Id ||
+                HasEvolution(evolution)
+            )
+            {
+                return false;
+            }
+
+            evolutions.Add(
+                evolution
+            );
 
             return true;
         }

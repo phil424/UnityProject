@@ -44,7 +44,8 @@ namespace MiniCrawler.Progress
                     abilityState.Definition
                         .CreateRuntime(
                             spawnedActor,
-                            abilityState.Level
+                            abilityState.Level,
+                            abilityState.Evolutions
                         );
 
                 if (runtimeAbility == null)
