@@ -18,3 +18,5 @@ MonoBehaviour:
     away.
   icon: {fileID: 0}
   targetAbility: {fileID: 11400000, guid: c7185abc97cb0354e98b28a44789d51f, type: 2}
+  requiredEvolutions: []
+  replacesAbilityPresentation: 1

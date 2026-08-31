@@ -37,6 +37,20 @@ namespace MiniCrawler.Abilities
             definition != null
                 ? definition.DisplayName
                 : GetType().Name;
+                
+        public string DisplayName =>
+            AbilityPresentationResolver
+                .GetDisplayName(
+                    definition,
+                    evolutions
+                );
+
+        public Sprite DisplayIcon =>
+            AbilityPresentationResolver
+                .GetDisplayIcon(
+                    definition,
+                    evolutions
+                );
 
         public float Cooldown =>
             definition != null

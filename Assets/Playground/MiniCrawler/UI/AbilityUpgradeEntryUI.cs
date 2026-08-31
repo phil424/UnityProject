@@ -88,6 +88,13 @@ namespace MiniCrawler.UI
                 gameObject.SetActive(false);
                 return;
             }
+            
+            string displayName =
+                AbilityPresentationResolver
+                    .GetDisplayName(
+                        ability,
+                        state.Evolutions
+                    );
 
             gameObject.SetActive(true);
 
@@ -96,7 +103,7 @@ namespace MiniCrawler.UI
                 if (labelText != null)
                 {
                     labelText.text =
-                        $"{ability.DisplayName} " +
+                        $"{displayName} " +
                         $"Lv.{state.Level} — MAX";
                 }
 
@@ -115,7 +122,7 @@ namespace MiniCrawler.UI
             if (labelText != null)
             {
                 labelText.text =
-                    $"{ability.DisplayName} " +
+                    $"{displayName} " +
                     $"Lv.{state.Level} → " +
                     $"Lv.{state.Level + 1} " +
                     $"({cost})";

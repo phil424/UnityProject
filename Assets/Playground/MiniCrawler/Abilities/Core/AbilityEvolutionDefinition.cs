@@ -34,6 +34,10 @@ namespace MiniCrawler.Abilities
         private List<AbilityEvolutionDefinition>
             requiredEvolutions = new();
 
+        [Header("Presentation")]
+        [SerializeField]
+        private bool replacesAbilityPresentation;
+
         public string Id =>
             string.IsNullOrWhiteSpace(id)
                 ? name
@@ -59,6 +63,9 @@ namespace MiniCrawler.Abilities
             AbilityEvolutionDefinition
         > RequiredEvolutions =>
             requiredEvolutions;
+
+        public bool ReplacesAbilityPresentation =>
+            replacesAbilityPresentation;
 
         public bool IsConfigured =>
             targetAbility != null &&
