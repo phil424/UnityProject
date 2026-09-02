@@ -520,6 +520,41 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!1 &85307898
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 85307899}
+  m_Layer: 0
+  m_Name: SpawnGroups
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &85307899
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 85307898}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 618659754}
+  - {fileID: 1388952761}
+  - {fileID: 1739963070}
+  - {fileID: 648079722}
+  m_Father: {fileID: 1218170565}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &97268034
 GameObject:
   m_ObjectHideFlags: 0
@@ -1187,6 +1222,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 221997190}
+  - component: {fileID: 221997191}
   m_Layer: 0
   m_Name: Boss Spawn
   m_TagString: Untagged
@@ -1209,6 +1245,21 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1218170565}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &221997191
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 221997189}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ec6c5272cff78ab42b58beae9d310062, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Spawning.LevelSpawnSource
+  shape: 0
+  radius: 1.5
+  boxSize: {x: 3, y: 3}
 --- !u!1 &256817863
 GameObject:
   m_ObjectHideFlags: 0
@@ -1899,6 +1950,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 333271350}
+  - component: {fileID: 333271351}
   m_Layer: 0
   m_Name: Zombie Cluster 3
   m_TagString: Untagged
@@ -1921,6 +1973,21 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1218170565}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &333271351
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 333271349}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ec6c5272cff78ab42b58beae9d310062, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Spawning.LevelSpawnSource
+  shape: 2
+  radius: 5
+  boxSize: {x: 4, y: 4}
 --- !u!1 &347449217
 GameObject:
   m_ObjectHideFlags: 0
@@ -1930,6 +1997,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 347449218}
+  - component: {fileID: 347449219}
   m_Layer: 0
   m_Name: Zombie Cluster 2
   m_TagString: Untagged
@@ -1952,6 +2020,21 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1218170565}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &347449219
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 347449217}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ec6c5272cff78ab42b58beae9d310062, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Spawning.LevelSpawnSource
+  shape: 1
+  radius: 5
+  boxSize: {x: 3, y: 3}
 --- !u!1 &382263932
 GameObject:
   m_ObjectHideFlags: 0
@@ -2326,6 +2409,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 494815016}
+  - component: {fileID: 494815017}
   m_Layer: 0
   m_Name: Zombie Cluster 1
   m_TagString: Untagged
@@ -2348,6 +2432,21 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1218170565}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &494815017
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 494815015}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ec6c5272cff78ab42b58beae9d310062, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Spawning.LevelSpawnSource
+  shape: 0
+  radius: 4
+  boxSize: {x: 3, y: 3}
 --- !u!1 &496598499
 GameObject:
   m_ObjectHideFlags: 0
@@ -3225,6 +3324,65 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 603541411}
   m_CullTransparentMesh: 1
+--- !u!1 &618659753
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 618659754}
+  - component: {fileID: 618659755}
+  m_Layer: 0
+  m_Name: Zombie Group 1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &618659754
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 618659753}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 85307899}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &618659755
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 618659753}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 534eca0a6af4aaf428b51272d5c7238e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Spawning.LevelSpawnGroup
+  spawnSources:
+  - {fileID: 494815017}
+  entries:
+  - actor: {fileID: 11400000, guid: f94bb2855b5c0e24eac3845bce957198, type: 2}
+    count: 8
+    startDelay: 0
+    batchSize: 8
+    timeBetweenSpawns: 0
+    timeBetweenBatches: 0
+  - actor: {fileID: 11400000, guid: f94bb2855b5c0e24eac3845bce957198, type: 2}
+    count: 30
+    startDelay: 1
+    batchSize: 1
+    timeBetweenSpawns: 0
+    timeBetweenBatches: 0.5
 --- !u!1 &633484007
 GameObject:
   m_ObjectHideFlags: 0
@@ -3362,6 +3520,61 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 633484007}
   m_CullTransparentMesh: 1
+--- !u!1 &648079721
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 648079722}
+  - component: {fileID: 648079723}
+  m_Layer: 0
+  m_Name: Elite Group
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &648079722
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 648079721}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 85307899}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &648079723
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 648079721}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 534eca0a6af4aaf428b51272d5c7238e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Spawning.LevelSpawnGroup
+  spawnSources:
+  - {fileID: 494815017}
+  - {fileID: 347449219}
+  - {fileID: 333271351}
+  entries:
+  - actor: {fileID: 11400000, guid: bf739fcb6ae22f644b59f5e39568fd7e, type: 2}
+    count: 1
+    startDelay: 0
+    batchSize: 1
+    timeBetweenSpawns: 0
+    timeBetweenBatches: 0
 --- !u!1 &666907402
 GameObject:
   m_ObjectHideFlags: 0
@@ -4254,20 +4467,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78ac2bdb91ded5c49b61654cc4710d88, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MiniCrawler.Systems.StageDirector
-  zombieDefinition: {fileID: 11400000, guid: f94bb2855b5c0e24eac3845bce957198, type: 2}
-  eliteZombieDefinition: {fileID: 11400000, guid: bf739fcb6ae22f644b59f5e39568fd7e, type: 2}
   bossDefinition: {fileID: 11400000, guid: 120bc4ab930fffa4bbf709c602bcb77b, type: 2}
   partySpawnPoint: {fileID: 1272413006}
-  zombieClusterSpawnPoints:
-  - {fileID: 494815016}
-  - {fileID: 347449218}
-  - {fileID: 333271350}
-  bossSpawnPoint: {fileID: 221997190}
+  bossSpawnSource: {fileID: 221997191}
   partySpawnRadius: 1
-  clusterCount: 3
-  zombiesPerCluster: 3
-  zombieClusterRadius: 1.5
-  eliteCount: 1
+  minionSpawnGroups:
+  - {fileID: 618659755}
+  - {fileID: 1388952762}
+  - {fileID: 1739963071}
+  - {fileID: 648079723}
 --- !u!114 &846909438
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5871,6 +6079,7 @@ Transform:
   - {fileID: 347449218}
   - {fileID: 333271350}
   - {fileID: 221997190}
+  - {fileID: 85307899}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1239560828
@@ -6426,6 +6635,59 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: -20, y: -20}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &1388952760
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1388952761}
+  - component: {fileID: 1388952762}
+  m_Layer: 0
+  m_Name: Zombie Group 2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1388952761
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1388952760}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 85307899}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1388952762
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1388952760}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 534eca0a6af4aaf428b51272d5c7238e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Spawning.LevelSpawnGroup
+  spawnSources:
+  - {fileID: 347449219}
+  entries:
+  - actor: {fileID: 11400000, guid: f94bb2855b5c0e24eac3845bce957198, type: 2}
+    count: 8
+    startDelay: 0
+    batchSize: 4
+    timeBetweenSpawns: 0
+    timeBetweenBatches: 8
 --- !u!1 &1405882066
 GameObject:
   m_ObjectHideFlags: 0
@@ -7346,6 +7608,59 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1731465785}
   m_CullTransparentMesh: 1
+--- !u!1 &1739963069
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1739963070}
+  - component: {fileID: 1739963071}
+  m_Layer: 0
+  m_Name: Zombie Group 3
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1739963070
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1739963069}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 85307899}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1739963071
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1739963069}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 534eca0a6af4aaf428b51272d5c7238e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Spawning.LevelSpawnGroup
+  spawnSources:
+  - {fileID: 333271351}
+  entries:
+  - actor: {fileID: 11400000, guid: f94bb2855b5c0e24eac3845bce957198, type: 2}
+    count: 3
+    startDelay: 0
+    batchSize: 3
+    timeBetweenSpawns: 0
+    timeBetweenBatches: 0
 --- !u!1 &1745767467
 GameObject:
   m_ObjectHideFlags: 0

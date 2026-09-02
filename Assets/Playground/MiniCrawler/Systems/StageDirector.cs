@@ -29,33 +29,26 @@ namespace MiniCrawler.Systems
         public event Action LevelCleared;
 
         [Header("Enemy Definitions")]
-        [SerializeField] private ActorDefinition zombieDefinition;
-        [SerializeField] private ActorDefinition eliteZombieDefinition;
         [SerializeField] private ActorDefinition bossDefinition;
 
         [Header("Spawn Points")]
         [SerializeField] private Transform partySpawnPoint;
-        [SerializeField] private Transform[] zombieClusterSpawnPoints;
-        [SerializeField] private Transform bossSpawnPoint;
+        [SerializeField] private LevelSpawnSource bossSpawnSource;
 
         [Header("Party")]
         [SerializeField] private float partySpawnRadius = 1f;
 
-        [Header("Zombies")]
-        [SerializeField] private int clusterCount = 3;
-        [SerializeField] private int zombiesPerCluster = 3;
-        [SerializeField] private float zombieClusterRadius = 1.5f;
-        
-        [Header("Elites")]
-        [SerializeField] private int eliteCount = 1;
+        [Header("Minion Spawn Groups")]
+        [SerializeField] private LevelSpawnGroup[] minionSpawnGroups;
 
         private readonly List<GameObject> levelObjects = new();
-        
         private readonly Dictionary<string, GameObject> spawnedPartyActors = new();
+        public int PendingMinionSpawns => pendingMinionSpawns;
 
         private LevelState state = LevelState.Idle;
         private int livingPartyMembers;
         private int livingMinions;
+        private int pendingMinionSpawns;
         private bool bossAlive;
 
         public LevelState State => state;
@@ -107,6 +100,7 @@ namespace MiniCrawler.Systems
 
             livingPartyMembers = 0;
             livingMinions = 0;
+            pendingMinionSpawns = 0;
             bossAlive = false;
 
             SpawnSelectedParty(runState);
@@ -119,9 +113,12 @@ namespace MiniCrawler.Systems
             }
 
             SetState(LevelState.FightingMinions);
-            SpawnZombieClusters();
+            StartMinionSpawnGroups();
 
-            Debug.Log($"Level started. Party: {livingPartyMembers}, Zombies: {livingMinions}");
+            Debug.Log(
+                $"Level started. Party: {livingPartyMembers}, " +
+                $"Living minions: {livingMinions}, Scheduled: {pendingMinionSpawns}"
+            );
             return true;
         }
 
@@ -178,63 +175,91 @@ namespace MiniCrawler.Systems
             RewardChoiceEarned?.Invoke();
             return true;
         }
-
-        private void SpawnZombieClusters()
-        {
-            int count = Mathf.Min(clusterCount, zombieClusterSpawnPoints.Length);
-
-            for (int cluster = 0; cluster < count; cluster++)
-            {
-                for (int i = 0; i < zombiesPerCluster; i++)
-                {
-                    GameObject spawned = Spawn(
-                        zombieDefinition,
-                        RandomPointAround(
-                            zombieClusterSpawnPoints[cluster].position,
-                            zombieClusterRadius
-                        )
-                    );
-
-                    if (spawned != null)
-                        livingMinions++;
-                }
-            }
-            
-            SpawnElites();
-
-            if (livingMinions <= 0)
-                SpawnBoss();
-        }
         
-        private void SpawnElites()
+        private void StartMinionSpawnGroups()
         {
-            if (eliteZombieDefinition == null ||
-                eliteCount <= 0 ||
-                zombieClusterSpawnPoints == null ||
-                zombieClusterSpawnPoints.Length == 0)
+            StopMinionSpawnGroups();
+            pendingMinionSpawns = 0;
+
+            if (minionSpawnGroups == null || minionSpawnGroups.Length == 0)
             {
+                TryAdvanceFromMinionPhase();
                 return;
             }
 
-            for (int i = 0; i < eliteCount; i++)
+            foreach (LevelSpawnGroup group in minionSpawnGroups)
             {
-                Transform spawnPoint = zombieClusterSpawnPoints[
-                    UnityEngine.Random.Range(0, zombieClusterSpawnPoints.Length)
-                ];
+                if (group == null)
+                    continue;
 
-                GameObject spawned = Spawn(
-                    eliteZombieDefinition,
-                    RandomPointAround(spawnPoint.position, zombieClusterRadius)
-                );
-
-                if (spawned != null)
-                    livingMinions++;
+                group.SpawnRequested += HandleMinionSpawnRequested;
+                pendingMinionSpawns += group.ConfiguredSpawnCount;
             }
+
+            if (pendingMinionSpawns <= 0)
+            {
+                StopMinionSpawnGroups();
+                TryAdvanceFromMinionPhase();
+                return;
+            }
+
+            foreach (LevelSpawnGroup group in minionSpawnGroups)
+            {
+                if (group != null && group.ConfiguredSpawnCount > 0)
+                    group.Begin();
+            }
+        }
+
+        private void StopMinionSpawnGroups()
+        {
+            if (minionSpawnGroups == null)
+                return;
+
+            foreach (LevelSpawnGroup group in minionSpawnGroups)
+            {
+                if (group == null)
+                    continue;
+
+                group.SpawnRequested -= HandleMinionSpawnRequested;
+                group.StopSpawning();
+            }
+        }
+
+        private void HandleMinionSpawnRequested(ActorDefinition definition, Pose pose)
+        {
+            pendingMinionSpawns = Mathf.Max(0, pendingMinionSpawns - 1);
+
+            GameObject spawned = Spawn(definition, pose);
+
+            if (spawned != null)
+                livingMinions++;
+
+            TryAdvanceFromMinionPhase();
+        }
+
+        private void TryAdvanceFromMinionPhase()
+        {
+            if (state != LevelState.FightingMinions)
+                return;
+
+            if (livingMinions > 0 || pendingMinionSpawns > 0)
+                return;
+
+            SpawnBoss();
         }
 
         private void SpawnBoss()
         {
-            GameObject spawned = Spawn(bossDefinition, bossSpawnPoint.position);
+            if (bossSpawnSource == null)
+            {
+                Debug.LogWarning("No boss spawn source is assigned.");
+                return;
+            }
+
+            GameObject spawned = Spawn(
+                bossDefinition,
+                bossSpawnSource.GetSpawnPose()
+            );
 
             if (spawned == null)
                 return;
@@ -243,8 +268,22 @@ namespace MiniCrawler.Systems
             SetState(LevelState.FightingBoss);
             Debug.Log("Boss spawned.");
         }
+        
+        private GameObject Spawn(ActorDefinition definition, Pose pose)
+        {
+            return Spawn(definition, pose.position, pose.rotation);
+        }
 
         private GameObject Spawn(ActorDefinition definition, Vector3 position)
+        {
+            return Spawn(definition, position, Quaternion.identity);
+        }
+
+        private GameObject Spawn(
+            ActorDefinition definition,
+            Vector3 position,
+            Quaternion rotation
+        )
         {
             if (SimulationSpawner.Instance == null)
             {
@@ -255,7 +294,7 @@ namespace MiniCrawler.Systems
             GameObject spawned = SimulationSpawner.Instance.Spawn(
                 definition,
                 position,
-                Quaternion.identity,
+                rotation,
                 gameObject
             );
 
@@ -303,9 +342,7 @@ namespace MiniCrawler.Systems
             }
 
             livingMinions = Mathf.Max(0, livingMinions - 1);
-
-            if (livingMinions <= 0 && state == LevelState.FightingMinions)
-                SpawnBoss();
+            TryAdvanceFromMinionPhase();
         }
 
         private void FinishLevel(bool won)
@@ -351,10 +388,12 @@ namespace MiniCrawler.Systems
             if (SimulationPause.Instance != null)
                 SimulationPause.Instance.Resume();
 
+            StopMinionSpawnGroups();
             ClearLevelObjects();
 
             livingPartyMembers = 0;
             livingMinions = 0;
+            pendingMinionSpawns = 0;
             bossAlive = false;
 
             LevelCleared?.Invoke();
