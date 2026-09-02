@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using MiniCrawler.Core;
 using MiniCrawler.Progress;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -48,8 +49,7 @@ namespace MiniCrawler.Systems
 
         public bool CanContinueRun =>
             RunProgress.HasActiveRun &&
-            state == RunFlowState.BetweenLevels &&
-            !RunProgress.HasPendingUpgradeChoice;
+            state == RunFlowState.BetweenLevels;
 
         private void Awake()
         {
@@ -140,53 +140,51 @@ namespace MiniCrawler.Systems
 
         public bool ContinueRun()
         {
-            if (!RunProgress.HasActiveRun)
+            if (!CanContinueRun)
             {
-                Debug.LogWarning(
-                    "Cannot continue without an active run."
-                );
-
+                Debug.LogWarning("The run cannot continue from the current state.");
                 return false;
             }
 
-            if (state != RunFlowState.BetweenLevels)
-            {
-                Debug.LogWarning(
-                    "Can only continue from the between-level state."
-                );
-
+            return StartCurrentLevel(RunFlowState.BetweenLevels);
+        }
+        
+        public bool TryChoosePendingReward(RunUpgradeOffer offer)
+        {
+            if (!RunProgress.TryChoosePendingReward(offer))
                 return false;
-            }
 
-            if (RunProgress.HasPendingUpgradeChoice)
-            {
-                Debug.LogWarning(
-                    "Choose a run upgrade before continuing."
-                );
+            RefreshLivePartyMember(offer.Member);
+            return true;
+        }
 
-                return false;
-            }
+        private void RefreshLivePartyMember(PartyMemberDefinition member)
+        {
+            if (member == null || stageDirector == null || RunProgress.CurrentRun == null)
+                return;
 
-            return StartCurrentLevel(
-                RunFlowState.BetweenLevels
-            );
+            RunBuild build = RunProgress.CurrentRun.GetBuild(member);
+            stageDirector.RefreshPartyMemberRuntime(member, build);
         }
 
         public void EndRun()
         {
+            if (RunProgress.HasPendingRewardChoice)
+            {
+                Debug.LogWarning("Resolve all earned pending rewards before ending the run.");
+                return;
+            }
+
             if (stageDirector != null)
                 stageDirector.ClearLevel();
 
             RunProgress.EndRun();
 
             LastLevelWon = false;
-
             SetState(RunFlowState.PreRun);
         }
 
-        private bool StartCurrentLevel(
-            RunFlowState failureState
-        )
+        private bool StartCurrentLevel(RunFlowState failureState)
         {
             if (RunProgress.CurrentRun == null ||
                 stageDirector == null)
@@ -196,9 +194,7 @@ namespace MiniCrawler.Systems
 
             SetState(RunFlowState.InLevel);
 
-            if (stageDirector.StartLevel(
-                    RunProgress.CurrentRun
-                ))
+            if (stageDirector.StartLevel(RunProgress.CurrentRun))
             {
                 return true;
             }
@@ -213,47 +209,52 @@ namespace MiniCrawler.Systems
             LastLevelWon = won;
 
             if (won)
-            {
                 GenerateRunUpgradeOffers();
-            }
-            else
-            {
-                RunProgress.SetRunUpgradeOffers(
-                    null
-                );
-            }
 
-            SetState(
-                RunFlowState.BetweenLevels
-            );
+            SetState(RunFlowState.BetweenLevels);
         }
 
         private void GenerateRunUpgradeOffers()
         {
-            RunState runState =
-                RunProgress.CurrentRun;
+            RunState runState = RunProgress.CurrentRun;
 
             if (runState == null)
                 return;
 
-            IReadOnlyList<RunUpgradeOffer> offers =
-                RunUpgradeOfferGenerator.Generate(
-                    runState,
-                    availableRunRewards,
-                    runUpgradeOfferCount
-                );
-
-            RunProgress.SetRunUpgradeOffers(
-                offers
+            IReadOnlyList<RunUpgradeOffer> offers = RunUpgradeOfferGenerator.Generate(
+                runState,
+                availableRunRewards,
+                runUpgradeOfferCount
             );
 
-            if (offers.Count <= 0)
+            if (offers.Count == 0)
+            {
+                Debug.Log(
+                    "Level completed with no eligible run rewards. " +
+                    "The run may continue normally."
+                );
+
+                return;
+            }
+
+            if (!RunProgress.EnqueueRewardChoice(offers))
             {
                 Debug.LogWarning(
-                    "Level was won but no run rewards " +
-                    "could be generated."
+                    "Eligible run rewards were generated but could not be queued."
                 );
             }
+        }
+        
+        [ContextMenu("Debug/Queue Reward Choice")]
+        private void DebugQueueRewardChoice()
+        {
+            if (!Application.isPlaying || state != RunFlowState.InLevel || !RunProgress.HasActiveRun)
+            {
+                Debug.LogWarning("A reward choice can only be queued during an active level.");
+                return;
+            }
+
+            GenerateRunUpgradeOffers();
         }
 
         private void HandleCurrencyEarned(int amount)

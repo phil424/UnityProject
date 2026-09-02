@@ -16,6 +16,9 @@ namespace MiniCrawler.UI
         private Button button;
         private PartyMemberDefinition ownerDefinition;
         private ActorAbility ability;
+        
+        public PartyMemberDefinition OwnerDefinition => ownerDefinition;
+        public ActorAbility Ability => ability;
 
         private void Awake()
         {

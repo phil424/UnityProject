@@ -11,7 +11,8 @@ namespace MiniCrawler.Progress
         public static void Apply(
             GameObject spawnedActor,
             PartyMemberDefinition definition,
-            RunBuild build
+            RunBuild build,
+            bool restoreHealth = true
         )
         {
             if (spawnedActor == null ||
@@ -65,23 +66,17 @@ namespace MiniCrawler.Progress
 
             if (mover != null)
             {
-                mover.ApplyRunMoveSpeedBonus(
-                    build.MoveSpeedPercentBonus
-                );
+                mover.ApplyRunMoveSpeedBonus(build.MoveSpeedPercentBonus);
             }
 
             if (health != null)
             {
-                health.ApplyMaxHealthBonus(
-                    healthBonus
-                );
+                health.ApplyMaxHealthBonus(healthBonus, restoreHealth);
             }
 
             if (supportStats != null)
             {
-                supportStats.ApplyHealingBonus(
-                    healingBonus
-                );
+                supportStats.ApplyHealingBonus(healingBonus);
             }
         }
     }

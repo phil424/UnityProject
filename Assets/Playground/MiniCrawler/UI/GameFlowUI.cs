@@ -11,8 +11,7 @@ namespace MiniCrawler.UI
     public class GameFlowUI : MonoBehaviour
     {
         [Header("Data")]
-        [SerializeField]
-        private PartyMemberDefinition[] availablePartyMembers;
+        [SerializeField] private PartyMemberDefinition[] availablePartyMembers;
 
         [Header("References")]
         [SerializeField] private StageDirector stageDirector;
@@ -34,6 +33,7 @@ namespace MiniCrawler.UI
         [SerializeField] private TMP_Text resultText;
         [SerializeField] private TMP_Text upgradeCurrencyText;
         [SerializeField] private Button continueButton;
+        [SerializeField] private Button endRunButton;
         [SerializeField] private GameObject gearUpgradeSection;
 
         [Header("Run Upgrade Rewards")]
@@ -46,8 +46,7 @@ namespace MiniCrawler.UI
 
         private readonly List<PartyCardUI> selectionCards = new();
         private readonly List<PartyCardUI> upgradeCards = new();
-        private readonly List<RunUpgradeOfferCardUI>
-            runUpgradeOfferCards = new();
+        private readonly List<RunUpgradeOfferCardUI> runUpgradeOfferCards = new();
 
         private void Start()
         {
@@ -62,18 +61,13 @@ namespace MiniCrawler.UI
             RunProgress.Changed += RefreshAll;
 
             if (stageDirector != null)
-            {
-                stageDirector.StateChanged +=
-                    HandleStageStateChanged;
-            }
+                stageDirector.StateChanged += HandleStageStateChanged;
 
             if (runDirector != null)
             {
-                runDirector.StateChanged +=
-                    HandleRunStateChanged;
+                runDirector.StateChanged += HandleRunStateChanged;
 
-                runDirector.Setup.Changed +=
-                    RefreshAll;
+                runDirector.Setup.Changed += RefreshAll;
             }
 
             RefreshAll();
@@ -84,18 +78,13 @@ namespace MiniCrawler.UI
             RunProgress.Changed -= RefreshAll;
 
             if (stageDirector != null)
-            {
-                stageDirector.StateChanged -=
-                    HandleStageStateChanged;
-            }
+                stageDirector.StateChanged -= HandleStageStateChanged;
 
             if (runDirector != null)
             {
-                runDirector.StateChanged -=
-                    HandleRunStateChanged;
+                runDirector.StateChanged -= HandleRunStateChanged;
 
-                runDirector.Setup.Changed -=
-                    RefreshAll;
+                runDirector.Setup.Changed -= RefreshAll;
             }
         }
 
@@ -122,16 +111,12 @@ namespace MiniCrawler.UI
             runDirector?.Setup.Clear();
         }
 
-        private void HandleStageStateChanged(
-            StageDirector.LevelState newState
-        )
+        private void HandleStageStateChanged(StageDirector.LevelState newState)
         {
             RefreshAll();
         }
 
-        private void HandleRunStateChanged(
-            RunDirector.RunFlowState newState
-        )
+        private void HandleRunStateChanged(RunDirector.RunFlowState newState)
         {
             RefreshAll();
         }
@@ -141,24 +126,14 @@ namespace MiniCrawler.UI
             if (runDirector == null)
                 return;
 
-            foreach (
-                PartyMemberDefinition member
-                in availablePartyMembers
-            )
+            foreach (PartyMemberDefinition member in availablePartyMembers)
             {
                 if (member == null)
                     continue;
 
-                PartyCardUI card =
-                    Instantiate(
-                        partyCardPrefab,
-                        selectionCardRoot
-                    );
+                PartyCardUI card = Instantiate(partyCardPrefab, selectionCardRoot);
 
-                card.BindSelection(
-                    member,
-                    runDirector.Setup
-                );
+                card.BindSelection(member, runDirector.Setup);
 
                 selectionCards.Add(card);
             }
@@ -166,10 +141,7 @@ namespace MiniCrawler.UI
 
         private void RebuildUpgradeCards()
         {
-            foreach (
-                PartyCardUI card
-                in upgradeCards
-            )
+            foreach (PartyCardUI card in upgradeCards)
             {
                 if (card != null)
                     Destroy(card.gameObject);
@@ -177,16 +149,9 @@ namespace MiniCrawler.UI
 
             upgradeCards.Clear();
 
-            foreach (
-                PartyMemberDefinition member
-                in RunProgress.SelectedParty
-            )
+            foreach (PartyMemberDefinition member in RunProgress.SelectedParty)
             {
-                PartyCardUI card =
-                    Instantiate(
-                        partyCardPrefab,
-                        upgradeCardRoot
-                    );
+                PartyCardUI card = Instantiate(partyCardPrefab, upgradeCardRoot);
 
                 card.BindUpgrade(member);
 
@@ -196,10 +161,7 @@ namespace MiniCrawler.UI
 
         private void RebuildRunUpgradeOfferCards()
         {
-            foreach (
-                RunUpgradeOfferCardUI card
-                    in runUpgradeOfferCards
-            )
+            foreach (RunUpgradeOfferCardUI card in runUpgradeOfferCards)
             {
                 if (card != null)
                     Destroy(card.gameObject);
@@ -207,52 +169,30 @@ namespace MiniCrawler.UI
 
             runUpgradeOfferCards.Clear();
 
-            if (runUpgradeOfferCardPrefab == null ||
-                runUpgradeOfferRoot == null)
+            if (runUpgradeOfferCardPrefab == null || runUpgradeOfferRoot == null)
             {
                 return;
             }
 
-            foreach (
-                RunUpgradeOffer offer
-                    in RunProgress.PendingUpgradeOffers
-            )
+            foreach (RunUpgradeOffer offer in RunProgress.CurrentPendingRewardOffers)
             {
-                RunUpgradeOfferCardUI card =
-                    Instantiate(
-                        runUpgradeOfferCardPrefab,
-                        runUpgradeOfferRoot
-                    );
+                RunUpgradeOfferCardUI card = Instantiate(runUpgradeOfferCardPrefab, runUpgradeOfferRoot);
 
-                card.Bind(
-                    offer,
-                    HandleRunUpgradeOfferChosen
-                );
+                card.Bind(offer, HandleRunUpgradeOfferChosen);
 
                 runUpgradeOfferCards.Add(card);
             }
         }
 
-        private void HandleRunUpgradeOfferChosen(
-            RunUpgradeOffer offer
-        )
+        private void HandleRunUpgradeOfferChosen(RunUpgradeOffer offer)
         {
-            if (!RunProgress.TryChooseRunUpgrade(
-                    offer
-                ))
-            {
-                Debug.LogWarning(
-                    "Could not choose run upgrade offer."
-                );
-            }
+            if (runDirector == null || !runDirector.TryChoosePendingReward(offer))
+                Debug.LogWarning("Could not resolve pending reward.");
         }
 
         private void RefreshAll()
         {
-            foreach (
-                PartyCardUI card
-                in selectionCards
-            )
+            foreach (PartyCardUI card in selectionCards)
             {
                 card.Refresh();
             }
@@ -260,25 +200,15 @@ namespace MiniCrawler.UI
             RebuildUpgradeCards();
             RebuildRunUpgradeOfferCards();
 
-            int setupPartyCount =
-                runDirector != null
-                    ? runDirector.Setup.SelectedParty.Count
-                    : 0;
+            int setupPartyCount = runDirector != null ? runDirector.Setup.SelectedParty.Count : 0;
 
-            selectedCountText.text =
-                $"Party: {setupPartyCount}/" +
-                $"{runDirector.Setup.MaximumPartySize}";
+            selectedCountText.text = $"Party: {setupPartyCount}/{runDirector.Setup.MaximumPartySize}";
 
-            upgradeCurrencyText.text =
-                $"Run Currency: {RunProgress.Currency}";
+            upgradeCurrencyText.text = $"Run Currency: {RunProgress.Currency}";
 
-            combatCurrencyText.text =
-                $"Run Currency: {RunProgress.Currency}";
+            combatCurrencyText.text = $"Run Currency: {RunProgress.Currency}";
 
-            startRunButton.interactable =
-                runDirector != null &&
-                !RunProgress.HasActiveRun &&
-                setupPartyCount > 0;
+            startRunButton.interactable = runDirector != null && !RunProgress.HasActiveRun && setupPartyCount > 0;
 
             if (runDirector == null)
             {
@@ -286,48 +216,38 @@ namespace MiniCrawler.UI
                 return;
             }
 
-            RunDirector.RunFlowState runState =
-                runDirector.State;
+            RunDirector.RunFlowState runState = runDirector.State;
 
-            continueButton.interactable =
-                runDirector.CanContinueRun;
+            bool betweenLevels = runState == RunDirector.RunFlowState.BetweenLevels;
+
+            continueButton.gameObject.SetActive(betweenLevels);
+            continueButton.interactable = runDirector.CanContinueRun;
+
+            if (endRunButton != null)
+            {
+                endRunButton.gameObject.SetActive(betweenLevels);
+                endRunButton.interactable = !RunProgress.HasPendingRewardChoice;
+            }
             
             if (runUpgradeRewardSection != null)
             {
-                runUpgradeRewardSection.SetActive(
-                    RunProgress.HasPendingUpgradeChoice
-                );
+                runUpgradeRewardSection.SetActive(RunProgress.HasPendingRewardChoice);
             }
 
             if (gearUpgradeSection != null)
             {
-                gearUpgradeSection.SetActive(
-                    !RunProgress.HasPendingUpgradeChoice
-                );
+                gearUpgradeSection.SetActive(!RunProgress.HasPendingRewardChoice);
             }
 
-            partySelectionPanel.SetActive(
-                runState ==
-                RunDirector.RunFlowState.PreRun
-            );
+            partySelectionPanel.SetActive(runState == RunDirector.RunFlowState.PreRun);
 
-            upgradePanel.SetActive(
-                runState ==
-                RunDirector.RunFlowState.BetweenLevels
-            );
+            upgradePanel.SetActive(runState == RunDirector.RunFlowState.BetweenLevels);
 
-            combatHudPanel.SetActive(
-                runState ==
-                RunDirector.RunFlowState.InLevel
-            );
+            combatHudPanel.SetActive(runState == RunDirector.RunFlowState.InLevel);
 
-            if (
-                runState ==
-                RunDirector.RunFlowState.BetweenLevels
-            )
+            if (runState == RunDirector.RunFlowState.BetweenLevels)
             {
-                resultText.text =
-                    runDirector.LastLevelWon
+                resultText.text = runDirector.LastLevelWon
                         ? "Level Complete - Victory"
                         : "Level Ended - Party Defeated";
             }

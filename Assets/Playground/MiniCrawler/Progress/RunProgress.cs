@@ -11,37 +11,36 @@ namespace MiniCrawler.Progress
 
         public static RunState CurrentRun { get; private set; }
 
-        public static bool HasActiveRun =>
-            CurrentRun != null;
+        public static bool HasActiveRun => CurrentRun != null;
 
-        public static int Currency =>
-            CurrentRun != null
-                ? CurrentRun.Currency
-                : 0;
+        public static int Currency => CurrentRun != null ? CurrentRun.Currency : 0;
 
         public static IReadOnlyList<PartyMemberDefinition> SelectedParty =>
-            CurrentRun != null
-                ? CurrentRun.SelectedParty
-                : Array.Empty<PartyMemberDefinition>();
+            CurrentRun != null ? CurrentRun.SelectedParty : Array.Empty<PartyMemberDefinition>();
         
-        public static IReadOnlyList<RunUpgradeOffer> PendingUpgradeOffers =>
-            CurrentRun != null
-                ? CurrentRun.PendingUpgradeOffers
-                : Array.Empty<RunUpgradeOffer>();
+        public static IReadOnlyList<PendingRewardChoice> PendingRewardChoices =>
+            CurrentRun != null ? CurrentRun.PendingRewardChoices : Array.Empty<PendingRewardChoice>();
 
-        public static bool HasPendingUpgradeChoice =>
-            CurrentRun != null &&
-            CurrentRun.HasPendingUpgradeChoice;
+        public static int PendingRewardChoiceCount =>
+            CurrentRun != null ? CurrentRun.PendingRewardChoiceCount : 0;
 
-        public static bool BeginRun(
-            RunStartConfiguration configuration
-        )
+        public static IReadOnlyList<RunUpgradeOffer>
+            CurrentPendingRewardOffers =>
+                CurrentRun != null ? CurrentRun.CurrentPendingRewardOffers : Array.Empty<RunUpgradeOffer>();
+
+        public static bool HasPendingRewardChoice => CurrentRun != null && CurrentRun.HasPendingRewardChoice;
+
+        // Temporary compatibility aliases.
+        public static IReadOnlyList<RunUpgradeOffer> PendingUpgradeOffers => CurrentPendingRewardOffers;
+
+        public static bool HasPendingUpgradeChoice => HasPendingRewardChoice;
+
+        public static bool BeginRun(RunStartConfiguration configuration)
         {
             if (CurrentRun != null)
                 return false;
 
-            if (configuration == null ||
-                !configuration.IsValid)
+            if (configuration == null || !configuration.IsValid)
             {
                 return false;
             }
@@ -73,9 +72,7 @@ namespace MiniCrawler.Progress
             Changed?.Invoke();
         }
 
-        public static RunBuild GetBuild(
-            PartyMemberDefinition definition
-        )
+        public static RunBuild GetBuild(PartyMemberDefinition definition)
         {
             if (CurrentRun == null)
                 return new RunBuild();
@@ -83,19 +80,12 @@ namespace MiniCrawler.Progress
             return CurrentRun.GetBuild(definition);
         }
         
-        public static bool TryAcquireAbility(
-            PartyMemberDefinition definition,
-            AbilityDefinition ability
-        )
+        public static bool TryAcquireAbility(PartyMemberDefinition definition, AbilityDefinition ability)
         {
             if (CurrentRun == null)
                 return false;
 
-            bool acquired =
-                CurrentRun.TryAcquireAbility(
-                    definition,
-                    ability
-                );
+            bool acquired = CurrentRun.TryAcquireAbility(definition, ability);
 
             if (acquired)
                 Changed?.Invoke();
@@ -103,51 +93,38 @@ namespace MiniCrawler.Progress
             return acquired;
         }
 
-        public static bool TryApplyRunUpgrade(
-            PartyMemberDefinition definition,
-            RunUpgradeDefinition upgrade
-        )
+        public static bool TryApplyRunUpgrade(PartyMemberDefinition definition, RunUpgradeDefinition upgrade)
         {
             if (CurrentRun == null)
                 return false;
 
-            bool applied =
-                CurrentRun.TryApplyRunUpgrade(
-                    definition,
-                    upgrade
-                );
+            bool applied = CurrentRun.TryApplyRunUpgrade(definition, upgrade);
 
             if (applied)
                 Changed?.Invoke();
 
             return applied;
         }
-
-        public static void SetRunUpgradeOffers(
-            IEnumerable<RunUpgradeOffer> offers
-        )
-        {
-            if (CurrentRun == null)
-                return;
-
-            CurrentRun.SetRunUpgradeOffers(
-                offers
-            );
-
-            Changed?.Invoke();
-        }
-
-        public static bool TryChooseRunUpgrade(
-            RunUpgradeOffer offer
-        )
+        
+        public static bool EnqueueRewardChoice(IEnumerable<RunUpgradeOffer> offers)
         {
             if (CurrentRun == null)
                 return false;
 
-            bool chosen =
-                CurrentRun.TryChooseRunUpgrade(
-                    offer
-                );
+            bool queued = CurrentRun.EnqueueRewardChoice(offers);
+
+            if (queued)
+                Changed?.Invoke();
+
+            return queued;
+        }
+
+        public static bool TryChoosePendingReward(RunUpgradeOffer offer)
+        {
+            if (CurrentRun == null)
+                return false;
+
+            bool chosen = CurrentRun.TryChoosePendingReward(offer);
 
             if (chosen)
                 Changed?.Invoke();
@@ -155,33 +132,43 @@ namespace MiniCrawler.Progress
             return chosen;
         }
 
-        public static int GetUpgradeCost(
-            PartyMemberDefinition definition,
-            GearSlot slot
-        )
+        public static void SetRunUpgradeOffers(IEnumerable<RunUpgradeOffer> offers)
         {
             if (CurrentRun == null)
-                return int.MaxValue;
+                return;
 
-            return CurrentRun.GetUpgradeCost(
-                definition,
-                slot
-            );
+            CurrentRun.SetRunUpgradeOffers(offers);
+
+            Changed?.Invoke();
         }
 
-        public static bool TryBuyUpgrade(
-            PartyMemberDefinition definition,
-            GearSlot slot
-        )
+        public static bool TryChooseRunUpgrade(RunUpgradeOffer offer)
         {
             if (CurrentRun == null)
                 return false;
 
-            bool purchased =
-                CurrentRun.TryBuyUpgrade(
-                    definition,
-                    slot
-                );
+            bool chosen = CurrentRun.TryChooseRunUpgrade(offer);
+
+            if (chosen)
+                Changed?.Invoke();
+
+            return chosen;
+        }
+
+        public static int GetUpgradeCost(PartyMemberDefinition definition, GearSlot slot)
+        {
+            if (CurrentRun == null)
+                return int.MaxValue;
+
+            return CurrentRun.GetUpgradeCost(definition, slot);
+        }
+
+        public static bool TryBuyUpgrade(PartyMemberDefinition definition, GearSlot slot)
+        {
+            if (CurrentRun == null)
+                return false;
+
+            bool purchased = CurrentRun.TryBuyUpgrade(definition, slot);
 
             if (purchased)
                 Changed?.Invoke();

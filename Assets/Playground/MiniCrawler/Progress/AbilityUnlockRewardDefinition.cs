@@ -4,48 +4,29 @@ using UnityEngine;
 
 namespace MiniCrawler.Progress
 {
-    [CreateAssetMenu(
-        fileName = "New Ability Unlock Reward",
-        menuName =
-            "Mini Crawler/Run Rewards/Ability Unlock"
-    )]
-    public class AbilityUnlockRewardDefinition :
-        RunRewardDefinition
+    [CreateAssetMenu(fileName = "New Ability Unlock Reward", menuName ="Mini Crawler/Run Rewards/Ability Unlock")]
+    public class AbilityUnlockRewardDefinition : RunRewardDefinition
     {
         [Header("Identity")]
-        [SerializeField]
-        private string id;
+        [SerializeField] private string id;
 
-        [SerializeField]
-        private string displayName;
+        [SerializeField] private string displayName;
 
-        [SerializeField]
-        private Sprite icon;
+        [SerializeField] private Sprite icon;
 
         [Header("Rarity")]
-        [SerializeField]
-        private RunUpgradeRarity rarity =
-            RunUpgradeRarity.Common;
+        [SerializeField] private RunUpgradeRarity rarity = RunUpgradeRarity.Common;
 
         [Header("Ability")]
-        [SerializeField]
-        private AbilityDefinition ability;
+        [SerializeField] private AbilityDefinition ability;
 
         [Header("Eligibility")]
-        [Tooltip(
-            "Leave empty to allow any party member."
-        )]
-        [SerializeField]
-        private PartyMemberDefinition[]
-            eligibleMembers;
+        [Tooltip("Leave empty to allow any party member.")]
+        [SerializeField] private PartyMemberDefinition[] eligibleMembers;
 
-        public AbilityDefinition Ability =>
-            ability;
+        public AbilityDefinition Ability => ability;
 
-        public override string Id =>
-            string.IsNullOrWhiteSpace(id)
-                ? name
-                : id;
+        public override string Id => string.IsNullOrWhiteSpace(id) ? name : id;
 
         public override string DisplayName
         {
@@ -78,11 +59,11 @@ namespace MiniCrawler.Progress
                     ? ability.Icon
                     : null;
 
-        public override RunUpgradeRarity Rarity =>
-            rarity;
+        public override RunUpgradeRarity Rarity => rarity;
 
-        public override bool IsConfigured =>
-            ability != null;
+        public override bool IsConfigured => ability != null;
+            
+        public override bool AllowDuplicatePendingOffers => false;
 
         public override bool CanApply(
             PartyMemberDefinition member,

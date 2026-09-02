@@ -37,21 +37,17 @@ namespace MiniCrawler.Core
         public bool DestroyWhenDead =>
             destroyWhenDead;
 
-        public void ApplyMaxHealthBonus(
-            float bonus
-        )
+        public void ApplyMaxHealthBonus(float bonus, bool restoreToFull = true)
         {
-            maxHealthBonus =
-                Mathf.Max(
-                    0f,
-                    bonus
-                );
+            float previousHealth = currentHealth;
 
-            currentHealth =
-                MaxHealth;
+            maxHealthBonus = Mathf.Max(0f, bonus);
 
-            deathProcessed =
-                false;
+            currentHealth = restoreToFull
+                ? MaxHealth
+                : Mathf.Clamp(previousHealth, 0f, MaxHealth);
+
+            deathProcessed = false;
 
             Changed?.Invoke(this);
         }

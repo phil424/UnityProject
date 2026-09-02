@@ -68,66 +68,31 @@ namespace MiniCrawler.Progress
         {
             get
             {
-                if (
-                    evolution == null
-                )
-                {
-                    return
-                        "Transform an owned ability.";
-                }
+                if (evolution == null)
+                    return "Transform an owned ability.";
 
-                if (
-                    !string.IsNullOrWhiteSpace(
-                        evolution.Description
-                    )
-                )
-                {
-                    return
-                        evolution.Description;
-                }
+                if (!string.IsNullOrWhiteSpace(evolution.Description))
+                    return evolution.Description;
 
-                AbilityDefinition ability =
-                    evolution.TargetAbility;
+                AbilityDefinition ability = evolution.TargetAbility;
 
-                return
-                    ability != null
-                        ? $"Evolve " +
-                          $"{ability.DisplayName}."
-                        : "Transform an owned ability.";
+                return ability != null ? $"Evolve " + $"{ability.DisplayName}." : "Transform an owned ability.";
             }
         }
 
-        public override Sprite Icon =>
-            icon != null
-                ? icon
-                : evolution != null &&
-                  evolution.Icon != null
-                    ? evolution.Icon
-                    : evolution != null &&
-                      evolution.TargetAbility != null
-                        ? evolution
-                            .TargetAbility
-                            .Icon
-                        : null;
+        public override Sprite Icon => icon != null ? icon : evolution != null && 
+                            evolution.Icon != null ? evolution.Icon : evolution != null &&
+                            evolution.TargetAbility != null ? evolution.TargetAbility.Icon : null;
 
-        public override RunUpgradeRarity Rarity =>
-            rarity;
+        public override RunUpgradeRarity Rarity => rarity;
 
-        public override bool IsConfigured =>
-            evolution != null &&
-            evolution.IsConfigured;
+        public override bool IsConfigured => evolution != null && evolution.IsConfigured;
+            
+        public override bool AllowDuplicatePendingOffers => false;
 
-        public override bool CanApply(
-            PartyMemberDefinition member,
-            RunBuild build
-        )
+        public override bool CanApply(PartyMemberDefinition member, RunBuild build)
         {
-            if (
-                member == null ||
-                build == null ||
-                evolution == null ||
-                !evolution.IsConfigured
-            )
+            if (member == null || build == null || evolution == null || !evolution.IsConfigured)
             {
                 return false;
             }
@@ -135,18 +100,13 @@ namespace MiniCrawler.Progress
             return build.CanAcquireAbilityEvolution(evolution);
         }
 
-        public override bool TryApply(
-            PartyMemberDefinition member,
-            RunBuild build
-        )
+        public override bool TryApply(PartyMemberDefinition member, RunBuild build)
         {
             if (!CanApply(member, build))
                 return false;
 
             return
-                build.TryAcquireAbilityEvolution(
-                    evolution
-                );
+                build.TryAcquireAbilityEvolution(evolution);
         }
 
         private void OnValidate()

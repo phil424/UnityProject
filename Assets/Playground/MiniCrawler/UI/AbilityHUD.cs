@@ -25,71 +25,67 @@ namespace MiniCrawler.UI
         {
             if (stageDirector == null)
             {
-                stageDirector =
-                    StageDirector.Instance;
+                stageDirector = StageDirector.Instance;
             }
 
             if (stageDirector == null)
                 return;
 
-            stageDirector.PartyMemberSpawned +=
-                HandlePartyMemberSpawned;
-
-            stageDirector.LevelCleared +=
-                HandleLevelCleared;
+            stageDirector.PartyMemberSpawned += HandlePartyMemberSpawned;
+            stageDirector.PartyMemberRuntimeChanged += HandlePartyMemberRuntimeChanged;
+            stageDirector.LevelCleared += HandleLevelCleared;
         }
 
         private void OnDisable()
         {
             if (stageDirector != null)
             {
-                stageDirector.PartyMemberSpawned -=
-                    HandlePartyMemberSpawned;
-
-                stageDirector.LevelCleared -=
-                    HandleLevelCleared;
+                stageDirector.PartyMemberSpawned -= HandlePartyMemberSpawned;
+                stageDirector.PartyMemberRuntimeChanged -= HandlePartyMemberRuntimeChanged;
+                stageDirector.LevelCleared -= HandleLevelCleared;
             }
 
             ClearEntries();
         }
 
-        private void HandlePartyMemberSpawned(
-            PartyMemberDefinition definition,
-            GameObject actor
-        )
+        private void HandlePartyMemberSpawned(PartyMemberDefinition definition, GameObject actor)
         {
-            if (
-                definition == null ||
-                actor == null ||
-                entryRoot == null ||
-                abilityButtonPrefab == null
-            )
-            {
+            AddMissingAbilityEntries(definition, actor);
+        }
+
+        private void HandlePartyMemberRuntimeChanged(PartyMemberDefinition definition, GameObject actor)
+        {
+            AddMissingAbilityEntries(definition, actor);
+        }
+
+        private void AddMissingAbilityEntries(PartyMemberDefinition definition, GameObject actor)
+        {
+            if (definition == null || actor == null || entryRoot == null || abilityButtonPrefab == null)
                 return;
-            }
 
             ActorAbility[] abilities = actor.GetComponentsInChildren<ActorAbility>(false);
 
-            foreach (
-                ActorAbility ability in abilities
-            )
+            foreach (ActorAbility ability in abilities)
             {
-                if (ability == null)
+                if (ability == null || HasEntryFor(ability))
                     continue;
 
-                AbilityButtonUI entry =
-                    Instantiate(
-                        abilityButtonPrefab,
-                        entryRoot
-                    );
-
-                entry.Bind(
-                    definition,
-                    ability
-                );
+                AbilityButtonUI entry = Instantiate(abilityButtonPrefab, entryRoot);
+                entry.Bind(definition, ability);
 
                 entries.Add(entry);
             }
+        }
+
+        private bool HasEntryFor(ActorAbility ability)
+        {
+            foreach (AbilityButtonUI entry in entries)
+            {
+                if (entry != null && entry.Ability == ability)
+                    return true;
+            }
+
+            return false;
         }
 
         private void HandleLevelCleared()
@@ -99,10 +95,7 @@ namespace MiniCrawler.UI
 
         private void ClearEntries()
         {
-            foreach (
-                AbilityButtonUI entry
-                in entries
-            )
+            foreach (AbilityButtonUI entry in entries)
             {
                 if (entry == null)
                     continue;

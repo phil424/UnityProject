@@ -26,126 +26,71 @@ namespace MiniCrawler.Progress
                 return candidates;
             }
 
-            foreach (
-                PartyMemberDefinition member
-                    in runState.SelectedParty
-            )
+            foreach (PartyMemberDefinition member in runState.SelectedParty)
             {
                 if (member == null)
                     continue;
 
-                RunBuild build =
-                    runState.GetBuild(member);
+                RunBuild build = runState.GetBuild(member);
 
-                foreach (
-                    RunRewardDefinition reward
-                        in rewards
-                )
+                foreach (RunRewardDefinition reward in rewards)
                 {
-                    if (
-                        reward == null ||
-                        !reward.IsConfigured ||
-                        !reward.CanApply(
-                            member,
-                            build
-                        )
-                    )
+                    if (reward == null || !reward.IsConfigured || !reward.CanApply(member, build))
+                        continue;
+
+                    if (!reward.AllowDuplicatePendingOffers &&
+                        runState.HasPendingOffer(member, reward))
                     {
                         continue;
                     }
 
-                    candidates.Add(
-                        new RunUpgradeOffer(
-                            member,
-                            reward
-                        )
-                    );
+                    candidates.Add(new RunUpgradeOffer(member, reward));
                 }
             }
 
-            return SelectOffers(
-                candidates,
-                offerCount
-            );
+            return SelectOffers(candidates, offerCount);
         }
 
         // Kept so the existing stat-upgrade
         // test/support surface still compiles while
         // runtime rewards use the generic overload.
-        public static IReadOnlyList<RunUpgradeOffer>
-            Generate(
-                IReadOnlyList<PartyMemberDefinition>
-                    party,
-                IReadOnlyList<RunUpgradeDefinition>
-                    upgrades,
+        public static IReadOnlyList<RunUpgradeOffer> Generate(
+                IReadOnlyList<PartyMemberDefinition> party,
+                IReadOnlyList<RunUpgradeDefinition> upgrades,
                 int offerCount
             )
         {
-            List<RunUpgradeOffer> candidates =
-                new();
+            List<RunUpgradeOffer> candidates = new();
 
-            if (
-                party == null ||
-                upgrades == null ||
-                offerCount <= 0
-            )
+            if (party == null || upgrades == null || offerCount <= 0)
             {
                 return candidates;
             }
 
-            foreach (
-                PartyMemberDefinition member
-                    in party
-            )
+            foreach (PartyMemberDefinition member in party)
             {
                 if (member == null)
                     continue;
 
-                foreach (
-                    RunUpgradeDefinition upgrade
-                        in upgrades
-                )
+                foreach (RunUpgradeDefinition upgrade in upgrades)
                 {
-                    if (
-                        upgrade == null ||
-                        !upgrade.IsConfigured
-                    )
+                    if (upgrade == null || !upgrade.IsConfigured)
                     {
                         continue;
                     }
 
-                    candidates.Add(
-                        new RunUpgradeOffer(
-                            member,
-                            upgrade
-                        )
-                    );
+                    candidates.Add(new RunUpgradeOffer(member, upgrade));
                 }
             }
 
-            return SelectOffers(
-                candidates,
-                offerCount
-            );
+            return SelectOffers(candidates, offerCount);
         }
 
-        private static IReadOnlyList<RunUpgradeOffer>
-            SelectOffers(
-                List<RunUpgradeOffer> candidates,
-                int offerCount
-            )
+        private static IReadOnlyList<RunUpgradeOffer> SelectOffers(List<RunUpgradeOffer> candidates, int offerCount)
         {
-            int resultCount =
-                Mathf.Min(
-                    offerCount,
-                    candidates.Count
-                );
+            int resultCount = Mathf.Min(offerCount, candidates.Count);
 
-            for (
-                int i = 0;
-                i < resultCount;
-                i++
-            )
+            for (int i = 0; i < resultCount; i++)
             {
                 int swapIndex =
                     Random.Range(

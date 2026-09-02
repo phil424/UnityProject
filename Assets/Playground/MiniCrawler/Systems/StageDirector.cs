@@ -23,11 +23,8 @@ namespace MiniCrawler.Systems
         public event Action<bool> LevelFinished;
         public event Action<int> CurrencyEarned;
 
-        public event Action<
-            PartyMemberDefinition,
-            GameObject
-        > PartyMemberSpawned;
-
+        public event Action<PartyMemberDefinition, GameObject> PartyMemberSpawned;
+        public event Action<PartyMemberDefinition, GameObject> PartyMemberRuntimeChanged;
         public event Action LevelCleared;
 
         [Header("Enemy Definitions")]
@@ -48,6 +45,8 @@ namespace MiniCrawler.Systems
         [SerializeField] private float zombieClusterRadius = 1.5f;
 
         private readonly List<GameObject> levelObjects = new();
+        
+        private readonly Dictionary<string, GameObject> spawnedPartyActors = new();
 
         private LevelState state = LevelState.Idle;
         private int livingPartyMembers;
@@ -131,35 +130,39 @@ namespace MiniCrawler.Systems
                     continue;
                 }
 
-                GameObject spawned = Spawn(
-                    member.ActorDefinition,
-                    RandomPointAround(partySpawnPoint.position, partySpawnRadius)
-                );
+                GameObject spawned = Spawn(member.ActorDefinition, RandomPointAround(partySpawnPoint.position, partySpawnRadius));
 
                 if (spawned == null)
                     continue;
 
-                RunBuild build =
-                    runState.GetBuild(member);
+                RunBuild build = runState.GetBuild(member);
 
-                PartyUpgradeApplicator.Apply(
-                    spawned,
-                    member,
-                    build
-                );
+                PartyUpgradeApplicator.Apply(spawned, member, build);
 
-                PartyAbilityApplicator.Apply(
-                    spawned,
-                    build
-                );
+                PartyAbilityApplicator.Apply(spawned, build);
 
-                PartyMemberSpawned?.Invoke(
-                    member,
-                    spawned
-                );
+                spawnedPartyActors[member.Id] = spawned;
+
+                PartyMemberSpawned?.Invoke(member, spawned);
 
                 livingPartyMembers++;
             }
+        }
+        
+        public bool RefreshPartyMemberRuntime(PartyMemberDefinition member, RunBuild build)
+        {
+            if (member == null || build == null)
+                return false;
+
+            if (!spawnedPartyActors.TryGetValue(member.Id, out GameObject actor) || actor == null)
+                return false;
+
+            PartyUpgradeApplicator.Apply(actor, member, build, restoreHealth: false);
+            PartyAbilityApplicator.Apply(actor, build);
+
+            PartyMemberRuntimeChanged?.Invoke(member, actor);
+
+            return true;
         }
 
         private void SpawnZombieClusters()
@@ -289,6 +292,7 @@ namespace MiniCrawler.Systems
             }
 
             levelObjects.Clear();
+            spawnedPartyActors.Clear();
         }
 
         private static Vector3 RandomPointAround(Vector3 center, float radius)

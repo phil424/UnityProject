@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using MiniCrawler.Core;
 using MiniCrawler.Abilities;
@@ -9,13 +10,33 @@ namespace MiniCrawler.Progress
     {
         private readonly List<PartyMemberDefinition> selectedParty = new();
         private readonly Dictionary<string, RunBuild> memberBuilds = new();
-        private readonly List<RunUpgradeOffer> pendingUpgradeOffers = new();
+        private readonly List<PendingRewardChoice> pendingRewardChoices = new();
 
         public int Currency { get; private set; }
 
         public IReadOnlyList<PartyMemberDefinition> SelectedParty => selectedParty;
-        public IReadOnlyList<RunUpgradeOffer> PendingUpgradeOffers => pendingUpgradeOffers;
-        public bool HasPendingUpgradeChoice => pendingUpgradeOffers.Count > 0;
+        public IReadOnlyList<PendingRewardChoice> PendingRewardChoices => pendingRewardChoices;
+
+        public int PendingRewardChoiceCount =>
+            pendingRewardChoices.Count;
+
+        public bool HasPendingRewardChoice =>
+            pendingRewardChoices.Count > 0;
+
+        public IReadOnlyList<RunUpgradeOffer>
+            CurrentPendingRewardOffers =>
+                pendingRewardChoices.Count > 0
+                    ? pendingRewardChoices[0].Offers
+                    : Array.Empty<RunUpgradeOffer>();
+
+        // Compatibility with the old single-choice
+        // terminology while the UI transitions.
+        public IReadOnlyList<RunUpgradeOffer>
+            PendingUpgradeOffers =>
+                CurrentPendingRewardOffers;
+
+        public bool HasPendingUpgradeChoice =>
+            HasPendingRewardChoice;
 
         public RunState(RunStartConfiguration configuration)
         {
@@ -113,36 +134,85 @@ namespace MiniCrawler.Progress
             return true;
         }
 
-        public void SetRunUpgradeOffers(
-            IEnumerable<RunUpgradeOffer> offers
-        )
+        public bool EnqueueRewardChoice(IEnumerable<RunUpgradeOffer> offers)
         {
-            pendingUpgradeOffers.Clear();
-
             if (offers == null)
-                return;
+                return false;
 
-            foreach (RunUpgradeOffer offer in offers)
+            List<RunUpgradeOffer> validOffers =
+                new();
+
+            foreach (
+                RunUpgradeOffer offer
+                    in offers
+            )
             {
-                if (offer == null ||
+                if (
+                    offer == null ||
                     !offer.IsValid ||
-                    !IsSelected(offer.Member))
+                    !IsSelected(offer.Member)
+                )
                 {
                     continue;
                 }
 
-                pendingUpgradeOffers.Add(offer);
+                validOffers.Add(offer);
             }
+
+            PendingRewardChoice choice =
+                new PendingRewardChoice(
+                    validOffers
+                );
+
+            if (!choice.IsValid)
+                return false;
+
+            pendingRewardChoices.Add(
+                choice
+            );
+
+            return true;
+        }
+        
+        public bool HasPendingOffer(PartyMemberDefinition member, RunRewardDefinition reward)
+        {
+            if (member == null || reward == null)
+                return false;
+
+            foreach (PendingRewardChoice choice in pendingRewardChoices)
+            {
+                if (choice == null)
+                    continue;
+
+                foreach (RunUpgradeOffer offer in choice.Offers)
+                {
+                    if (offer == null)
+                        continue;
+
+                    if (offer.Member == member && offer.Reward == reward)
+                        return true;
+                }
+            }
+
+            return false;
         }
 
-        public bool TryChooseRunUpgrade(
-            RunUpgradeOffer offer
-        )
+        public bool TryChoosePendingReward(RunUpgradeOffer offer)
         {
             if (
                 offer == null ||
                 !offer.IsValid ||
-                !pendingUpgradeOffers.Contains(offer) ||
+                pendingRewardChoices.Count <= 0
+            )
+            {
+                return false;
+            }
+
+            PendingRewardChoice currentChoice =
+                pendingRewardChoices[0];
+
+            if (
+                !currentChoice.Contains(offer) ||
                 !IsSelected(offer.Member)
             )
             {
@@ -164,9 +234,31 @@ namespace MiniCrawler.Progress
                 return false;
             }
 
-            pendingUpgradeOffers.Clear();
+            pendingRewardChoices.RemoveAt(0);
 
             return true;
+        }
+
+        // Compatibility surface for the old
+        // single pending-choice API.
+        public void SetRunUpgradeOffers(
+            IEnumerable<RunUpgradeOffer> offers
+        )
+        {
+            pendingRewardChoices.Clear();
+
+            EnqueueRewardChoice(
+                offers
+            );
+        }
+
+        public bool TryChooseRunUpgrade(
+            RunUpgradeOffer offer
+        )
+        {
+            return TryChoosePendingReward(
+                offer
+            );
         }
 
         public int GetUpgradeCost(

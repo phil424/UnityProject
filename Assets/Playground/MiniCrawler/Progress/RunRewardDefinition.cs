@@ -12,8 +12,7 @@ namespace MiniCrawler.Progress
         Legendary
     }
 
-    public abstract class RunRewardDefinition :
-        ScriptableObject
+    public abstract class RunRewardDefinition : ScriptableObject
     {
         public abstract string Id { get; }
 
@@ -26,15 +25,11 @@ namespace MiniCrawler.Progress
         public abstract RunUpgradeRarity Rarity { get; }
 
         public abstract bool IsConfigured { get; }
+        
+        public virtual bool AllowDuplicatePendingOffers => true;
 
-        public abstract bool CanApply(
-            PartyMemberDefinition member,
-            RunBuild build
-        );
+        public abstract bool CanApply(PartyMemberDefinition member, RunBuild build);
 
-        public abstract bool TryApply(
-            PartyMemberDefinition member,
-            RunBuild build
-        );
+        public abstract bool TryApply(PartyMemberDefinition member, RunBuild build);
     }
 }
