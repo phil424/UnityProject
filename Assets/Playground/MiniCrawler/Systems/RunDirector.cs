@@ -49,7 +49,8 @@ namespace MiniCrawler.Systems
 
         public bool CanContinueRun =>
             RunProgress.HasActiveRun &&
-            state == RunFlowState.BetweenLevels;
+            state == RunFlowState.BetweenLevels &&
+            !RunProgress.HasPendingRewardChoice;
 
         private void Awake()
         {
@@ -75,11 +76,9 @@ namespace MiniCrawler.Systems
                 return;
             }
 
-            stageDirector.LevelFinished +=
-                HandleLevelFinished;
-
-            stageDirector.CurrencyEarned +=
-                HandleCurrencyEarned;
+            stageDirector.LevelFinished += HandleLevelFinished;
+            stageDirector.CurrencyEarned += HandleCurrencyEarned;
+            stageDirector.RewardChoiceEarned += HandleRewardChoiceEarned;
 
             stageDirector.ClearLevel();
 
@@ -90,11 +89,9 @@ namespace MiniCrawler.Systems
         {
             if (stageDirector != null)
             {
-                stageDirector.LevelFinished -=
-                    HandleLevelFinished;
-
-                stageDirector.CurrencyEarned -=
-                    HandleCurrencyEarned;
+                stageDirector.LevelFinished -= HandleLevelFinished;
+                stageDirector.CurrencyEarned -= HandleCurrencyEarned;
+                stageDirector.RewardChoiceEarned -= HandleRewardChoiceEarned;
             }
 
             if (Instance == this)
@@ -248,12 +245,21 @@ namespace MiniCrawler.Systems
         [ContextMenu("Debug/Queue Reward Choice")]
         private void DebugQueueRewardChoice()
         {
-            if (!Application.isPlaying || state != RunFlowState.InLevel || !RunProgress.HasActiveRun)
+            if (!Application.isPlaying ||
+                state != RunFlowState.InLevel ||
+                !RunProgress.HasActiveRun ||
+                stageDirector == null)
             {
                 Debug.LogWarning("A reward choice can only be queued during an active level.");
                 return;
             }
 
+            if (!stageDirector.TryAwardRewardChoice())
+                Debug.LogWarning("The current level could not award a reward choice.");
+        }
+        
+        private void HandleRewardChoiceEarned()
+        {
             GenerateRunUpgradeOffers();
         }
 

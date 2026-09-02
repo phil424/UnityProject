@@ -1,0 +1,16 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe58b8e01daed414496fb8a6437aae26, type: 3}
+  m_Name: EliteZombieDefinition
+  m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Core.ActorDefinition
+  id: EliteZombieDefinition
+  prefab: {fileID: 7542115736443214471, guid: 3beb6d4808dfe7341b82fd188bb705d8, type: 3}

@@ -22,6 +22,7 @@ namespace MiniCrawler.Systems
 
         public event Action<bool> LevelFinished;
         public event Action<int> CurrencyEarned;
+        public event Action RewardChoiceEarned;
 
         public event Action<PartyMemberDefinition, GameObject> PartyMemberSpawned;
         public event Action<PartyMemberDefinition, GameObject> PartyMemberRuntimeChanged;
@@ -29,6 +30,7 @@ namespace MiniCrawler.Systems
 
         [Header("Enemy Definitions")]
         [SerializeField] private ActorDefinition zombieDefinition;
+        [SerializeField] private ActorDefinition eliteZombieDefinition;
         [SerializeField] private ActorDefinition bossDefinition;
 
         [Header("Spawn Points")]
@@ -43,6 +45,9 @@ namespace MiniCrawler.Systems
         [SerializeField] private int clusterCount = 3;
         [SerializeField] private int zombiesPerCluster = 3;
         [SerializeField] private float zombieClusterRadius = 1.5f;
+        
+        [Header("Elites")]
+        [SerializeField] private int eliteCount = 1;
 
         private readonly List<GameObject> levelObjects = new();
         
@@ -164,6 +169,15 @@ namespace MiniCrawler.Systems
 
             return true;
         }
+        
+        public bool TryAwardRewardChoice()
+        {
+            if (state == LevelState.Idle)
+                return false;
+
+            RewardChoiceEarned?.Invoke();
+            return true;
+        }
 
         private void SpawnZombieClusters()
         {
@@ -185,9 +199,37 @@ namespace MiniCrawler.Systems
                         livingMinions++;
                 }
             }
+            
+            SpawnElites();
 
             if (livingMinions <= 0)
                 SpawnBoss();
+        }
+        
+        private void SpawnElites()
+        {
+            if (eliteZombieDefinition == null ||
+                eliteCount <= 0 ||
+                zombieClusterSpawnPoints == null ||
+                zombieClusterSpawnPoints.Length == 0)
+            {
+                return;
+            }
+
+            for (int i = 0; i < eliteCount; i++)
+            {
+                Transform spawnPoint = zombieClusterSpawnPoints[
+                    UnityEngine.Random.Range(0, zombieClusterSpawnPoints.Length)
+                ];
+
+                GameObject spawned = Spawn(
+                    eliteZombieDefinition,
+                    RandomPointAround(spawnPoint.position, zombieClusterRadius)
+                );
+
+                if (spawned != null)
+                    livingMinions++;
+            }
         }
 
         private void SpawnBoss()
@@ -249,6 +291,9 @@ namespace MiniCrawler.Systems
                 return;
 
             CurrencyEarned?.Invoke(enemy.CurrencyReward);
+
+            for (int i = 0; i < enemy.RewardChoicesOnDeath; i++)
+                TryAwardRewardChoice();
 
             if (enemy.IsBoss)
             {

@@ -4255,6 +4255,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MiniCrawler.Systems.StageDirector
   zombieDefinition: {fileID: 11400000, guid: f94bb2855b5c0e24eac3845bce957198, type: 2}
+  eliteZombieDefinition: {fileID: 11400000, guid: bf739fcb6ae22f644b59f5e39568fd7e, type: 2}
   bossDefinition: {fileID: 11400000, guid: 120bc4ab930fffa4bbf709c602bcb77b, type: 2}
   partySpawnPoint: {fileID: 1272413006}
   zombieClusterSpawnPoints:
@@ -4266,6 +4267,7 @@ MonoBehaviour:
   clusterCount: 3
   zombiesPerCluster: 3
   zombieClusterRadius: 1.5
+  eliteCount: 1
 --- !u!114 &846909438
 MonoBehaviour:
   m_ObjectHideFlags: 0
