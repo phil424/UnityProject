@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 0d2b9cc79ab37b74ca3595076f8dcc66
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 383584
+  packageName: PerfSight Lite
+  packageVersion: 1.0
+  assetPath: Assets/JGT_Tools/PerfSight Lite/Scripts/Stats/TrianglesStat.cs
+  uploadId: 977912

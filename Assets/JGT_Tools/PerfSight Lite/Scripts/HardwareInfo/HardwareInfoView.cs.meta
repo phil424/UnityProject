@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 79521f7658f07b8418989e70ab797749
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 383584
+  packageName: PerfSight Lite
+  packageVersion: 1.0
+  assetPath: Assets/JGT_Tools/PerfSight Lite/Scripts/HardwareInfo/HardwareInfoView.cs
+  uploadId: 977912

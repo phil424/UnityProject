@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 1c9c5382e4581f1428f57a29874a27ce
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 383584
+  packageName: PerfSight Lite
+  packageVersion: 1.0
+  assetPath: Assets/JGT_Tools/PerfSight Lite/Scripts/Helpers/SystemInfoFormatter.cs
+  uploadId: 977912

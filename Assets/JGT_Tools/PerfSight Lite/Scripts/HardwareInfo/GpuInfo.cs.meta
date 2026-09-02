@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 11f4d90781214284189e17514f39e637
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 383584
+  packageName: PerfSight Lite
+  packageVersion: 1.0
+  assetPath: Assets/JGT_Tools/PerfSight Lite/Scripts/HardwareInfo/GpuInfo.cs
+  uploadId: 977912

@@ -1,0 +1,60 @@
+PerfSight – License Agreement
+Copyright (c) 2026 JGT Tools. All rights reserved.
+
+---
+
+IMPORTANT:
+This software is licensed, not sold. By downloading or using PerfSight,
+you agree to the terms of the Unity Asset Store End User License Agreement (EULA),
+as well as the additional terms outlined below.
+
+---
+
+1. GRANT OF LICENSE
+
+PerfSight is licensed to you for use in personal and commercial Unity projects.
+
+You are permitted to:
+- Use PerfSight in both personal and commercial Unity projects
+- Modify the source code for use within your own projects
+- Distribute compiled builds of your games or applications that include PerfSight
+
+---
+
+2. RESTRICTIONS
+
+You may NOT:
+- Redistribute, resell, or repackage PerfSight (or its source code) as a standalone product
+- Share the source code publicly (e.g. GitHub, forums, file sharing sites)
+- Claim ownership or authorship of PerfSight or any part of its original codebase
+- Sub-license PerfSight or include it in another asset store package
+
+---
+
+3. OWNERSHIP
+
+PerfSight and all original source code, assets, and documentation remain the intellectual property of JGT Tools.
+
+---
+
+4. WARRANTY DISCLAIMER
+
+PerfSight is provided "as is", without warranty of any kind.
+JGT Tools is not responsible for any damage, data loss, or issues arising from its use.
+
+---
+
+5. TERMINATION
+
+This license is effective until terminated. Violation of any terms will result in automatic termination of your rights to use PerfSight.
+
+---
+
+6. UNITY ASSET STORE EULA
+
+This license is supplementary to the Unity Asset Store End User License Agreement.
+In case of conflict, the Unity Asset Store EULA takes precedence.
+
+---
+
+For support or enquiries, contact: jgt-tools@outlook.com

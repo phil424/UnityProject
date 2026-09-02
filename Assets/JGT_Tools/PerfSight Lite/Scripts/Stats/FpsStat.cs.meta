@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: ec132448ce0d274429cd09ba62ec9229
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 383584
+  packageName: PerfSight Lite
+  packageVersion: 1.0
+  assetPath: Assets/JGT_Tools/PerfSight Lite/Scripts/Stats/FpsStat.cs
+  uploadId: 977912

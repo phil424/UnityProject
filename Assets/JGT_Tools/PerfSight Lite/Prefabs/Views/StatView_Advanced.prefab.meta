@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 40d239aa7dc450549ae1e61de7a1b1af
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 383584
+  packageName: PerfSight Lite
+  packageVersion: 1.0
+  assetPath: Assets/JGT_Tools/PerfSight Lite/Prefabs/Views/StatView_Advanced.prefab
+  uploadId: 977912

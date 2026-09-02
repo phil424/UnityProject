@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 1519d53db5843c34c9b79562d552f863
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 383584
+  packageName: PerfSight Lite
+  packageVersion: 1.0
+  assetPath: Assets/JGT_Tools/PerfSight Lite/Prefabs/Views/HardwareInfoView.prefab
+  uploadId: 977912

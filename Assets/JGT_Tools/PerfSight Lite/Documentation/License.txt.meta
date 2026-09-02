@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: ff4e630244c681740b8d66cfa2bd3a6e
+TextScriptImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 383584
+  packageName: PerfSight Lite
+  packageVersion: 1.0
+  assetPath: Assets/JGT_Tools/PerfSight Lite/Documentation/License.txt
+  uploadId: 977912
