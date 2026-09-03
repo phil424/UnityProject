@@ -40,6 +40,9 @@ namespace MiniCrawler.Spawning
             }
         }
 
+        [Header("Activation")]
+        [SerializeField] private bool startActive = true;
+
         [Header("Spawn Sources")]
         [SerializeField] private LevelSpawnSource[] spawnSources;
 
@@ -50,6 +53,8 @@ namespace MiniCrawler.Spawning
 
         private int runningEntries;
 
+        public bool StartActive => startActive;
+        public bool IsActivated { get; private set; }
         public bool IsRunning => runningEntries > 0;
 
         public int ConfiguredSpawnCount
@@ -71,31 +76,40 @@ namespace MiniCrawler.Spawning
             }
         }
 
-        public void Begin()
+        public void PrepareForLevel()
         {
-            StopSpawning();
-
-            if (!HasValidSpawnSource())
-            {
-                Debug.LogWarning($"Spawn group '{name}' has no valid spawn source.");
-                return;
-            }
+            StopAllCoroutines();
 
             runningEntries = 0;
+            IsActivated = false;
+        }
+
+        public bool Activate()
+        {
+            if (IsActivated || !HasValidSpawnSource())
+                return false;
+
+            int validEntryCount = 0;
 
             foreach (SpawnEntry entry in entries)
             {
                 if (entry != null && entry.IsConfigured)
-                    runningEntries++;
+                    validEntryCount++;
             }
+
+            if (validEntryCount <= 0)
+                return false;
+
+            IsActivated = true;
+            runningEntries = validEntryCount;
 
             foreach (SpawnEntry entry in entries)
             {
-                if (entry == null || !entry.IsConfigured)
-                    continue;
-
-                StartCoroutine(RunEntry(entry));
+                if (entry != null && entry.IsConfigured)
+                    StartCoroutine(RunEntry(entry));
             }
+
+            return true;
         }
 
         public void StopSpawning()

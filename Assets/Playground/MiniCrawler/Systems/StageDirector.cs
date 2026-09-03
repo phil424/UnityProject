@@ -192,6 +192,7 @@ namespace MiniCrawler.Systems
                 if (group == null)
                     continue;
 
+                group.PrepareForLevel();
                 group.SpawnRequested += HandleMinionSpawnRequested;
                 pendingMinionSpawns += group.ConfiguredSpawnCount;
             }
@@ -205,8 +206,8 @@ namespace MiniCrawler.Systems
 
             foreach (LevelSpawnGroup group in minionSpawnGroups)
             {
-                if (group != null && group.ConfiguredSpawnCount > 0)
-                    group.Begin();
+                if (group != null && group.StartActive && group.ConfiguredSpawnCount > 0)
+                    group.Activate();
             }
         }
 
