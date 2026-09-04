@@ -6,21 +6,20 @@ We are continuing an existing Unity MiniCrawler / autonomous-combat buildcraft p
 
 Before implementing a new development step:
 
-- inspect the **latest uploaded numbered `{X.XX}Complete.zip`** as the authoritative codebase;
-- inspect the **latest uploaded `Design.zip`** as the authoritative living game-design documentation;
+- inspect the latest uploaded numbered `{X.XX}Complete.zip` as the authoritative project baseline;
+- if a newer working zip has been explicitly provided, inspect it when the requested work depends on changes made after the latest Complete snapshot;
+- inspect the embedded Obsidian vault at:
+
+  `Assets/GameDesignVault/GameDesign/`
+
+  inside that project archive;
+- treat the embedded `Development Rules.md` as the current development workflow;
+- treat the embedded `Design/` knowledge base as the current living game-design and technical-design documentation;
 - inspect the actual relevant scripts, prefabs, ScriptableObjects, scenes and existing architecture;
 - do not reconstruct implementation details from memory;
 - do not suggest creating a new system until checking whether an equivalent or related system already exists.
 
-Example code baseline:
-
-```
-2.7EComplete.zip
-```
-
-The latest Design zip is the canonical design baseline.
-
-If code and an older conversation disagree, prefer the latest approved code snapshot.
+If code, older conversation context, or older standalone Design/Rules uploads disagree with the latest embedded project vault, prefer the latest project archive unless the user explicitly states otherwise.
 
 If implementation and design appear inconsistent, identify the conflict rather than silently choosing one.
 
@@ -945,3 +944,27 @@ Several verified lettered steps may exist after that snapshot without requiring 
 If further implementation depends on files changed after the latest Complete.zip, inspect a current uploaded working zip before giving exact code changes.
 
 A working zip does not automatically become an authoritative checkpoint and does not change snapshot cadence.
+
+# C# Formatting Style
+
+Code examples and replacement files should use conventional compact C# formatting.
+
+Prefer:
+
+- method signatures on one line when reasonably short;
+- simple method calls on one line;
+- simple conditions on one line;
+- concise early returns;
+- logical expressions grouped naturally;
+- wrapping only when a line becomes genuinely long or readability materially improves.
+
+Avoid:
+
+- putting individual identifiers or arguments on separate lines unnecessarily;
+- vertically exploding simple expressions;
+- excessive nesting caused purely by formatting;
+- wrapping short boolean expressions across many lines.
+
+As a general guide, lines around 120–140 characters are acceptable when still readable, but use judgement rather than enforcing a rigid maximum.
+
+Match the style already present in the latest project where practical.

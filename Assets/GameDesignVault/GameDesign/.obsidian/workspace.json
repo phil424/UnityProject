@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Design/Technical/Level Authoring and Encounters.md",
+                "file": "Development Rules.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Level Authoring and Encounters"
+              "title": "Development Rules"
             }
           }
         ]
@@ -185,11 +185,22 @@
       "bases:Create new base": false
     }
   },
-  "active": "57c7e95b4b97b861",
+  "active": "ef2b5fd24fc90e6a",
   "lastOpenFiles": [
+    "Design/Characters/Abilities.md.meta",
+    "00 - Core/00 - Game Design Index.md.meta",
+    "Design/Combat.meta",
+    "Design/Characters.meta",
+    "Design/Enemies.md.meta",
+    "Design/Equipment/Equipment.md.meta",
+    "00 - Core/Template.md.meta",
+    "00 - Core/Core Design File.md.meta",
+    "00 - Core/02 - Core Gameplay Loop.md.meta",
+    "Design.meta",
+    "Design/World/Ecology.md.meta",
+    "Untitled.md",
     "Development Rules.md",
     "Design/Technical/Level Authoring and Encounters.md",
-    "Design/Technical",
     "Design/Untitled.md",
     "00 - Core/Template.md",
     "00 - Core/Core Design File.md",
@@ -201,24 +212,16 @@
     "00 - Core/01 - Design Pillars.md",
     "00 - Core/00 - Game Vision.md",
     "00 - Core/00 - Game Design Index.md",
-    "00 - Core",
     "Design/World/World.md",
     "Design/World/Expeditions.md",
     "Design/World/Ecology.md",
-    "Design/World",
     "Design/Equipment/Weapons.md",
     "Design/Equipment/Equipment.md",
     "Design/Equipment/Armour.md",
-    "Design/Equipment",
     "Design/Combat/Combat.md",
-    "Design/Combat",
     "Design/Characters/Characters.md",
     "Design/Characters/Abilities.md",
-    "Design/Characters",
     "Design/UI-UX.md",
-    "Design/Rewards.md",
-    "Design/Progression.md",
-    "Design/Enemies.md",
-    "Design"
+    "Design/Rewards.md"
   ]
 }

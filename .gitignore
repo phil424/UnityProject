@@ -104,3 +104,9 @@ InitTestScene*.unity*
 
 # Auto-generated cache in Assets folder
 /[Aa]ssets/[Ss]ceneDependencyCache*
+
+# Obsidian meta files
+*.md.meta
+/[Aa]ssets/GameDesignVault.meta
+/[Aa]ssets/GameDesignVault/GameDesign/.obsidian/workspace.json
+/[Aa]ssets/GameDesignVault/**/*.meta
