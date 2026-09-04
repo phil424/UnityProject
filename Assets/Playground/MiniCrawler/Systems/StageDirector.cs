@@ -44,11 +44,13 @@ namespace MiniCrawler.Systems
         private readonly List<GameObject> levelObjects = new();
         private readonly Dictionary<string, GameObject> spawnedPartyActors = new();
         public int PendingMinionSpawns => pendingMinionSpawns;
+        public int UnstartedMinionSpawnGroups => unstartedMinionSpawnGroups;
 
         private LevelState state = LevelState.Idle;
         private int livingPartyMembers;
         private int livingMinions;
         private int pendingMinionSpawns;
+        private int unstartedMinionSpawnGroups;
         private bool bossAlive;
 
         public LevelState State => state;
@@ -101,6 +103,7 @@ namespace MiniCrawler.Systems
             livingPartyMembers = 0;
             livingMinions = 0;
             pendingMinionSpawns = 0;
+            unstartedMinionSpawnGroups = 0;
             bossAlive = false;
 
             SpawnSelectedParty(runState);
@@ -116,8 +119,8 @@ namespace MiniCrawler.Systems
             StartMinionSpawnGroups();
 
             Debug.Log(
-                $"Level started. Party: {livingPartyMembers}, " +
-                $"Living minions: {livingMinions}, Scheduled: {pendingMinionSpawns}"
+                $"Level started. Party: {livingPartyMembers}, Living minions: {livingMinions}, " +
+                $"Scheduled: {pendingMinionSpawns}, Unstarted groups: {unstartedMinionSpawnGroups}"
             );
             return true;
         }
@@ -179,7 +182,9 @@ namespace MiniCrawler.Systems
         private void StartMinionSpawnGroups()
         {
             StopMinionSpawnGroups();
+
             pendingMinionSpawns = 0;
+            unstartedMinionSpawnGroups = 0;
 
             if (minionSpawnGroups == null || minionSpawnGroups.Length == 0)
             {
@@ -193,22 +198,23 @@ namespace MiniCrawler.Systems
                     continue;
 
                 group.PrepareForLevel();
-                group.SpawnRequested += HandleMinionSpawnRequested;
-                pendingMinionSpawns += group.ConfiguredSpawnCount;
-            }
 
-            if (pendingMinionSpawns <= 0)
-            {
-                StopMinionSpawnGroups();
-                TryAdvanceFromMinionPhase();
-                return;
+                if (group.ConfiguredSpawnCount <= 0)
+                    continue;
+
+                group.SpawningStarted += HandleMinionGroupSpawningStarted;
+                group.SpawnRequested += HandleMinionSpawnRequested;
+
+                unstartedMinionSpawnGroups++;
             }
 
             foreach (LevelSpawnGroup group in minionSpawnGroups)
             {
-                if (group != null && group.StartActive && group.ConfiguredSpawnCount > 0)
-                    group.Activate();
+                if (group != null && group.StartSpawning)
+                    group.BeginSpawning();
             }
+
+            TryAdvanceFromMinionPhase();
         }
 
         private void StopMinionSpawnGroups()
@@ -221,19 +227,29 @@ namespace MiniCrawler.Systems
                 if (group == null)
                     continue;
 
+                group.SpawningStarted -= HandleMinionGroupSpawningStarted;
                 group.SpawnRequested -= HandleMinionSpawnRequested;
                 group.StopSpawning();
             }
         }
+        
+        private void HandleMinionGroupSpawningStarted(LevelSpawnGroup group, int spawnCount)
+        {
+            unstartedMinionSpawnGroups = Mathf.Max(0, unstartedMinionSpawnGroups - 1);
+            pendingMinionSpawns += Mathf.Max(0, spawnCount);
+        }
 
-        private void HandleMinionSpawnRequested(ActorDefinition definition, Pose pose)
+        private void HandleMinionSpawnRequested(LevelSpawnGroup group, ActorDefinition definition, Pose pose)
         {
             pendingMinionSpawns = Mathf.Max(0, pendingMinionSpawns - 1);
 
             GameObject spawned = Spawn(definition, pose);
 
             if (spawned != null)
+            {
                 livingMinions++;
+                group?.RegisterSpawnedActor(spawned);
+            }
 
             TryAdvanceFromMinionPhase();
         }
@@ -243,7 +259,7 @@ namespace MiniCrawler.Systems
             if (state != LevelState.FightingMinions)
                 return;
 
-            if (livingMinions > 0 || pendingMinionSpawns > 0)
+            if (livingMinions > 0 || pendingMinionSpawns > 0 || unstartedMinionSpawnGroups > 0)
                 return;
 
             SpawnBoss();
@@ -395,6 +411,7 @@ namespace MiniCrawler.Systems
             livingPartyMembers = 0;
             livingMinions = 0;
             pendingMinionSpawns = 0;
+            unstartedMinionSpawnGroups = 0;
             bossAlive = false;
 
             LevelCleared?.Invoke();

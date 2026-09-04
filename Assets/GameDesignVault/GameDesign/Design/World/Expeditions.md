@@ -21,9 +21,23 @@ An expedition is one complete temporary run.
 Current direction:
 > Eventually the player's build can no longer survive.
 
-### Death
-- ends temporary run
-- does not remove earned persistent resources.
+### Level Defeat
+
+Current implemented direction:
+
+A level defeat does not automatically end the expedition.
+
+The player may resolve pending rewards and continue to the next level.
+
+### Expedition End / Final Failure
+
+The eventual condition that truly ends a long expedition remains a separate
+design problem.
+
+Current long-term direction still expects expeditions to eventually reach a
+point where the temporary build can no longer continue effectively.
+
+Do not conflate a normal level defeat with the final expedition-ending state.
 
 ### Major Phases
 - Early expedition
@@ -68,6 +82,31 @@ Preparation
 ```
 
 Add sections later for pacing.
+
+# Encounter Selection
+
+Regions should contain multiple threats and opportunities rather than only one
+mandatory next fight.
+
+The player can assess known encounters and choose where to direct the hero /
+party next.
+
+Encounter choice may consider:
+- distance;
+- threat;
+- rewards;
+- rare enemies;
+- ecology events;
+- upcoming schedule changes;
+- current build needs.
+
+The player should sometimes face decisions such as:
+
+> Continue fighting the nearby horde, or redirect toward a rare valuable target
+> that has just appeared elsewhere?
+
+This makes traversal part of strategic decision-making rather than only downtime
+between fights.
 
 # Threat Escalation - (Risk of Rain)
 ### Purpose

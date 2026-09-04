@@ -52,17 +52,105 @@ Document:
 - ability state readability
 - pending/cast information.
 
-# Map and Schedule UI
-Should communicate:
-- where player is
-- what is happening now
-- what is coming next
-- where
-- when
-- expected danger
-- expected opportunities.
+# Map, Minimap and Encounter Navigation
 
-This interface may become one of the game's central strategic tools.
+The map / schedule interface may become one of the game's primary strategic
+control surfaces.
+
+It should help answer:
+
+- Where am I?
+- What encounters currently exist?
+- Which encounters can I pursue?
+- What is happening now?
+- What is coming next?
+- Where will it happen?
+- When will it happen?
+- How dangerous is it?
+- What valuable opportunities exist?
+- Which encounter am I currently heading toward?
+
+# Combat Minimap
+
+Working direction:
+
+The combat HUD should contain a compact spatial view of the current area.
+
+Potential information:
+- hero / party location;
+- known encounter locations;
+- selected encounter;
+- important active threats;
+- rare opportunities;
+- bosses / elites where appropriate;
+- relevant navigation destination.
+
+The minimap should communicate useful strategic information without becoming a
+complete omniscient representation of every unit.
+
+Exactly how encounter discovery affects map visibility remains unresolved.
+
+# Encounter List
+
+The combat HUD should expose known encounters in a compact selectable list.
+
+Example:
+
+ENCOUNTERS
+
+★ Nobleman's Procession
+  RARE • 68m
+
+◆ Cemetery
+  ACTIVE • 25m
+
+◇ Church Horde
+  Incoming • 00:22
+
+Selecting an encounter gives the hero / party a travel directive toward it.
+
+The encounter list should surface information such as:
+- name;
+- state;
+- distance / location;
+- threat;
+- opportunity / rarity;
+- notable enemies;
+- relevant timing.
+
+The HUD should not become a giant quest log.
+
+Use progressive disclosure so important decisions remain quick to read.
+
+# Targeting Controls
+
+The HUD should expose the hero's current autonomous target policy.
+
+Example:
+
+TARGETING
+Closest
++ Prefer Elite
+
+The normal HUD may display only the current configuration.
+
+A secondary panel can provide deeper targeting configuration if required.
+
+# Rare Opportunity Presentation
+
+Rare or valuable encounters should be capable of interrupting the player's
+attention without forcing immediate interaction.
+
+Example:
+
+RARE SIGHTING
+Nobleman's Procession
+North Cemetery
+Available for a limited period
+
+The player can then choose whether to redirect toward it.
+
+Threat and opportunity rarity should be visually distinguishable.
 
 # Reward UI
 Include:

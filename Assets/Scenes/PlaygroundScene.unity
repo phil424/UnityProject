@@ -2315,7 +2315,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Spawning.LevelSpawnProximityActivator
   activationRadius: 4
-  spawnGroups:
+  groups:
   - {fileID: 1739963071}
   - {fileID: 648079723}
 --- !u!1 &478213883
@@ -3416,7 +3416,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 534eca0a6af4aaf428b51272d5c7238e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Spawning.LevelSpawnGroup
-  startActive: 1
+  startSpawning: 1
+  startCombatActive: 1
   spawnSources:
   - {fileID: 494815017}
   entries:
@@ -3613,7 +3614,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 534eca0a6af4aaf428b51272d5c7238e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Spawning.LevelSpawnGroup
-  startActive: 0
+  startSpawning: 0
+  startCombatActive: 1
   spawnSources:
   - {fileID: 333271351}
   entries:
@@ -4699,7 +4701,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Spawning.LevelSpawnProximityActivator
   activationRadius: 4
-  spawnGroups:
+  groups:
   - {fileID: 1388952762}
 --- !u!1 &962459151
 GameObject:
@@ -6775,7 +6777,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 534eca0a6af4aaf428b51272d5c7238e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Spawning.LevelSpawnGroup
-  startActive: 0
+  startSpawning: 0
+  startCombatActive: 1
   spawnSources:
   - {fileID: 347449219}
   entries:
@@ -7749,7 +7752,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 534eca0a6af4aaf428b51272d5c7238e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Spawning.LevelSpawnGroup
-  startActive: 0
+  startSpawning: 0
+  startCombatActive: 1
   spawnSources:
   - {fileID: 333271351}
   entries:

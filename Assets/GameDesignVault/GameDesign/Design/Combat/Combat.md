@@ -24,6 +24,38 @@
 Important principle:
 > Automatic behaviour must never make the character feel unresponsive to player ability input.
 
+# Targeting and Tactical Direction
+
+Autonomous combat does not mean the player has no influence over target choice.
+
+Working direction:
+
+The player can configure how the hero evaluates combat targets.
+
+Potential base targeting rules:
+- Closest
+- Weakest
+- Strongest / Highest Health
+
+Target rules may be combined with separate priorities such as:
+- Prefer Elite
+- Prefer Boss
+- Prefer Rare / Valuable
+
+Example:
+
+Closest
++
+Prefer Elite
+
+This should mean:
+> Prefer an appropriate Elite when available, otherwise behave according to the
+> Closest targeting rule.
+
+Avoid defining every possible combination as a separate targeting mode.
+
+See [[Targeting, Tactics and Encounter Direction]].
+
 # Player Intervention
 - active abilities controlled by player
 - immediate response
@@ -31,6 +63,24 @@ Important principle:
 - abilities may cancel attacks
 - deciding whether to cancel a combo is gameplay
 - optional future autocast.
+
+Player agency operates at several scales:
+
+### Strategic
+- choose which encounter / opportunity to pursue;
+- redirect toward rare or valuable encounters.
+
+### Tactical Targeting
+- configure autonomous target policy;
+- adjust priorities such as Elite / Rare targets.
+
+### Immediate Intervention
+- activate abilities;
+- interrupt autonomous combat at important moments.
+
+The intent is not to directly control routine movement and attacks, but to give
+the player meaningful control over what the autonomous character is trying to
+achieve.
 
 # Damage and Stats
 ### Core Combat Stats

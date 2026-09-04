@@ -1,3 +1,4 @@
+using MiniCrawler.Combat;
 using MiniCrawler.Core;
 using MiniCrawler.Movement;
 using MiniCrawler.Support;
@@ -13,11 +14,9 @@ namespace MiniCrawler.Systems
             if (SimulationPause.IsPaused)
                 return;
                 
-            AutoTargetMover[] movers =
-                FindObjectsByType<AutoTargetMover>(FindObjectsSortMode.None);
+            AutoTargetMover[] movers = FindObjectsByType<AutoTargetMover>(FindObjectsSortMode.None);
 
-            Health[] possibleTargets =
-                FindObjectsByType<Health>(FindObjectsSortMode.None);
+            Health[] possibleTargets = FindObjectsByType<Health>(FindObjectsSortMode.None);
 
             foreach (AutoTargetMover mover in movers)
             {
@@ -50,15 +49,14 @@ namespace MiniCrawler.Systems
             if (mover == null || !mover.isActiveAndEnabled)
                 return false;
 
-            Health selfHealth = mover.GetComponent<Health>();
+            if (!CombatEngagementState.AllowsCombat(mover.gameObject))
+                return false;
 
+            Health selfHealth = mover.GetComponent<Health>();
             return selfHealth == null || !selfHealth.IsDead;
         }
 
-        private Health FindSupportTarget(
-            AutoTargetMover mover,
-            Health[] possibleTargets
-        )
+        private Health FindSupportTarget(AutoTargetMover mover, Health[] possibleTargets)
         {
             Health mostInjuredAlly = null;
             float lowestHealthRatio = float.MaxValue;
@@ -72,9 +70,7 @@ namespace MiniCrawler.Systems
                 if (!IsValidSupportTarget(mover, possibleTarget))
                     continue;
 
-                float distanceSquared =
-                    (possibleTarget.transform.position - mover.transform.position)
-                    .sqrMagnitude;
+                float distanceSquared = (possibleTarget.transform.position - mover.transform.position).sqrMagnitude;
 
                 bool isInjured = possibleTarget.CurrentHealth < possibleTarget.MaxHealth;
 
@@ -92,9 +88,7 @@ namespace MiniCrawler.Systems
                 float healthRatio = possibleTarget.CurrentHealth / possibleTarget.MaxHealth;
 
                 bool hasLowerHealth = healthRatio < lowestHealthRatio;
-                bool sameHealthButCloser =
-                    Mathf.Approximately(healthRatio, lowestHealthRatio) &&
-                    distanceSquared < injuredDistanceSquared;
+                bool sameHealthButCloser = Mathf.Approximately(healthRatio, lowestHealthRatio) && distanceSquared < injuredDistanceSquared;
 
                 if (!hasLowerHealth && !sameHealthButCloser)
                     continue;
@@ -105,15 +99,10 @@ namespace MiniCrawler.Systems
             }
 
             // Injured allies take priority. If everyone is healthy, follow the nearest ally.
-            return mostInjuredAlly != null
-                ? mostInjuredAlly
-                : nearestHealthyAlly;
+            return mostInjuredAlly != null ? mostInjuredAlly : nearestHealthyAlly;
         }
 
-        private Health FindNearestCombatTarget(
-            AutoTargetMover mover,
-            Health[] possibleTargets
-        )
+        private Health FindNearestCombatTarget(AutoTargetMover mover, Health[] possibleTargets)
         {
             Health bestTarget = null;
             float bestDistanceSquared = float.MaxValue;
@@ -124,9 +113,7 @@ namespace MiniCrawler.Systems
                 if (!IsValidCombatTarget(mover, possibleTarget))
                     continue;
 
-                float distanceSquared =
-                    (possibleTarget.transform.position - mover.transform.position)
-                    .sqrMagnitude;
+                float distanceSquared =(possibleTarget.transform.position - mover.transform.position).sqrMagnitude;
 
                 if (distanceSquared > maxDistanceSquared)
                     continue;
@@ -141,10 +128,7 @@ namespace MiniCrawler.Systems
             return bestTarget;
         }
 
-        private bool IsValidSupportTarget(
-            AutoTargetMover mover,
-            Health possibleTarget
-        )
+        private bool IsValidSupportTarget(AutoTargetMover mover, Health possibleTarget)
         {
             if (possibleTarget == null || possibleTarget.IsDead)
                 return false;
@@ -155,10 +139,7 @@ namespace MiniCrawler.Systems
             return possibleTarget.GetComponent<PartyMember>() != null;
         }
 
-        private bool IsValidCombatTarget(
-            AutoTargetMover mover,
-            Health possibleTarget
-        )
+        private bool IsValidCombatTarget(AutoTargetMover mover, Health possibleTarget)
         {
             if (possibleTarget == null || possibleTarget.IsDead)
                 return false;
@@ -166,8 +147,10 @@ namespace MiniCrawler.Systems
             if (possibleTarget.gameObject == mover.gameObject)
                 return false;
 
-            FactionMember faction = possibleTarget.GetComponent<FactionMember>();
+            if (!CombatEngagementState.AllowsCombat(possibleTarget.gameObject))
+                return false;
 
+            FactionMember faction = possibleTarget.GetComponent<FactionMember>();
             return faction != null && faction.IsFaction(mover.TargetFactionId);
         }
     }

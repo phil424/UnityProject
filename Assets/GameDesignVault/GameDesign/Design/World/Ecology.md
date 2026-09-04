@@ -70,3 +70,42 @@ Could affect:
 ### Principle:
 > Encourage new opportunities without deleting existing builds.
 
+# Rare Sightings
+
+Ecology can create temporary high-value encounters.
+
+Examples:
+- rare monster variants;
+- valuable migrating groups;
+- unusual bosses;
+- resource-rich monster populations.
+
+Rare sightings should create:
+> "Do I change my current plan to pursue this opportunity?"
+
+A sighting may contain:
+- encounter/location;
+- warning or discovery time;
+- duration;
+- rarity / opportunity value;
+- expected reward;
+- notable monster.
+
+Rare sightings should integrate with the map / encounter HUD.
+
+# Global Activation Events
+
+Ecological events may affect groups that already exist in the world.
+
+Example:
+
+## Zombie Surge
+
+Possible behaviour:
+- activate currently dormant zombie groups;
+- begin additional zombie spawn schedules;
+- increase activity in selected areas;
+- improve zombie-specific reward opportunities.
+
+A level/world schedule should issue commands into existing spawn and combat
+engagement seams rather than containing special zombie-spawning logic itself.

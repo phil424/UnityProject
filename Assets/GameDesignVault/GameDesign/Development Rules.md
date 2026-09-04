@@ -37,7 +37,7 @@ The current design pillars include:
 - preparation establishes direction but does not guarantee the final build;
 - permanent progression should primarily expand possibilities rather than endlessly increase raw power;
 - reward generation should respect the player's existing build;
-- death ends the run but does not remove already-earned persistent rewards;
+- level defeat does not automatically end the run; between-level continuation remains available once unresolved pending rewards have been handled;
 - expeditions should escalate toward increasingly unusual/dangerous situations.
 
 Where useful, distinguish design ideas as:
@@ -58,9 +58,9 @@ Do not quietly turn exploratory ideas into implementation requirements.
 Continue using:
 
 ```
-2.7F
-2.7G
-2.7H
+2.9A
+2.9B
+2.9C
 ...
 ```
 

@@ -1,5 +1,6 @@
 using MiniCrawler.Core;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace MiniCrawler.Spawning
 {
@@ -7,13 +8,15 @@ namespace MiniCrawler.Spawning
     public class LevelSpawnProximityActivator : MonoBehaviour
     {
         [SerializeField, Min(0.1f)] private float activationRadius = 5f;
-        [SerializeField] private LevelSpawnGroup[] spawnGroups;
+
+        [FormerlySerializedAs("spawnGroups")]
+        [SerializeField] private LevelSpawnGroup[] groups;
 
         public float ActivationRadius => activationRadius;
 
         private void Update()
         {
-            if (!HasUnactivatedGroup())
+            if (!HasPendingGroupAction())
                 return;
 
             PartyMember[] partyMembers = FindObjectsByType<PartyMember>(FindObjectsSortMode.None);
@@ -29,31 +32,36 @@ namespace MiniCrawler.Spawning
                 if (difference.sqrMagnitude > activationRadiusSquared)
                     continue;
 
-                ActivateGroups();
+                TriggerGroups();
                 return;
             }
         }
 
-        private void ActivateGroups()
+        private void TriggerGroups()
         {
-            if (spawnGroups == null)
+            if (groups == null)
                 return;
 
-            foreach (LevelSpawnGroup group in spawnGroups)
+            foreach (LevelSpawnGroup group in groups)
             {
-                if (group != null)
-                    group.Activate();
+                if (group == null)
+                    continue;
+
+                // Combat state is applied first so an immediate first spawn
+                // inherits the correct engagement state.
+                group.ActivateCombat();
+                group.BeginSpawning();
             }
         }
 
-        private bool HasUnactivatedGroup()
+        private bool HasPendingGroupAction()
         {
-            if (spawnGroups == null)
+            if (groups == null)
                 return false;
 
-            foreach (LevelSpawnGroup group in spawnGroups)
+            foreach (LevelSpawnGroup group in groups)
             {
-                if (group != null && !group.IsActivated)
+                if (group != null && (!group.IsSpawningStarted || !group.IsCombatActive))
                     return true;
             }
 

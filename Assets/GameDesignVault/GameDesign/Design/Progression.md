@@ -15,7 +15,8 @@ Possible collection:
 - recipes
 - cosmetics
 - achievements
-- monster discoveries.
+- monster discoveries
+- support characters
 
 # Unlocks
 Questions:
@@ -73,3 +74,20 @@ Potential long-term motivations:
 - difficulty modifiers
 - high-rarity augments
 - increasingly unusual ecology.
+
+# Support Progression
+
+Current working direction:
+
+Support characters are persistent unlocks and are configured outside the active
+run.
+
+Their preparation may eventually include:
+- selection;
+- tactics / behaviour preset;
+- full custom tactics;
+- equipment or progression where appropriate.
+
+The exact support progression model is unresolved.
+
+See [[Support Characters]].

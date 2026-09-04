@@ -1,8 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using MiniCrawler.Combat;
 using MiniCrawler.Core;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace MiniCrawler.Spawning
 {
@@ -40,8 +42,10 @@ namespace MiniCrawler.Spawning
             }
         }
 
-        [Header("Activation")]
-        [SerializeField] private bool startActive = true;
+        [Header("Level Start")]
+        [FormerlySerializedAs("startActive")]
+        [SerializeField] private bool startSpawning = true;
+        [SerializeField] private bool startCombatActive = true;
 
         [Header("Spawn Sources")]
         [SerializeField] private LevelSpawnSource[] spawnSources;
@@ -49,12 +53,17 @@ namespace MiniCrawler.Spawning
         [Header("Schedule")]
         [SerializeField] private List<SpawnEntry> entries = new();
 
-        public event Action<ActorDefinition, Pose> SpawnRequested;
+        public event Action<LevelSpawnGroup, int> SpawningStarted;
+        public event Action<LevelSpawnGroup, ActorDefinition, Pose> SpawnRequested;
 
+        private readonly List<GameObject> spawnedActors = new();
         private int runningEntries;
 
-        public bool StartActive => startActive;
-        public bool IsActivated { get; private set; }
+        public bool StartSpawning => startSpawning;
+        public bool StartCombatActive => startCombatActive;
+
+        public bool IsSpawningStarted { get; private set; }
+        public bool IsCombatActive { get; private set; }
         public bool IsRunning => runningEntries > 0;
 
         public int ConfiguredSpawnCount
@@ -80,28 +89,39 @@ namespace MiniCrawler.Spawning
         {
             StopAllCoroutines();
 
+            spawnedActors.Clear();
             runningEntries = 0;
-            IsActivated = false;
+
+            IsSpawningStarted = false;
+            IsCombatActive = startCombatActive;
         }
 
-        public bool Activate()
+        public bool BeginSpawning()
         {
-            if (IsActivated || !HasValidSpawnSource())
+            if (IsSpawningStarted || !HasValidSpawnSource())
                 return false;
 
             int validEntryCount = 0;
+            int spawnCount = 0;
 
             foreach (SpawnEntry entry in entries)
             {
-                if (entry != null && entry.IsConfigured)
-                    validEntryCount++;
+                if (entry == null || !entry.IsConfigured)
+                    continue;
+
+                validEntryCount++;
+                spawnCount += entry.Count;
             }
 
-            if (validEntryCount <= 0)
+            if (validEntryCount <= 0 || spawnCount <= 0)
                 return false;
 
-            IsActivated = true;
+            IsSpawningStarted = true;
             runningEntries = validEntryCount;
+
+            // Report the committed spawn count before any immediate coroutine
+            // can issue its first SpawnRequested event.
+            SpawningStarted?.Invoke(this, spawnCount);
 
             foreach (SpawnEntry entry in entries)
             {
@@ -112,10 +132,59 @@ namespace MiniCrawler.Spawning
             return true;
         }
 
+        public bool ActivateCombat()
+        {
+            if (IsCombatActive)
+                return false;
+
+            IsCombatActive = true;
+
+            foreach (GameObject actor in spawnedActors)
+            {
+                if (actor == null)
+                    continue;
+
+                CombatEngagementState engagement = actor.GetComponent<CombatEngagementState>();
+
+                if (engagement == null)
+                    engagement = actor.AddComponent<CombatEngagementState>();
+
+                engagement.SetEngaged(true);
+            }
+
+            return true;
+        }
+
+        public void RegisterSpawnedActor(GameObject actor)
+        {
+            if (actor == null)
+                return;
+
+            CombatEngagementState engagement = actor.GetComponent<CombatEngagementState>();
+
+            if (engagement == null)
+                engagement = actor.AddComponent<CombatEngagementState>();
+
+            engagement.SetEngaged(IsCombatActive);
+            spawnedActors.Add(actor);
+        }
+
         public void StopSpawning()
         {
             StopAllCoroutines();
             runningEntries = 0;
+        }
+
+        [ContextMenu("Debug/Begin Spawning")]
+        private void DebugBeginSpawning()
+        {
+            BeginSpawning();
+        }
+
+        [ContextMenu("Debug/Activate Combat")]
+        private void DebugActivateCombat()
+        {
+            ActivateCombat();
         }
 
         private IEnumerator RunEntry(SpawnEntry entry)
@@ -132,7 +201,7 @@ namespace MiniCrawler.Spawning
                 for (int i = 0; i < batchCount; i++)
                 {
                     if (TryGetSpawnPose(out Pose pose))
-                        SpawnRequested?.Invoke(entry.Actor, pose);
+                        SpawnRequested?.Invoke(this, entry.Actor, pose);
 
                     remaining--;
 

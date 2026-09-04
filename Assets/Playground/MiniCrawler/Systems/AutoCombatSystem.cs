@@ -26,92 +26,47 @@ namespace MiniCrawler.Systems
             }
         }
 
-        private void TryAttackTarget(
-            AutoTargetMover mover
-        )
+        private void TryAttackTarget(AutoTargetMover mover)
         {
-            Health selfHealth =
-                mover.GetComponent<Health>();
+            Health selfHealth = mover.GetComponent<Health>();
 
-            if (
-                selfHealth != null &&
-                selfHealth.IsDead
-            )
-            {
+            if (selfHealth != null && selfHealth.IsDead)
                 return;
-            }
 
-            CombatStats attackerStats =
-                mover.GetComponent<CombatStats>();
+            if (!CombatEngagementState.AllowsCombat(mover.gameObject))
+                return;
+
+            CombatStats attackerStats = mover.GetComponent<CombatStats>();
 
             if (attackerStats == null)
                 return;
 
-            attackerStats.AttackTimer =
-                Mathf.Max(
-                    0f,
-                    attackerStats.AttackTimer -
-                    Time.deltaTime
-                );
+            attackerStats.AttackTimer = Mathf.Max(0f, attackerStats.AttackTimer - Time.deltaTime);
 
-            AbilityExecutionState
-                abilityExecutionState =
-                    mover.GetComponent<
-                        AbilityExecutionState
-                    >();
+            AbilityExecutionState abilityExecutionState = mover.GetComponent<AbilityExecutionState>();
 
-            if (
-                abilityExecutionState != null &&
-                abilityExecutionState
-                    .BlocksAutonomousActions
-            )
-            {
+            if (abilityExecutionState != null && abilityExecutionState.BlocksAutonomousActions)
                 return;
-            }
 
-            if (
-                mover.CurrentIntent !=
-                TargetIntent.Combat
-            )
-            {
+            if (mover.CurrentIntent != TargetIntent.Combat)
                 return;
-            }
 
-            Health target =
-                mover.CurrentTarget;
+            Health target = mover.CurrentTarget;
 
-            if (
-                target == null ||
+            if (target == null ||
                 target.IsDead ||
-                attackerStats.AttackTimer > 0f
-            )
-            {
+                !CombatEngagementState.AllowsCombat(target.gameObject) ||
+                attackerStats.AttackTimer > 0f)
                 return;
-            }
 
-            float distance =
-                Vector3.Distance(
-                    mover.transform.position,
-                    target.transform.position
-                );
+            float distance = Vector3.Distance(mover.transform.position, target.transform.position);
 
-            if (
-                distance >
-                attackerStats.AttackRange
-            )
-            {
+            if (distance > attackerStats.AttackRange)
                 return;
-            }
 
-            DamageResolver.ApplyDamage(
-                mover.gameObject,
-                target,
-                attackerStats.Damage,
-                attackerStats.AttackName
-            );
+            DamageResolver.ApplyDamage(mover.gameObject, target, attackerStats.Damage, attackerStats.AttackName);
 
-            attackerStats.AttackTimer =
-                attackerStats.AttackCooldown;
+            attackerStats.AttackTimer = attackerStats.AttackCooldown;
         }
     }
 }

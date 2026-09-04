@@ -106,7 +106,9 @@ InitTestScene*.unity*
 /[Aa]ssets/[Ss]ceneDependencyCache*
 
 # Obsidian meta files
+.obsidian/workspace.json
+.obsidian/app.json
 *.md.meta
 /[Aa]ssets/GameDesignVault.meta
-/[Aa]ssets/GameDesignVault/GameDesign/.obsidian/workspace.json
+/[Aa]ssets/GameDesignVault/GameDesign/.obsidian/*
 /[Aa]ssets/GameDesignVault/**/*.meta

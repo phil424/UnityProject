@@ -83,6 +83,7 @@ A previous design that has intentionally been replaced.
 - [[Character Abilities]]
 - [[Character Sustain]]
 - [[Character Catalogue]]
+- [[Support Characters]]
 
 # Abilities
 
@@ -143,3 +144,8 @@ A previous design that has intentionally been replaced.
 - [[Map and Schedule UI]]
 - [[Reward UI]]
 - [[Hub and Menus]]
+
+# Technical Design
+
+- [[Level Authoring and Encounters]]
+- [[Targeting, Tactics and Encounter Direction]]

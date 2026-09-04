@@ -12,34 +12,109 @@ Related Design:
 # Purpose
 
 Provide a scene-authorable framework for creating regions and encounters without
-hard-coding individual enemy types or locations into StageDirector.
+hard-coding individual enemy types, spawn locations, spawn rhythms or encounter
+behaviour into StageDirector.
 
 # Core Separation
 
-WHERE
-LevelSpawnSource
+## WHERE
+
+`LevelSpawnSource`
+
 Defines valid physical spawn positions/areas.
 
-WHAT + SPAWN RHYTHM
-LevelSpawnGroup
-Defines actors, counts, delays, batches and spawn intervals.
+Current shapes:
+- Point
+- Circle
+- Box
 
-WHEN TO ENTER THE WORLD
-Spawn triggers / future level schedule.
-Begins a group's spawn schedule.
+## WHAT + SPAWN RHYTHM
 
-WHEN TO ENGAGE IN COMBAT
-Combat engagement.
-Independent from whether an actor already exists in the world.
+`LevelSpawnGroup`
 
-HOW TO ENTER
-Spawn presentation.
-Future door, ground-burst, portal, cave, etc. behaviour.
+Defines:
+- actor definitions;
+- counts;
+- initial delays;
+- batch sizes;
+- time between individual spawns;
+- time between batches.
 
-PLAYER-FACING IDENTITY
-LevelEncounter.
-Future authored concept representing a meaningful opportunity/threat shown to
-the player independently from low-level spawn machinery.
+Multiple entries may overlap to create compound spawn rhythms such as:
+- an immediate burst;
+- a long stream;
+- delayed elites;
+- repeated waves.
+
+## WHEN TO ENTER THE WORLD
+
+`LevelSpawnGroup.BeginSpawning()`
+
+Starting a spawn schedule is separate from combat engagement.
+
+Future triggers and the level schedule may invoke this independently.
+
+## WHEN TO ENGAGE IN COMBAT
+
+`LevelSpawnGroup.ActivateCombat()`
+
+Combat engagement is independent from whether actors already exist.
+
+A spawned group may therefore be physically present but dormant.
+
+`CombatEngagementState` controls whether an actor participates in normal
+autonomous combat targeting.
+
+Component absence currently means combat-active for backwards compatibility.
+
+When a group becomes combat-active:
+- already-spawned members become engaged;
+- actors spawned later inherit the active state.
+
+## HOW TO ENTER
+
+Future spawn-presentation components.
+
+Examples:
+- church doorway;
+- ground/grave burst;
+- portal;
+- tunnel;
+- map edge.
+
+Spawn presentation must remain separate from spawn location, schedule and combat
+engagement.
+
+## PLAYER-FACING IDENTITY
+
+Future `LevelEncounter`.
+
+An encounter represents a meaningful player-understandable threat or opportunity
+independently from low-level spawn machinery.
+
+Future encounter information may include:
+- display identity;
+- map/location anchor;
+- encounter state;
+- threat;
+- opportunity/rarity;
+- notable targets;
+- HUD presentation.
+
+# Current Runtime State
+
+`StageDirector` distinguishes:
+
+`LivingMinions`
+- actors physically alive now.
+
+`PendingMinionSpawns`
+- actors committed to a spawn schedule but not yet spawned.
+
+`UnstartedMinionSpawnGroups`
+- currently required authored groups whose spawn schedule has not begun.
+
+These concepts must not be conflated.
 
 # Important Invariants
 
@@ -47,19 +122,40 @@ Spawning and combat engagement are separate.
 
 A spawned actor may exist without participating in combat.
 
-Activating a group affects both existing members and members spawned later.
+Disengaged actors are excluded from normal autonomous combat target selection
+in both directions.
 
-Unstarted authored groups are not the same thing as currently scheduled spawns.
+Activating a group's combat affects both existing members and future members.
 
-Level completion must not depend only on the number of enemies currently alive.
+Unstarted authored groups are not currently scheduled spawns.
+
+Level completion must not depend only on enemies currently alive.
 
 Spawn presentation must not be encoded as a giant spawn-type enum.
 
 Combat threat and reward/opportunity rarity are separate concepts.
 
+Low-level spawn groups are not the same thing as player-facing encounters.
+
+# Current Trigger Compatibility
+
+`LevelSpawnProximityActivator` currently performs both:
+
+1. `ActivateCombat()`
+2. `BeginSpawning()`
+
+This preserves the existing 2.8G scene behaviour.
+
+This is transitional.
+
+A following step should allow authored triggers to independently:
+- begin spawning;
+- activate combat;
+- or perform both.
+
 # Future Runtime Flow
 
-Level Schedule / Trigger
+Spawn trigger / Level Schedule
         ↓
 BeginSpawning()
         ↓
@@ -67,11 +163,11 @@ LevelSpawnGroup
         ↓
 LevelSpawnSource
         ↓
-Spawn Presentation
+future Spawn Presentation
         ↓
 Actor exists
         ↓
-Combat engagement may be inactive
+actor inherits group's current CombatEngagementState
 
 Separate trigger / schedule event
         ↓
@@ -81,19 +177,84 @@ existing + future group members become combat-active
 
 # Future Encounter Direction
 
-Player selects LevelEncounter
+Player selects `LevelEncounter`
+        ↓
+party receives encounter/travel directive
         ↓
 party travels toward encounter
         ↓
 encounter spawn/engagement rules operate
         ↓
-targeting policy chooses actors inside relevant combat
+targeting policy chooses actors relevant to combat
+
+When no combat target exists, encounter/travel intent should eventually provide
+a movement destination instead of leaving the party stationary.
+
+# Future Targeting Direction
+
+Unit targeting and encounter direction are separate layers.
+
+Target resolution should eventually consider:
+
+candidate eligibility / combat engagement
+        ↓
+selected encounter or travel directive bias
+        ↓
+base target rule
+        ↓
+priority modifiers
+        ↓
+fallback / tie-break
+
+Possible base rules:
+- Closest
+- Weakest
+- Strongest
+
+Possible composable priorities:
+- Prefer Elite
+- Prefer Boss
+- Prefer Rare / Valuable
+
+Avoid representing every combination as one giant targeting enum.
+
+# Future Schedule Direction
+
+A level-wide schedule may issue commands into existing seams rather than
+implementing spawning itself.
+
+Examples:
+
+Zombie Surge
+- activate already-spawned hostile groups;
+- begin additional reinforcement spawn groups.
+
+Rare Sighting
+- make a valuable encounter available;
+- surface it to the player through encounter UI.
+
+# Known Limitation
+
+All current `StageDirector.MinionSpawnGroups` are treated as required encounter
+work.
+
+A dormant required group can therefore prevent minion-phase completion if the
+party never reaches its trigger.
+
+This is intentionally not solved through fake pending-spawn counts or oversized
+aggro ranges.
+
+Future encounter identity and encounter-directed movement should distinguish
+required, optional and opportunistic encounters and provide travel intent when
+no combat target exists.
 
 # Open Questions
 
-- Required versus optional encounters.
-- How encounter discovery works.
+- Required versus optional encounter semantics.
+- Encounter discovery rules.
 - Encounter completion conditions.
 - Ambient movement for disengaged enemies.
-- Exact schedule authoring UI.
-- Whether encounter direction applies to whole party or individual characters.
+- Whether damage against a disengaged actor automatically engages it.
+- Exact level-schedule authoring UI.
+- Whole-party versus per-character encounter direction.
+- How much encounter information is visible before discovery.
