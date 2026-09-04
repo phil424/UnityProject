@@ -137,21 +137,53 @@ Combat threat and reward/opportunity rarity are separate concepts.
 
 Low-level spawn groups are not the same thing as player-facing encounters.
 
-# Current Trigger Compatibility
+Trigger condition and trigger response are separate.
 
-`LevelSpawnProximityActivator` currently performs both:
+A proximity trigger does not inherently mean "spawn and activate".
 
-1. `ActivateCombat()`
-2. `BeginSpawning()`
+Spawn-group actions should be reusable by future schedule and encounter systems.
 
-This preserves the existing 2.8G scene behaviour.
+# Spawn Group Actions
 
-This is transitional.
+`LevelSpawnGroupActions` is the reusable authored command set for manipulating
+spawn groups.
 
-A following step should allow authored triggers to independently:
+It currently supports two independent actions:
+
 - begin spawning;
-- activate combat;
-- or perform both.
+- activate combat.
+
+The same group may appear in both lists.
+
+Combat activation is applied before spawning begins so an immediately spawned
+actor inherits the intended engagement state.
+
+This action set should be reusable by future systems such as:
+
+- proximity triggers;
+- level-schedule events;
+- encounter events;
+- global ecology events;
+- debug tooling.
+
+The trigger determines **when** the actions occur.
+
+`LevelSpawnGroupActions` determines **what group state changes occur**.
+
+# Proximity Trigger
+
+`LevelSpawnProximityActivator` detects when a living party member enters an
+authored radius and then executes its configured `LevelSpawnGroupActions`.
+
+A proximity trigger may therefore:
+
+- begin spawning without activating combat;
+- activate already-spawned actors without beginning a spawn schedule;
+- perform both;
+- affect multiple groups at once.
+
+Proximity is only one trigger source and should not be baked into the spawn
+group itself.
 
 # Future Runtime Flow
 

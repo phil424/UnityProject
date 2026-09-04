@@ -1,6 +1,5 @@
 using MiniCrawler.Core;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace MiniCrawler.Spawning
 {
@@ -9,14 +8,14 @@ namespace MiniCrawler.Spawning
     {
         [SerializeField, Min(0.1f)] private float activationRadius = 5f;
 
-        [FormerlySerializedAs("spawnGroups")]
-        [SerializeField] private LevelSpawnGroup[] groups;
+        [Header("Actions")]
+        [SerializeField] private LevelSpawnGroupActions actions = new();
 
         public float ActivationRadius => activationRadius;
 
         private void Update()
         {
-            if (!HasPendingGroupAction())
+            if (actions == null || !actions.HasPendingActions)
                 return;
 
             PartyMember[] partyMembers = FindObjectsByType<PartyMember>(FindObjectsSortMode.None);
@@ -32,40 +31,15 @@ namespace MiniCrawler.Spawning
                 if (difference.sqrMagnitude > activationRadiusSquared)
                     continue;
 
-                TriggerGroups();
+                actions.Execute();
                 return;
             }
         }
 
-        private void TriggerGroups()
+        [ContextMenu("Debug/Trigger Actions")]
+        private void DebugTriggerActions()
         {
-            if (groups == null)
-                return;
-
-            foreach (LevelSpawnGroup group in groups)
-            {
-                if (group == null)
-                    continue;
-
-                // Combat state is applied first so an immediate first spawn
-                // inherits the correct engagement state.
-                group.ActivateCombat();
-                group.BeginSpawning();
-            }
-        }
-
-        private bool HasPendingGroupAction()
-        {
-            if (groups == null)
-                return false;
-
-            foreach (LevelSpawnGroup group in groups)
-            {
-                if (group != null && (!group.IsSpawningStarted || !group.IsCombatActive))
-                    return true;
-            }
-
-            return false;
+            actions?.Execute();
         }
 
         private static bool IsLivingPartyMember(PartyMember partyMember)

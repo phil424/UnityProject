@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Development Rules.md",
+                "file": "Design/Technical/Level Authoring and Encounters.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Development Rules"
+              "title": "Level Authoring and Encounters"
             }
           }
         ]
@@ -187,6 +187,7 @@
   },
   "active": "57c7e95b4b97b861",
   "lastOpenFiles": [
+    "Development Rules.md",
     "Design/Technical/Level Authoring and Encounters.md",
     "00 - Core/05 - Open Design Questions.md",
     "Design/Technical/Targeting, Tactics and Encounter Direction.md.meta",
@@ -202,7 +203,6 @@
     "Design/Technical/Targeting, Tactics and Encounter Direction.md",
     "Design/Characters/Support Characters.md",
     "Design/Characters/Characters.md",
-    "Development Rules.md",
     "Design/Characters/Abilities.md.meta",
     "00 - Core/00 - Game Design Index.md.meta",
     "Design/Combat.meta",
