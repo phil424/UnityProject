@@ -93,6 +93,33 @@ A sighting may contain:
 
 Rare sightings should integrate with the map / encounter HUD.
 
+## Gated Rare Sightings
+
+A rare sighting may become known before it becomes available.
+
+Example:
+
+Nobleman's Procession appears on the regional schedule.
+
+The player can see:
+- that it exists;
+- that it is extremely rare;
+- how long remains before it expires.
+
+However, accessing it requires completing an Elite encounter first.
+
+The expiry window may continue running while the rare encounter is locked.
+
+This creates an optional risk/reward challenge:
+
+> Take on a dangerous prerequisite now for a chance at the rare payoff, or
+> ignore the opportunity and continue with the safer expedition plan.
+
+The scheduler should own the timing window.
+
+The encounter should own its current known / available / completed / expired
+state.
+
 # Global Activation Events
 
 Ecological events may affect groups that already exist in the world.

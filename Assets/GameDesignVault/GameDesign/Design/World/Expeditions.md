@@ -108,6 +108,36 @@ The player should sometimes face decisions such as:
 This makes traversal part of strategic decision-making rather than only downtime
 between fights.
 
+# Encounter Relationships
+
+Encounters may affect the availability of other encounters.
+
+These relationships should create optional strategic opportunities rather than
+requiring every region to follow a fixed linear encounter chain.
+
+Example:
+
+Elite Gauntlet
+        ↓ clear
+Nobleman's Procession becomes available
+
+The rare encounter may already be known and expiring while the prerequisite
+remains incomplete.
+
+This allows authored decisions such as:
+
+> I would normally avoid that difficult Elite encounter, but completing it now
+> unlocks a rare opportunity that disappears in 45 seconds.
+
+Possible encounter relationships may eventually include:
+- completion unlocks another encounter;
+- either of several encounters can unlock an opportunity;
+- completing an encounter reveals another;
+- world/schedule events unlock encounters;
+- ecological events alter encounter availability.
+
+Avoid making `LevelEncounter` itself own one fixed prerequisite reference.
+
 # Threat Escalation - (Risk of Rain)
 ### Purpose
 Create increasing tension without relying only on inflated enemy health/damage.

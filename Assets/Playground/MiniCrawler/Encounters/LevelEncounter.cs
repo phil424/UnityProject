@@ -3,18 +3,21 @@ using System.Collections.Generic;
 using MiniCrawler.Core;
 using MiniCrawler.Spawning;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace MiniCrawler.Encounters
 {
     [DisallowMultipleComponent]
     public class LevelEncounter : MonoBehaviour
     {
-        public enum EncounterState
+        public enum EncounterPresentationState
         {
-            Dormant,
+            Unknown,
+            Locked,
             Available,
             Active,
-            Cleared
+            Cleared,
+            Expired
         }
 
         [Header("Identity")]
@@ -25,18 +28,25 @@ namespace MiniCrawler.Encounters
         [Header("Location")]
         [SerializeField] private Transform anchor;
 
-        [Header("Availability")]
+        [Header("Initial State")]
+        [SerializeField] private bool knownAtLevelStart = true;
         [SerializeField] private bool availableAtLevelStart = true;
 
         [Header("Content")]
         [SerializeField] private LevelSpawnGroup[] spawnGroups;
 
         [Header("Runtime (Debug)")]
-        [SerializeField] private EncounterState state = EncounterState.Dormant;
+        [SerializeField] private bool isKnown;
+        [SerializeField] private bool isAvailable;
+        [SerializeField] private bool isCompleted;
+        [SerializeField] private bool isExpired;
 
-        private bool isAvailable;
+        [FormerlySerializedAs("state")]
+        [SerializeField] private EncounterPresentationState presentationState =
+            EncounterPresentationState.Unknown;
 
-        public event Action<LevelEncounter, EncounterState> StateChanged;
+        public event Action<LevelEncounter, EncounterPresentationState> StateChanged;
+        public event Action<LevelEncounter> Completed;
 
         public string Id => string.IsNullOrWhiteSpace(id) ? name : id;
         public string DisplayName => string.IsNullOrWhiteSpace(displayName) ? name : displayName;
@@ -48,9 +58,18 @@ namespace MiniCrawler.Encounters
         public IReadOnlyList<LevelSpawnGroup> SpawnGroups =>
             spawnGroups ?? Array.Empty<LevelSpawnGroup>();
 
-        public EncounterState State => state;
+        public bool IsKnown => isKnown;
         public bool IsAvailable => isAvailable;
-        public bool IsSelectable => state == EncounterState.Available || state == EncounterState.Active;
+        public bool IsCompleted => isCompleted;
+        public bool IsExpired => isExpired;
+
+        public bool IsSelectable =>
+            isKnown &&
+            isAvailable &&
+            !isCompleted &&
+            !isExpired;
+
+        public EncounterPresentationState PresentationState => presentationState;
 
         private void OnEnable()
         {
@@ -66,30 +85,89 @@ namespace MiniCrawler.Encounters
 
         public void PrepareForLevel()
         {
+            isKnown = knownAtLevelStart || availableAtLevelStart;
             isAvailable = availableAtLevelStart;
+            isCompleted = false;
+            isExpired = false;
+
             RefreshState();
         }
 
         public void ClearForLevel()
         {
+            isKnown = false;
             isAvailable = false;
-            SetState(EncounterState.Dormant);
+            isCompleted = false;
+            isExpired = false;
+
+            SetPresentationState(EncounterPresentationState.Unknown);
+        }
+
+        public bool MakeKnown()
+        {
+            if (isKnown)
+                return false;
+
+            isKnown = true;
+            RefreshState();
+            return true;
         }
 
         public bool MakeAvailable()
         {
-            if (isAvailable || state == EncounterState.Cleared)
+            if (isAvailable || isCompleted || isExpired)
                 return false;
 
+            isKnown = true;
             isAvailable = true;
+
             RefreshState();
             return true;
+        }
+
+        public bool Expire()
+        {
+            if (isCompleted || isExpired)
+                return false;
+
+            isExpired = true;
+            isAvailable = false;
+
+            RefreshState();
+            return true;
+        }
+
+        public bool Complete()
+        {
+            if (isCompleted)
+                return false;
+
+            isKnown = true;
+            isAvailable = false;
+            isCompleted = true;
+
+            RefreshPresentationState();
+            Completed?.Invoke(this);
+
+            return true;
+        }
+
+        [ContextMenu("Debug/Make Known")]
+        private void DebugMakeKnown()
+        {
+            MakeKnown();
         }
 
         [ContextMenu("Debug/Make Available")]
         private void DebugMakeAvailable()
         {
             MakeAvailable();
+        }
+
+        [ContextMenu("Debug/Expire")]
+        private void DebugExpire()
+        {
+            Expire();
         }
 
         private void SubscribeToSpawnGroups()
@@ -141,19 +219,38 @@ namespace MiniCrawler.Encounters
 
         private void RefreshState()
         {
-            if (HasCleared())
+            if (!isCompleted && HasCleared())
             {
-                SetState(EncounterState.Cleared);
+                Complete();
                 return;
             }
+
+            RefreshPresentationState();
+        }
+
+        private void RefreshPresentationState()
+        {
+            SetPresentationState(ResolvePresentationState());
+        }
+
+        private EncounterPresentationState ResolvePresentationState()
+        {
+            if (!isKnown)
+                return EncounterPresentationState.Unknown;
+
+            if (isCompleted)
+                return EncounterPresentationState.Cleared;
 
             if (HasActiveCombat())
-            {
-                SetState(EncounterState.Active);
-                return;
-            }
+                return EncounterPresentationState.Active;
 
-            SetState(isAvailable ? EncounterState.Available : EncounterState.Dormant);
+            if (isExpired)
+                return EncounterPresentationState.Expired;
+
+            if (!isAvailable)
+                return EncounterPresentationState.Locked;
+
+            return EncounterPresentationState.Available;
         }
 
         private bool HasActiveCombat()
@@ -194,13 +291,19 @@ namespace MiniCrawler.Encounters
             return hasConfiguredGroup;
         }
 
-        private void SetState(EncounterState newState)
+        private void SetPresentationState(EncounterPresentationState newState)
         {
-            if (state == newState)
+            if (presentationState == newState)
                 return;
 
-            state = newState;
-            StateChanged?.Invoke(this, state);
+            presentationState = newState;
+            StateChanged?.Invoke(this, presentationState);
+        }
+
+        private void OnValidate()
+        {
+            if (availableAtLevelStart)
+                knownAtLevelStart = true;
         }
 
         private void OnDrawGizmosSelected()

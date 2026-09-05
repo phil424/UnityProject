@@ -97,39 +97,135 @@ Current authored data includes:
 - display name;
 - description;
 - world-space anchor;
-- availability at level start;
+- initial knowledge;
+- initial availability;
 - one or more `LevelSpawnGroup` references.
 
-Current runtime states:
+# Encounter State Axes
 
-`Dormant`
-- not currently available to the player.
+Encounter lifecycle state is intentionally stored as independent concepts rather
+than one mutually-exclusive gameplay enum.
 
-`Available`
-- known / eligible as a future encounter;
-- may already contain physically spawned but combat-inactive actors.
+## Known
 
-`Active`
-- at least one owned spawn group has begun and is combat-active.
+`IsKnown`
 
-`Cleared`
-- every configured owned spawn group has completed spawning and has no living
-  actors remaining.
+Answers:
 
-An encounter may therefore exist independently from whether its actors have
-spawned or entered combat.
+> Does the player currently know this encounter exists?
 
-Current intended authoring invariant:
+Unknown encounters may exist in the authored level without appearing in normal
+player-facing encounter UI.
 
-> One `LevelSpawnGroup` belongs to at most one `LevelEncounter`.
+## Available
 
-Future encounter information may additionally include:
-- threat;
-- opportunity / rarity;
-- notable targets;
-- schedule information;
-- HUD presentation;
-- required / optional semantics.
+`IsAvailable`
+
+Answers:
+
+> Is the encounter currently accessible/selectable as an opportunity?
+
+An encounter may be known but unavailable.
+
+Example:
+
+Nobleman's Procession
+- known;
+- rare;
+- visible in the schedule;
+- currently locked behind an Elite encounter.
+
+## Completed
+
+`IsCompleted`
+
+Answers:
+
+> Has this encounter been successfully completed?
+
+For current spawn-group encounters this is derived when every configured group
+has completed spawning and has no living actors.
+
+## Expired
+
+`IsExpired`
+
+Answers:
+
+> Has the opportunity window for this encounter ended?
+
+Expiry is independent from completion.
+
+The exact gameplay effect of expiry on an encounter that is already active is
+still unresolved.
+
+# Presentation State
+
+`EncounterPresentationState` is derived for player-facing/debug presentation.
+
+Current values:
+- Unknown
+- Locked
+- Available
+- Active
+- Cleared
+- Expired
+
+Presentation state is not the authoritative lifecycle storage.
+
+For example:
+
+IsKnown = true
+IsAvailable = false
+IsExpired = false
+
+derives:
+
+Locked
+
+`IsSelectable` currently requires:
+- known;
+- available;
+- not completed;
+- not expired.
+
+# Encounter Actions
+
+`LevelEncounterActions` is a reusable authored command set.
+
+Current actions:
+- make encounter known;
+- make encounter available;
+- expire encounter.
+
+It should be reusable by:
+- encounter completion triggers;
+- future scheduler events;
+- ecology events;
+- objectives;
+- debug tooling.
+
+Trigger source and trigger response remain separate.
+
+# Encounter Completion Links
+
+`LevelEncounterCompletionTrigger` listens for one encounter completing and
+executes configured:
+
+- `LevelEncounterActions`;
+- `LevelSpawnGroupActions`.
+
+This allows authored relationships such as:
+
+Elite Gauntlet
+        ↓ complete
+Nobleman's Procession
+        ↓ make available
+
+without embedding prerequisite references directly into `LevelEncounter`.
+
+Encounter relationships should remain composable rather than requiring every
+encounter to belong to a fixed linear dependency tree.
 
 # Current Runtime State
 

@@ -122,6 +122,43 @@ The HUD should not become a giant quest log.
 
 Use progressive disclosure so important decisions remain quick to read.
 
+# Locked and Gated Encounters
+
+Known encounters do not necessarily need to be immediately selectable.
+
+The HUD may expose a known but locked encounter when doing so creates a useful
+strategic decision.
+
+Example:
+
+🔒 ★ Nobleman's Procession
+VERY RARE
+Expires 00:45
+Unlock: Clear Elite Gauntlet
+
+This creates a choice:
+
+> Do I take on the dangerous prerequisite encounter now in order to gain access
+> to the rare opportunity before it expires?
+
+The encounter UI therefore needs to distinguish:
+- unknown;
+- known but locked;
+- available;
+- active;
+- completed;
+- expired.
+
+Locked encounters may still display:
+- rarity / opportunity;
+- location;
+- expiry;
+- unlock requirement;
+- notable rewards / enemies where appropriate.
+
+Exactly how much information is revealed before an encounter is available is a
+design question and may vary by encounter.
+
 # Targeting Controls
 
 The HUD should expose the hero's current autonomous target policy.

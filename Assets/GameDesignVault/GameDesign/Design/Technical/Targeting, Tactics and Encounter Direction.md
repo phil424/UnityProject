@@ -62,9 +62,25 @@ system.
 Relevant current data:
 - encounter identity;
 - display name;
-- runtime state;
 - world-space anchor;
+- whether the encounter is known;
+- whether the encounter is available;
+- whether the encounter is completed;
+- whether the encounter is expired;
+- derived presentation state;
 - whether the encounter is currently selectable.
+
+Encounter selection should operate on `IsSelectable` rather than assuming that
+every known encounter can be pursued.
+
+This supports player-facing situations such as:
+
+Nobleman's Procession
+- known;
+- visible on the strategic HUD;
+- temporarily locked;
+- unlockable through another encounter;
+- expiring according to a future schedule.
 
 Encounter-directed movement is not yet implemented.
 
