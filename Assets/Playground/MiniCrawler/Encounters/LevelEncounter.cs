@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using MiniCrawler.Core;
 using MiniCrawler.Spawning;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace MiniCrawler.Encounters
 {
@@ -25,25 +24,21 @@ namespace MiniCrawler.Encounters
         [SerializeField] private string displayName;
         [SerializeField, TextArea(2, 4)] private string description;
 
-        [Header("Location")]
-        [SerializeField] private Transform anchor;
-
         [Header("Initial State")]
         [SerializeField] private bool knownAtLevelStart = true;
         [SerializeField] private bool availableAtLevelStart = true;
 
-        [Header("Content")]
-        [SerializeField] private LevelSpawnGroup[] spawnGroups;
+        [Header("On Completed")]
+        [SerializeField] private LevelEncounterActions onCompletedActions = new();
 
         [Header("Runtime (Debug)")]
         [SerializeField] private bool isKnown;
         [SerializeField] private bool isAvailable;
         [SerializeField] private bool isCompleted;
         [SerializeField] private bool isExpired;
+        [SerializeField] private EncounterPresentationState presentationState = EncounterPresentationState.Unknown;
 
-        [FormerlySerializedAs("state")]
-        [SerializeField] private EncounterPresentationState presentationState =
-            EncounterPresentationState.Unknown;
+        private LevelSpawnGroup[] spawnGroups = Array.Empty<LevelSpawnGroup>();
 
         public event Action<LevelEncounter, EncounterPresentationState> StateChanged;
         public event Action<LevelEncounter> Completed;
@@ -52,27 +47,51 @@ namespace MiniCrawler.Encounters
         public string DisplayName => string.IsNullOrWhiteSpace(displayName) ? name : displayName;
         public string Description => description ?? string.Empty;
 
-        public Transform Anchor => anchor != null ? anchor : transform;
-        public Vector3 AnchorPosition => Anchor.position;
+        public Transform Anchor => transform;
+        public Vector3 AnchorPosition => transform.position;
 
-        public IReadOnlyList<LevelSpawnGroup> SpawnGroups =>
-            spawnGroups ?? Array.Empty<LevelSpawnGroup>();
+        public IReadOnlyList<LevelSpawnGroup> SpawnGroups => spawnGroups;
 
         public bool IsKnown => isKnown;
         public bool IsAvailable => isAvailable;
         public bool IsCompleted => isCompleted;
         public bool IsExpired => isExpired;
 
-        public bool IsSelectable =>
-            isKnown &&
-            isAvailable &&
-            !isCompleted &&
-            !isExpired;
+        public bool IsSelectable => isKnown && isAvailable && !isCompleted && !isExpired;
 
         public EncounterPresentationState PresentationState => presentationState;
 
+        public bool HasUnstartedSpawnGroups
+        {
+            get
+            {
+                foreach (LevelSpawnGroup group in spawnGroups)
+                {
+                    if (group != null && group.ConfiguredSpawnCount > 0 && !group.IsSpawningStarted)
+                        return true;
+                }
+
+                return false;
+            }
+        }
+
+        public bool HasInactiveCombatGroups
+        {
+            get
+            {
+                foreach (LevelSpawnGroup group in spawnGroups)
+                {
+                    if (group != null && group.ConfiguredSpawnCount > 0 && !group.IsCombatActive)
+                        return true;
+                }
+
+                return false;
+            }
+        }
+
         private void OnEnable()
         {
+            RefreshOwnedSpawnGroups();
             SubscribeToSpawnGroups();
             Health.AnyDied += HandleActorDied;
         }
@@ -85,6 +104,10 @@ namespace MiniCrawler.Encounters
 
         public void PrepareForLevel()
         {
+            UnsubscribeFromSpawnGroups();
+            RefreshOwnedSpawnGroups();
+            SubscribeToSpawnGroups();
+
             isKnown = knownAtLevelStart || availableAtLevelStart;
             isAvailable = availableAtLevelStart;
             isCompleted = false;
@@ -125,6 +148,34 @@ namespace MiniCrawler.Encounters
             return true;
         }
 
+        public bool BeginSpawning()
+        {
+            bool changed = false;
+
+            foreach (LevelSpawnGroup group in spawnGroups)
+            {
+                if (group != null && group.BeginSpawning())
+                    changed = true;
+            }
+
+            RefreshState();
+            return changed;
+        }
+
+        public bool ActivateCombat()
+        {
+            bool changed = false;
+
+            foreach (LevelSpawnGroup group in spawnGroups)
+            {
+                if (group != null && group.ActivateCombat())
+                    changed = true;
+            }
+
+            RefreshState();
+            return changed;
+        }
+
         public bool Expire()
         {
             if (isCompleted || isExpired)
@@ -147,7 +198,9 @@ namespace MiniCrawler.Encounters
             isCompleted = true;
 
             RefreshPresentationState();
+
             Completed?.Invoke(this);
+            onCompletedActions?.Execute(this);
 
             return true;
         }
@@ -164,17 +217,45 @@ namespace MiniCrawler.Encounters
             MakeAvailable();
         }
 
+        [ContextMenu("Debug/Begin Spawning")]
+        private void DebugBeginSpawning()
+        {
+            BeginSpawning();
+        }
+
+        [ContextMenu("Debug/Activate Combat")]
+        private void DebugActivateCombat()
+        {
+            ActivateCombat();
+        }
+
         [ContextMenu("Debug/Expire")]
         private void DebugExpire()
         {
             Expire();
         }
 
+        private void RefreshOwnedSpawnGroups()
+        {
+            LevelSpawnGroup[] candidates = GetComponentsInChildren<LevelSpawnGroup>(true);
+            List<LevelSpawnGroup> ownedGroups = new();
+
+            foreach (LevelSpawnGroup group in candidates)
+            {
+                if (group == null)
+                    continue;
+
+                LevelEncounter owner = group.GetComponentInParent<LevelEncounter>();
+
+                if (owner == this)
+                    ownedGroups.Add(group);
+            }
+
+            spawnGroups = ownedGroups.ToArray();
+        }
+
         private void SubscribeToSpawnGroups()
         {
-            if (spawnGroups == null)
-                return;
-
             foreach (LevelSpawnGroup group in spawnGroups)
             {
                 if (group == null)
@@ -188,9 +269,6 @@ namespace MiniCrawler.Encounters
 
         private void UnsubscribeFromSpawnGroups()
         {
-            if (spawnGroups == null)
-                return;
-
             foreach (LevelSpawnGroup group in spawnGroups)
             {
                 if (group == null)
@@ -255,15 +333,9 @@ namespace MiniCrawler.Encounters
 
         private bool HasActiveCombat()
         {
-            if (spawnGroups == null)
-                return false;
-
             foreach (LevelSpawnGroup group in spawnGroups)
             {
-                if (group == null)
-                    continue;
-
-                if (group.IsSpawningStarted && group.IsCombatActive && !group.IsComplete)
+                if (group != null && group.IsSpawningStarted && group.IsCombatActive && !group.IsComplete)
                     return true;
             }
 
@@ -272,9 +344,6 @@ namespace MiniCrawler.Encounters
 
         private bool HasCleared()
         {
-            if (spawnGroups == null)
-                return false;
-
             bool hasConfiguredGroup = false;
 
             foreach (LevelSpawnGroup group in spawnGroups)
@@ -308,13 +377,8 @@ namespace MiniCrawler.Encounters
 
         private void OnDrawGizmosSelected()
         {
-            Transform resolvedAnchor = anchor != null ? anchor : transform;
-
             Gizmos.color = Color.magenta;
-            Gizmos.DrawWireSphere(resolvedAnchor.position, 0.5f);
-
-            if (anchor != null)
-                Gizmos.DrawLine(transform.position, anchor.position);
+            Gizmos.DrawWireSphere(transform.position, 0.5f);
         }
     }
 }

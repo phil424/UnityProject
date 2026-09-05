@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace MiniCrawler.Encounters
@@ -6,103 +7,42 @@ namespace MiniCrawler.Encounters
     [Serializable]
     public class LevelEncounterActions
     {
-        [SerializeField] private LevelEncounter[] makeKnownEncounters;
-        [SerializeField] private LevelEncounter[] makeAvailableEncounters;
-        [SerializeField] private LevelEncounter[] expireEncounters;
-
-        public bool HasPendingActions =>
-            HasPendingKnownAction() ||
-            HasPendingAvailableAction() ||
-            HasPendingExpireAction();
-
-        public void Execute()
+        [Serializable]
+        public class Entry
         {
-            MakeKnown();
-            MakeAvailable();
-            Expire();
-        }
+            [SerializeField] private LevelEncounter target;
+            [SerializeField] private LevelEncounterCommands commands = new();
 
-        private void MakeKnown()
-        {
-            if (makeKnownEncounters == null)
-                return;
-
-            foreach (LevelEncounter encounter in makeKnownEncounters)
+            public bool HasPending(LevelEncounter context)
             {
-                if (encounter != null)
-                    encounter.MakeKnown();
+                LevelEncounter resolvedTarget = target != null ? target : context;
+                return commands != null && commands.HasPending(resolvedTarget);
+            }
+
+            public void Execute(LevelEncounter context)
+            {
+                LevelEncounter resolvedTarget = target != null ? target : context;
+                commands?.Execute(resolvedTarget);
             }
         }
 
-        private void MakeAvailable()
+        [SerializeField] private List<Entry> entries = new();
+
+        public bool HasPendingActions(LevelEncounter context = null)
         {
-            if (makeAvailableEncounters == null)
-                return;
-
-            foreach (LevelEncounter encounter in makeAvailableEncounters)
+            foreach (Entry entry in entries)
             {
-                if (encounter != null)
-                    encounter.MakeAvailable();
-            }
-        }
-
-        private void Expire()
-        {
-            if (expireEncounters == null)
-                return;
-
-            foreach (LevelEncounter encounter in expireEncounters)
-            {
-                if (encounter != null)
-                    encounter.Expire();
-            }
-        }
-
-        private bool HasPendingKnownAction()
-        {
-            if (makeKnownEncounters == null)
-                return false;
-
-            foreach (LevelEncounter encounter in makeKnownEncounters)
-            {
-                if (encounter != null && !encounter.IsKnown)
+                if (entry != null && entry.HasPending(context))
                     return true;
             }
 
             return false;
         }
 
-        private bool HasPendingAvailableAction()
+        public void Execute(LevelEncounter context = null)
         {
-            if (makeAvailableEncounters == null)
-                return false;
-
-            foreach (LevelEncounter encounter in makeAvailableEncounters)
-            {
-                if (encounter != null &&
-                    !encounter.IsAvailable &&
-                    !encounter.IsCompleted &&
-                    !encounter.IsExpired)
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        private bool HasPendingExpireAction()
-        {
-            if (expireEncounters == null)
-                return false;
-
-            foreach (LevelEncounter encounter in expireEncounters)
-            {
-                if (encounter != null && !encounter.IsCompleted && !encounter.IsExpired)
-                    return true;
-            }
-
-            return false;
+            foreach (Entry entry in entries)
+                entry?.Execute(context);
         }
     }
 }

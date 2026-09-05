@@ -47,10 +47,7 @@ namespace MiniCrawler.Spawning
         [SerializeField] private bool startSpawning = true;
         [SerializeField] private bool startCombatActive = true;
 
-        [Header("Spawn Sources")]
-        [SerializeField] private LevelSpawnSource[] spawnSources;
-
-        [Header("Schedule")]
+        [Header("Spawn Schedule")]
         [SerializeField] private List<SpawnEntry> entries = new();
 
         public event Action<LevelSpawnGroup, int> SpawningStarted;
@@ -59,6 +56,7 @@ namespace MiniCrawler.Spawning
         public event Action<LevelSpawnGroup, ActorDefinition, Pose> SpawnRequested;
 
         private readonly List<GameObject> spawnedActors = new();
+        private LevelSpawnSource[] spawnSources = Array.Empty<LevelSpawnSource>();
         private int runningEntries;
 
         public bool StartSpawning => startSpawning;
@@ -110,9 +108,15 @@ namespace MiniCrawler.Spawning
             }
         }
 
+        private void Awake()
+        {
+            RefreshSpawnSources();
+        }
+
         public void PrepareForLevel()
         {
             StopAllCoroutines();
+            RefreshSpawnSources();
 
             spawnedActors.Clear();
             runningEntries = 0;
@@ -123,8 +127,18 @@ namespace MiniCrawler.Spawning
 
         public bool BeginSpawning()
         {
-            if (IsSpawningStarted || !HasValidSpawnSource())
+            if (IsSpawningStarted)
                 return false;
+
+            if (!HasValidSpawnSource())
+            {
+                Debug.LogWarning(
+                    $"Spawn group '{name}' has no LevelSpawnSource on itself or beneath it.",
+                    this
+                );
+
+                return false;
+            }
 
             int validEntryCount = 0;
             int spawnCount = 0;
@@ -144,8 +158,6 @@ namespace MiniCrawler.Spawning
             IsSpawningStarted = true;
             runningEntries = validEntryCount;
 
-            // Report the committed spawn count before any immediate coroutine
-            // can issue its first SpawnRequested event.
             SpawningStarted?.Invoke(this, spawnCount);
 
             foreach (SpawnEntry entry in entries)
@@ -245,9 +257,28 @@ namespace MiniCrawler.Spawning
                 SpawningCompleted?.Invoke(this);
         }
 
+        private void RefreshSpawnSources()
+        {
+            LevelSpawnSource[] candidates = GetComponentsInChildren<LevelSpawnSource>(true);
+            List<LevelSpawnSource> ownedSources = new();
+
+            foreach (LevelSpawnSource source in candidates)
+            {
+                if (source == null)
+                    continue;
+
+                LevelSpawnGroup owner = source.GetComponentInParent<LevelSpawnGroup>();
+
+                if (owner == this)
+                    ownedSources.Add(source);
+            }
+
+            spawnSources = ownedSources.ToArray();
+        }
+
         private bool TryGetSpawnPose(out Pose pose)
         {
-            if (spawnSources == null || spawnSources.Length == 0)
+            if (spawnSources.Length == 0)
             {
                 pose = default;
                 return false;
@@ -273,9 +304,6 @@ namespace MiniCrawler.Spawning
 
         private bool HasValidSpawnSource()
         {
-            if (spawnSources == null)
-                return false;
-
             foreach (LevelSpawnSource source in spawnSources)
             {
                 if (source != null)

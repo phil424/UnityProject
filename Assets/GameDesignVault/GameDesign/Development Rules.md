@@ -968,3 +968,25 @@ Avoid:
 As a general guide, lines around 120–140 characters are acceptable when still readable, but use judgement rather than enforcing a rigid maximum.
 
 Match the style already present in the latest project where practical.
+
+# Authoring Ergonomics
+
+Preserving runtime separation does not require exposing every runtime seam as
+manual scene or Inspector wiring.
+
+For designer-authored content:
+
+- prefer hierarchy to express obvious ownership;
+- automatically discover child components where ownership is unambiguous;
+- avoid requiring the same object to be referenced in several separate arrays;
+- make the common case understandable from one primary authoring root;
+- keep advanced escape hatches only when there is a concrete need for them;
+- do not create separate GameObjects merely because two runtime concepts are
+  implemented by separate classes.
+
+If authoring one ordinary gameplay concept requires following references across
+several unrelated GameObjects or components, reassess the authoring surface
+before adding more features.
+
+Runtime architecture should remain modular while the authoring experience stays
+coherent.

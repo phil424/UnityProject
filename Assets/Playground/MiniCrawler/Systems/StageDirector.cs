@@ -39,18 +39,18 @@ namespace MiniCrawler.Systems
         [Header("Party")]
         [SerializeField] private float partySpawnRadius = 1f;
 
-        [Header("Minion Spawn Groups")]
-        [SerializeField] private LevelSpawnGroup[] minionSpawnGroups;
-        
         [Header("Encounters")]
-        [SerializeField] private LevelEncounter[] encounters;
+        [SerializeField] private Transform encountersRoot;
 
         private readonly List<GameObject> levelObjects = new();
         private readonly Dictionary<string, GameObject> spawnedPartyActors = new();
+        
+        private LevelEncounter[] encounters = Array.Empty<LevelEncounter>();
+        private LevelSpawnGroup[] minionSpawnGroups = Array.Empty<LevelSpawnGroup>();
+
         public int PendingMinionSpawns => pendingMinionSpawns;
         public int UnstartedMinionSpawnGroups => unstartedMinionSpawnGroups;
-        
-        public IReadOnlyList<LevelEncounter> Encounters => encounters ?? Array.Empty<LevelEncounter>();
+        public IReadOnlyList<LevelEncounter> Encounters => encounters;
 
         private LevelState state = LevelState.Idle;
         private int livingPartyMembers;
@@ -130,6 +130,21 @@ namespace MiniCrawler.Systems
             );
             return true;
         }
+        
+        private void RefreshEncounterContent()
+        {
+            if (encountersRoot == null)
+            {
+                encounters = Array.Empty<LevelEncounter>();
+                minionSpawnGroups = Array.Empty<LevelSpawnGroup>();
+
+                Debug.LogWarning("StageDirector has no Encounters Root assigned.", this);
+                return;
+            }
+
+            encounters = encountersRoot.GetComponentsInChildren<LevelEncounter>(true);
+            minionSpawnGroups = encountersRoot.GetComponentsInChildren<LevelSpawnGroup>(true);
+        }
 
         private void SpawnSelectedParty(RunState runState)
         {
@@ -188,6 +203,7 @@ namespace MiniCrawler.Systems
         private void StartMinionSpawnGroups()
         {
             StopMinionSpawnGroups();
+            RefreshEncounterContent();
 
             pendingMinionSpawns = 0;
             unstartedMinionSpawnGroups = 0;

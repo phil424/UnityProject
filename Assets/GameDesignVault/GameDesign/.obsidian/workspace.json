@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Design/World/Expeditions.md",
+                "file": "Development Rules.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Expeditions"
+              "title": "Development Rules"
             }
           }
         ]
@@ -187,10 +187,11 @@
   },
   "active": "57c7e95b4b97b861",
   "lastOpenFiles": [
+    "Design/Technical/Level Authoring and Encounters.md",
+    "Design/World/Expeditions.md",
     "Design/World/Ecology.md",
     "Design/UI-UX.md",
     "Design/Technical/Targeting, Tactics and Encounter Direction.md",
-    "Design/Technical/Level Authoring and Encounters.md",
     "Development Rules.md",
     "00 - Core/05 - Open Design Questions.md",
     "Design/Technical/Targeting, Tactics and Encounter Direction.md.meta",
@@ -198,7 +199,6 @@
     "00 - Core/00 - Game Design Index.md",
     "00 - Core/04 - Terminology.md",
     "Design/Progression.md",
-    "Design/World/Expeditions.md",
     "Design/Enemies.md",
     "Design/Combat/Combat.md",
     "Design/Characters/Support Characters.md",

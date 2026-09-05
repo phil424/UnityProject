@@ -15,6 +15,90 @@ Provide a scene-authorable framework for creating regions and encounters without
 hard-coding individual enemy types, spawn locations, spawn rhythms or encounter
 behaviour into StageDirector.
 
+# Authoring Model
+
+Runtime responsibilities remain separated, but ordinary scene authoring is
+encounter-rooted.
+
+The normal authoring unit is:
+
+LevelEncounter
+    ├── LevelSpawnGroup
+    ├── LevelSpawnSource
+    └── optional encounter triggers
+
+For simple encounters, all three core components may live on the same
+GameObject.
+
+Example:
+
+Old Cemetery
+    LevelEncounter
+    LevelSpawnGroup
+    LevelSpawnSource
+
+More complex encounters may use children:
+
+Church Siege
+    LevelEncounter
+
+    Door Horde
+        LevelSpawnGroup
+        LevelSpawnSource
+
+    Grave Reinforcements
+        LevelSpawnGroup
+
+        Grave Left
+            LevelSpawnSource
+
+        Grave Right
+            LevelSpawnSource
+
+    Approach Trigger
+        LevelEncounterProximityTrigger
+
+The hierarchy expresses ownership.
+
+`LevelEncounter` automatically discovers `LevelSpawnGroup`s for which it is the
+nearest parent encounter.
+
+`LevelSpawnGroup` automatically discovers `LevelSpawnSource`s for which it is
+the nearest parent spawn group.
+
+Ordinary authoring should not require manually maintaining duplicate arrays of
+encounters, groups and sources.
+
+`StageDirector` receives one `Encounters Root` reference and discovers the
+encounters and spawn groups beneath it.
+
+# Authoring Principle
+
+Runtime separation does not require authoring separation.
+
+Keep separate runtime responsibilities when they protect flexibility, but hide
+plumbing that can be inferred safely from scene hierarchy.
+
+Prefer:
+
+one understandable encounter root
+        ↓
+local components / children
+        ↓
+automatic ownership discovery
+
+over:
+
+encounter
+        ↓ manual reference
+spawn group
+        ↓ manual reference
+spawn source
+        ↓ separate StageDirector reference
+
+A common encounter should be understandable by selecting its root GameObject
+and inspecting its immediate children.
+
 # Core Separation
 
 ## WHERE
@@ -189,43 +273,56 @@ Locked
 - not completed;
 - not expired.
 
-# Encounter Actions
+# Encounter Commands and Actions
 
-`LevelEncounterActions` is a reusable authored command set.
+`LevelEncounterCommands` represents the common authored operations that can be
+performed on an encounter:
 
-Current actions:
-- make encounter known;
-- make encounter available;
-- expire encounter.
+- make known;
+- make available;
+- begin spawning;
+- activate combat;
+- expire.
 
-It should be reusable by:
-- encounter completion triggers;
-- future scheduler events;
-- ecology events;
-- objectives;
-- debug tooling.
+Commands operate at encounter level and forward spawning/combat changes to the
+encounter's owned spawn groups.
 
-Trigger source and trigger response remain separate.
+`LevelEncounterActions` contains one or more target encounter + command entries.
+
+Example:
+
+On Opening Horde Completed
+
+Target:
+    Reinforcements
+
+Commands:
+    Make Available
+
+Future systems such as the level scheduler should reuse the same encounter
+commands rather than manipulating spawn groups directly.
+
+Low-level `LevelSpawnGroup.BeginSpawning()` and `ActivateCombat()` remain
+runtime primitives but are no longer the normal scene-authoring interface.
 
 # Encounter Completion Links
 
-`LevelEncounterCompletionTrigger` listens for one encounter completing and
-executes configured:
+`LevelEncounter` owns its authored `On Completed` actions directly.
 
-- `LevelEncounterActions`;
-- `LevelSpawnGroupActions`.
+This avoids requiring a separate completion-trigger component whose only purpose
+is to reference the encounter it already sits beside.
 
-This allows authored relationships such as:
+Example:
 
 Elite Gauntlet
-        ↓ complete
-Nobleman's Procession
-        ↓ make available
+    LevelEncounter
 
-without embedding prerequisite references directly into `LevelEncounter`.
+    On Completed:
+        Nobleman's Procession
+            Make Available
 
-Encounter relationships should remain composable rather than requiring every
-encounter to belong to a fixed linear dependency tree.
+The generic `Completed` runtime event remains available for systems that need to
+observe completion programmatically.
 
 # Current Runtime State
 
@@ -279,47 +376,28 @@ A proximity trigger does not inherently mean "spawn and activate".
 
 Spawn-group actions should be reusable by future schedule and encounter systems.
 
-# Spawn Group Actions
-
-`LevelSpawnGroupActions` is the reusable authored command set for manipulating
-spawn groups.
-
-It currently supports two independent actions:
-
-- begin spawning;
-- activate combat.
-
-The same group may appear in both lists.
-
-Combat activation is applied before spawning begins so an immediately spawned
-actor inherits the intended engagement state.
-
-This action set should be reusable by future systems such as:
-
-- proximity triggers;
-- level-schedule events;
-- encounter events;
-- global ecology events;
-- debug tooling.
-
-The trigger determines **when** the actions occur.
-
-`LevelSpawnGroupActions` determines **what group state changes occur**.
-
 # Proximity Trigger
 
-`LevelSpawnProximityActivator` detects when a living party member enters an
-authored radius and then executes its configured `LevelSpawnGroupActions`.
+`LevelEncounterProximityTrigger` is normally placed on the encounter itself or
+on a child positioned at the desired trigger location.
 
-A proximity trigger may therefore:
+It automatically controls its nearest parent `LevelEncounter`.
 
-- begin spawning without activating combat;
-- activate already-spawned actors without beginning a spawn schedule;
-- perform both;
-- affect multiple groups at once.
+Its authored commands may independently:
 
-Proximity is only one trigger source and should not be baked into the spawn
-group itself.
+- make the encounter known;
+- make it available;
+- begin spawning;
+- activate combat;
+- expire it.
+
+A trigger can optionally require the encounter to already be available.
+
+This allows a locked encounter to have a world-space trigger without that
+trigger prematurely starting the encounter.
+
+Proximity remains only one future trigger source. Scheduler, ecology and
+objective systems should eventually use the same encounter-command vocabulary.
 
 # Future Runtime Flow
 
