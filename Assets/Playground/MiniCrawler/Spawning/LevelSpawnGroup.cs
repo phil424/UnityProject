@@ -54,6 +54,8 @@ namespace MiniCrawler.Spawning
         [SerializeField] private List<SpawnEntry> entries = new();
 
         public event Action<LevelSpawnGroup, int> SpawningStarted;
+        public event Action<LevelSpawnGroup> SpawningCompleted;
+        public event Action<LevelSpawnGroup> CombatActivated;
         public event Action<LevelSpawnGroup, ActorDefinition, Pose> SpawnRequested;
 
         private readonly List<GameObject> spawnedActors = new();
@@ -65,6 +67,29 @@ namespace MiniCrawler.Spawning
         public bool IsSpawningStarted { get; private set; }
         public bool IsCombatActive { get; private set; }
         public bool IsRunning => runningEntries > 0;
+        public bool IsSpawningComplete => IsSpawningStarted && runningEntries == 0;
+        public bool IsComplete => IsSpawningComplete && LivingActorCount == 0;
+
+        public int LivingActorCount
+        {
+            get
+            {
+                int count = 0;
+
+                foreach (GameObject actor in spawnedActors)
+                {
+                    if (actor == null)
+                        continue;
+
+                    Health health = actor.GetComponent<Health>();
+
+                    if (health == null || !health.IsDead)
+                        count++;
+                }
+
+                return count;
+            }
+        }
 
         public int ConfiguredSpawnCount
         {
@@ -152,6 +177,7 @@ namespace MiniCrawler.Spawning
                 engagement.SetEngaged(true);
             }
 
+            CombatActivated?.Invoke(this);
             return true;
         }
 
@@ -214,6 +240,9 @@ namespace MiniCrawler.Spawning
             }
 
             runningEntries = Mathf.Max(0, runningEntries - 1);
+
+            if (runningEntries == 0)
+                SpawningCompleted?.Invoke(this);
         }
 
         private bool TryGetSpawnPose(out Pose pose)

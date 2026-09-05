@@ -54,6 +54,30 @@ Selected Encounter:
 The party travels toward that encounter when it does not have a higher-priority
 local combat requirement.
 
+## Current Encounter Foundation
+
+`LevelEncounter` now provides the first runtime identity used by this future
+system.
+
+Relevant current data:
+- encounter identity;
+- display name;
+- runtime state;
+- world-space anchor;
+- whether the encounter is currently selectable.
+
+Encounter-directed movement is not yet implemented.
+
+The intended next seam is:
+
+Selected LevelEncounter
+        ↓
+Encounter Directive
+        ↓
+travel toward LevelEncounter.AnchorPosition
+        ↓
+normal combat targeting takes priority when appropriate
+
 ## Target Policy
 
 Answers:

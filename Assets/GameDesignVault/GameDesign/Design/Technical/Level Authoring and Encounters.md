@@ -87,19 +87,49 @@ engagement.
 
 ## PLAYER-FACING IDENTITY
 
-Future `LevelEncounter`.
+`LevelEncounter`
 
-An encounter represents a meaningful player-understandable threat or opportunity
-independently from low-level spawn machinery.
+A `LevelEncounter` represents a meaningful player-understandable threat or
+opportunity independently from low-level spawn machinery.
 
-Future encounter information may include:
-- display identity;
-- map/location anchor;
-- encounter state;
+Current authored data includes:
+- stable identity;
+- display name;
+- description;
+- world-space anchor;
+- availability at level start;
+- one or more `LevelSpawnGroup` references.
+
+Current runtime states:
+
+`Dormant`
+- not currently available to the player.
+
+`Available`
+- known / eligible as a future encounter;
+- may already contain physically spawned but combat-inactive actors.
+
+`Active`
+- at least one owned spawn group has begun and is combat-active.
+
+`Cleared`
+- every configured owned spawn group has completed spawning and has no living
+  actors remaining.
+
+An encounter may therefore exist independently from whether its actors have
+spawned or entered combat.
+
+Current intended authoring invariant:
+
+> One `LevelSpawnGroup` belongs to at most one `LevelEncounter`.
+
+Future encounter information may additionally include:
 - threat;
-- opportunity/rarity;
+- opportunity / rarity;
 - notable targets;
-- HUD presentation.
+- schedule information;
+- HUD presentation;
+- required / optional semantics.
 
 # Current Runtime State
 
@@ -113,6 +143,16 @@ Future encounter information may include:
 
 `UnstartedMinionSpawnGroups`
 - currently required authored groups whose spawn schedule has not begun.
+
+`LevelEncounter.State`
+- player-facing runtime encounter state.
+
+`LevelEncounter.AnchorPosition`
+- world-space destination for future encounter direction, minimap and navigation.
+
+`StageDirector.Encounters`
+- current runtime seam through which future player-facing systems can discover
+  the authored encounters for the current level.
 
 These concepts must not be conflated.
 
@@ -279,6 +319,16 @@ aggro ranges.
 Future encounter identity and encounter-directed movement should distinguish
 required, optional and opportunistic encounters and provide travel intent when
 no combat target exists.
+
+`LevelEncounter` does not yet control level-completion semantics.
+
+`StageDirector.MinionSpawnGroups` are still treated as required work separately
+from encounter identity.
+
+Encounter-directed movement is also not implemented yet.
+
+A party can therefore still become stationary with no valid combat target while
+an unstarted required group exists elsewhere.
 
 # Open Questions
 

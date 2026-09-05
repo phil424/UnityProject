@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using MiniCrawler.Core;
+using MiniCrawler.Encounters;
 using MiniCrawler.Progress;
 using MiniCrawler.Spawning;
 using UnityEngine;
@@ -40,11 +41,16 @@ namespace MiniCrawler.Systems
 
         [Header("Minion Spawn Groups")]
         [SerializeField] private LevelSpawnGroup[] minionSpawnGroups;
+        
+        [Header("Encounters")]
+        [SerializeField] private LevelEncounter[] encounters;
 
         private readonly List<GameObject> levelObjects = new();
         private readonly Dictionary<string, GameObject> spawnedPartyActors = new();
         public int PendingMinionSpawns => pendingMinionSpawns;
         public int UnstartedMinionSpawnGroups => unstartedMinionSpawnGroups;
+        
+        public IReadOnlyList<LevelEncounter> Encounters => encounters ?? Array.Empty<LevelEncounter>();
 
         private LevelState state = LevelState.Idle;
         private int livingPartyMembers;
@@ -207,6 +213,8 @@ namespace MiniCrawler.Systems
 
                 unstartedMinionSpawnGroups++;
             }
+
+            PrepareEncountersForLevel();
 
             foreach (LevelSpawnGroup group in minionSpawnGroups)
             {
@@ -406,6 +414,7 @@ namespace MiniCrawler.Systems
                 SimulationPause.Instance.Resume();
 
             StopMinionSpawnGroups();
+            ClearEncounters();
             ClearLevelObjects();
 
             livingPartyMembers = 0;
@@ -417,6 +426,30 @@ namespace MiniCrawler.Systems
             LevelCleared?.Invoke();
 
             SetState(LevelState.Idle);
+        }
+        
+        private void PrepareEncountersForLevel()
+        {
+            if (encounters == null)
+                return;
+
+            foreach (LevelEncounter encounter in encounters)
+            {
+                if (encounter != null)
+                    encounter.PrepareForLevel();
+            }
+        }
+
+        private void ClearEncounters()
+        {
+            if (encounters == null)
+                return;
+
+            foreach (LevelEncounter encounter in encounters)
+            {
+                if (encounter != null)
+                    encounter.ClearForLevel();
+            }
         }
     }
 }
