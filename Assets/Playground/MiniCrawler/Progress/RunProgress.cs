@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using MiniCrawler.Core;
 using MiniCrawler.Abilities;
+using MiniCrawler.Expedition;
 
 namespace MiniCrawler.Progress
 {
@@ -14,6 +15,7 @@ namespace MiniCrawler.Progress
         public static bool HasActiveRun => CurrentRun != null;
 
         public static int Currency => CurrentRun != null ? CurrentRun.Currency : 0;
+        public static WorldClockState WorldClock => CurrentRun?.WorldClock;
 
         public static IReadOnlyList<PartyMemberDefinition> SelectedParty =>
             CurrentRun != null ? CurrentRun.SelectedParty : Array.Empty<PartyMemberDefinition>();
@@ -155,27 +157,6 @@ namespace MiniCrawler.Progress
             return chosen;
         }
 
-        public static int GetUpgradeCost(PartyMemberDefinition definition, GearSlot slot)
-        {
-            if (CurrentRun == null)
-                return int.MaxValue;
-
-            return CurrentRun.GetUpgradeCost(definition, slot);
-        }
-
-        public static bool TryBuyUpgrade(PartyMemberDefinition definition, GearSlot slot)
-        {
-            if (CurrentRun == null)
-                return false;
-
-            bool purchased = CurrentRun.TryBuyUpgrade(definition, slot);
-
-            if (purchased)
-                Changed?.Invoke();
-
-            return purchased;
-        }
-        
         public static int GetAbilityUpgradeCost(PartyMemberDefinition definition, AbilityDefinition ability)
         {
             if (CurrentRun == null)

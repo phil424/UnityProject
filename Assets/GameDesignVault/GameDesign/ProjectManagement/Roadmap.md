@@ -8,36 +8,68 @@ Technical architecture lives under `Design/Technical/`.
 
 # Current Checkpoint
 
-## 2.9E — Encounter Authoring Consolidation ✅
+## 2.9F — Strategic Expedition Design Closure ✅
 
 Completed:
-- LevelEncounter foundation;
-- separate spawning / combat activation;
-- encounter lifecycle;
-- encounter relationships;
-- hierarchy-owned encounter authoring;
-- reusable encounter commands;
-- simplified StageDirector encounter discovery.
+- scheduler / encounter-generation design;
+- World Time / daily-cycle design;
+- ambient exploration direction;
+- strategic HUD information hierarchy;
+- open design questions;
+- initial 3.x roadmap.
 
-# 2.9F — Strategic Expedition Design Closure
+## 3.0A — Strategic Direction Foundation ✅
+
+Completed:
+- runtime encounter membership;
+- generic navigation intent;
+- immediate encounter redirection.
+
+## 3.0B — World Clock Foundation ✅
+
+Completed:
+- run-owned accelerated World Time;
+- Day N + HH:MM;
+- configurable clock speed;
+- simulation-speed integration.
+
+## 3.0C — Expedition Lifetime & Persistent Progression Bridge
 
 **Status: Active**
 
-Purpose:
-- consolidate scheduler / encounter-generation design;
-- document ambient exploration;
-- define strategic HUD information hierarchy;
-- capture remaining questions;
-- establish the 3.x roadmap;
-- review detailed strategic-panel wireframes.
+Prove:
+- defeat ends expedition;
+- new expedition resets World Time;
+- persistent progression survives defeat;
+- persistent Weapon / Armour / Focus levels seed a fresh RunBuild;
+- temporary ability/build progression resets;
+- failure → upgrade → retry is playable.
 
-No major gameplay implementation is required.
+Use in-memory persistence only.
 
-Completion:
-- documentation updated;
-- passive HUD wireframe accepted as working baseline;
-- open questions recorded;
-- 3.0 prototype scope agreed.
+The prototype persistent economy is deliberately temporary.
+
+## 3.0D — Quick Encounter Choice Proof
+
+Prototype:
+- three quick encounter choices;
+- oldest selectable ordering;
+- same EncounterDirection API;
+- temporary presentation.
+
+## 3.0E — Ambient Route Navigation
+
+## 3.0F — Forecast Proof
+
+## 3.0G — Encounter Supply Transition
+
+## 3.0H — First World Event
+
+## 3.0I — Passive Strategic HUD
+
+## 3.0J — Expanded Strategic Planner
+
+## 3.0K — Strategic Expedition Integration
 
 ---
 
@@ -55,120 +87,96 @@ The prototype should answer:
 
 A short 5–10 minute prototype is sufficient.
 
-The encounter supply may initially be fake / predefined.
+Encounter supply may initially be fake / predefined.
 
-```
+## 3.0B — World Clock Foundation
 
-3.0A — Encounter Directive + Membership
-Immediate encounter redirection.
+**Status: Active**
 
-3.0B — World Clock Foundation
-Day N + HH:MM
-configurable clock speed
-simulation-speed integration
-basic debug presentation
+Establish:
+- run-owned accelerated World Time;
+- Day N + HH:MM;
+- configurable world-clock rate;
+- simulation-speed integration;
+- basic debug presentation.
 
-3.0C — Prototype Encounter Supply
-Always maintain three encounter choices.
-Fake/predefined supply is fine.
+No scheduler behaviour is required yet.
 
-3.0D — Forecast / Daily Timeline
-Next 3 encounters
-world-time timestamps
-short countdown windows
-long-range major events
+## 3.0C — Quick Encounter Choice Proof
 
-3.0E — Quick Encounter Selection + Passive Strategic HUD
-Minimap
-three oldest selectable encounters
-world clock
-upcoming schedule
+Prototype:
+- three quick encounter choices;
+- same `EncounterDirectionController` API as debug selection;
+- oldest selectable encounter ordering;
+- temporary presentation before final HUD work.
 
-3.0F — Ambient Route Graph + Autopilot
-No directive → follow ambient route/activity.
+Controller architecture should remain compatible, but controller polish is not
+required yet.
 
-3.0G — First World Event
-Zombie Surge / Fiery Zombies
-scheduled using World Time.
+## 3.0D — Ambient Route Navigation
 
-3.0H — Expanded Strategic Planner
-Your detailed wireframe
-full timeline/calendar
-known/locked encounters
-strong slow-motion
-
-3.0I — Strategic Expedition Integration
-5–10 minute playable proof.
-```
-
-
-## 3.0A — Encounter Directive and Membership
-
-Introduce runtime encounter membership for spawned actors.
-
-Introduce a selected Encounter Directive.
-
-Selecting another encounter:
-- changes the directive immediately;
-- drops targets belonging to the old encounter;
-- begins travel toward the new encounter;
-- does not force old enemies to disengage.
-
-No polished UI required.
-
-## 3.0B — Three Quick Encounter Choices
-
-Prototype the three quick encounter slots.
-
-Rules:
-- always maintain three selectable choices;
-- default display = three oldest selectable encounters;
-- clicking / input selects Encounter Directive;
-- use consistent Triangle / Square / Circle slot identity.
-
-Controller architecture should remain compatible but full controller polish is
-not required.
-
-## 3.0C — Ambient Route Graph and Autopilot
-
-Create the first designer-authored ambient route graph.
+Create the first designer-authored ambient route proof.
 
 Prove:
-- nodes;
-- connections;
-- ambient spawning ahead;
-- local wandering;
-- no selected encounter → follow ambient activity;
-- selected encounter → encounter directive overrides ambient navigation.
+- authored travel nodes / connections;
+- no Encounter Directive → ambient autopilot;
+- Encounter Directive overrides ambient travel;
+- manually placed ambient enemies are sufficient initially.
 
-Keep the first ambient population deliberately small.
+Do not build the complete ambient population system yet.
 
-## 3.0D — Simple Encounter Supply and Forecast
+## 3.0E — Forecast Proof
 
-Do NOT build the final intelligent Encounter Director yet.
-
-Use a controlled prototype queue.
+Use predefined / fake schedule data.
 
 Prove:
-- three current selectable encounters;
 - next three upcoming encounters;
+- World Time timestamps;
+- short actionable countdown windows;
+- longer-range major-event information.
+
+The purpose is to test whether forecast information changes player decisions.
+
+## 3.0F — Encounter Supply Transition
+
+Introduce the first continuously cycling encounter supply.
+
+Prove:
 - encounter arrival;
-- encounter expiry;
+- expiry;
+- selected/committed encounter protection;
 - automatic backfill;
-- selected encounter protected from expiry.
+- three selectable encounter opportunities remain available.
 
-A handful of additional scene-authored encounters is sufficient.
+Deliberately address the old finite StageDirector boss-gating assumptions rather
+than hiding endless encounter supply behind them.
 
-## 3.0E — Passive Strategic HUD Proof
+## 3.0G — First World Event
 
-Implement the passive wireframe concepts:
+Implement one representative world event.
+
+Recommended proof:
+- Zombie Surge;
+or
+- Fiery Zombies.
+
+Prove:
+- schedule integration;
+- activation / expiry;
+- affects future / unengaged content;
+- does not rewrite already-engaged combat.
+
+## 3.0H — Passive Strategic HUD
+
+Implement the passive wireframe direction:
 
 Top-left:
+- World Time;
 - simulation controls;
 - next three upcoming schedule entries.
 
 Top-right:
-- active world-event strip;
+- active world-event status;
 - minimap;
 - three quick encounter slots.
 
@@ -180,58 +188,38 @@ Bottom-right:
 - Pending Rewards;
 - currency / run resources.
 
-Focus on information hierarchy, not visual polish.
+Focus on information hierarchy rather than visual polish.
 
-## 3.0F — First World Event
+## 3.0I — Expanded Strategic Planner
 
-Implement one representative world event.
-
-Recommended first proof:
-- Zombie Surge;
-or
-- Fiery Zombies.
-
-Prove:
-- passive HUD presentation;
-- forecast entry;
-- activation / expiry;
-- affects unengaged encounter / ambient content;
-- does not rewrite already-engaged combat.
-
-## 3.0G — Expanded Strategic View
-
-Use the user's detailed-panel wireframe as the basis.
+Use the detailed strategic-panel wireframe as the basis.
 
 Prototype:
 - expanded map;
-- known encounters;
-- locked encounters;
-- forecast / timeline;
-- encounter details;
+- known / locked encounters;
+- forecast timeline;
+- encounter information;
 - selection;
-- strong slow-motion.
+- strong simulation slow-motion.
 
-Sorting/filtering only if required by the wireframe/playtest.
+## 3.0J — Strategic Expedition Integration
 
-## 3.0H — Strategic Expedition Integration
-
-Run a 5–10 minute prototype expedition.
+Run a deliberate 5–10 minute strategic expedition proof.
 
 Validate:
-- three encounter choices remain available;
-- encounter redirection feels immediate;
-- old enemies can pursue into new fights;
-- ambient autopilot works;
-- forecast creates useful decisions;
-- expiry creates urgency;
-- passive HUD remains readable;
-- world event affects planning.
+- encounter selection creates useful strategic agency;
+- redirection feels immediate;
+- pulling encounters together is useful/fun;
+- ambient autopilot prevents inactivity;
+- World Time is readable;
+- forecast changes decisions;
+- expiry creates useful urgency;
+- world events influence planning;
+- passive HUD remains understandable.
 
-Iterate based on actual play.
+Do not build the full adaptive endless director until this loop is enjoyable.
 
-Do not implement the full endless director unless this loop is enjoyable.
-
----
+------
 
 # 3.1 — Data-Driven Encounter Generation and Authoring
 

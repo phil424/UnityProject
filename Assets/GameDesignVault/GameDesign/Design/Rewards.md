@@ -11,6 +11,59 @@ A reward may provide:
 - unlock
 - other future content.
 
+# Reward Lifetime
+
+Rewards must explicitly communicate which progression lifetime they affect.
+
+## Expedition Rewards
+
+Temporary.
+
+Examples:
+- ability acquisition;
+- ability level;
+- evolution;
+- temporary augment;
+- temporary stat growth.
+
+These reset when the expedition ends.
+
+## Persistent Rewards
+
+Survive expedition end.
+
+Examples:
+- permanent ability unlock;
+- equipment;
+- crafting material;
+- persistent currency;
+- character / support unlock;
+- recipe / collection unlock.
+
+Persistent rewards should not be hidden inside temporary reward state.
+
+If a persistent reward is earned, its permanent ownership should be committed
+through the persistent progression layer.
+
+# Ability Unlock vs Acquisition
+
+Ability Unlock:
+- persistent availability.
+
+Ability Acquisition:
+- ownership during one expedition.
+
+A reward may potentially do both.
+
+Example:
+
+Rare encounter reward
+→ permanently unlocks Vortex
++
+→ grants Vortex immediately during the current expedition.
+
+The exact reward rules remain future design.
+
 # Sources
 Potential sources:
 - normal enemies

@@ -261,3 +261,74 @@ The system should support both.
 
 **Need to decide by:**
 Full scheduler implementation.
+
+## Persistent Economy
+
+**Question:** What resources should actually fund persistent equipment and
+progression?
+
+**Current Thinking:**
+3.0C temporarily converts total expedition currency earned into an in-memory
+Persistent Currency so the failure → upgrade → retry loop can be tested.
+
+Long term, monster materials / crafting resources may replace or supplement this
+currency.
+
+**Blocks:**
+- final crafting economy;
+- persistent upgrade economy.
+
+**Need to decide by:**
+Before persistent progression leaves prototype stage.
+
+
+## Voluntary Expedition Return
+
+**Question:** When can the player voluntarily end an expedition and what rewards
+are secured?
+
+**Current Thinking:**
+The player should eventually be able to return voluntarily rather than being
+required to die.
+
+The exact risk/reward consequences remain unresolved.
+
+**Blocks:**
+- final expedition-end UX;
+- banking/reward rules.
+
+**Need to decide by:**
+Before endurance / extraction-from-expedition behaviour is implemented.
+
+
+## Apex Success Reward
+
+**Question:** What permanent reward marks the first successful Apex clear?
+
+**Current Thinking:**
+Apex should provide more significance than simply another normal reward.
+
+Potential rewards:
+- major unlock;
+- region progression;
+- unique material;
+- equipment access;
+- new difficulty / expedition tier.
+
+**Need to decide by:**
+Before Apex implementation.
+
+
+## Persistent Save Lifetime
+
+**Question:** When should prototype in-memory persistent progression become
+save-file-backed progression?
+
+**Current Thinking:**
+Do not build save persistence merely to prove the current gameplay loop.
+
+3.0C persistence only needs to survive multiple expeditions during one Play
+session.
+
+**Need to decide by:**
+Before persistent progression content becomes expensive to recreate manually.

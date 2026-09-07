@@ -76,90 +76,60 @@ namespace MiniCrawler.UI
 
         private PartyMemberDefinition definition;
         private RunSetup setup;
-        private bool upgradeMode;
-
-        public void BindSelection(
-            PartyMemberDefinition member,
-            RunSetup runSetup
-        )
+        private enum CardMode
         {
-            definition =
-                member;
-
-            setup =
-                runSetup;
-
-            upgradeMode =
-                false;
-
-            selectionControls.SetActive(true);
-            upgradeControls.SetActive(false);
-
-            if (abilityUpgradeSection != null)
-            {
-                abilityUpgradeSection.SetActive(
-                    false
-                );
-            }
-
-            selectButton.onClick.RemoveAllListeners();
-
-            selectButton.onClick.AddListener(
-                () =>
-                    setup?.TogglePartyMember(
-                        definition
-                    )
-            );
-
-            Refresh();
+            Selection,
+            RunUpgrade
         }
 
-        public void BindUpgrade(
-            PartyMemberDefinition member
-        )
+        private CardMode mode;
+
+        public void BindSelection(PartyMemberDefinition member, RunSetup runSetup)
         {
-            definition =
-                member;
+            definition = member;
+            setup = runSetup;
+            mode = CardMode.Selection;
 
-            setup =
-                null;
-
-            upgradeMode =
-                true;
-
-            selectionControls.SetActive(false);
+            selectionControls.SetActive(true);
             upgradeControls.SetActive(true);
+
+            if (abilityUpgradeSection != null)
+                abilityUpgradeSection.SetActive(false);
+
+            selectButton.onClick.RemoveAllListeners();
+            selectButton.onClick.AddListener(() => setup?.TogglePartyMember(definition));
 
             weaponButton.onClick.RemoveAllListeners();
             armourButton.onClick.RemoveAllListeners();
             focusButton.onClick.RemoveAllListeners();
 
             weaponButton.onClick.AddListener(
-                () =>
-                    RunProgress.TryBuyUpgrade(
-                        definition,
-                        GearSlot.Weapon
-                    )
+                () => PersistentProgression.TryBuyUpgrade(definition, GearSlot.Weapon)
             );
 
             armourButton.onClick.AddListener(
-                () =>
-                    RunProgress.TryBuyUpgrade(
-                        definition,
-                        GearSlot.Armour
-                    )
+                () => PersistentProgression.TryBuyUpgrade(definition, GearSlot.Armour)
             );
 
             focusButton.onClick.AddListener(
-                () =>
-                    RunProgress.TryBuyUpgrade(
-                        definition,
-                        GearSlot.Focus
-                    )
+                () => PersistentProgression.TryBuyUpgrade(definition, GearSlot.Focus)
             );
 
-            RebuildAbilityUpgradeEntries();
+            Refresh();
+        }
 
+        public void BindUpgrade(PartyMemberDefinition member)
+        {
+            definition = member;
+            setup = null;
+            mode = CardMode.RunUpgrade;
+
+            selectionControls.SetActive(false);
+
+            // Equipment is persistent preparation now, not an expedition purchase.
+            upgradeControls.SetActive(false);
+
+            RebuildAbilityUpgradeEntries();
             Refresh();
         }
 
@@ -168,120 +138,88 @@ namespace MiniCrawler.UI
             if (definition == null)
                 return;
 
-            RunBuild build =
-                RunProgress.GetBuild(
-                    definition
-                );
-
             if (portraitImage != null)
             {
-                portraitImage.sprite =
-                    definition.Portrait;
-
-                portraitImage.enabled =
-                    definition.Portrait != null;
+                portraitImage.sprite = definition.Portrait;
+                portraitImage.enabled = definition.Portrait != null;
             }
 
-            nameText.text =
-                definition.DisplayName;
+            nameText.text = definition.DisplayName;
+            roleText.text = definition.Role;
+            descriptionText.text = definition.Description;
 
-            roleText.text =
-                definition.Role;
-
-            descriptionText.text =
-                definition.Description;
-
-            float health =
-                definition.BaseHealth +
-                RunProgress.GetHealthBonus(
-                    definition
-                );
-
-            float damage =
-                definition.BaseDamage +
-                RunProgress.GetDamageBonus(
-                    definition
-                );
-
-            float armour =
-                definition.BaseArmour +
-                RunProgress.GetArmourBonus(
-                    definition
-                );
-
-            float healing =
-                definition.BaseHealing +
-                RunProgress.GetHealingBonus(
-                    definition
-                );
-
-            statsText.text =
-                healing > 0f
-                    ? $"HP {health:0}   " +
-                      $"DMG {damage:0.#}   " +
-                      $"ARM {armour:0.#}   " +
-                      $"HEAL {healing:0.#}"
-                    : $"HP {health:0}   " +
-                      $"DMG {damage:0.#}   " +
-                      $"ARM {armour:0.#}";
-
-            gearText.text =
-                $"{definition.WeaponName} " +
-                $"Lv.{build.WeaponLevel}  |  " +
-                $"{definition.ArmourName} " +
-                $"Lv.{build.ArmourLevel}" +
-                (
-                    definition.BaseHealing > 0f
-                        ? $"  |  " +
-                          $"{definition.FocusName} " +
-                          $"Lv.{build.FocusLevel}"
-                        : string.Empty
-                );
-
-            if (!upgradeMode)
+            if (mode == CardMode.Selection)
             {
+                PersistentMemberProgress progress = PersistentProgression.GetMemberProgress(definition);
+
+                float health = definition.BaseHealth + PersistentProgression.GetHealthBonus(definition);
+                float damage = definition.BaseDamage + PersistentProgression.GetDamageBonus(definition);
+                float armour = definition.BaseArmour + PersistentProgression.GetArmourBonus(definition);
+                float healing = definition.BaseHealing + PersistentProgression.GetHealingBonus(definition);
+
+                statsText.text =
+                    healing > 0f
+                        ? $"HP {health:0}   DMG {damage:0.#}   ARM {armour:0.#}   HEAL {healing:0.#}"
+                        : $"HP {health:0}   DMG {damage:0.#}   ARM {armour:0.#}";
+
+                gearText.text =
+                    $"{definition.WeaponName} Lv.{progress.WeaponLevel}  |  " +
+                    $"{definition.ArmourName} Lv.{progress.ArmourLevel}" +
+                    (definition.BaseHealing > 0f
+                        ? $"  |  {definition.FocusName} Lv.{progress.FocusLevel}"
+                        : string.Empty);
+
                 RefreshSelectionControls();
+
+                RefreshPersistentUpgradeButton(
+                    weaponButton,
+                    weaponButtonText,
+                    "Weapon",
+                    GearSlot.Weapon
+                );
+
+                RefreshPersistentUpgradeButton(
+                    armourButton,
+                    armourButtonText,
+                    "Armour",
+                    GearSlot.Armour
+                );
+
+                bool hasHealing = definition.BaseHealing > 0f;
+                focusButton.gameObject.SetActive(hasHealing);
+
+                if (hasHealing)
+                {
+                    RefreshPersistentUpgradeButton(
+                        focusButton,
+                        focusButtonText,
+                        "Focus",
+                        GearSlot.Focus
+                    );
+                }
+
                 return;
             }
 
-            RefreshUpgradeButton(
-                weaponButton,
-                weaponButtonText,
-                "Weapon",
-                GearSlot.Weapon
-            );
+            RunBuild build = RunProgress.GetBuild(definition);
 
-            RefreshUpgradeButton(
-                armourButton,
-                armourButtonText,
-                "Armour",
-                GearSlot.Armour
-            );
+            float runHealth = definition.BaseHealth + RunProgress.GetHealthBonus(definition);
+            float runDamage = definition.BaseDamage + RunProgress.GetDamageBonus(definition);
+            float runArmour = definition.BaseArmour + RunProgress.GetArmourBonus(definition);
+            float runHealing = definition.BaseHealing + RunProgress.GetHealingBonus(definition);
 
-            bool hasHealing =
-                definition.BaseHealing > 0f;
+            statsText.text =
+                runHealing > 0f
+                    ? $"HP {runHealth:0}   DMG {runDamage:0.#}   ARM {runArmour:0.#}   HEAL {runHealing:0.#}"
+                    : $"HP {runHealth:0}   DMG {runDamage:0.#}   ARM {runArmour:0.#}";
 
-            focusButton.gameObject.SetActive(
-                hasHealing
-            );
+            gearText.text =
+                $"{definition.WeaponName} Lv.{build.WeaponLevel}  |  " +
+                $"{definition.ArmourName} Lv.{build.ArmourLevel}" +
+                (definition.BaseHealing > 0f ? $"  |  {definition.FocusName} Lv.{build.FocusLevel}" : string.Empty);
 
-            if (hasHealing)
-            {
-                RefreshUpgradeButton(
-                    focusButton,
-                    focusButtonText,
-                    "Focus",
-                    GearSlot.Focus
-                );
-            }
-
-            foreach (
-                AbilityUpgradeEntryUI entry
-                    in abilityUpgradeEntries
-            )
-            {
+            foreach (AbilityUpgradeEntryUI entry in abilityUpgradeEntries)
                 entry?.Refresh();
-            }
         }
 
         private void RebuildAbilityUpgradeEntries()
@@ -384,24 +322,18 @@ namespace MiniCrawler.UI
                     setup.MaximumPartySize;
         }
 
-        private void RefreshUpgradeButton(
+        private void RefreshPersistentUpgradeButton(
             Button button,
             TMP_Text label,
             string slotName,
             GearSlot slot
         )
         {
-            int cost =
-                RunProgress.GetUpgradeCost(
-                    definition,
-                    slot
-                );
+            int cost = PersistentProgression.GetUpgradeCost(definition, slot);
 
-            label.text =
-                $"Upgrade {slotName} ({cost})";
+            label.text = $"Upgrade {slotName} ({cost})";
 
-            button.interactable =
-                RunProgress.Currency >= cost;
+            button.interactable = !RunProgress.HasActiveRun && PersistentProgression.Currency >= cost;
         }
     }
 }

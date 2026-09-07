@@ -31,6 +31,28 @@ At this rate one full game day lasts 24 real simulation minutes.
 
 This value is not locked.
 
+# Lifetime
+
+World Time belongs to one expedition.
+
+Party defeat / expedition end destroys that expedition's clock state.
+
+A new expedition begins with a new World Clock at its configured starting time.
+
+World Time may continue across region / level transitions while the same
+expedition remains active.
+
+Therefore:
+
+Region change
+→ same World Time.
+
+Expedition end
+→ World Time ends.
+
+New expedition
+→ new Day 1 / starting time.
+
 # World Time vs Escalation
 
 World Time and Escalation are separate.

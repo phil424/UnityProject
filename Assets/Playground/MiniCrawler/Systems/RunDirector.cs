@@ -15,6 +15,14 @@ namespace MiniCrawler.Systems
             InLevel,
             BetweenLevels
         }
+        
+        public enum ExpeditionEndReason
+        {
+            None,
+            Defeat,
+            VoluntaryReturn,
+            Success
+        }
 
         public static RunDirector Instance { get; private set; }
 
@@ -34,18 +42,17 @@ namespace MiniCrawler.Systems
 
         private RunSetup setup;
 
-        private RunFlowState state =
-            RunFlowState.PreRun;
+        private RunFlowState state = RunFlowState.PreRun;
 
         public RunFlowState State => state;
 
-        public string StateName =>
-            state.ToString();
+        public string StateName => state.ToString();
 
-        public RunSetup Setup =>
-            setup;
+        public RunSetup Setup => setup;
 
         public bool LastLevelWon { get; private set; }
+        public ExpeditionEndReason LastExpeditionEndReason { get; private set; }
+        public int LastPersistentCurrencyBanked { get; private set; }
 
         public bool CanContinueRun =>
             RunProgress.HasActiveRun &&
@@ -56,10 +63,7 @@ namespace MiniCrawler.Systems
         {
             Instance = this;
 
-            setup =
-                new RunSetup(
-                    maximumPartySize
-                );
+            setup = new RunSetup(maximumPartySize);
         }
 
         private void Start()
@@ -102,31 +106,24 @@ namespace MiniCrawler.Systems
         {
             if (RunProgress.HasActiveRun)
             {
-                Debug.LogWarning(
-                    "Cannot begin a new run while another run is active."
-                );
-
+                Debug.LogWarning("Cannot begin a new run while another run is active.");
                 return false;
             }
+            
+            LastExpeditionEndReason = ExpeditionEndReason.None;
+            LastPersistentCurrencyBanked = 0;
+            LastLevelWon = false;
 
-            RunStartConfiguration configuration =
-                setup.CreateConfiguration();
+            RunStartConfiguration configuration = setup.CreateConfiguration();
 
             if (!RunProgress.BeginRun(configuration))
             {
-                Debug.LogWarning(
-                    "Cannot begin a run without a valid setup."
-                );
-
+                Debug.LogWarning("Cannot begin a run without a valid setup.");
                 return false;
             }
 
-            if (StartCurrentLevel(
-                    RunFlowState.PreRun
-                ))
-            {
+            if (StartCurrentLevel(RunFlowState.PreRun))
                 return true;
-            }
 
             RunProgress.EndRun();
 
@@ -168,17 +165,11 @@ namespace MiniCrawler.Systems
         {
             if (RunProgress.HasPendingRewardChoice)
             {
-                Debug.LogWarning("Resolve all earned pending rewards before ending the run.");
+                Debug.LogWarning("Resolve all earned pending rewards before ending the expedition voluntarily.");
                 return;
             }
 
-            if (stageDirector != null)
-                stageDirector.ClearLevel();
-
-            RunProgress.EndRun();
-
-            LastLevelWon = false;
-            SetState(RunFlowState.PreRun);
+            FinishExpedition(ExpeditionEndReason.VoluntaryReturn);
         }
 
         private bool StartCurrentLevel(RunFlowState failureState)
@@ -205,10 +196,44 @@ namespace MiniCrawler.Systems
         {
             LastLevelWon = won;
 
-            if (won)
-                GenerateRunUpgradeOffers();
+            if (!won)
+            {
+                FinishExpedition(ExpeditionEndReason.Defeat);
+                return;
+            }
 
+            GenerateRunUpgradeOffers();
             SetState(RunFlowState.BetweenLevels);
+        }
+        
+        private void FinishExpedition(ExpeditionEndReason reason)
+        {
+            RunState runState = RunProgress.CurrentRun;
+
+            if (runState == null)
+                return;
+
+            int persistentCurrencyEarned = runState.TotalCurrencyEarned;
+
+            if (stageDirector != null && stageDirector.State != StageDirector.LevelState.Idle)
+                stageDirector.ClearLevel();
+
+            RunProgress.EndRun();
+
+            if (persistentCurrencyEarned > 0)
+                PersistentProgression.AddCurrency(persistentCurrencyEarned);
+
+            LastPersistentCurrencyBanked = persistentCurrencyEarned;
+            LastExpeditionEndReason = reason;
+            LastLevelWon = false;
+
+            SetState(RunFlowState.PreRun);
+
+            Debug.Log(
+                $"Expedition ended: {reason}. " +
+                $"Persistent Currency earned: {persistentCurrencyEarned}.",
+                this
+            );
         }
 
         private void GenerateRunUpgradeOffers()

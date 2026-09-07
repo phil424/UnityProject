@@ -163,3 +163,67 @@ rhythms to become learnable player information.
 - event identity must include day as well as time-of-day;
 - the clock can later support visual/environment/ecology systems without those
   being required by the initial prototype.
+
+## 2026-09-07 — Party defeat ends the expedition
+
+### Decision
+
+Party defeat ends the active expedition.
+
+The previous prototype behaviour allowing defeat → BetweenLevels → Continue is
+superseded.
+
+### Reason
+
+World Time, escalation, temporary build progression and encounter momentum only
+have meaningful stakes if expedition failure actually closes that attempt.
+
+### Implications
+
+- World Time resets on the next expedition.
+- Temporary RunBuild progression is discarded.
+- Pending temporary rewards are discarded.
+- Persistent progression remains.
+- normal level/region victory is no longer treated as expedition success.
+
+
+## 2026-09-07 — Persistent and expedition progression are separate lifetimes
+
+### Decision
+
+Weapons, armour, permanent unlocks and future crafting progression belong to
+persistent preparation.
+
+Abilities acquired/levelled/evolved during an expedition and temporary build
+upgrades remain expedition-owned.
+
+### Reason
+
+The player needs meaningful long-term growth without removing the fresh
+buildcraft challenge from each expedition.
+
+### Implications
+
+- RunBuild must be seeded from persistent preparation.
+- permanent rewards cannot live only inside RunState.
+- equipment progression needs a persistent owner.
+
+
+## 2026-09-07 — Apex defines expedition success
+
+### Decision
+
+Clearing the future Apex marks an expedition as successful.
+
+After Apex the player may return or continue into endurance.
+
+### Reason
+
+Normal encounter/level victory needs to be distinct from actually beating the
+expedition while still supporting effectively endless post-success play.
+
+### Implications
+
+- level clear != expedition victory;
+- post-Apex death does not erase the previously achieved success;
+- Apex can carry a meaningful permanent completion reward.

@@ -180,6 +180,52 @@ The exact event schedule does not need to be fixed across every expedition.
 # World Clock
 
 The expedition uses a run-owned accelerated world clock.
+## 3.0B Prototype Implementation
+
+The prototype implementation separates runtime time state from the system that
+advances it.
+
+`WorldTimestamp`
+- represents a unique position in expedition World Time;
+- includes expedition day and time-of-day;
+- stores monotonic total world minutes;
+- supports future schedule comparisons.
+
+`WorldClockState`
+- is owned by `RunState`;
+- persists across level/runtime actor recreation;
+- tracks current World Time;
+- separately tracks elapsed simulation time.
+
+`WorldClockSystem`
+- advances the active run's `WorldClockState`;
+- owns prototype authoring values for starting hour and clock rate;
+- advances only while `RunDirector` is `InLevel`;
+- uses scaled simulation delta time.
+
+Therefore existing simulation controls naturally affect the clock:
+
+Pause
+→ World Time stops.
+
+Slow
+→ World Time advances more slowly.
+
+Fast
+→ World Time advances more quickly.
+
+The initial prototype rate is:
+
+1 world hour / simulation minute
+
+which produces:
+
+24 simulation minutes / world day.
+
+This is a tuning value rather than a locked design constant.
+
+`RunProgress.Changed` should not be emitted every frame for clock advancement.
+Continuous World Time is separate from discrete progression-change notification.
 
 The World Clock provides:
 

@@ -177,3 +177,55 @@ Unlike a bare `18:00`, a world timestamp distinguishes Day 1 18:00 from Day 4
 18:00.
 
 Status: Working Definition
+
+## Persistent Progression
+
+Progression that survives expedition success and failure and affects future
+preparation.
+
+Status: Working Definition
+
+## Expedition Progression
+
+Temporary progression owned by one expedition and discarded when that expedition
+ends.
+
+Status: Working Definition
+
+## Prepared Build
+
+The persistent/pre-run configuration brought into an expedition.
+
+Status: Working Definition
+
+## Expedition Build
+
+The temporary build developed during one expedition through abilities, levels,
+evolutions, augments and other run-owned progression.
+
+Status: Working Definition
+
+## Ability Unlock
+
+Persistent access to an ability within the broader progression ecosystem.
+
+Status: Working Definition
+
+## Ability Acquisition
+
+Ownership of an ability by a character during one active expedition.
+
+Status: Working Definition
+
+## Expedition Success
+
+The state achieved by clearing the expedition's Apex success threshold.
+
+Status: Working Definition
+
+## Post-Apex Endurance
+
+Optional continued expedition play after expedition success, with continuing
+escalation and increasing challenge.
+
+Status: Working Definition

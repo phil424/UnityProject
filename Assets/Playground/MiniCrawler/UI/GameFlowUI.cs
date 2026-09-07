@@ -59,6 +59,7 @@ namespace MiniCrawler.UI
             BuildSelectionCards();
 
             RunProgress.Changed += RefreshAll;
+            PersistentProgression.Changed += RefreshAll;
 
             if (stageDirector != null)
                 stageDirector.StateChanged += HandleStageStateChanged;
@@ -76,6 +77,7 @@ namespace MiniCrawler.UI
         private void OnDestroy()
         {
             RunProgress.Changed -= RefreshAll;
+            PersistentProgression.Changed -= RefreshAll;
 
             if (stageDirector != null)
                 stageDirector.StateChanged -= HandleStageStateChanged;
@@ -202,11 +204,12 @@ namespace MiniCrawler.UI
 
             int setupPartyCount = runDirector != null ? runDirector.Setup.SelectedParty.Count : 0;
 
-            selectedCountText.text = $"Party: {setupPartyCount}/{runDirector.Setup.MaximumPartySize}";
+            selectedCountText.text =
+                $"Party: {setupPartyCount}/{runDirector.Setup.MaximumPartySize}   " +
+                $"Persistent Currency: {PersistentProgression.Currency}";
 
-            upgradeCurrencyText.text = $"Run Currency: {RunProgress.Currency}";
-
-            combatCurrencyText.text = $"Run Currency: {RunProgress.Currency}";
+            upgradeCurrencyText.text = $"Expedition Currency: {RunProgress.Currency}";
+            combatCurrencyText.text = $"Expedition Currency: {RunProgress.Currency}";
 
             startRunButton.interactable = runDirector != null && !RunProgress.HasActiveRun && setupPartyCount > 0;
 
@@ -247,9 +250,7 @@ namespace MiniCrawler.UI
 
             if (runState == RunDirector.RunFlowState.BetweenLevels)
             {
-                resultText.text = runDirector.LastLevelWon
-                        ? "Level Complete - Victory"
-                        : "Level Ended - Party Defeated";
+                resultText.text = "Area Cleared - Expedition Continues";
             }
         }
     }

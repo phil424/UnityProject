@@ -19,8 +19,25 @@ Potential controllable elements:
 Document:
 > Starting setup establishes build intent rather than final build completion.
 
-# Run Build
-Run build can contain:
+# Prepared / Persistent Build
+
+The prepared build exists outside the expedition and survives failure.
+
+Potential components:
+- character;
+- weapon;
+- armour;
+- persistent gear upgrades;
+- selected starting abilities;
+- persistent augments / sockets where appropriate;
+- support configuration.
+
+The prepared build establishes intention and baseline capability.
+
+It should not fully determine the finished expedition build.
+
+# Expedition Build
+Expedition build can contain:
 - acquired abilities
 - evolutions
 - temporary augments

@@ -1,22 +1,97 @@
 # Overview
+
+Progression has two primary layers:
+
+Persistent Progression
++
+Expedition Progression
+
+They serve different purposes.
+
+# Persistent Progression
+
 Main rule:
-> Permanent progression primarily increases player options and control.
 
-Not:
-> Every run starts with permanently larger numbers forever.
+> Persistent progression improves preparation, starting identity and player
+> options.
 
-# Persistent Collection
-Possible collection:
-- characters
-- weapons
-- armour
-- augments
-- abilities
-- recipes
-- cosmetics
-- achievements
-- monster discoveries
-- support characters
+It survives expedition success and failure.
+
+Potential persistent progression:
+- characters;
+- support characters;
+- weapons;
+- armour;
+- gear upgrades;
+- ability unlocks;
+- materials;
+- recipes;
+- crafting progression;
+- cosmetics;
+- achievements;
+- monster discoveries.
+
+Persistent power should help the player begin stronger and access more
+strategies.
+
+It should not make expedition buildcraft irrelevant.
+
+# Expedition Progression
+
+Resets when the expedition ends.
+
+Examples:
+- acquired abilities;
+- ability levels;
+- evolutions;
+- temporary augments;
+- temporary stat upgrades;
+- temporary run currency;
+- pending temporary rewards.
+
+The expedition build should provide the majority of the dramatic power growth
+required to survive increasing escalation.
+
+# Desired Relationship
+
+Persistent Progression
+→ creates stronger / broader starting possibilities.
+
+Expedition Progression
+→ determines how successfully the player adapts and scales during this attempt.
+
+A useful shorthand:
+
+> Persistent power gets you through the front door.
+>
+> Expedition buildcraft determines how deep you can go.
+
+# Failure Progression
+
+Failure should still advance the broader game.
+
+A failed expedition may still retain:
+- persistent currency;
+- materials;
+- permanent unlocks;
+- discovered content;
+- other committed persistent rewards.
+
+The temporary expedition build is lost.
+
+This creates:
+
+Attempt
+↓
+earn permanent progression
+↓
+fail
+↓
+prepare better
+↓
+new attempt
+
+without making failure equivalent to losing all progress.
 
 # Unlocks
 Questions:

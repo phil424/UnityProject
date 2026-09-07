@@ -1,5 +1,6 @@
 using MiniCrawler.Combat;
 using MiniCrawler.Encounters;
+using MiniCrawler.Expedition;
 using MiniCrawler.Progress;
 using UnityEngine;
 
@@ -13,8 +14,8 @@ namespace MiniCrawler.Systems
         private const float ButtonHeight = 30f;
 
         private const float PanelWidth = 420f;
-        private const float ClosedLogPanelHeight = 620f;
-        private const float OpenLogPanelHeight = 780f;
+        private const float ClosedLogPanelHeight = 700f;
+        private const float OpenLogPanelHeight = 860f;
 
         private const float PanelSpacing = 5f;
 
@@ -65,9 +66,16 @@ namespace MiniCrawler.Systems
 
             GUILayout.Label("Mini Crawler Prototype");
 
-            GUILayout.Label($"Run Currency: {RunProgress.Currency}");
+            GUILayout.Label($"Persistent Currency: {PersistentProgression.Currency}");
+            GUILayout.Label($"Expedition Currency: {RunProgress.Currency}");
 
             GUILayout.Label($"Run Active: " + $"{(RunProgress.HasActiveRun ? "Yes" : "No")}");
+            
+            if (!RunProgress.HasActiveRun && run != null && run.LastExpeditionEndReason != RunDirector.ExpeditionEndReason.None)
+            {
+                GUILayout.Label($"Last Expedition: {run.LastExpeditionEndReason}");
+                GUILayout.Label($"Persistent Currency Banked: {run.LastPersistentCurrencyBanked}");
+            }
 
             if (run != null)
             {
@@ -112,11 +120,62 @@ namespace MiniCrawler.Systems
             {
                 GUILayout.Label("StageDirector: Missing");
             }
+            
+            DrawWorldClock();
 
             DrawEncounterDirection(stage);
             DrawCombatTelemetry();
 
             GUILayout.EndArea();
+        }
+        
+        private void DrawWorldClock()
+        {
+            GUILayout.Space(10);
+            GUILayout.Label("World Clock");
+
+            WorldClockState worldClock = RunProgress.WorldClock;
+
+            if (worldClock == null)
+            {
+                GUILayout.Label("No active run.");
+                return;
+            }
+
+            if (!worldClock.IsInitialized)
+            {
+                GUILayout.Label("Waiting for clock initialization.");
+                return;
+            }
+
+            WorldTimestamp currentTime = worldClock.CurrentTime;
+
+            GUILayout.Label($"World Time: Day {currentTime.DayNumber}  {currentTime.ClockText}");
+            GUILayout.Label($"Expedition Elapsed: {worldClock.ExpeditionElapsedSimulationMinutes:0.0} sim min");
+
+            WorldClockSystem system = WorldClockSystem.Instance;
+
+            if (system == null)
+            {
+                GUILayout.Label("WorldClockSystem: Missing");
+                return;
+            }
+
+            GUILayout.Label($"Clock Rate: {system.WorldHoursPerSimulationMinute:0.##} world h / sim min");
+            GUILayout.Label($"World Day Length: {system.SimulationMinutesPerWorldDay:0.#} sim min");
+
+            GUILayout.BeginHorizontal();
+
+            if (GUILayout.Button("0.5 h/min"))
+                system.SetWorldHoursPerSimulationMinute(0.5f);
+
+            if (GUILayout.Button("1 h/min"))
+                system.SetWorldHoursPerSimulationMinute(1f);
+
+            if (GUILayout.Button("2 h/min"))
+                system.SetWorldHoursPerSimulationMinute(2f);
+
+            GUILayout.EndHorizontal();
         }
         
         private void DrawEncounterDirection(StageDirector stage)

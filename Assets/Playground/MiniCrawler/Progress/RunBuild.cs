@@ -39,6 +39,13 @@ namespace MiniCrawler.Progress
                 _ => 0
             };
         }
+        
+        public void InitializeGearLevels(int weaponLevel, int armourLevel, int focusLevel)
+        {
+            WeaponLevel = Math.Max(0, weaponLevel);
+            ArmourLevel = Math.Max(0, armourLevel);
+            FocusLevel = Math.Max(0, focusLevel);
+        }
 
         public void Increase(GearSlot slot)
         {

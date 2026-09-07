@@ -18,26 +18,46 @@ An expedition is one complete temporary run.
 - resources collected.
 
 ### Ends
-Current direction:
-> Eventually the player's build can no longer survive.
 
-### Level Defeat
+An expedition ends when:
+- the party is defeated;
+- the player voluntarily returns / ends the expedition;
+- a future successful-return flow ends an Apex-completed expedition.
 
-Current implemented direction:
+Party defeat is an expedition-ending failure.
 
-A level defeat does not automatically end the expedition.
+### Party Defeat
 
-The player may resolve pending rewards and continue to the next level.
+Party defeat ends the active expedition.
 
-### Expedition End / Final Failure
+The following expedition-owned state is lost/reset:
+- World Time;
+- temporary build progression;
+- acquired run abilities / levels / evolutions;
+- temporary augments;
+- pending temporary rewards;
+- escalation;
+- schedule;
+- current encounters;
+- other expedition-owned runtime state.
 
-The eventual condition that truly ends a long expedition remains a separate
-design problem.
+Persistent progression already earned remains available.
 
-Current long-term direction still expects expeditions to eventually reach a
-point where the temporary build can no longer continue effectively.
+The next attempt is a new expedition rather than a continuation of the defeated
+one.
 
-Do not conflate a normal level defeat with the final expedition-ending state.
+### Normal Level / Region Clear
+
+Clearing a normal level or region is NOT expedition victory.
+
+It represents progress inside the same expedition.
+
+The expedition may continue into:
+- another region;
+- another encounter cycle;
+- greater escalation;
+- additional bosses;
+- the eventual Apex.
 
 ### Major Phases
 - Early expedition
@@ -283,23 +303,57 @@ The desired feeling is:
 > Things are going to change. What should I accomplish before then?
 
 # Apex System
-### Convergence Apex
-Several/all region bosses converge.
 
-### Ascendant Apex
-A heavily empowered version of an existing boss.
+The Apex is the intended expedition-success threshold.
 
-### Unique Apex
+## Convergence Apex
+
+Several / all major region threats converge.
+
+## Ascendant Apex
+
+A heavily empowered form of an existing boss.
+
+## Unique Apex
+
 A special boss exclusive to Apex encounters.
 
-### Apex Philosophy
-- major climax
-- highly telegraphed
-- significant reward
-- not necessarily the end.
+## Apex Philosophy
 
-### Post-Apex
-Clearing Apex can open effectively endless escalation.
+- major climax;
+- highly telegraphed;
+- meaningful strategic preparation;
+- significant persistent reward;
+- marks expedition success;
+- does not necessarily force the expedition to end.
+
+## Apex Success
+
+Defeating the Apex marks the expedition as successfully completed.
+
+The player may then choose:
+
+Return
+→ finish the expedition successfully.
+
+Continue
+→ enter post-Apex endurance.
+
+Post-Apex death does not retroactively erase the achieved success.
+
+## Post-Apex
+
+Post-Apex play supports the endurance fantasy:
+
+> How far can this build go?
+
+Potential characteristics:
+- continued escalation;
+- boss combinations;
+- increasingly rare opportunities;
+- extreme encounter overlap;
+- prestige / record chasing;
+- increasingly valuable rewards.
 
 
 # Rewards and Pacing

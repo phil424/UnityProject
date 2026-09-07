@@ -36,9 +36,11 @@ Redirect / Continue
 
 ## Expedition loop
 ```
-Prepare Build
+Prepare Persistent Build
  ↓
-Enter Region
+Start New Expedition
+ ↓
+Fresh World Time / Temporary Build
  ↓
 Encounter Supply Begins
  ↓
@@ -54,21 +56,34 @@ World Events / Rare Opportunities / Bosses
  ↓
 Apex
  ↓
-Post-Apex Endless Escalation
+Expedition Success
  ↓
-Build Can No Longer Survive
+Return
+ OR
+Continue Into Post-Apex Endurance
+ ↓
+Eventually End / Die
 ```
 
 ## Long-term loop
-
 ```
-Complete Expedition
+Prepare Character / Equipment
  ↓
-Keep Materials / Unlocks
+Start Expedition
  ↓
-Craft / Unlock / Experiment
+Earn Temporary Power
+ +
+Earn Persistent Progress
  ↓
-Create New Starting Configuration
+Succeed / Fail / End Expedition
+ ↓
+Temporary Build Resets
+ ↓
+Persistent Rewards Remain
+ ↓
+Craft / Upgrade / Unlock
+ ↓
+Create Stronger / Different Starting Configuration
  ↓
 New Expedition
 ```

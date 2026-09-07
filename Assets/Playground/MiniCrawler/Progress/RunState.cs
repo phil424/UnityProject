@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using MiniCrawler.Core;
 using MiniCrawler.Abilities;
+using MiniCrawler.Expedition;
 using UnityEngine;
 
 namespace MiniCrawler.Progress
@@ -13,30 +14,25 @@ namespace MiniCrawler.Progress
         private readonly List<PendingRewardChoice> pendingRewardChoices = new();
 
         public int Currency { get; private set; }
+        public int TotalCurrencyEarned { get; private set; }
+        public WorldClockState WorldClock { get; } = new();
 
         public IReadOnlyList<PartyMemberDefinition> SelectedParty => selectedParty;
         public IReadOnlyList<PendingRewardChoice> PendingRewardChoices => pendingRewardChoices;
 
-        public int PendingRewardChoiceCount =>
-            pendingRewardChoices.Count;
+        public int PendingRewardChoiceCount => pendingRewardChoices.Count;
 
-        public bool HasPendingRewardChoice =>
-            pendingRewardChoices.Count > 0;
+        public bool HasPendingRewardChoice => pendingRewardChoices.Count > 0;
 
-        public IReadOnlyList<RunUpgradeOffer>
-            CurrentPendingRewardOffers =>
-                pendingRewardChoices.Count > 0
+        public IReadOnlyList<RunUpgradeOffer> CurrentPendingRewardOffers => pendingRewardChoices.Count > 0
                     ? pendingRewardChoices[0].Offers
                     : Array.Empty<RunUpgradeOffer>();
 
         // Compatibility with the old single-choice
         // terminology while the UI transitions.
-        public IReadOnlyList<RunUpgradeOffer>
-            PendingUpgradeOffers =>
-                CurrentPendingRewardOffers;
+        public IReadOnlyList<RunUpgradeOffer> PendingUpgradeOffers => CurrentPendingRewardOffers;
 
-        public bool HasPendingUpgradeChoice =>
-            HasPendingRewardChoice;
+        public bool HasPendingUpgradeChoice => HasPendingRewardChoice;
 
         public RunState(RunStartConfiguration configuration)
         {
@@ -54,6 +50,13 @@ namespace MiniCrawler.Progress
                 selectedParty.Add(member);
 
                 RunBuild build = GetBuild(member);
+                PersistentMemberProgress persistentProgress = PersistentProgression.GetMemberProgress(member);
+
+                build.InitializeGearLevels(
+                    persistentProgress.WeaponLevel,
+                    persistentProgress.ArmourLevel,
+                    persistentProgress.FocusLevel
+                );
 
                 build.InitializeStartingAbilities(member.StartingAbilities);
             }
@@ -65,6 +68,7 @@ namespace MiniCrawler.Progress
                 return;
 
             Currency += amount;
+            TotalCurrencyEarned += amount;
         }
 
         public bool IsSelected(
@@ -261,43 +265,6 @@ namespace MiniCrawler.Progress
             );
         }
 
-        public int GetUpgradeCost(
-            PartyMemberDefinition definition,
-            GearSlot slot
-        )
-        {
-            if (definition == null)
-                return int.MaxValue;
-
-            int currentLevel =
-                GetBuild(definition).GetLevel(slot);
-
-            return definition.BaseUpgradeCost +
-                   currentLevel *
-                   definition.UpgradeCostStep;
-        }
-
-        public bool TryBuyUpgrade(
-            PartyMemberDefinition definition,
-            GearSlot slot
-        )
-        {
-            int cost =
-                GetUpgradeCost(
-                    definition,
-                    slot
-                );
-
-            if (Currency < cost)
-                return false;
-
-            Currency -= cost;
-
-            GetBuild(definition).Increase(slot);
-
-            return true;
-        }
-        
         public int GetAbilityUpgradeCost(PartyMemberDefinition definition, AbilityDefinition ability)
         {
             if (
