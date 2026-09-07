@@ -332,3 +332,28 @@ session.
 
 **Need to decide by:**
 Before persistent progression content becomes expensive to recreate manually.
+
+## Open design backlog
+
+Do equipment trees branch with mutually exclusive choices?
+
+Can a completed tree eventually unlock everything?
+
+Can nodes be respecced?
+
+Are skill-tree points equipment-specific or a shared persistent currency?
+
+Does using a weapon/armour earn mastery for that item?
+
+Do monster materials unlock particular branches?
+
+Are abilities granted directly by tree nodes or merely permanently unlocked?
+
+Does every weapon copy share progression, or is progression attached to a
+weapon type/set?
+
+Is Armour a complete set or multiple independently progressed pieces?
+
+How many prepared ability / augment slots can equipment ultimately expose?
+
+Exactly what form does the universal Heal action take?

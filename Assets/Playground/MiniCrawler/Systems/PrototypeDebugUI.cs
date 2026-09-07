@@ -191,6 +191,28 @@ namespace MiniCrawler.Systems
                 return;
             }
 
+            QuickEncounterChoices quickChoices = QuickEncounterChoices.Instance;
+
+            if (quickChoices != null)
+            {
+                GUILayout.Label(
+                    $"Quick Slots: {(quickChoices.IncludeSelectedEncounter ? "Include Selected" : "Alternatives Only")}"
+                );
+
+                if (GUILayout.Button(
+                        quickChoices.IncludeSelectedEncounter
+                            ? "DEBUG: Exclude Selected From Quick Slots"
+                            : "DEBUG: Include Selected In Quick Slots"
+                    ))
+                {
+                    quickChoices.SetIncludeSelectedEncounter(!quickChoices.IncludeSelectedEncounter);
+                }
+            }
+            else
+            {
+                GUILayout.Label("QuickEncounterChoices: Missing");
+            }
+
             if (direction.SelectedEncounter != null)
             {
                 string state = direction.IsTravelling ? "Travelling" : "Engaged";
@@ -216,7 +238,9 @@ namespace MiniCrawler.Systems
                 GUI.enabled = encounter.IsSelectable;
 
                 string selectedPrefix = direction.SelectedEncounter == encounter ? "► " : string.Empty;
-                string label = $"{selectedPrefix}{encounter.DisplayName} [{encounter.PresentationState}]";
+                string label =
+                    $"{selectedPrefix}{encounter.DisplayName} " +
+                    $"[{encounter.PresentationState}] #{encounter.AvailabilitySequence}";
 
                 if (GUILayout.Button(label))
                     direction.SelectEncounter(encounter);

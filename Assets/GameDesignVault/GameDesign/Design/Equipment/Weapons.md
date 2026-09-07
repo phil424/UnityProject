@@ -86,3 +86,45 @@ Create a reusable weapon template:
 ```
 
 No need to design weapons yet.
+
+# Persistent Weapon Progression Tree
+
+Each weapon should have an authored progression tree that develops its
+autonomous combat identity over long-term play.
+
+Potential nodes include:
+
+### Incremental
+- damage;
+- attack speed;
+- attack range;
+- movement speed during attacks;
+- combo coefficients;
+- knockback;
+- critical / status behaviour where appropriate.
+
+### Combo Development
+- faster combo transitions;
+- modified attack steps;
+- additional combo step;
+- stronger finisher;
+- improved cancel windows;
+- movement during specific attacks;
+- invulnerability on appropriate steps.
+
+### Unlock
+- innate weapon ability;
+- additional ability slot;
+- augment slot;
+- alternate weapon behaviour;
+- new targeting interaction.
+
+### Identity
+- unique passive;
+- weapon-specific mechanic;
+- conditional attack behaviour;
+- special interaction with abilities;
+- unusual movement / defensive property.
+
+Progression should gradually make the weapon feel more complete and expressive,
+not merely numerically stronger.

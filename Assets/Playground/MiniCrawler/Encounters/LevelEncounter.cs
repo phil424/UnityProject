@@ -38,6 +38,10 @@ namespace MiniCrawler.Encounters
         [SerializeField] private bool isExpired;
         [SerializeField] private EncounterPresentationState presentationState = EncounterPresentationState.Unknown;
 
+        private static long nextAvailabilitySequence;
+
+        [SerializeField] private long availabilitySequence;
+
         private LevelSpawnGroup[] spawnGroups = Array.Empty<LevelSpawnGroup>();
 
         public event Action<LevelEncounter, EncounterPresentationState> StateChanged;
@@ -57,6 +61,8 @@ namespace MiniCrawler.Encounters
         public bool IsCompleted => isCompleted;
         public bool IsExpired => isExpired;
 
+        public long AvailabilitySequence => availabilitySequence;
+        
         public bool IsSelectable => isKnown && isAvailable && !isCompleted && !isExpired;
 
         public EncounterPresentationState PresentationState => presentationState;
@@ -88,6 +94,12 @@ namespace MiniCrawler.Encounters
                 return false;
             }
         }
+        
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetAvailabilitySequence()
+        {
+            nextAvailabilitySequence = 0;
+        }
 
         private void OnEnable()
         {
@@ -112,6 +124,10 @@ namespace MiniCrawler.Encounters
             isAvailable = availableAtLevelStart;
             isCompleted = false;
             isExpired = false;
+            availabilitySequence = 0;
+
+            if (isAvailable)
+                StampAvailability();
 
             RefreshState();
         }
@@ -122,6 +138,7 @@ namespace MiniCrawler.Encounters
             isAvailable = false;
             isCompleted = false;
             isExpired = false;
+            availabilitySequence = 0;
 
             SetPresentationState(EncounterPresentationState.Unknown);
         }
@@ -143,6 +160,7 @@ namespace MiniCrawler.Encounters
 
             isKnown = true;
             isAvailable = true;
+            StampAvailability();
 
             RefreshState();
             return true;
@@ -367,6 +385,11 @@ namespace MiniCrawler.Encounters
 
             presentationState = newState;
             StateChanged?.Invoke(this, presentationState);
+        }
+        
+        private void StampAvailability()
+        {
+            availabilitySequence = ++nextAvailabilitySequence;
         }
 
         private void OnValidate()

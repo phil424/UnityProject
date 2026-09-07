@@ -37,7 +37,9 @@ The current design pillars include:
 - preparation establishes direction but does not guarantee the final build;
 - permanent progression should primarily expand possibilities rather than endlessly increase raw power;
 - reward generation should respect the player's existing build;
-- level defeat does not automatically end the run; between-level continuation remains available once unresolved pending rewards have been handled;
+- party defeat ends the active expedition; normal level / region clear continues
+  the same expedition; persistent progression survives expedition end while
+  expedition-owned progression resets;
 - expeditions should escalate toward increasingly unusual/dangerous situations.
 
 Where useful, distinguish design ideas as:
@@ -184,55 +186,95 @@ If an implementation already exists but is crude, inspect and evolve it rather t
 
 The project deliberately separates:
 
-```
+Persistent / Meta
+  ↓
 Setup
   ↓
-Run
+Expedition / Run
   ↓
-Level
-```
+Region / Level
+  ↓
+Encounter
+  ↓
+Runtime Actor
+
+`Run` remains the current implementation term for the active Expedition
+lifetime.
+
+### Persistent / Meta-owned
+
+Examples:
+
+PersistentProgression
+equipment progression
+permanent ability unlocks
+characters / supports
+future materials / crafting resources
+
+These survive expedition success and failure.
 
 ### Setup-owned
 
 Examples:
 
-```
 RunSetup
 RunStartConfiguration
-```
 
-### Run-owned
+### Expedition / Run-owned
 
 Examples:
 
-```
 RunState
 RunBuild
-currency
+WorldClockState
+expedition currency
 acquired abilities
 ability levels
-future ability augments
-```
+evolutions
+future temporary augments
+schedule / escalation state
 
-These survive runtime actor recreation during the run.
+These survive region / level transitions inside the expedition.
 
-### Level/runtime actor-owned
+They are discarded when the expedition ends.
+
+### Region / Level-owned
 
 Examples:
 
-```
+scene-authored encounter sites
+ambient routes
+local encounter supply
+region runtime objects
+
+### Encounter-owned
+
+Examples:
+
+availability
+commitment
+expiry
+spawn-group state
+encounter membership
+
+### Runtime Actor-owned
+
+Examples:
+
 Health
 cooldowns
 ForcedMotion
 temporary buffs/debuffs
 runtime ability instances
-```
+combat targets
+navigation intents
 
-These disappear when the actor is destroyed.
+Do not accidentally move temporary actor state into `RunBuild`, expedition
+state into persistent progression, or persistent progression into runtime
+components.
 
-Do not accidentally move temporary actor state into `RunBuild`, or persistent run progression into runtime components.
-
-When a feature genuinely touches this boundary, explicitly validate actor recreation.
+When a feature genuinely touches these boundaries, explicitly validate the
+relevant recreation/reset behaviour.
 
 ---
 

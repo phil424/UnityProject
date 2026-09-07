@@ -200,6 +200,41 @@ Mouse / keyboard should expose equivalent direct interaction.
 There should never normally be fewer than three selectable quick encounter
 options.
 
+## 3.0D Prototype
+
+The first playable quick-selection implementation uses a dedicated
+`QuickEncounterChoices` gameplay-facing selection model.
+
+The presentation layer does not determine encounter selection rules.
+
+Flow:
+
+LevelEncounter availability
+        ↓
+QuickEncounterChoices
+        ↓
+three oldest selectable encounters
+        ↓
+HUD / future controller input
+        ↓
+EncounterDirectionController
+
+Encounter age is currently represented by an availability sequence.
+
+Future scheduler / encounter-generation work may replace or supplement this with
+explicit creation / availability timestamps.
+
+The unresolved question:
+
+> Should the current selected encounter occupy one quick slot?
+
+is deliberately exposed as a prototype toggle.
+
+The quick-choice provider does NOT create replacement encounters.
+
+Guaranteeing three continuously available opportunities belongs to Encounter
+Supply rather than UI.
+
 # Encounter Selection
 
 Selecting an encounter immediately changes the encounter directive.

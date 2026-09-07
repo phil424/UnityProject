@@ -1284,6 +1284,7 @@ MonoBehaviour:
   isCompleted: 0
   isExpired: 0
   presentationState: 0
+  availabilitySequence: 0
 --- !u!114 &246946506
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2007,6 +2008,101 @@ Transform:
   - {fileID: 602258925}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &348410348
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 348410349}
+  - component: {fileID: 348410352}
+  - component: {fileID: 348410351}
+  - component: {fileID: 348410350}
+  m_Layer: 0
+  m_Name: South Road Horde Encounter
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &348410349
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 348410348}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -15, y: 0.5, z: -15}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 907118059}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &348410350
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 348410348}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ec6c5272cff78ab42b58beae9d310062, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Spawning.LevelSpawnSource
+  shape: 1
+  radius: 5
+  boxSize: {x: 3, y: 3}
+--- !u!114 &348410351
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 348410348}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 534eca0a6af4aaf428b51272d5c7238e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Spawning.LevelSpawnGroup
+  startSpawning: 1
+  startCombatActive: 0
+  entries:
+  - actor: {fileID: 11400000, guid: f94bb2855b5c0e24eac3845bce957198, type: 2}
+    count: 8
+    startDelay: 0
+    batchSize: 4
+    timeBetweenSpawns: 0
+    timeBetweenBatches: 8
+--- !u!114 &348410352
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 348410348}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e7fea86c1f620448b78d1c3ad8eb4b3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Encounters.LevelEncounter
+  id: south-road-horde
+  displayName: South Road Horde
+  description: A dormant horde on the south road
+  knownAtLevelStart: 1
+  availableAtLevelStart: 1
+  onCompletedActions:
+    entries: []
+  isKnown: 0
+  isAvailable: 0
+  isCompleted: 0
+  isExpired: 0
+  presentationState: 0
+  availabilitySequence: 0
 --- !u!1 &382263932
 GameObject:
   m_ObjectHideFlags: 0
@@ -3140,6 +3236,7 @@ MonoBehaviour:
   isCompleted: 0
   isExpired: 0
   presentationState: 0
+  availabilitySequence: 0
 --- !u!114 &579706918
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3604,6 +3701,7 @@ MonoBehaviour:
   isCompleted: 0
   isExpired: 0
   presentationState: 0
+  availabilitySequence: 0
 --- !u!114 &641285805
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4210,6 +4308,7 @@ GameObject:
   m_Component:
   - component: {fileID: 810166848}
   - component: {fileID: 810166849}
+  - component: {fileID: 810166850}
   m_Layer: 5
   m_Name: GameFlowUI
   m_TagString: Untagged
@@ -4270,6 +4369,18 @@ MonoBehaviour:
   runUpgradeOfferRoot: {fileID: 328879906}
   runUpgradeOfferCardPrefab: {fileID: 3867086064608015899, guid: 5b2fe9fb57efd1b44ac1b34d00662505, type: 3}
   combatCurrencyText: {fileID: 733094833}
+--- !u!114 &810166850
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 810166847}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d9d7c33b6c4c724418c636cd1d4bdbd0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.UI.QuickEncounterPrototypeHUD
 --- !u!1 &830497294
 GameObject:
   m_ObjectHideFlags: 0
@@ -4514,6 +4625,7 @@ GameObject:
   - component: {fileID: 846909446}
   - component: {fileID: 846909447}
   - component: {fileID: 846909448}
+  - component: {fileID: 846909449}
   m_Layer: 0
   m_Name: StageDirector
   m_TagString: Untagged
@@ -4681,6 +4793,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Encounters.EncounterDirectionController
   arrivalDistance: 2.5
+--- !u!114 &846909449
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 846909435}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3cf40124bae0ff6479362d3ceb6cac7b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Encounters.QuickEncounterChoices
+  includeSelectedEncounter: 1
 --- !u!1 &907118058
 GameObject:
   m_ObjectHideFlags: 0
@@ -4712,6 +4837,7 @@ Transform:
   m_Children:
   - {fileID: 579706916}
   - {fileID: 641285803}
+  - {fileID: 348410349}
   - {fileID: 246946504}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

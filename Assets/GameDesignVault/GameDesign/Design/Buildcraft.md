@@ -36,6 +36,10 @@ The prepared build establishes intention and baseline capability.
 
 It should not fully determine the finished expedition build.
 
+Weapon and armour progression trees are intended to gradually expand the
+prepared build's available mechanics and slots, not merely increase its base
+statistics.
+
 # Expedition Build
 Expedition build can contain:
 - acquired abilities

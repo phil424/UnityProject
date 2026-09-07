@@ -36,6 +36,51 @@ strategies.
 
 It should not make expedition buildcraft irrelevant.
 
+# Incremental Equipment Progression
+
+A major form of persistent progression should be authored skill trees attached
+to weapons and armour.
+
+These trees intentionally combine two reward scales.
+
+## Frequent Progress
+
+Small nodes provide regular improvement.
+
+Examples:
+- +Damage;
+- +Armour;
+- +Health;
+- +Attack Speed;
+- +Movement Speed;
+- +Range.
+
+These nodes provide the satisfying incremental sense that almost every
+expedition contributes something.
+
+## Milestone Progress
+
+Larger nodes meaningfully change preparation possibilities.
+
+Examples:
+- ability unlock;
+- ability slot;
+- augment slot;
+- combo modification;
+- defensive mechanic;
+- weapon passive;
+- armour passive;
+- unique equipment behaviour.
+
+The combination should create:
+
+frequent small progress
++
+longer-term anticipation of meaningful unlocks.
+
+Persistent progression should broaden and strengthen the starting build without
+removing the need to build significant temporary power during an expedition.
+
 # Expedition Progression
 
 Resets when the expedition ends.
