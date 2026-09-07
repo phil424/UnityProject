@@ -14,200 +14,120 @@ namespace MiniCrawler.Systems
             if (SimulationPause.IsPaused)
                 return;
 
-            Actor[] actors =
-                FindObjectsByType<Actor>(
-                    FindObjectsSortMode.None
-                );
+            Actor[] actors = FindObjectsByType<Actor>(FindObjectsSortMode.None);
 
             foreach (Actor actor in actors)
             {
                 if (!CanMoveActor(actor))
                     continue;
 
-                ForcedMotion forcedMotion =
-                    actor.GetComponent<ForcedMotion>();
+                ForcedMotion forcedMotion = actor.GetComponent<ForcedMotion>();
 
-                if (
-                    forcedMotion != null &&
-                    forcedMotion.IsActive
-                )
+                if (forcedMotion != null && forcedMotion.IsActive)
                 {
-                    ApplyForcedMotion(
-                        actor.transform,
-                        forcedMotion
-                    );
-
+                    ApplyForcedMotion(actor.transform, forcedMotion);
                     continue;
                 }
 
-                AbilityExecutionState
-                    abilityExecutionState =
-                        actor.GetComponent<
-                            AbilityExecutionState
-                        >();
+                AbilityExecutionState abilityExecutionState = actor.GetComponent<AbilityExecutionState>();
 
-                if (
-                    abilityExecutionState != null &&
-                    abilityExecutionState
-                        .BlocksAutonomousActions
-                )
+                if (abilityExecutionState != null && abilityExecutionState.BlocksAutonomousActions)
+                    continue;
+
+                AutoTargetMover mover = actor.GetComponent<AutoTargetMover>();
+                ActorNavigationIntent navigation = actor.GetComponent<ActorNavigationIntent>();
+
+                if (navigation != null && navigation.IsActive)
                 {
+                    if (mover != null && mover.isActiveAndEnabled)
+                    {
+                        MoveTowardsDestination(
+                            actor.transform,
+                            navigation.Destination,
+                            navigation.StoppingDistance,
+                            mover.MoveSpeed
+                        );
+                    }
+
                     continue;
                 }
-
-                AutoTargetMover mover =
-                    actor.GetComponent<AutoTargetMover>();
 
                 if (!CanMoveAutonomously(mover))
                     continue;
 
-                MoveTowardsTarget(
-                    mover,
-                    mover.CurrentTarget
-                );
+                MoveTowardsTarget(mover, mover.CurrentTarget);
             }
         }
 
-        private bool CanMoveActor(
-            Actor actor
-        )
+        private bool CanMoveActor(Actor actor)
         {
-            if (
-                actor == null ||
-                !actor.isActiveAndEnabled
-            )
-            {
+            if (actor == null || !actor.isActiveAndEnabled)
                 return false;
-            }
 
-            Health health =
-                actor.GetComponent<Health>();
-
-            return
-                health == null ||
-                !health.IsDead;
+            Health health = actor.GetComponent<Health>();
+            return health == null || !health.IsDead;
         }
 
-        private bool CanMoveAutonomously(
-            AutoTargetMover mover
-        )
+        private bool CanMoveAutonomously(AutoTargetMover mover)
         {
-            if (
-                mover == null ||
-                !mover.isActiveAndEnabled
-            )
-            {
-                return false;
-            }
-
-            return
-                mover.CurrentTarget != null &&
-                !mover.CurrentTarget.IsDead;
+            return mover != null &&
+                   mover.isActiveAndEnabled &&
+                   mover.CurrentTarget != null &&
+                   !mover.CurrentTarget.IsDead;
         }
 
-        private void ApplyForcedMotion(
-            Transform actorTransform,
-            ForcedMotion forcedMotion
-        )
+        private void ApplyForcedMotion(Transform actorTransform, ForcedMotion forcedMotion)
         {
-            Vector3 displacement =
-                forcedMotion.ConsumeDisplacement(
-                    Time.deltaTime
-                );
-
-            actorTransform.position +=
-                displacement;
+            actorTransform.position += forcedMotion.ConsumeDisplacement(Time.deltaTime);
         }
 
-        private void MoveTowardsTarget(
-            AutoTargetMover mover,
-            Health target
-        )
+        private void MoveTowardsTarget(AutoTargetMover mover, Health target)
         {
-            Vector3 current =
-                mover.transform.position;
+            MoveTowardsDestination(
+                mover.transform,
+                target.transform.position,
+                GetStoppingDistance(mover),
+                mover.MoveSpeed
+            );
+        }
 
-            Vector3 destination =
-                target.transform.position;
+        private void MoveTowardsDestination(Transform moverTransform, Vector3 destination, float stoppingDistance, float moveSpeed)
+        {
+            Vector3 current = moverTransform.position;
 
-            destination.y =
-                current.y;
+            destination.y = current.y;
 
-            Vector3 toTarget =
-                destination - current;
-
-            float distance =
-                toTarget.magnitude;
-
-            float stoppingDistance =
-                GetStoppingDistance(mover);
+            Vector3 toDestination = destination - current;
+            float distance = toDestination.magnitude;
 
             if (distance <= stoppingDistance)
                 return;
 
-            mover.transform.position =
-                Vector3.MoveTowards(
-                    current,
-                    destination,
-                    mover.MoveSpeed *
-                    Time.deltaTime
-                );
+            moverTransform.position = Vector3.MoveTowards(current, destination, moveSpeed * Time.deltaTime);
 
-            FaceTarget(
-                mover.transform,
-                destination
-            );
+            FaceTarget(moverTransform, destination);
         }
 
-        private float GetStoppingDistance(
-            AutoTargetMover mover
-        )
+        private float GetStoppingDistance(AutoTargetMover mover)
         {
-            if (
-                mover.CurrentIntent !=
-                TargetIntent.Support
-            )
-            {
-                return
-                    mover.CombatStoppingDistance;
-            }
+            if (mover.CurrentIntent != TargetIntent.Support)
+                return mover.CombatStoppingDistance;
 
-            SupportStats supportStats =
-                mover.GetComponent<SupportStats>();
+            SupportStats supportStats = mover.GetComponent<SupportStats>();
 
             if (supportStats == null)
-            {
-                return
-                    mover.SupportStoppingDistance;
-            }
+                return mover.SupportStoppingDistance;
 
-            // Never stop farther away than
-            // the actor's healing range.
-            return Mathf.Min(
-                mover.SupportStoppingDistance,
-                supportStats.HealRange
-            );
+            return Mathf.Min(mover.SupportStoppingDistance, supportStats.HealRange);
         }
 
-        private void FaceTarget(
-            Transform moverTransform,
-            Vector3 destination
-        )
+        private void FaceTarget(Transform moverTransform, Vector3 destination)
         {
-            Vector3 toTarget =
-                destination -
-                moverTransform.position;
-
-            toTarget.y =
-                0f;
+            Vector3 toTarget = destination - moverTransform.position;
+            toTarget.y = 0f;
 
             if (toTarget.sqrMagnitude > 0.001f)
-            {
-                moverTransform.rotation =
-                    Quaternion.LookRotation(
-                        toTarget
-                    );
-            }
+                moverTransform.rotation = Quaternion.LookRotation(toTarget);
         }
     }
 }

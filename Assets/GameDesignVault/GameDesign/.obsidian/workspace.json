@@ -27,12 +27,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "ProjectManagement/Roadmap.md",
+                "file": "Design/Technical/Targeting, Tactics and Encounter Direction.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Roadmap"
+              "title": "Targeting, Tactics and Encounter Direction"
             }
           }
         ],
@@ -202,6 +202,9 @@
   },
   "active": "f3554c7cd0292fc7",
   "lastOpenFiles": [
+    "Development Rules.md",
+    "Design/World/World Time and Daily Cycle.md.meta",
+    "ProjectManagement/Roadmap.md",
     "00 - Core/06 - Design Decision Log.md",
     "00 - Core/05 - Open Design Questions.md",
     "00 - Core/04 - Terminology.md",
@@ -210,13 +213,11 @@
     "Design/World/Expeditions.md",
     "Design/Technical/Expedition Scheduling and Encounter Generation.md",
     "Design/World/World Time and Daily Cycle.md",
-    "ProjectManagement/Roadmap.md",
     "00 - Core/00 - Game Design Index.md",
     "ProjectManagement",
     "00 - Core/02 - Core Gameplay Loop.md",
     "Design/Technical/Level Authoring and Encounters.md",
     "Design/Technical/Targeting, Tactics and Encounter Direction.md",
-    "Development Rules.md",
     "Design/Technical/Targeting, Tactics and Encounter Direction.md.meta",
     "Design/Characters/Support Characters.md.meta",
     "Design/Progression.md",
@@ -230,13 +231,11 @@
     "Design/Characters.meta",
     "Design/Enemies.md.meta",
     "Design/Equipment/Equipment.md.meta",
-    "00 - Core/Template.md.meta",
     "Design/Untitled.md",
     "00 - Core/Template.md",
     "00 - Core/Core Design File.md",
     "00 - Core/03 - Progression Layers.md",
     "00 - Core/01 - Design Pillars.md",
-    "00 - Core/00 - Game Vision.md",
-    "Design/World/World.md"
+    "00 - Core/00 - Game Vision.md"
   ]
 }

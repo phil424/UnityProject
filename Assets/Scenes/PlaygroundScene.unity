@@ -2281,7 +2281,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 441528358}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1dce4c6e967eed44587c0d4b450f9b3e, type: 3}
   m_Name: 
@@ -4513,6 +4513,7 @@ GameObject:
   - component: {fileID: 846909445}
   - component: {fileID: 846909446}
   - component: {fileID: 846909447}
+  - component: {fileID: 846909448}
   m_Layer: 0
   m_Name: StageDirector
   m_TagString: Untagged
@@ -4667,6 +4668,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c07236dae33f9134aa80722d4c2e6d80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Systems.AbilitySystem
+--- !u!114 &846909448
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 846909435}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f85ea7491951d554b9a1147839291eee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Encounters.EncounterDirectionController
+  arrivalDistance: 2.5
 --- !u!1 &907118058
 GameObject:
   m_ObjectHideFlags: 0
@@ -4740,7 +4754,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 940666680}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1dce4c6e967eed44587c0d4b450f9b3e, type: 3}
   m_Name: 

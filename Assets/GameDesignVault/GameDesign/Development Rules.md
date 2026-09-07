@@ -86,30 +86,47 @@ Keep the scope explicit.
 
 # 4. Snapshot cadence
 
-Do not create a zip after every minor change.
+Snapshots exist to keep implementation context current, inspectable and
+unambiguous.
 
-Create a new authoritative snapshot when:
+Do not use a hard file-count threshold.
 
-- a coherent feature slice is complete;
-- a significant architectural checkpoint has been reached;
-- a milestone is complete;
-- the change is risky enough that a stable rollback point is valuable.
+Create a new authoritative Complete.zip when it would materially improve our
+ability to understand, verify or safely continue from the current project state.
 
-### Mandatory rule
+Strong reasons to take a snapshot include:
 
-If one planned development step will:
+- a coherent gameplay or architectural progression point is complete;
+- an important runtime seam or ownership model has changed;
+- scene, prefab, ScriptableObject or UI serialization has changed enough that
+  inspecting the actual project matters;
+- several smaller steps have accumulated and the previous snapshot no longer
+  accurately represents the working project;
+- a risky change would benefit from a stable rollback point;
+- a milestone is complete.
 
-```
-CREATE + MODIFY + DELETE >= 10 files
-```
+During low-risk periods of small, well-understood code tweaks, several steps may
+continue without a new snapshot when the previous project context remains
+sufficient.
 
-a new snapshot zip is required at the end of that step before continuing.
+Prefer meaningful development slices large enough to justify a checkpoint where
+practical, but do not interrupt productive iteration merely to satisfy snapshot
+cadence.
 
-This overrides the looser snapshot cadence.
+The purpose of a snapshot is:
 
-If a validation/closure step requires no changes, do not modify files merely to create a new snapshot. The previous approved snapshot can remain authoritative.
+> keep development context trustworthy.
 
----
+It is not:
+
+> create administrative pauses after arbitrary amounts of work.
+
+If further implementation depends on serialized scene/prefab/UI changes that
+cannot be reliably reconstructed from the previous snapshot, request an updated
+working or Complete zip before giving exact follow-up implementation changes.
+
+If a validation/closure step requires no changes, do not modify files merely to
+create a new snapshot.
 
 # 5. Testing philosophy
 
@@ -872,8 +889,8 @@ Focused manual validation
         ↓
 Continue if small
         ↓
-Snapshot at meaningful checkpoint
-or always if >=10 files changed
+Snapshot when the project has reached a meaningful checkpoint
+or when refreshed project context would materially improve verification
 ```
 
 That’s the instruction set I’d use going forward. It retains the deliberate architecture-first approach we liked, while removing the parts that had become cumbersome: constant snapshots, ever-growing automated-test suites, and giant regression checklists.

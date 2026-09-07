@@ -120,6 +120,51 @@ Targeting can answer:
 
 This should remain separate from faction and combat engagement.
 
+### 3.0A Prototype Foundation
+
+The first strategic-direction prototype introduces:
+
+`EncounterMembership`
+- runtime actor → owning `LevelEncounter`.
+
+`ActorNavigationIntent`
+- generic actor-owned destination intent;
+- independent from combat target selection;
+- owned by the system currently issuing the travel intent.
+
+`EncounterDirectionController`
+- prototype whole-party encounter directive;
+- converts encounter selection into runtime navigation intents.
+
+Current movement priority:
+
+Forced Motion
+↓
+Ability autonomous-action lock
+↓
+Navigation Intent
+↓
+Combat / Support target movement
+
+While travelling toward an explicitly selected encounter, normal combat target
+acquisition is suppressed.
+
+Support targeting may remain available independently from movement so future
+support actors can continue providing nearby utility while following a strategic
+travel directive.
+
+For the 3.0A prototype, reaching the selected encounter's anchor performs the
+common-case behaviour:
+
+BeginSpawning
++
+ActivateCombat
+
+This is a prototype default rather than a final authored encounter-presentation
+rule.
+
+The whole-party versus per-character directive question remains open.
+
 ## Encounter Selection and Combat Eligibility
 
 Encounter direction influences which valid targets the hero is willing to pursue.

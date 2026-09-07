@@ -1,4 +1,5 @@
 using MiniCrawler.Combat;
+using MiniCrawler.Encounters;
 using MiniCrawler.Progress;
 using UnityEngine;
 
@@ -12,8 +13,8 @@ namespace MiniCrawler.Systems
         private const float ButtonHeight = 30f;
 
         private const float PanelWidth = 420f;
-        private const float ClosedLogPanelHeight = 440f;
-        private const float OpenLogPanelHeight = 650f;
+        private const float ClosedLogPanelHeight = 620f;
+        private const float OpenLogPanelHeight = 780f;
 
         private const float PanelSpacing = 5f;
 
@@ -34,262 +35,177 @@ namespace MiniCrawler.Systems
 
         private void DrawToggleButton()
         {
-            Rect buttonRect =
-                new Rect(
-                    Screen.width -
-                    ButtonWidth -
-                    Margin,
-                    Margin,
-                    ButtonWidth,
-                    ButtonHeight
-                );
+            Rect buttonRect = new Rect( Screen.width - ButtonWidth - Margin, Margin, ButtonWidth, ButtonHeight);
 
-            if (
-                GUI.Button(
-                    buttonRect,
-                    showDebugPanel
-                        ? "DEBUG ▲"
-                        : "DEBUG ▼"
-                )
-            )
-            {
-                showDebugPanel =
-                    !showDebugPanel;
-            }
+            if (GUI.Button(buttonRect, showDebugPanel ? "DEBUG ▲" : "DEBUG ▼"))
+                showDebugPanel = !showDebugPanel;
         }
 
         private void DrawDebugPanel()
         {
-            float availableWidth =
-                Screen.width -
-                (Margin * 2f);
+            float availableWidth = Screen.width - (Margin * 2f);
 
-            float width =
-                Mathf.Min(
-                    PanelWidth,
-                    availableWidth
-                );
+            float width = Mathf.Min(PanelWidth, availableWidth);
 
-            float panelTop =
-                Margin +
-                ButtonHeight +
-                PanelSpacing;
+            float panelTop = Margin + ButtonHeight + PanelSpacing;
 
-            float desiredHeight =
-                showCombatLog
-                    ? OpenLogPanelHeight
-                    : ClosedLogPanelHeight;
+            float desiredHeight = showCombatLog ? OpenLogPanelHeight : ClosedLogPanelHeight;
 
-            float availableHeight =
-                Screen.height -
-                panelTop -
-                Margin;
+            float availableHeight = Screen.height - panelTop - Margin;
 
-            float height =
-                Mathf.Min(
-                    desiredHeight,
-                    availableHeight
-                );
+            float height = Mathf.Min(desiredHeight, availableHeight);
 
-            Rect panelRect =
-                new Rect(
-                    Screen.width -
-                    width -
-                    Margin,
-                    panelTop,
-                    width,
-                    height
-                );
+            Rect panelRect = new Rect(Screen.width - width - Margin, panelTop, width, height);
 
-            GUILayout.BeginArea(
-                panelRect,
-                GUI.skin.box
-            );
+            GUILayout.BeginArea(panelRect, GUI.skin.box);
 
-            RunDirector run =
-                RunDirector.Instance;
+            RunDirector run = RunDirector.Instance;
 
-            StageDirector stage =
-                StageDirector.Instance;
+            StageDirector stage = StageDirector.Instance;
 
-            GUILayout.Label(
-                "Mini Crawler Prototype"
-            );
+            GUILayout.Label("Mini Crawler Prototype");
 
-            GUILayout.Label(
-                $"Run Currency: {RunProgress.Currency}"
-            );
+            GUILayout.Label($"Run Currency: {RunProgress.Currency}");
 
-            GUILayout.Label(
-                $"Run Active: " +
-                $"{(RunProgress.HasActiveRun ? "Yes" : "No")}"
-            );
+            GUILayout.Label($"Run Active: " + $"{(RunProgress.HasActiveRun ? "Yes" : "No")}");
 
             if (run != null)
             {
-                GUILayout.Label(
-                    $"Setup Party: " +
-                    $"{run.Setup.SelectedParty.Count}/" +
-                    $"{run.Setup.MaximumPartySize}"
-                );
+                GUILayout.Label($"Setup Party: " + $"{run.Setup.SelectedParty.Count}/" + $"{run.Setup.MaximumPartySize}");
 
                 if (RunProgress.HasActiveRun)
-                {
-                    GUILayout.Label(
-                        $"Run Party: " +
-                        $"{RunProgress.SelectedParty.Count}"
-                    );
-                }
+                    GUILayout.Label($"Run Party: " + $"{RunProgress.SelectedParty.Count}");
 
                 GUILayout.Space(10);
 
-                GUILayout.Label(
-                    $"Run Flow: {run.StateName}"
-                );
+                GUILayout.Label($"Run Flow: {run.StateName}");
 
                 if (!RunProgress.HasActiveRun)
                 {
-                    if (
-                        GUILayout.Button(
-                            "DEBUG: Begin Run"
-                        )
-                    )
-                    {
+                    if (GUILayout.Button("DEBUG: Begin Run"))
                         run.BeginRun();
-                    }
                 }
                 else
                 {
-                    if (
-                        run.State ==
-                        RunDirector.RunFlowState.BetweenLevels
-                    )
-                    {
-                        if (
-                            GUILayout.Button(
-                                "DEBUG: Continue Run"
-                            )
-                        )
-                        {
+                    if (run.State == RunDirector.RunFlowState.BetweenLevels)
+                        if (GUILayout.Button("DEBUG: Continue Run"))
                             run.ContinueRun();
-                        }
-                    }
 
-                    if (
-                        GUILayout.Button(
-                            "DEBUG: End Run"
-                        )
-                    )
-                    {
+                    if (GUILayout.Button("DEBUG: End Run"))
                         run.EndRun();
-                    }
                 }
             }
             else
             {
-                GUILayout.Label(
-                    "RunDirector: Missing"
-                );
+                GUILayout.Label("RunDirector: Missing");
             }
 
             GUILayout.Space(10);
 
             if (stage != null)
             {
-                GUILayout.Label(
-                    $"Level State: {stage.StateName}"
-                );
-
-                GUILayout.Label(
-                    $"Party Alive: " +
-                    $"{stage.LivingPartyMembers}"
-                );
-
-                GUILayout.Label(
-                    $"Minions Alive: " +
-                    $"{stage.LivingMinions}"
-                );
+                GUILayout.Label($"Level State: {stage.StateName}");
+                GUILayout.Label($"Party Alive: " + $"{stage.LivingPartyMembers}");
+                GUILayout.Label($"Minions Alive: " + $"{stage.LivingMinions}");
             }
             else
             {
-                GUILayout.Label(
-                    "StageDirector: Missing"
-                );
+                GUILayout.Label("StageDirector: Missing");
             }
 
+            DrawEncounterDirection(stage);
             DrawCombatTelemetry();
 
             GUILayout.EndArea();
+        }
+        
+        private void DrawEncounterDirection(StageDirector stage)
+        {
+            GUILayout.Space(10);
+            GUILayout.Label("Encounter Direction");
+
+            EncounterDirectionController direction = EncounterDirectionController.Instance;
+
+            if (direction == null)
+            {
+                GUILayout.Label("EncounterDirectionController: Missing");
+                return;
+            }
+
+            if (direction.SelectedEncounter != null)
+            {
+                string state = direction.IsTravelling ? "Travelling" : "Engaged";
+                GUILayout.Label($"Selected: {direction.SelectedEncounter.DisplayName} ({state})");
+            }
+            else
+            {
+                GUILayout.Label("Selected: None");
+            }
+
+            if (stage == null || stage.Encounters.Count == 0)
+            {
+                GUILayout.Label("No encounters available.");
+                return;
+            }
+
+            foreach (LevelEncounter encounter in stage.Encounters)
+            {
+                if (encounter == null)
+                    continue;
+
+                bool previousEnabled = GUI.enabled;
+                GUI.enabled = encounter.IsSelectable;
+
+                string selectedPrefix = direction.SelectedEncounter == encounter ? "► " : string.Empty;
+                string label = $"{selectedPrefix}{encounter.DisplayName} [{encounter.PresentationState}]";
+
+                if (GUILayout.Button(label))
+                    direction.SelectEncounter(encounter);
+
+                GUI.enabled = previousEnabled;
+            }
+
+            if (direction.SelectedEncounter != null && GUILayout.Button("Clear Encounter Direction"))
+                direction.ClearSelection();
         }
 
         private void DrawCombatTelemetry()
         {
             GUILayout.Space(10);
 
-            GUILayout.Label(
-                "Combat Telemetry"
-            );
+            GUILayout.Label("Combat Telemetry");
 
-            CombatTelemetry telemetry =
-                CombatTelemetry.Instance;
+            CombatTelemetry telemetry = CombatTelemetry.Instance;
 
             if (telemetry == null)
             {
-                GUILayout.Label(
-                    "CombatTelemetry: Missing"
-                );
-
+                GUILayout.Label("CombatTelemetry: Missing");
                 return;
             }
 
-            GUILayout.Label(
-                $"Party DPS: " +
-                $"{telemetry.OutgoingDps:0.0}"
-            );
+            GUILayout.Label($"Party DPS: " + $"{telemetry.OutgoingDps:0.0}");
 
-            GUILayout.Label(
-                $"Incoming DPS: " +
-                $"{telemetry.IncomingDps:0.0}"
-            );
+            GUILayout.Label($"Incoming DPS: " + $"{telemetry.IncomingDps:0.0}");
 
-            if (
-                GUILayout.Button(
-                    showCombatLog
-                        ? "Hide Combat Log"
-                        : "Show Combat Log"
-                )
-            )
-            {
-                showCombatLog =
-                    !showCombatLog;
-            }
+            if (GUILayout.Button(showCombatLog ? "Hide Combat Log" : "Show Combat Log"))
+                showCombatLog = !showCombatLog;
 
             if (!showCombatLog)
                 return;
 
             GUILayout.Space(5);
 
-            GUILayout.Label(
-                "Detailed Combat Log"
-            );
+            GUILayout.Label("Detailed Combat Log");
 
-            combatLogScrollPosition =
-                GUILayout.BeginScrollView(
-                    combatLogScrollPosition
-                );
+            combatLogScrollPosition = GUILayout.BeginScrollView(combatLogScrollPosition);
 
             if (telemetry.CombatLogCount <= 0)
             {
-                GUILayout.Label(
-                    "No damage events recorded."
-                );
+                GUILayout.Label("No damage events recorded.");
             }
             else
             {
-                foreach (
-                    string entry
-                    in telemetry.CombatLog
-                )
+                foreach (string entry in telemetry.CombatLog)
                 {
                     GUILayout.Label(entry);
                     GUILayout.Space(5);

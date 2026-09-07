@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using MiniCrawler.Combat;
 using MiniCrawler.Core;
+using MiniCrawler.Encounters;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -204,6 +205,19 @@ namespace MiniCrawler.Spawning
                 engagement = actor.AddComponent<CombatEngagementState>();
 
             engagement.SetEngaged(IsCombatActive);
+
+            LevelEncounter encounter = GetComponentInParent<LevelEncounter>();
+
+            if (encounter != null)
+            {
+                EncounterMembership membership = actor.GetComponent<EncounterMembership>();
+
+                if (membership == null)
+                    membership = actor.AddComponent<EncounterMembership>();
+
+                membership.SetEncounter(encounter);
+            }
+
             spawnedActors.Add(actor);
         }
 
