@@ -149,3 +149,8 @@ A previous design that has intentionally been replaced.
 
 - [[Level Authoring and Encounters]]
 - [[Targeting, Tactics and Encounter Direction]]
+- [[Expedition Scheduling and Encounter Generation]]
+
+# Project Management
+
+- [[Roadmap]]

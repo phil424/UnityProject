@@ -42,57 +42,100 @@ Current 2.9 direction uses combat engagement as an explicit runtime concept.
 
 Answers:
 
-"Where does the player want this character / party to go?"
+> Which encounter does the player want the hero / party to pursue?
 
-This is a navigation / strategic layer rather than an individual-target decision.
+Encounter direction is a strategic navigation layer and is separate from
+individual enemy target selection.
 
-Example:
+Selecting an encounter is an immediate player command.
 
-Selected Encounter:
-    Nobleman's Procession
+Expected flow:
 
-The party travels toward that encounter when it does not have a higher-priority
-local combat requirement.
+Current Encounter A
+        ↓
+Player selects Encounter B
+        ↓
+Encounter Directive = B
+        ↓
+drop autonomous targets belonging to A
+        ↓
+immediately travel toward B
+
+Actors belonging to Encounter A are not forced to disengage.
+
+They may continue pursuing.
+
+The hero should not automatically reacquire Encounter A while deliberately
+redirecting toward B.
+
+This permits deliberate encounter stacking:
+
+Encounter A pursues
+        +
+hero reaches Encounter B
+        ↓
+both encounters may participate in the resulting combat
+
+The exact travel/pathing implementation remains open.
+
+## Ambient Travel Intent
+
+If no encounter is currently selected, the hero should not become stationary.
+
+Fallback behaviour:
+
+No Encounter Directive
+        ↓
+follow ambient activity / authored route intent
+        ↓
+engage light ambient combat
+        ↓
+continue moving through the region
+
+Encounter direction and ambient travel therefore provide separate strategic and
+autonomous movement intents.
 
 ## Current Encounter Foundation
 
-`LevelEncounter` now provides the first runtime identity used by this future
-system.
-
-Relevant current data:
+`LevelEncounter` currently provides:
 - encounter identity;
-- display name;
 - world-space anchor;
-- whether the encounter is known;
-- whether the encounter is available;
-- whether the encounter is completed;
-- whether the encounter is expired;
-- derived presentation state;
-- whether the encounter is currently selectable.
+- lifecycle state;
+- selectability;
+- owned spawn groups.
 
-Encounter selection should operate on `IsSelectable` rather than assuming that
-every known encounter can be pursued.
+Future encounter-directed targeting will also require runtime actors to be
+identifiable as belonging to a particular encounter.
 
-This supports player-facing situations such as:
+The exact runtime representation of encounter membership is not yet implemented.
 
-Nobleman's Procession
-- known;
-- visible on the strategic HUD;
-- temporarily locked;
-- unlockable through another encounter;
-- expiring according to a future schedule.
+Conceptually:
 
-Encounter-directed movement is not yet implemented.
-
-The intended next seam is:
-
-Selected LevelEncounter
+Runtime Actor
         ↓
-Encounter Directive
+Encounter Membership
         ↓
-travel toward LevelEncounter.AnchorPosition
-        ↓
-normal combat targeting takes priority when appropriate
+Targeting can answer:
+"Does this actor belong to the encounter I am leaving / pursuing?"
+
+This should remain separate from faction and combat engagement.
+
+## Encounter Selection and Combat Eligibility
+
+Encounter direction influences which valid targets the hero is willing to pursue.
+
+It does not automatically change whether enemies are allowed to attack the hero.
+
+Therefore:
+
+Hero leaves Encounter A
+→ Hero stops choosing A targets.
+
+Encounter A enemies remain engaged
+→ They may chase / attack the hero.
+
+Once the new encounter is engaged, the resulting combat may include pursuing
+actors from previous encounters.
 
 ## Target Policy
 
@@ -130,7 +173,7 @@ Working target resolution:
 
 Eligible candidates
     ↓
-Selected encounter / directive influence
+Encounter directive / encounter-membership filtering
     ↓
 Priority modifiers
     ↓

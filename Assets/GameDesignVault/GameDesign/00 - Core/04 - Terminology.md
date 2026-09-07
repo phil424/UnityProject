@@ -79,3 +79,101 @@ A description of how unusual / desirable a monster or encounter is as a reward
 opportunity, independently from its combat threat.
 
 Status: Working Definition
+
+## Encounter Definition
+
+Authored gameplay content describing what an encounter is independently from
+one particular runtime occurrence or location.
+
+Status: Working Definition
+
+## Encounter Site
+
+An authored world location capable of hosting one or more compatible encounters.
+
+Status: Working Definition
+
+## Runtime Encounter
+
+One specific occurrence of an encounter during an active expedition.
+
+Status: Working Definition
+
+## Encounter Commitment
+
+The state reached when the player selects or starts an encounter such that
+normal expiry should no longer remove it.
+
+Status: Working Definition
+
+## Encounter Supply
+
+The process responsible for maintaining appropriate current and future encounter
+opportunities during an expedition.
+
+Status: Working Definition
+
+## Forecast / Schedule
+
+The player-facing representation of planned upcoming encounters, world events
+and expedition changes.
+
+Status: Working Definition
+
+## Escalation
+
+The long-term increasing danger level of an expedition.
+
+Status: Working Definition
+
+## Intensity
+
+The amount of immediate gameplay pressure being experienced at a particular
+moment.
+
+Intensity may rise and fall while Escalation continues rising.
+
+Status: Working Definition
+
+## World Event
+
+A temporary expedition or regional condition that affects the world rather than
+representing one selectable encounter.
+
+Status: Working Definition
+
+## Ambient Route
+
+A designer-authored connected path used to guide ambient population and
+automatic exploration through interesting parts of the map.
+
+Status: Working Definition
+
+## World Time
+
+The accelerated 24-hour clock used to represent temporal progression during an
+expedition.
+
+Status: Working Definition
+
+## Expedition Day
+
+The current numbered world-time day within an expedition.
+
+Status: Working Definition
+
+## Daily Schedule Profile
+
+Data describing recurring time-of-day tendencies or event windows used by the
+expedition scheduling system.
+
+Status: Exploratory Definition
+
+## World Timestamp
+
+A unique expedition time including both day and time-of-day.
+
+Unlike a bare `18:00`, a world timestamp distinguishes Day 1 18:00 from Day 4
+18:00.
+
+Status: Working Definition

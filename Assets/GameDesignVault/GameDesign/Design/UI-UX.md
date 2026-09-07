@@ -52,142 +52,274 @@ Document:
 - ability state readability
 - pending/cast information.
 
-# Map, Minimap and Encounter Navigation
+# Strategic Combat HUD
 
-The map / schedule interface may become one of the game's primary strategic
-control surfaces.
+The passive combat HUD should remain glanceable.
 
-It should help answer:
+Detailed information belongs in deliberately opened expanded panels.
 
-- Where am I?
-- What encounters currently exist?
-- Which encounters can I pursue?
-- What is happening now?
-- What is coming next?
-- Where will it happen?
-- When will it happen?
-- How dangerous is it?
-- What valuable opportunities exist?
-- Which encounter am I currently heading toward?
+Primary HUD questions:
+
+Top Left:
+> What is happening next?
+
+Top Right:
+> Where am I and where can I go?
+
+Bottom Left:
+> How am I fighting?
+
+Bottom Right:
+> What have I earned / what decisions are pending?
+
+Large portions of the screen should remain unobstructed so watching combat stays
+central to the experience.
+
+# Upcoming Schedule
+
+The passive HUD should display the next three upcoming encounter arrivals or
+other immediately relevant schedule entries.
+
+Example:
+
+UPCOMING
+
+00:18 Graveyard Horde
+00:42 Nobleman's Procession
+01:05 Elite Patrol
+
+Short actionable transition / expiry countdowns should generally be around
+20–30 seconds maximum.
+
+The expanded strategic view may expose:
+- the detailed next 5–10 minutes;
+- major expedition events significantly further ahead.
+
+Long-range presentation may resemble a planner / calendar.
+
+# World Clock Presentation
+
+The passive combat HUD should show current world time near the simulation /
+schedule information.
+
+Working presentation:
+
+DAY 2
+17:42
+
+The clock should remain compact and immediately readable.
+
+The expanded strategic view may use world time as the backbone of a larger
+planner / calendar timeline.
+
+Example:
+
+NOW — 17:42
+
+17:50
+Church Horde
+
+18:00
+Rare Activity
+
+20:00
+Zombie Surge
+
+00:00
+Fiery Horde
+
+Immediate events should still provide countdowns when they enter the short
+20–30 second response window.
+
+Long-range information may use world-time labels instead of continuously
+displaying large countdown values.
+
+# Current World Events
+
+Current map-wide or regional effects should be visually distinct from encounters.
+
+Examples:
+- Zombie Surge;
+- Fiery Zombies.
+
+A compact status area near / over the minimap is currently preferred.
+
+These should communicate:
+> What rules or pressures are affecting the region right now?
+
+rather than:
+> Where should I go?
 
 # Combat Minimap
 
-Working direction:
+The minimap answers:
 
-The combat HUD should contain a compact spatial view of the current area.
+> Where?
 
-Potential information:
-- hero / party location;
-- known encounter locations;
-- selected encounter;
-- important active threats;
-- rare opportunities;
-- bosses / elites where appropriate;
-- relevant navigation destination.
+Working information:
+- hero / party;
+- current encounter directive;
+- three quick encounter choices;
+- important rare opportunities;
+- major world threats where appropriate.
 
-The minimap should communicate useful strategic information without becoming a
-complete omniscient representation of every unit.
+Do not default to displaying every normal enemy.
 
-Exactly how encounter discovery affects map visibility remains unresolved.
+Quick encounter symbols must remain consistent between:
+- minimap;
+- encounter list;
+- notifications;
+- controller prompts.
 
-# Encounter List
+# Quick Encounter Slots
 
-The combat HUD should expose known encounters in a compact selectable list.
+The passive HUD exposes exactly three quick encounter options.
 
-Example:
+Current default ordering:
 
-ENCOUNTERS
+> The three oldest selectable encounters.
 
-★ Nobleman's Procession
-  RARE • 68m
+Reason:
+Older encounters are generally nearer expiry and therefore more strategically
+urgent.
 
-◆ Cemetery
-  ACTIVE • 25m
+The world may contain more than three known encounters.
 
-◇ Church Horde
-  Incoming • 00:22
+The quick slots are only the immediate-access layer.
 
-Selecting an encounter gives the hero / party a travel directive toward it.
+Controller working concept:
 
-The encounter list should surface information such as:
-- name;
-- state;
-- distance / location;
+R1 + Triangle
+R1 + Square
+R1 + Circle
+
+→ select one of the three quick encounters.
+
+Mouse / keyboard should expose equivalent direct interaction.
+
+There should never normally be fewer than three selectable quick encounter
+options.
+
+# Encounter Selection
+
+Selecting an encounter immediately changes the encounter directive.
+
+The hero should:
+- drop autonomous targets belonging to the previous encounter;
+- immediately begin travelling toward the newly selected encounter.
+
+Enemies from previous encounters may continue pursuing.
+
+This can allow deliberate encounter stacking.
+
+# Expanded Strategic View
+
+Working input concept:
+
+D-pad Right
+→ open strategic view
+→ strongly slow simulation.
+
+Exact slow-motion versus full pause should be playtested.
+
+The expanded view may contain:
+- larger map;
+- all known encounters;
+- locked encounters;
+- encounter details;
+- full forecast;
+- long-range major events;
 - threat;
-- opportunity / rarity;
-- notable enemies;
-- relevant timing.
+- opportunity rarity;
+- known modifiers;
+- expected reward information.
 
-The HUD should not become a giant quest log.
+Sorting/filter behaviour remains unresolved until the detailed panel wireframe
+has been evaluated.
 
-Use progressive disclosure so important decisions remain quick to read.
+# Encounter Information
 
-# Locked and Gated Encounters
+Encounter selection should be informed.
 
-Known encounters do not necessarily need to be immediately selectable.
+The player should generally understand significant properties before committing.
 
-The HUD may expose a known but locked encounter when doing so creates a useful
-strategic decision.
-
-Example:
-
-🔒 ★ Nobleman's Procession
-VERY RARE
-Expires 00:45
-Unlock: Clear Elite Gauntlet
-
-This creates a choice:
-
-> Do I take on the dangerous prerequisite encounter now in order to gain access
-> to the rare opportunity before it expires?
-
-The encounter UI therefore needs to distinguish:
-- unknown;
-- known but locked;
-- available;
-- active;
-- completed;
-- expired.
-
-Locked encounters may still display:
-- rarity / opportunity;
-- location;
+Possible information:
+- threat;
+- opportunity rarity;
+- enemy composition;
+- notable Elite / rare enemies;
+- world modifiers;
+- encounter modifiers;
+- expected reward category;
 - expiry;
-- unlock requirement;
-- notable rewards / enemies where appropriate.
+- prerequisites.
 
-Exactly how much information is revealed before an encounter is available is a
-design question and may vary by encounter.
+Use progressive disclosure.
+
+The passive quick row should remain compact.
+
+Detailed information belongs in the expanded strategic view.
 
 # Targeting Controls
 
-The HUD should expose the hero's current autonomous target policy.
+The normal HUD should show the current hero targeting policy near the
+character/health/ability information.
 
-Example:
+Initial prototype choices:
+- Closest;
+- Strongest;
+- Weakest.
 
-TARGETING
-Closest
-+ Prefer Elite
+Working controller concept:
 
-The normal HUD may display only the current configuration.
+L1 + face button
+→ quick targeting choice.
 
-A secondary panel can provide deeper targeting configuration if required.
+Later targeting should support:
+- composable priorities;
+- targeting presets;
+- support tactics.
 
-# Rare Opportunity Presentation
+Detailed targeting/tactics configuration belongs in an expanded panel, currently
+associated with D-pad Down.
 
-Rare or valuable encounters should be capable of interrupting the player's
-attention without forcing immediate interaction.
+# Controller-Friendly UI Principle
 
-Example:
+Critical information and actions must be reachable through focus navigation.
 
-RARE SIGHTING
-Nobleman's Procession
-North Cemetery
-Available for a limited period
+Mouse hover may provide additional PC convenience but must never be required to:
+- understand critical information;
+- select an encounter;
+- configure essential behaviour.
 
-The player can then choose whether to redirect toward it.
+Current conceptual expanded-panel directions:
 
-Threat and opportunity rarity should be visually distinguishable.
+D-pad Right
+→ world / encounters / schedule
+
+D-pad Down
+→ targeting / tactics
+
+D-pad Left
+→ character / build
+
+D-pad Up
+→ strong candidate for Pending Rewards
+
+These bindings are working concepts rather than final controller mappings.
+
+# Run Resources and Pending Rewards
+
+Bottom-right remains the preferred passive location for:
+- run currency;
+- future collected resources;
+- Pending Rewards.
+
+Pending Rewards should receive stronger visual priority than passive currency
+because they represent an actionable decision.
+
+The normal HUD should communicate reward availability without forcing an
+immediate interruption.
 
 # Reward UI
 Include:

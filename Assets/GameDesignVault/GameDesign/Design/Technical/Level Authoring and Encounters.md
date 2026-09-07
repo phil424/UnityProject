@@ -504,6 +504,46 @@ Encounter-directed movement is also not implemented yet.
 A party can therefore still become stationary with no valid combat target while
 an unstarted required group exists elsewhere.
 
+# Future Reusable Encounter Model
+
+The current `LevelEncounter` implementation is scene-authored and is appropriate
+for proving encounter behaviour.
+
+Long-running expedition generation may later require three conceptual layers:
+
+Encounter Definition
+"What scenario is this?"
+
+Encounter Site
+"Where can this scenario occur?"
+
+Runtime Encounter Instance
+"This particular occurrence during this expedition."
+
+Fixed spectacles may remain tightly authored:
+
+Church Site
++
+Church Outbreak
+
+Generic encounters should be capable of using several compatible authored sites.
+
+Do not refactor the current implementation into these layers until the strategic
+expedition prototype provides concrete requirements.
+
+# Encounter Workshop
+
+A future dedicated encounter-authoring/test scene should allow designers to:
+
+- create or load an encounter;
+- configure spawn rhythm;
+- configure enemy composition;
+- configure activation;
+- configure presentation;
+- immediately run the encounter using real game systems.
+
+The workshop should reduce the iteration cost of authored encounter content.
+
 # Open Questions
 
 - Required versus optional encounter semantics.

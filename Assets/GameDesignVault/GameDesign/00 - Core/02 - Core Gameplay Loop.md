@@ -15,35 +15,48 @@ Observe Outcome
 ## Encounter loop
 
 ```
-Travel
+Read Current World / Forecast
  ↓
-Encounter
+Choose Encounter
+ OR
+Allow Ambient Autopilot
+ ↓
+Travel Through Region
+ ↓
+Ambient Combat / Encounter Approach
+ ↓
+Commit to Encounter
  ↓
 Auto Combat + Player Abilities
  ↓
 Earn Resources / Pending Rewards
  ↓
-Choose Next Destination
+Redirect / Continue
 ```
 
 ## Expedition loop
-
 ```
 Prepare Build
  ↓
 Enter Region
  ↓
-Hunt
+Encounter Supply Begins
  ↓
-Gain Temporary Build
+Choose / Hunt / Travel
  ↓
-Threat Escalates
+Gain Temporary Build Power
+ ↓
+Escalation Rises
+ ↓
+Intensity Peaks and Falls
+ ↓
+World Events / Rare Opportunities / Bosses
  ↓
 Apex
  ↓
-Post-Apex Survival
+Post-Apex Endless Escalation
  ↓
-Death
+Build Can No Longer Survive
 ```
 
 ## Long-term loop

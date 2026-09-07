@@ -120,19 +120,119 @@ The scheduler should own the timing window.
 The encounter should own its current known / available / completed / expired
 state.
 
-# Global Activation Events
+# Current World Events
 
-Ecological events may affect groups that already exist in the world.
+World events are temporary changes to the expedition rather than individual
+selectable encounters.
 
-Example:
+Examples:
 
 ## Zombie Surge
 
-Possible behaviour:
-- activate currently dormant zombie groups;
-- begin additional zombie spawn schedules;
-- increase activity in selected areas;
-- improve zombie-specific reward opportunities.
+Potential effects:
+- increased ambient zombie population;
+- more zombie encounters;
+- increased encounter density;
+- greater Zombie-specific reward opportunity.
 
-A level/world schedule should issue commands into existing spawn and combat
-engagement seams rather than containing special zombie-spawning logic itself.
+## Fiery Zombies
+
+Potential effects:
+- newly generated zombies gain Fire-related behaviour;
+- unengaged zombie encounters may receive the modifier;
+- ambient zombie populations may change;
+- related reward opportunities may change.
+
+# Engagement Snapshot Principle
+
+World changes should generally not rewrite enemies the player has already
+committed to fighting.
+
+Example:
+
+Fiery Zombies begins.
+
+Already-engaged zombie encounter:
+- unchanged.
+
+Available but unengaged encounter:
+- may be modified.
+
+Future zombie encounter:
+- may be generated with Fiery Zombies.
+
+Ambient zombie that has not been engaged:
+- may be affected.
+
+Ambient zombie already chasing/fighting the player:
+- remains unchanged.
+
+# Ambient Ecology
+
+Ambient enemies provide:
+- world population;
+- low-pressure combat;
+- build experimentation;
+- movement continuity.
+
+They are not necessarily represented as formal encounters.
+
+# Ambient Route Graph
+
+Ambient population should follow designer-authored paths through interesting
+parts of the region.
+
+Working model:
+
+A ─── B ─── C
+         │          │
+         D ─── E
+
+Nodes and connections are authored by the level designer.
+
+The ambient population system may:
+- populate routes ahead of the hero;
+- favour routes leading toward new parts of the map;
+- wander enemies locally after spawning;
+- use route segments as fallback spawn areas;
+- respond to world events and escalation.
+
+The system should avoid arbitrary map-wide random scatter that causes the hero
+to move between unrelated coordinates.
+
+# Ecology and Intensity
+
+World events and encounter generation should contribute to an overall intensity
+rhythm.
+
+Example:
+
+Fiery Horde event
++
+high zombie encounter density
+→ rising pressure.
+
+When pressure exceeds the desired range for the current escalation level:
+
+future encounter density may decrease
++
+world event may finish
++
+lower-intensity opportunities may be served
+
+This should create peaks and valleys without reducing long-term escalation.
+
+# Time-of-Day Ecology
+
+World time may influence ecological activity.
+
+Working examples:
+- zombie density increases at night;
+- rare encounters become more common around particular phases;
+- ambient populations change with world events;
+- migrations may occur at scheduled times.
+
+Time-of-day rules should influence unengaged / future content rather than
+retroactively rewriting already-engaged combat.
+
+The exact ecology effects of day/night remain exploratory.

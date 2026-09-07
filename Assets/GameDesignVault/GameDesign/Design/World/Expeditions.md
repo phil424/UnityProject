@@ -83,37 +83,97 @@ Preparation
 
 Add sections later for pacing.
 
+# Continuous Encounter Supply
+
+An expedition is not intended to be a finite sequence of:
+
+Encounter A
+→ Encounter B
+→ Encounter C
+→ Boss
+→ End
+
+The region should continually provide new encounter opportunities for as long as
+the temporary build can survive.
+
+The encounter system should maintain enough opportunities that the player is
+never left without meaningful options.
+
+Current strong working direction:
+
+> There should always be at least three selectable encounters available during
+> normal expedition play.
+
+Completed and expired opportunities are replaced by new encounters appropriate
+to the current expedition state.
+
 # Encounter Selection
 
-Regions should contain multiple threats and opportunities rather than only one
-mandatory next fight.
-
-The player can assess known encounters and choose where to direct the hero /
-party next.
+The player chooses which encounter the hero / party should pursue.
 
 Encounter choice may consider:
 - distance;
 - threat;
-- rewards;
+- opportunity rarity;
+- known encounter modifiers;
+- expected reward;
 - rare enemies;
-- ecology events;
-- upcoming schedule changes;
-- current build needs.
+- current build;
+- future schedule changes;
+- current world events.
 
-The player should sometimes face decisions such as:
+Encounter information should generally be generous enough to support an
+informed decision.
 
-> Continue fighting the nearby horde, or redirect toward a rare valuable target
-> that has just appeared elsewhere?
+The intention is not:
+> Pick one of three mystery doors.
 
-This makes traversal part of strategic decision-making rather than only downtime
-between fights.
+The player should understand the important properties of the challenge they are
+choosing.
+
+# Immediate Redirection
+
+Selecting another encounter is an immediate command.
+
+Expected behaviour:
+
+Encounter A currently targeted
+↓
+player selects Encounter B
+↓
+hero drops targets belonging to Encounter A
+↓
+hero begins moving toward Encounter B immediately
+
+Enemies from Encounter A do not automatically disengage.
+
+They may continue pursuing the hero.
+
+This allows the player to deliberately pull several encounters together into a
+larger fight when their build is capable of handling the additional pressure.
+
+# Encounter Commitment
+
+Selecting or starting an encounter commits to that opportunity.
+
+Default expiry behaviour:
+
+Unselected / unstarted encounter
+→ may disappear when its expiry window ends.
+
+Selected encounter
+→ remains available.
+
+Engaged encounter
+→ remains active until resolved.
+
+This creates meaningful decisions around encounters that are close to expiring:
+
+> Commit to it now or lose the opportunity.
 
 # Encounter Relationships
 
-Encounters may affect the availability of other encounters.
-
-These relationships should create optional strategic opportunities rather than
-requiring every region to follow a fixed linear encounter chain.
+Encounters may influence the availability of other encounters.
 
 Example:
 
@@ -121,51 +181,106 @@ Elite Gauntlet
         ↓ clear
 Nobleman's Procession becomes available
 
-The rare encounter may already be known and expiring while the prerequisite
+A valuable encounter may already be known and expiring while its prerequisite
 remains incomplete.
 
-This allows authored decisions such as:
+Encounter relationships should remain optional strategic opportunities rather
+than turning every region into one fixed linear chain.
 
-> I would normally avoid that difficult Elite encounter, but completing it now
-> unlocks a rare opportunity that disappears in 45 seconds.
+# Passive Expedition Play
 
-Possible encounter relationships may eventually include:
-- completion unlocks another encounter;
-- either of several encounters can unlock an opportunity;
-- completing an encounter reveals another;
-- world/schedule events unlock encounters;
-- ecological events alter encounter availability.
+The game remains an autobattler even when the player does not actively choose
+an encounter.
 
-Avoid making `LevelEncounter` itself own one fixed prerequisite reference.
+With no encounter directive:
 
-# Threat Escalation - (Risk of Rain)
-### Purpose
-Create increasing tension without relying only on inflated enemy health/damage.
+hero
+↓
+follows ambient activity
+↓
+travels through authored interesting routes
+↓
+fights lighter ambient enemies
+↓
+naturally moves through the region
 
-### Escalation Examples
-- larger enemy groups
-- stronger enemies
-- mixed enemy families
-- additional bosses
-- multiple bosses simultaneously
-- boss/minion combinations
-- upsurges
-- environmental events
-- migration collisions.
+The player can therefore intervene heavily or allow the expedition to continue
+more autonomously.
 
-### Pacing
-Should contain ebbs and flows rather than monotonically increasing intensity.
+Ignoring encounter progression should not trigger bespoke punishment.
 
-### Telegraphing
-Major escalation should be visible ahead of time through the region schedule.
+Instead, rising escalation naturally outpaces a build that is not acquiring
+enough new power.
+
+# Threat Escalation
+
+Escalation is the long-term increase in expedition danger.
+
+Examples:
+- increased encounter supply;
+- larger groups;
+- Elites appearing more frequently;
+- higher-difficulty encounter pools;
+- mixed enemy families;
+- additional bosses;
+- world events;
+- stronger ambient populations;
+- eventual Apex pressure.
+
+Escalation should support effectively endless post-Apex survival.
+
+# Intensity and Pacing
+
+Escalation and current intensity are separate.
+
+Escalation generally trends upward.
+
+Intensity should rise and fall.
+
+Desired pacing:
+
+pressure
+↓
+peak
+↓
+recovery
+↓
+new opportunity
+↓
+greater pressure
+
+The expedition / encounter systems should communicate enough runtime pressure
+information to avoid producing endlessly increasing chaos without recovery.
+
+Potential runtime observations may include:
+- hostile population;
+- encounter overlap;
+- damage taken;
+- healing frequency;
+- current party health;
+- recent encounter completion rate.
+
+Exact metrics remain exploratory.
+
+The system should normally adjust future content rather than secretly changing
+enemies already committed to combat.
+
+# Forecasting
+
+Future danger should be visible enough to create planning decisions.
+
+The player may receive:
+- precise short-term countdowns;
+- a detailed near-future schedule;
+- major long-range expedition events.
 
 Example:
-> THREAT LEVEL INCREASE IN 10:00
 
-### Principle
-The player should feel:
-> Things are about to get worse. What can I accomplish before then?
+> Fiery Horde begins in 10 minutes.
 
+The desired feeling is:
+
+> Things are going to change. What should I accomplish before then?
 
 # Apex System
 ### Convergence Apex
@@ -206,3 +321,24 @@ The player can potentially leave rewards pending.
 ### Future Opportunities
 Challenges could interact with unresolved rewards.
 
+# World Time
+
+Expeditions operate within an accelerated 24-hour world cycle.
+
+The clock gives long runs a readable rhythm and allows future events to be
+expressed as meaningful world times rather than only elapsed-time counters.
+
+An expedition may survive through multiple game days.
+
+World time should support decisions such as:
+
+> Dusk is approaching.
+
+> The next rare-activity period begins at 18:00.
+
+> Zombie activity increases after midnight.
+
+The world-time cycle does not replace Escalation.
+
+Repeated days should become progressively more dangerous as the expedition
+continues to escalate.
