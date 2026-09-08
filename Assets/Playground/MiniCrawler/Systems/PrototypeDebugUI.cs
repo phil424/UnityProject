@@ -113,8 +113,15 @@ namespace MiniCrawler.Systems
             if (stage != null)
             {
                 GUILayout.Label($"Level State: {stage.StateName}");
-                GUILayout.Label($"Party Alive: " + $"{stage.LivingPartyMembers}");
-                GUILayout.Label($"Minions Alive: " + $"{stage.LivingMinions}");
+                GUILayout.Label($"Party Alive: {stage.LivingPartyMembers}");
+                GUILayout.Label($"Minions Alive: {stage.LivingMinions}");
+                GUILayout.Label($"Unstarted Groups: {stage.UnstartedMinionSpawnGroups}");
+
+                if (stage.State == StageDirector.LevelState.FightingMinions &&
+                    GUILayout.Button("DEBUG: Start Boss Phase"))
+                {
+                    stage.TryStartBossPhase();
+                }
             }
             else
             {

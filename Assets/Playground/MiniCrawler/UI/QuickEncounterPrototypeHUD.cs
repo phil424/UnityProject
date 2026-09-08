@@ -1,4 +1,6 @@
+using System;
 using MiniCrawler.Encounters;
+using MiniCrawler.Expedition;
 using MiniCrawler.Progress;
 using MiniCrawler.Systems;
 using UnityEngine;
@@ -10,8 +12,8 @@ namespace MiniCrawler.UI
     {
         private const float Margin = 10f;
         private const float DebugButtonClearance = 45f;
-        private const float PanelWidth = 300f;
-        private const float PanelHeight = 155f;
+        private const float PanelWidth = 340f;
+        private const float PanelHeight = 175f;
 
         private static readonly string[] SlotGlyphs =
         {
@@ -23,10 +25,13 @@ namespace MiniCrawler.UI
         private void OnGUI()
         {
             RunDirector runDirector = RunDirector.Instance;
+            StageDirector stageDirector = StageDirector.Instance;
 
             if (!RunProgress.HasActiveRun ||
                 runDirector == null ||
-                runDirector.State != RunDirector.RunFlowState.InLevel)
+                runDirector.State != RunDirector.RunFlowState.InLevel ||
+                stageDirector == null ||
+                stageDirector.State != StageDirector.LevelState.FightingMinions)
             {
                 return;
             }
@@ -54,6 +59,7 @@ namespace MiniCrawler.UI
             GUILayout.EndHorizontal();
 
             EncounterDirectionController direction = EncounterDirectionController.Instance;
+            PrototypeEncounterSupply supply = PrototypeEncounterSupply.Instance;
 
             for (int i = 0; i < QuickEncounterChoices.SlotCount; i++)
             {
@@ -63,21 +69,72 @@ namespace MiniCrawler.UI
                 {
                     bool previousEnabled = GUI.enabled;
                     GUI.enabled = false;
-
                     GUILayout.Button($"{SlotGlyphs[i]}  No Encounter");
-
                     GUI.enabled = previousEnabled;
                     continue;
                 }
 
-                bool selected = direction != null && direction.SelectedEncounter == encounter;
-                string selectedMarker = selected ? "  ★" : string.Empty;
+                string suffix = BuildStatusSuffix(encounter, direction, supply);
 
-                if (GUILayout.Button($"{SlotGlyphs[i]}  {encounter.DisplayName}{selectedMarker}"))
+                if (GUILayout.Button($"{SlotGlyphs[i]}  {encounter.DisplayName}{suffix}"))
                     quickChoices.TrySelectSlot(i);
             }
 
             GUILayout.EndArea();
+        }
+
+        private static string BuildStatusSuffix(
+            LevelEncounter encounter,
+            EncounterDirectionController direction,
+            PrototypeEncounterSupply supply)
+        {
+            string suffix = string.Empty;
+
+            if (supply != null)
+            {
+                int occurrence = supply.GetOccurrence(encounter);
+
+                if (occurrence > 1)
+                    suffix += $"  x{occurrence}";
+            }
+
+            bool selected = direction != null && direction.SelectedEncounter == encounter;
+
+            if (selected)
+                return suffix + "  ★ COMMITTED";
+
+            if (supply != null && supply.IsExpiryProtected(encounter))
+                return suffix + "  COMMITTED";
+
+            WorldClockState worldClock = RunProgress.WorldClock;
+
+            if (supply == null ||
+                worldClock == null ||
+                !worldClock.IsInitialized ||
+                !supply.TryGetExpiry(encounter, out WorldTimestamp expiry))
+            {
+                return suffix;
+            }
+
+            double remainingWorldMinutes = Math.Max(0d, worldClock.CurrentTime.MinutesUntil(expiry));
+
+            WorldClockSystem clockSystem = WorldClockSystem.Instance;
+            float worldMinutesPerSimulationSecond =
+                clockSystem != null ? clockSystem.WorldHoursPerSimulationMinute : 1f;
+
+            double remainingSimulationSeconds =
+                remainingWorldMinutes / Math.Max(0.01f, worldMinutesPerSimulationSecond);
+
+            return suffix + $"  {FormatCountdown(remainingSimulationSeconds)}";
+        }
+
+        private static string FormatCountdown(double seconds)
+        {
+            int totalSeconds = Mathf.Max(0, Mathf.CeilToInt((float)seconds));
+            int minutes = totalSeconds / 60;
+            int remainingSeconds = totalSeconds % 60;
+
+            return $"{minutes:00}:{remainingSeconds:00}";
         }
     }
 }

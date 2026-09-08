@@ -563,6 +563,34 @@ navigation.
 
 Encounter choice and ambient exploration are different gameplay concepts.
 
+# Prototype Reusable Encounter Sites
+
+3.0G introduces a temporary authoring flag:
+
+`Reusable By Prototype Supply`
+
+This marks a scene-authored `LevelEncounter` as eligible to be rearmed after
+completion / expiry during the current strategic expedition prototype.
+
+This is not the final generated-encounter architecture.
+
+It should primarily be used on generic encounter sites whose content can
+reasonably repeat.
+
+Fixed spectacle encounters should generally remain one-shot unless repetition is
+deliberately authored.
+
+For the initial expiry prototype, reusable generic encounters begin unspawned.
+
+This avoids introducing incomplete actor-despawn presentation solely to support
+expiry.
+
+Future encounter lifecycle may support:
+- pre-spawned dormant encounters that disappear cleanly;
+- visual arrival / departure;
+- site-specific spectacle;
+- generated runtime encounter instances.
+
 # Encounter Workshop
 
 A future dedicated encounter-authoring/test scene should allow designers to:

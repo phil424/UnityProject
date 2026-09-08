@@ -33,14 +33,20 @@ namespace MiniCrawler.Encounters
             if (stageDirector == null)
                 stageDirector = GetComponent<StageDirector>();
 
-            if (stageDirector != null)
-                stageDirector.LevelCleared += HandleLevelCleared;
+            if (stageDirector == null)
+                return;
+
+            stageDirector.LevelCleared += HandleLevelCleared;
+            stageDirector.StateChanged += HandleStageStateChanged;
         }
 
         private void OnDisable()
         {
-            if (stageDirector != null)
-                stageDirector.LevelCleared -= HandleLevelCleared;
+            if (stageDirector == null)
+                return;
+
+            stageDirector.LevelCleared -= HandleLevelCleared;
+            stageDirector.StateChanged -= HandleStageStateChanged;
         }
 
         private void OnDestroy()
@@ -114,6 +120,12 @@ namespace MiniCrawler.Encounters
         private void HandleLevelCleared()
         {
             ClearSelection();
+        }
+        
+        private void HandleStageStateChanged(StageDirector.LevelState state)
+        {
+            if (state == StageDirector.LevelState.FightingBoss)
+                ClearSelection();
         }
 
         private void ArriveAtSelectedEncounter()

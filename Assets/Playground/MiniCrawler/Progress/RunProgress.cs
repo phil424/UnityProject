@@ -16,6 +16,7 @@ namespace MiniCrawler.Progress
 
         public static int Currency => CurrentRun != null ? CurrentRun.Currency : 0;
         public static WorldClockState WorldClock => CurrentRun?.WorldClock;
+        public static WorldEventState WorldEvents => CurrentRun?.WorldEvents;
 
         public static IReadOnlyList<PartyMemberDefinition> SelectedParty =>
             CurrentRun != null ? CurrentRun.SelectedParty : Array.Empty<PartyMemberDefinition>();

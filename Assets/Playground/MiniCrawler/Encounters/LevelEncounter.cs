@@ -31,6 +31,9 @@ namespace MiniCrawler.Encounters
         [Header("On Completed")]
         [SerializeField] private LevelEncounterActions onCompletedActions = new();
 
+        [Header("Prototype Supply")]
+        [SerializeField] private bool reusableByPrototypeSupply;
+
         [Header("Runtime (Debug)")]
         [SerializeField] private bool isKnown;
         [SerializeField] private bool isAvailable;
@@ -55,6 +58,22 @@ namespace MiniCrawler.Encounters
         public Vector3 AnchorPosition => transform.position;
 
         public IReadOnlyList<LevelSpawnGroup> SpawnGroups => spawnGroups;
+        
+        public bool ReusableByPrototypeSupply => reusableByPrototypeSupply;
+
+        public bool HasStartedSpawnGroups
+        {
+            get
+            {
+                foreach (LevelSpawnGroup group in spawnGroups)
+                {
+                    if (group != null && group.IsSpawningStarted)
+                        return true;
+                }
+
+                return false;
+            }
+        }
 
         public bool IsKnown => isKnown;
         public bool IsAvailable => isAvailable;
@@ -141,6 +160,29 @@ namespace MiniCrawler.Encounters
             availabilitySequence = 0;
 
             SetPresentationState(EncounterPresentationState.Unknown);
+        }
+        
+        public bool RearmForPrototypeSupply()
+        {
+            if (!reusableByPrototypeSupply)
+                return false;
+
+            foreach (LevelSpawnGroup group in spawnGroups)
+            {
+                if (group != null)
+                    group.PrepareForLevel();
+            }
+
+            isKnown = true;
+            isAvailable = true;
+            isCompleted = false;
+            isExpired = false;
+            availabilitySequence = 0;
+
+            StampAvailability();
+            RefreshState();
+
+            return true;
         }
 
         public bool MakeKnown()

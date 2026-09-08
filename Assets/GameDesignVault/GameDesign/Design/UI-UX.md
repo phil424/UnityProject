@@ -183,6 +183,33 @@ These should communicate:
 rather than:
 > Where should I go?
 
+## 3.0H Prototype
+
+The first active-event HUD displays currently active World Events separately
+from encounter choices.
+
+Prototype:
+
+CURRENT WORLD EVENTS
+
+Zombie Surge   02:14
+
+The World Event status is positioned near the existing strategic encounter area.
+
+This remains distinct from:
+
+UPCOMING
+→ future forecast.
+
+ENCOUNTERS
+→ selectable destinations.
+
+CURRENT WORLD EVENTS
+→ rules / pressures affecting the world now.
+
+Final layout should consolidate these elements around the minimap / strategic
+HUD according to the established passive-HUD wireframe.
+
 # Combat Minimap
 
 The minimap answers:
@@ -267,6 +294,37 @@ The quick-choice provider does NOT create replacement encounters.
 
 Guaranteeing three continuously available opportunities belongs to Encounter
 Supply rather than UI.
+
+## 3.0G Expiry Presentation
+
+Quick encounter choices now expose remaining opportunity time.
+
+Prototype example:
+
+△ Opening Horde       00:42
+□ Dormant Horde       ★ COMMITTED
+○ South Road Horde    01:11
+
+Selected or started encounters use:
+
+COMMITTED
+
+instead of an expiry countdown.
+
+Recycled prototype encounters may temporarily show an occurrence marker such as:
+
+x2
+
+This marker exists for development validation and is not necessarily final
+player-facing presentation.
+
+The important player-facing information is:
+
+> How urgent is this opportunity?
+
+and:
+
+> Have I already committed to it?
 
 # Encounter Selection
 

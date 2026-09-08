@@ -135,6 +135,33 @@ Potential effects:
 - increased encounter density;
 - greater Zombie-specific reward opportunity.
 
+### 3.0H Prototype
+
+The first playable Zombie Surge implementation affects ambient population.
+
+While active:
+
+- additional ambient zombies appear when the event begins;
+- additional population pulses occur periodically;
+- ambient enemies continue to use normal combat and reward systems.
+
+When Zombie Surge expires:
+
+- additional surge spawning stops;
+- already-generated enemies remain.
+
+This intentionally proves the Engagement Snapshot Principle without introducing
+enemy-stat mutation.
+
+Future Zombie Surge versions may also influence:
+- encounter supply;
+- zombie encounter frequency;
+- Elite probability;
+- Zombie-specific reward opportunity;
+- intensity targets.
+
+Those are not required for the first implementation.
+
 ## Fiery Zombies
 
 Potential effects:

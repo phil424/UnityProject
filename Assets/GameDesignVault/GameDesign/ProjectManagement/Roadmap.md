@@ -62,22 +62,42 @@ Completed:
 - explicit Encounter Directive overrides ambient travel;
 - ambient enemies remain separate from formal encounter progression.
 
-## 3.0F — Forecast Proof
+## 3.0F — Forecast Proof ✅
+
+Completed:
+- passive World Time;
+- next-three forecast;
+- near-event countdowns;
+- longer-range World Time presentation;
+- first gameplay-backed scheduled event;
+- player actions can resolve planned forecast entries early.
+
+## 3.0G — Encounter Supply Transition ✅
+
+Completed:
+- reusable baseline encounter supply;
+- encounter expiry;
+- commitment protection;
+- automatic backfill;
+- more known opportunities than quick slots;
+- one-shot scheduled encounters remain separate;
+- encounter exhaustion no longer controls boss progression.
+
+## 3.0H — First World Event
 
 **Status: Active**
 
 Prove:
-- World Time is visible during normal play;
-- next three planned events are visible;
-- immediate events use countdowns;
-- longer-range events use World Time;
-- one forecast entry causes a real encounter-state change;
-- player action may resolve a planned entry early;
-- scheduling remains separate from continuous encounter supply.
-
-## 3.0G — Encounter Supply Transition
-
-## 3.0H — First World Event
+- World Event state belongs to the expedition lifetime;
+- scheduler can activate a real World Event;
+- active events are shown separately from encounter choices;
+- Zombie Surge increases ambient zombie population;
+- active-event duration follows World Time;
+- simulation speed naturally affects event timing;
+- event expiry stops future effects;
+- existing spawned enemies remain after expiry;
+- active events survive region transitions;
+- active events reset when the expedition ends.
 
 ## 3.0I — Passive Strategic HUD
 

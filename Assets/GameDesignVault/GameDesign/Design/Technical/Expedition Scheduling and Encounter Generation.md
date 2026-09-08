@@ -119,6 +119,123 @@ The encounter system / future encounter director should:
 There should always be at least three selectable encounter opportunities
 available to the player during normal expedition play.
 
+## 3.0G Prototype Encounter Supply
+
+The first continuous-supply prototype deliberately reuses existing
+scene-authored `LevelEncounter` sites.
+
+This is temporary.
+
+It exists to prove encounter lifecycle and strategic pacing before introducing
+the future:
+
+Encounter Definition
++
+Encounter Site
++
+Runtime Encounter Instance
+
+model.
+
+### Prototype Lifecycle
+
+Reusable generic encounter:
+
+Available
+↓
+expiry timer begins
+↓
+Selected / Started
+OR
+Ignored
+
+Selected / Started
+→ protected from expiry
+→ resolve normally
+
+Ignored
+→ Expired
+
+Completed / Expired
+↓
+reuse delay
+↓
+site rearmed
+↓
+new availability sequence
+↓
+new occurrence enters the back of supply
+
+### Minimum Supply
+
+Normal strategic play should expose at least three quick encounter choices.
+
+`PrototypeEncounterSupply` therefore:
+- maintains a configurable minimum;
+- normally respects reuse delay;
+- may rearm the oldest reusable site early if required to prevent a supply
+  shortage.
+
+If the selected encounter is excluded from quick slots, supply may maintain one
+additional selectable encounter so the player still receives three alternative
+destinations.
+
+### Expiry Protection
+
+Prototype rule:
+
+Current selected encounter
+→ protected.
+
+Encounter whose spawning has begun
+→ protected.
+
+Unselected + unstarted encounter
+→ may expire.
+
+This means redirecting away from an encounter before reaching it may allow its
+expiry timer to resume.
+
+Once gameplay has actually begun, the encounter remains until resolved.
+
+### Scene-Authored Reuse
+
+The 3.0G prototype distinguishes:
+
+Reusable baseline encounters
+- provide regular strategic supply;
+- may cycle repeatedly.
+
+Special scheduled encounters
+- may be one-shot;
+- do not need to participate in baseline recycling.
+
+Example:
+
+West Road Horde
+→ reusable baseline opportunity.
+
+Reinforcements
+→ scheduled special opportunity.
+
+### Regional Boss Progression
+
+Continuous encounter supply invalidates the previous rule:
+
+all minion groups exhausted
+→ automatically spawn boss.
+
+`StageDirector` therefore no longer needs to infer regional progression from
+encounter exhaustion.
+
+For the current MVP, boss phase may be started explicitly through a debug seam
+so level/region transition remains testable.
+
+Future boss / Apex initiation should come from an explicit progression,
+schedule, encounter or expedition rule.
+
+Encounter Supply must not secretly own expedition-success logic.
+
 ## Forecast / Schedule
 
 Answers:
@@ -177,14 +294,43 @@ This is a thin prototype execution bridge.
 It is NOT the future Encounter Director and should not become responsible for
 constructing arbitrary encounter content.
 
+#### World Event Activation
+
+As of 3.0H, a gameplay-backed schedule entry may also activate a
+`WorldEventDefinition` for a configured World Time duration.
+
+Example:
+
+10:00
+Zombie Surge
+↓
+WorldEventState activates Zombie Surge
+↓
+WorldEvent-specific systems react.
+
+The scheduler owns:
+
+> when the event begins.
+
+The World Event system owns:
+
+> whether the event is currently active.
+
+Domain-specific effect systems own:
+
+> what the event changes.
+
+This prevents the scheduler from becoming a gameplay-effect manager.
+
 ### Forecast-Only Entries
 
 Forecast-only entries communicate future information whose gameplay system does
 not exist yet.
 
-Prototype examples:
-- Rare Activity Window;
-- Zombie Surge.
+Current prototype example:
+- Rare Activity Window.
+
+Zombie Surge became the first gameplay-backed World Event in 3.0H.
 
 These let the forecast presentation be tested before their full systems are
 implemented.

@@ -16,7 +16,13 @@ namespace MiniCrawler.Expedition
             [SerializeField] private string displayName = "Scheduled Event";
             [SerializeField, Min(0f)] private float worldMinutesAfterExpeditionStart = 30f;
             [SerializeField] private bool forecastOnly;
+
+            [Header("Encounter Actions")]
             [SerializeField] private LevelEncounterActions onDue = new();
+
+            [Header("World Event")]
+            [SerializeField] private WorldEventDefinition worldEvent;
+            [SerializeField, Min(1f)] private float worldEventDurationWorldMinutes = 180f;
 
             [NonSerialized] private WorldTimestamp scheduledTime;
             [NonSerialized] private bool isInitialized;
@@ -27,6 +33,7 @@ namespace MiniCrawler.Expedition
             public string DisplayName => string.IsNullOrWhiteSpace(displayName) ? "Scheduled Event" : displayName;
             public float WorldMinutesAfterExpeditionStart => worldMinutesAfterExpeditionStart;
             public bool ForecastOnly => forecastOnly;
+            public WorldEventDefinition WorldEvent => worldEvent;
 
             public WorldTimestamp ScheduledTime => scheduledTime;
 
@@ -50,6 +57,9 @@ namespace MiniCrawler.Expedition
                 if (!isInitialized || isResolved || forecastOnly)
                     return false;
 
+                if (worldEvent != null)
+                    return false;
+
                 return onDue == null || !onDue.HasPendingActions();
             }
 
@@ -68,7 +78,17 @@ namespace MiniCrawler.Expedition
                     return;
 
                 if (!forecastOnly)
+                {
                     onDue?.Execute();
+
+                    if (worldEvent != null && RunProgress.WorldEvents != null)
+                    {
+                        WorldTimestamp endsAt =
+                            scheduledTime.AddMinutes(Mathf.Max(1f, worldEventDurationWorldMinutes));
+
+                        RunProgress.WorldEvents.TryActivate(worldEvent, scheduledTime, endsAt);
+                    }
+                }
 
                 wasTriggered = true;
                 isResolved = true;

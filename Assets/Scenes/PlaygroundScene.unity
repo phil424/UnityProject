@@ -1390,6 +1390,7 @@ MonoBehaviour:
   availableAtLevelStart: 0
   onCompletedActions:
     entries: []
+  reusableByPrototypeSupply: 0
   isKnown: 0
   isAvailable: 0
   isCompleted: 0
@@ -2180,7 +2181,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 534eca0a6af4aaf428b51272d5c7238e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Spawning.LevelSpawnGroup
-  startSpawning: 1
+  startSpawning: 0
   startCombatActive: 0
   entries:
   - actor: {fileID: 11400000, guid: f94bb2855b5c0e24eac3845bce957198, type: 2}
@@ -2208,6 +2209,7 @@ MonoBehaviour:
   availableAtLevelStart: 1
   onCompletedActions:
     entries: []
+  reusableByPrototypeSupply: 1
   isKnown: 0
   isAvailable: 0
   isCompleted: 0
@@ -2449,6 +2451,102 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 388989776}
   m_CullTransparentMesh: 1
+--- !u!1 &392467344
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 392467345}
+  - component: {fileID: 392467348}
+  - component: {fileID: 392467347}
+  - component: {fileID: 392467346}
+  m_Layer: 0
+  m_Name: West Road Horde Encounter
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &392467345
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 392467344}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -18, y: 0.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 907118059}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &392467346
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 392467344}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ec6c5272cff78ab42b58beae9d310062, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Spawning.LevelSpawnSource
+  shape: 1
+  radius: 5
+  boxSize: {x: 3, y: 3}
+--- !u!114 &392467347
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 392467344}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 534eca0a6af4aaf428b51272d5c7238e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Spawning.LevelSpawnGroup
+  startSpawning: 0
+  startCombatActive: 0
+  entries:
+  - actor: {fileID: 11400000, guid: f94bb2855b5c0e24eac3845bce957198, type: 2}
+    count: 8
+    startDelay: 0
+    batchSize: 4
+    timeBetweenSpawns: 0
+    timeBetweenBatches: 8
+--- !u!114 &392467348
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 392467344}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e7fea86c1f620448b78d1c3ad8eb4b3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Encounters.LevelEncounter
+  id: west-road-horde
+  displayName: West Road Horde
+  description: A roaming horde gathering along the western road.
+  knownAtLevelStart: 1
+  availableAtLevelStart: 1
+  onCompletedActions:
+    entries: []
+  reusableByPrototypeSupply: 1
+  isKnown: 0
+  isAvailable: 0
+  isCompleted: 0
+  isExpired: 0
+  presentationState: 0
+  availabilitySequence: 0
 --- !u!1 &441528358
 GameObject:
   m_ObjectHideFlags: 0
@@ -3342,6 +3440,7 @@ MonoBehaviour:
         beginSpawning: 0
         activateCombat: 0
         expire: 0
+  reusableByPrototypeSupply: 1
   isKnown: 0
   isAvailable: 0
   isCompleted: 0
@@ -3375,7 +3474,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 534eca0a6af4aaf428b51272d5c7238e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Spawning.LevelSpawnGroup
-  startSpawning: 1
+  startSpawning: 0
   startCombatActive: 0
   entries:
   - actor: {fileID: 11400000, guid: f94bb2855b5c0e24eac3845bce957198, type: 2}
@@ -3807,6 +3906,7 @@ MonoBehaviour:
   availableAtLevelStart: 1
   onCompletedActions:
     entries: []
+  reusableByPrototypeSupply: 1
   isKnown: 0
   isAvailable: 0
   isCompleted: 0
@@ -3840,7 +3940,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 534eca0a6af4aaf428b51272d5c7238e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Spawning.LevelSpawnGroup
-  startSpawning: 1
+  startSpawning: 0
   startCombatActive: 0
   entries:
   - actor: {fileID: 11400000, guid: f94bb2855b5c0e24eac3845bce957198, type: 2}
@@ -4548,6 +4648,7 @@ GameObject:
   - component: {fileID: 810166849}
   - component: {fileID: 810166850}
   - component: {fileID: 810166851}
+  - component: {fileID: 810166852}
   m_Layer: 5
   m_Name: GameFlowUI
   m_TagString: Untagged
@@ -4632,6 +4733,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b23db9c24eab0ca4a9952563493c9a1b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.UI.PrototypeForecastHUD
+--- !u!114 &810166852
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 810166847}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d36a5e23d0a40b24cb54fc2a4c351217, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.UI.PrototypeWorldEventHUD
 --- !u!1 &830497294
 GameObject:
   m_ObjectHideFlags: 0
@@ -4878,6 +4991,7 @@ GameObject:
   - component: {fileID: 846909448}
   - component: {fileID: 846909449}
   - component: {fileID: 846909450}
+  - component: {fileID: 846909451}
   m_Layer: 0
   m_Name: StageDirector
   m_TagString: Untagged
@@ -4901,6 +5015,7 @@ MonoBehaviour:
   partySpawnPoint: {fileID: 1272413006}
   bossSpawnSource: {fileID: 221997191}
   partySpawnRadius: 1
+  autoSpawnBossWhenEncounterContentExhausted: 0
   encountersRoot: {fileID: 907118059}
 --- !u!114 &846909438
 MonoBehaviour:
@@ -5083,16 +5198,38 @@ MonoBehaviour:
           beginSpawning: 0
           activateCombat: 0
           expire: 0
+    worldEvent: {fileID: 0}
+    worldEventDurationWorldMinutes: 180
   - displayName: Rare Activity Window
     worldMinutesAfterExpeditionStart: 300
     forecastOnly: 1
     onDue:
       entries: []
+    worldEvent: {fileID: 0}
+    worldEventDurationWorldMinutes: 180
   - displayName: Zombie Surge
-    worldMinutesAfterExpeditionStart: 600
-    forecastOnly: 1
+    worldMinutesAfterExpeditionStart: 120
+    forecastOnly: 0
     onDue:
       entries: []
+    worldEvent: {fileID: 11400000, guid: 6c5a5bdb253b6d44b9da0bad3dfc0e40, type: 2}
+    worldEventDurationWorldMinutes: 180
+--- !u!114 &846909451
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 846909435}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3adde4dcf82db74fb9336e1faff23ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Expedition.PrototypeEncounterSupply
+  encounterLifetimeWorldMinutes: 60
+  initialExpiryStaggerWorldMinutes: 15
+  reuseDelayWorldMinutes: 20
+  minimumQuickChoices: 3
 --- !u!1 &907118058
 GameObject:
   m_ObjectHideFlags: 0
@@ -5124,6 +5261,7 @@ Transform:
   m_Children:
   - {fileID: 579706916}
   - {fileID: 641285803}
+  - {fileID: 392467345}
   - {fileID: 348410349}
   - {fileID: 246946504}
   m_Father: {fileID: 0}
@@ -7985,6 +8123,7 @@ GameObject:
   - component: {fileID: 1644379269}
   - component: {fileID: 1644379268}
   - component: {fileID: 1644379267}
+  - component: {fileID: 1644379270}
   m_Layer: 0
   m_Name: Ambient Route
   m_TagString: Untagged
@@ -8037,6 +8176,23 @@ Transform:
   - {fileID: 147068390}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1644379270
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1644379266}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7668e02490aa27e4bb139e126418e8bb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Ecology.ZombieSurgeAmbientEffect
+  worldEvent: {fileID: 11400000, guid: 6c5a5bdb253b6d44b9da0bad3dfc0e40, type: 2}
+  affectedActorDefinition: {fileID: 11400000, guid: f94bb2855b5c0e24eac3845bce957198, type: 2}
+  activationBonusPerSpawnPoint: 1
+  pulseBonusPerSpawnPoint: 1
+  pulseIntervalWorldMinutes: 60
 --- !u!1 &1656925456
 GameObject:
   m_ObjectHideFlags: 0
@@ -8493,6 +8649,7 @@ GameObject:
   - component: {fileID: 1773141660}
   - component: {fileID: 1773141661}
   - component: {fileID: 1773141662}
+  - component: {fileID: 1773141663}
   m_Layer: 0
   m_Name: RunDirector
   m_TagString: Untagged
@@ -8551,6 +8708,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Systems.WorldClockSystem
   startingHour: 8
   worldHoursPerSimulationMinute: 1
+--- !u!114 &1773141663
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1773141659}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bcd384e46f615db4986fe4f18e4c9481, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Systems.WorldEventSystem
 --- !u!1 &1844614448
 GameObject:
   m_ObjectHideFlags: 0

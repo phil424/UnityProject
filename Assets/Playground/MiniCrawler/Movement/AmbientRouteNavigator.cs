@@ -77,6 +77,11 @@ namespace MiniCrawler.Movement
             if (runDirector == null || runDirector.State != RunDirector.RunFlowState.InLevel)
                 return false;
 
+            StageDirector stageDirector = StageDirector.Instance;
+
+            if (stageDirector == null || stageDirector.State != StageDirector.LevelState.FightingMinions)
+                return false;
+
             EncounterDirectionController encounterDirection = EncounterDirectionController.Instance;
 
             return encounterDirection == null || encounterDirection.SelectedEncounter == null;

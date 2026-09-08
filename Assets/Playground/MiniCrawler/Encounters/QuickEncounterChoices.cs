@@ -84,7 +84,7 @@ namespace MiniCrawler.Encounters
         {
             candidates.Clear();
 
-            if (stageDirector != null && stageDirector.State != StageDirector.LevelState.Idle)
+            if (stageDirector != null && stageDirector.State == StageDirector.LevelState.FightingMinions)
             {
                 LevelEncounter selectedEncounter =
                     directionController != null ? directionController.SelectedEncounter : null;

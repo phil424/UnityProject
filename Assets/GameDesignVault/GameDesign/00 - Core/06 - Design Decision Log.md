@@ -281,3 +281,55 @@ Future scheduling may:
 - react to escalation / intensity.
 
 The player-facing forecast should remain trustworthy while still being dynamic.
+
+## 2026-09-08 — World Events are run-owned state with domain-specific effects
+
+### Decision
+
+Active World Events belong to the expedition lifetime.
+
+The scheduler may activate them, but concrete gameplay effects are implemented
+by the systems that own the affected domain.
+
+### Example
+
+Prototype schedule
+→ activates Zombie Surge.
+
+ZombieSurgeAmbientEffect
+→ increases ambient zombie population.
+
+### Reason
+
+World Events may affect very different gameplay systems.
+
+A single central World Event effect switch would become difficult to extend and
+would couple unrelated domains.
+
+### Implications
+
+- WorldEventDefinition primarily provides identity / presentation;
+- WorldEventState owns active event lifetime;
+- schedule owns event timing;
+- individual systems react to relevant active events;
+- World Events survive region transitions inside the same expedition;
+- World Events reset when the expedition ends.
+
+
+## 2026-09-08 — Ending a World Event does not rewrite generated actors
+
+### Decision
+
+When a World Event ends, already-generated actors or committed combat are not
+automatically reverted or deleted.
+
+### Example
+
+Zombie Surge-generated ambient zombies remain after Zombie Surge expires.
+
+No additional surge population is generated after expiry.
+
+### Reason
+
+World changes should influence future state without making existing combat
+visibly mutate for purely systemic reasons.

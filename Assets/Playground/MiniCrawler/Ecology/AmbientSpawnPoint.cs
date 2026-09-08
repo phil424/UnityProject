@@ -15,9 +15,11 @@ namespace MiniCrawler.Ecology
         private StageDirector stageDirector;
         private bool spawnedForLevel;
 
+        public ActorDefinition ActorDefinition => actorDefinition;
+
         private void Start()
         {
-            stageDirector = StageDirector.Instance;
+            EnsureStageDirector();
 
             if (stageDirector == null)
             {
@@ -41,6 +43,23 @@ namespace MiniCrawler.Ecology
             stageDirector.LevelCleared -= HandleLevelCleared;
         }
 
+        public int SpawnAdditional(int additionalCount)
+        {
+            if (additionalCount <= 0)
+                return 0;
+
+            EnsureStageDirector();
+
+            if (stageDirector == null ||
+                stageDirector.State != StageDirector.LevelState.FightingMinions ||
+                actorDefinition == null)
+            {
+                return 0;
+            }
+
+            return SpawnActors(additionalCount);
+        }
+
         private void HandleStageStateChanged(StageDirector.LevelState state)
         {
             if (state == StageDirector.LevelState.FightingMinions)
@@ -58,20 +77,37 @@ namespace MiniCrawler.Ecology
                 return;
 
             spawnedForLevel = true;
+            SpawnActors(count);
+        }
 
-            for (int i = 0; i < count; i++)
+        private int SpawnActors(int amount)
+        {
+            int spawnedCount = 0;
+
+            for (int i = 0; i < amount; i++)
             {
                 Vector2 offset = Random.insideUnitCircle * spawnRadius;
 
                 Vector3 position = transform.position + new Vector3(offset.x, 0f, offset.y);
                 Quaternion rotation = Quaternion.Euler(0f, Random.Range(0f, 360f), 0f);
 
-                stageDirector.SpawnAmbientActor(
+                GameObject spawned = stageDirector.SpawnAmbientActor(
                     actorDefinition,
                     new Pose(position, rotation),
                     engagementRadius
                 );
+
+                if (spawned != null)
+                    spawnedCount++;
             }
+
+            return spawnedCount;
+        }
+
+        private void EnsureStageDirector()
+        {
+            if (stageDirector == null)
+                stageDirector = StageDirector.Instance;
         }
 
         private void OnValidate()

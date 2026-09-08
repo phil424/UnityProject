@@ -16,6 +16,7 @@ namespace MiniCrawler.Progress
         public int Currency { get; private set; }
         public int TotalCurrencyEarned { get; private set; }
         public WorldClockState WorldClock { get; } = new();
+        public WorldEventState WorldEvents { get; } = new();
 
         public IReadOnlyList<PartyMemberDefinition> SelectedParty => selectedParty;
         public IReadOnlyList<PendingRewardChoice> PendingRewardChoices => pendingRewardChoices;
