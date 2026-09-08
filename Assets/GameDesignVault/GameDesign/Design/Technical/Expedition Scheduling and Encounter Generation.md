@@ -543,6 +543,51 @@ The system should prefer authored street / route placement.
 If additional population is required, it may fall back to scattering enemies
 sensibly along the route rather than across arbitrary world coordinates.
 
+## 3.0E Prototype Implementation
+
+The first ambient-navigation prototype introduces:
+
+`AmbientRouteNode`
+- designer-authored world position;
+- explicit connections to other nodes.
+
+`AmbientRouteGraph`
+- hierarchy-owned collection of route nodes;
+- treats authored connections as bidirectional;
+- provides route-neighbour and nearest-node queries.
+
+`AmbientRouteNavigator`
+- owns fallback whole-party travel;
+- activates only when no Encounter Directive exists;
+- uses `ActorNavigationIntent`;
+- yields to local combat;
+- resumes route travel when combat ends.
+
+`AmbientSpawnPoint`
+- prototype scene-authored ambient population;
+- spawns lightweight ambient actors around selected route nodes.
+
+`AmbientEnemy`
+- begins combat-disengaged;
+- becomes combat-active when the party approaches;
+- once engaged, uses normal combat movement/targeting;
+- does not count toward formal encounter/boss progression.
+
+The prototype intentionally does NOT yet implement:
+- local wandering;
+- moving population fronts;
+- spawn-ahead visibility rules;
+- dynamic route population;
+- escalation-based density;
+- world-event modifications.
+
+These belong to the later ambient ecology implementation.
+
+The purpose of 3.0E is to prove:
+
+> Does a designer-authored route plus light combat make the game feel naturally
+> alive when the player chooses not to issue strategic commands?
+
 # World Events
 
 World events modify the expedition rather than representing one selectable

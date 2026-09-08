@@ -82,18 +82,66 @@ The exact travel/pathing implementation remains open.
 
 If no encounter is currently selected, the hero should not become stationary.
 
-Fallback behaviour:
+The 3.0E prototype establishes:
 
 No Encounter Directive
         ↓
-follow ambient activity / authored route intent
+Ambient Route Navigation
         ↓
-engage light ambient combat
+local combat appears
         ↓
-continue moving through the region
+combat temporarily interrupts route travel
+        ↓
+combat resolves
+        ↓
+ambient route resumes
 
-Encounter direction and ambient travel therefore provide separate strategic and
-autonomous movement intents.
+Ambient travel uses the same generic `ActorNavigationIntent` seam as explicit
+encounter travel.
+
+The priority difference is intentional.
+
+### Explicit Encounter Travel
+
+Encounter navigation uses:
+
+`SuppressCombatTargeting = true`
+
+The player has issued an immediate strategic command.
+
+Normal combat acquisition should not prevent that command from being obeyed.
+
+### Ambient Travel
+
+Ambient navigation uses:
+
+`SuppressCombatTargeting = false`
+
+Ambient travel is fallback/autonomous behaviour.
+
+Local combat may interrupt it.
+
+Once combat has resolved, ambient travel resumes.
+
+Working priority:
+
+Forced Motion
+↓
+Ability Action Lock
+↓
+Explicit Encounter Navigation
+↓
+Local Combat
+↓
+Ambient Route Navigation
+
+This distinction allows:
+
+> Go to that encounter now.
+
+to behave differently from:
+
+> Nothing selected; keep exploring automatically.
 
 ## Current Encounter Foundation
 

@@ -531,6 +531,38 @@ Generic encounters should be capable of using several compatible authored sites.
 Do not refactor the current implementation into these layers until the strategic
 expedition prototype provides concrete requirements.
 
+# Ambient Route Authoring
+
+Ambient navigation is separate from formal encounter authoring.
+
+A level may contain one or more designer-authored route graphs.
+
+Example:
+
+Ambient Route
+├── Route Center
+├── Village Street
+├── Church Road
+├── Cemetery Path
+└── Market Square
+
+Each route node represents a meaningful travel location.
+
+Explicit links describe valid travel relationships.
+
+The graph, rather than arbitrary random world positions, provides the spatial
+structure for autonomous ambient movement.
+
+Prototype ambient spawn points may live on route nodes.
+
+Long-term ambient population may instead move/populate dynamically through the
+graph.
+
+Do not model ambient enemies as fake `LevelEncounter`s merely to reuse encounter
+navigation.
+
+Encounter choice and ambient exploration are different gameplay concepts.
+
 # Encounter Workshop
 
 A future dedicated encounter-authoring/test scene should allow designers to:

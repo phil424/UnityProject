@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using MiniCrawler.Core;
+using MiniCrawler.Ecology;
 using MiniCrawler.Encounters;
 using MiniCrawler.Progress;
 using MiniCrawler.Spawning;
@@ -310,6 +311,26 @@ namespace MiniCrawler.Systems
             Debug.Log("Boss spawned.");
         }
         
+        public GameObject SpawnAmbientActor(ActorDefinition definition, Pose pose, float engagementRadius)
+        {
+            if (state == LevelState.Idle)
+                return null;
+
+            GameObject spawned = Spawn(definition, pose);
+
+            if (spawned == null)
+                return null;
+
+            AmbientEnemy ambientEnemy = spawned.GetComponent<AmbientEnemy>();
+
+            if (ambientEnemy == null)
+                ambientEnemy = spawned.AddComponent<AmbientEnemy>();
+
+            ambientEnemy.Configure(pose.position, engagementRadius);
+
+            return spawned;
+        }
+        
         private GameObject Spawn(ActorDefinition definition, Pose pose)
         {
             return Spawn(definition, pose.position, pose.rotation);
@@ -374,6 +395,9 @@ namespace MiniCrawler.Systems
 
             for (int i = 0; i < enemy.RewardChoicesOnDeath; i++)
                 TryAwardRewardChoice();
+
+            if (deadObject.GetComponent<AmbientEnemy>() != null)
+                return;
 
             if (enemy.IsBoss)
             {

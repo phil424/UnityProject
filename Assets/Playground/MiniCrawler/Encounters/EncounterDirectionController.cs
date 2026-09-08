@@ -1,11 +1,14 @@
 using System;
 using MiniCrawler.Core;
 using MiniCrawler.Movement;
+using MiniCrawler.Systems;
 using UnityEngine;
 
 namespace MiniCrawler.Encounters
 {
     [DefaultExecutionOrder(-350)]
+    [DisallowMultipleComponent]
+    [RequireComponent(typeof(StageDirector))]
     public class EncounterDirectionController : MonoBehaviour
     {
         public static EncounterDirectionController Instance { get; private set; }
@@ -14,12 +17,30 @@ namespace MiniCrawler.Encounters
 
         public event Action<LevelEncounter> SelectedEncounterChanged;
 
+        private StageDirector stageDirector;
+
         public LevelEncounter SelectedEncounter { get; private set; }
         public bool IsTravelling { get; private set; }
 
         private void Awake()
         {
             Instance = this;
+            stageDirector = GetComponent<StageDirector>();
+        }
+
+        private void OnEnable()
+        {
+            if (stageDirector == null)
+                stageDirector = GetComponent<StageDirector>();
+
+            if (stageDirector != null)
+                stageDirector.LevelCleared += HandleLevelCleared;
+        }
+
+        private void OnDisable()
+        {
+            if (stageDirector != null)
+                stageDirector.LevelCleared -= HandleLevelCleared;
         }
 
         private void OnDestroy()
@@ -34,13 +55,19 @@ namespace MiniCrawler.Encounters
         {
             if (!IsTravelling)
             {
-                if (SelectedEncounter != null && SelectedEncounter.IsCompleted)
+                if (SelectedEncounter != null &&
+                    (SelectedEncounter.IsCompleted || SelectedEncounter.IsExpired || !SelectedEncounter.IsKnown))
+                {
                     ClearSelection();
+                }
 
                 return;
             }
 
-            if (SelectedEncounter == null || SelectedEncounter.IsCompleted || SelectedEncounter.IsExpired)
+            if (SelectedEncounter == null ||
+                SelectedEncounter.IsCompleted ||
+                SelectedEncounter.IsExpired ||
+                !SelectedEncounter.IsKnown)
             {
                 ClearSelection();
                 return;
@@ -82,6 +109,11 @@ namespace MiniCrawler.Encounters
             IsTravelling = false;
 
             SelectedEncounterChanged?.Invoke(null);
+        }
+
+        private void HandleLevelCleared()
+        {
+            ClearSelection();
         }
 
         private void ArriveAtSelectedEncounter()

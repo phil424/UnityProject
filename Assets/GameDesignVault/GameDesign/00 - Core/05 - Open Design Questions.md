@@ -101,24 +101,6 @@ should represent alternative destinations.
 Before the quick encounter HUD leaves prototype stage.
 
 
-## Ambient Combat During Encounter Travel
-
-**Question:** How should the hero react to ambient enemies while travelling
-toward an explicitly selected encounter?
-
-**Current Thinking:**
-Encounter redirection should remain dominant. It is unresolved whether the hero
-should completely ignore ambient targets, attack convenient targets while
-continuing to move, or use another lightweight travel-combat rule.
-
-**Blocks:**
-- final encounter-directed movement;
-- ambient targeting behaviour.
-
-**Need to decide by:**
-During the strategic expedition prototype.
-
-
 ## Intensity Measurement
 
 **Question:** Which runtime signals should determine current expedition intensity?

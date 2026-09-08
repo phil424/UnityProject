@@ -43,17 +43,27 @@ Completed:
 - temporary progression resets;
 - failure → upgrade → retry loop is playable.
 
-## 3.0D — Quick Encounter Choice Proof
+## 3.0D — Quick Encounter Choice Proof ✅
+
+Completed:
+- three quick encounter slots;
+- oldest selectable ordering;
+- reusable quick-choice gameplay seam;
+- prototype strategic HUD;
+- consistent Triangle / Square / Circle slot identity.
+
+## 3.0E — Ambient Route Navigation
 
 **Status: Active**
 
-Prototype:
-- three quick encounter choices;
-- oldest selectable ordering;
-- same EncounterDirection API;
-- temporary presentation.
-
-## 3.0E — Ambient Route Navigation
+Prove:
+- designer-authored connected route graph;
+- no Encounter Directive → autonomous route travel;
+- local combat interrupts ambient travel;
+- ambient travel resumes after combat;
+- explicit Encounter Directive immediately overrides ambient behaviour;
+- first lightweight ambient enemy population;
+- ambient enemies do not gate formal encounter progression.
 
 ## 3.0F — Forecast Proof
 

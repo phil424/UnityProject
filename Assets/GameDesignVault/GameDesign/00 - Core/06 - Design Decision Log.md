@@ -227,3 +227,27 @@ expedition while still supporting effectively endless post-success play.
 - level clear != expedition victory;
 - post-Apex death does not erase the previously achieved success;
 - Apex can carry a meaningful permanent completion reward.
+
+## 2026-09-07 — Explicit encounter travel and ambient travel use different combat priorities
+
+### Decision
+
+Explicit encounter travel suppresses normal autonomous combat targeting until
+the selected encounter is reached.
+
+Ambient fallback travel does not suppress combat.
+
+Local combat interrupts ambient travel and the route resumes after combat ends.
+
+### Reason
+
+Player-issued strategic commands must produce immediate response, while ambient
+navigation exists specifically to keep the autobattler active when the player
+chooses not to intervene.
+
+### Implications
+
+- both behaviours reuse `ActorNavigationIntent`;
+- encounter travel remains dominant over ambient combat;
+- ambient roaming yields to nearby combat;
+- ambient navigation resumes automatically after combat.
