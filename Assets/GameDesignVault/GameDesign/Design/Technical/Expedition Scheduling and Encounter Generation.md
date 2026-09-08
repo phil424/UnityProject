@@ -138,6 +138,91 @@ Potential forecast information includes:
 - rare encounter periods;
 - Apex-related events.
 
+## 3.0F Prototype Implementation
+
+The first playable forecast uses a lightweight `PrototypeExpeditionSchedule`.
+
+The prototype schedule is anchored to:
+
+`WorldClockState.StartTime`
+
+rather than the time at which the schedule component happens to initialize.
+
+This keeps schedule timing stable if:
+- initialization occurs a frame later;
+- simulation speed changes;
+- World Time rate changes during the expedition.
+
+Each prototype schedule entry contains:
+- display name;
+- World Time offset from expedition start;
+- scheduled `WorldTimestamp`;
+- optional existing `LevelEncounterActions`;
+- forecast-only state;
+- runtime resolved / triggered state.
+
+### Gameplay-Backed Entries
+
+A gameplay-backed entry may execute an existing authored action when its scheduled
+time arrives.
+
+Example:
+
+Reinforcements Mobilise
+↓
+Make Reinforcement Encounter Available
+
+This is a thin prototype execution bridge.
+
+It is NOT the future Encounter Director and should not become responsible for
+constructing arbitrary encounter content.
+
+### Forecast-Only Entries
+
+Forecast-only entries communicate future information whose gameplay system does
+not exist yet.
+
+Prototype examples:
+- Rare Activity Window;
+- Zombie Surge.
+
+These let the forecast presentation be tested before their full systems are
+implemented.
+
+### Early Resolution
+
+A planned schedule entry may become unnecessary because of player action.
+
+Example:
+
+Opening Horde completed
+↓
+Reinforcements become available early
+↓
+scheduled Reinforcement availability action has nothing left to do
+↓
+forecast entry resolves early
+
+This establishes:
+
+> The schedule is a forecast of planned future state, not an immutable script.
+
+Future generation systems may reschedule, replace or remove forecast entries as
+the expedition changes.
+
+### Prototype Boundary
+
+3.0F does not maintain encounter supply.
+
+It only proves:
+- World Time-based scheduling;
+- upcoming-event presentation;
+- short actionable countdowns;
+- longer-range forecast timestamps;
+- one small interaction between player action and planned future state.
+
+Continuous arrival / expiry / backfill remains the responsibility of 3.0G.
+
 # Forecast Horizons
 
 ## Immediate

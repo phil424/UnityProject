@@ -11,6 +11,7 @@ namespace MiniCrawler.Expedition
         public double ExpeditionElapsedSimulationSeconds { get; private set; }
         public double ExpeditionElapsedSimulationMinutes => ExpeditionElapsedSimulationSeconds / 60d;
 
+        public WorldTimestamp StartTime { get; private set; }
         public WorldTimestamp CurrentTime => new(totalWorldMinutes);
 
         public void Initialize(double startingHour)
@@ -21,6 +22,7 @@ namespace MiniCrawler.Expedition
             double clampedStartingHour = Math.Max(0d, Math.Min(23.999d, startingHour));
 
             totalWorldMinutes = clampedStartingHour * WorldTimestamp.MinutesPerHour;
+            StartTime = new WorldTimestamp(totalWorldMinutes);
             ExpeditionElapsedSimulationSeconds = 0d;
             IsInitialized = true;
         }

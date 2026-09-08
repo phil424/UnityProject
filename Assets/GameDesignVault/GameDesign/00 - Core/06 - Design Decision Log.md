@@ -251,3 +251,33 @@ chooses not to intervene.
 - encounter travel remains dominant over ambient combat;
 - ambient roaming yields to nearby combat;
 - ambient navigation resumes automatically after combat.
+
+## 2026-09-08 — Expedition forecast is a plan, not an immutable script
+
+### Decision
+
+Forecast entries may resolve early or change when player actions make their
+planned future state unnecessary.
+
+### Example
+
+Opening Horde completion may unlock Reinforcements before the forecasted
+Reinforcement availability time.
+
+The corresponding forecast entry then resolves early.
+
+### Reason
+
+The scheduler should communicate the expedition's current plan without making
+player actions feel irrelevant.
+
+### Implications
+
+Future scheduling may:
+- remove obsolete entries;
+- replace planned events;
+- move future events;
+- react to encounter completion;
+- react to escalation / intensity.
+
+The player-facing forecast should remain trustworthy while still being dynamic.

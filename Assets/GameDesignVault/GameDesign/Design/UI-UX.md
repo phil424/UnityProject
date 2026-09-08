@@ -75,6 +75,39 @@ Bottom Right:
 Large portions of the screen should remain unobstructed so watching combat stays
 central to the experience.
 
+## 3.0F Forecast HUD Prototype
+
+The first normal-play schedule presentation occupies the top-left strategic
+information area.
+
+Prototype layout:
+
+DAY 1  08:17
+
+UPCOMING
+00:13  Reinforcements Mobilise
+13:00  Rare Activity Window
+18:00  Zombie Surge
+
+Presentation rule:
+
+Immediate events
+→ use an actionable countdown.
+
+Longer-range events
+→ use World Time.
+
+The prototype immediate threshold is approximately 30 simulation seconds.
+
+Because World Time uses scaled simulation time:
+- Fast causes countdowns to fall faster in real time;
+- Slow causes them to fall more slowly;
+- Pause freezes them.
+
+The passive forecast should remain small and glanceable.
+
+Detailed schedule explanation belongs to the future expanded strategic planner.
+
 # Upcoming Schedule
 
 The passive HUD should display the next three upcoming encounter arrivals or

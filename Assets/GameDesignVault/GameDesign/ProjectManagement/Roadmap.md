@@ -52,20 +52,28 @@ Completed:
 - prototype strategic HUD;
 - consistent Triangle / Square / Circle slot identity.
 
-## 3.0E — Ambient Route Navigation
+## 3.0E — Ambient Route Navigation ✅
+
+Completed:
+- designer-authored ambient route graph;
+- autonomous fallback exploration;
+- local ambient combat;
+- ambient travel resumes after combat;
+- explicit Encounter Directive overrides ambient travel;
+- ambient enemies remain separate from formal encounter progression.
+
+## 3.0F — Forecast Proof
 
 **Status: Active**
 
 Prove:
-- designer-authored connected route graph;
-- no Encounter Directive → autonomous route travel;
-- local combat interrupts ambient travel;
-- ambient travel resumes after combat;
-- explicit Encounter Directive immediately overrides ambient behaviour;
-- first lightweight ambient enemy population;
-- ambient enemies do not gate formal encounter progression.
-
-## 3.0F — Forecast Proof
+- World Time is visible during normal play;
+- next three planned events are visible;
+- immediate events use countdowns;
+- longer-range events use World Time;
+- one forecast entry causes a real encounter-state change;
+- player action may resolve a planned entry early;
+- scheduling remains separate from continuous encounter supply.
 
 ## 3.0G — Encounter Supply Transition
 

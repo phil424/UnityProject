@@ -4547,6 +4547,7 @@ GameObject:
   - component: {fileID: 810166848}
   - component: {fileID: 810166849}
   - component: {fileID: 810166850}
+  - component: {fileID: 810166851}
   m_Layer: 5
   m_Name: GameFlowUI
   m_TagString: Untagged
@@ -4619,6 +4620,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d9d7c33b6c4c724418c636cd1d4bdbd0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.UI.QuickEncounterPrototypeHUD
+--- !u!114 &810166851
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 810166847}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b23db9c24eab0ca4a9952563493c9a1b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.UI.PrototypeForecastHUD
 --- !u!1 &830497294
 GameObject:
   m_ObjectHideFlags: 0
@@ -4864,6 +4877,7 @@ GameObject:
   - component: {fileID: 846909447}
   - component: {fileID: 846909448}
   - component: {fileID: 846909449}
+  - component: {fileID: 846909450}
   m_Layer: 0
   m_Name: StageDirector
   m_TagString: Untagged
@@ -5044,6 +5058,41 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Encounters.QuickEncounterChoices
   includeSelectedEncounter: 1
+--- !u!114 &846909450
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 846909435}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d21f77ae51afbd429d1c2308d3d3752, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Expedition.PrototypeExpeditionSchedule
+  entries:
+  - displayName: Reinforcements Mobilise
+    worldMinutesAfterExpeditionStart: 30
+    forecastOnly: 0
+    onDue:
+      entries:
+      - target: {fileID: 246946505}
+        commands:
+          makeKnown: 0
+          makeAvailable: 1
+          beginSpawning: 0
+          activateCombat: 0
+          expire: 0
+  - displayName: Rare Activity Window
+    worldMinutesAfterExpeditionStart: 300
+    forecastOnly: 1
+    onDue:
+      entries: []
+  - displayName: Zombie Surge
+    worldMinutesAfterExpeditionStart: 600
+    forecastOnly: 1
+    onDue:
+      entries: []
 --- !u!1 &907118058
 GameObject:
   m_ObjectHideFlags: 0
