@@ -83,27 +83,59 @@ Completed:
 - one-shot scheduled encounters remain separate;
 - encounter exhaustion no longer controls boss progression.
 
-## 3.0H — First World Event
+## 3.0H — First World Event ✅
+
+Completed:
+- run-owned World Event state;
+- scheduled Zombie Surge;
+- World Time-driven event duration;
+- ambient-population pressure;
+- active World Event HUD;
+- already-generated actors are not rewritten on event expiry.
+
+## 3.0I — Passive Strategic HUD
 
 **Status: Active**
 
 Prove:
-- World Event state belongs to the expedition lifetime;
-- scheduler can activate a real World Event;
-- active events are shown separately from encounter choices;
-- Zombie Surge increases ambient zombie population;
-- active-event duration follows World Time;
-- simulation speed naturally affects event timing;
-- event expiry stops future effects;
-- existing spawned enemies remain after expiry;
-- active events survive region transitions;
-- active events reset when the expedition ends.
+- World Time and forecast use normal Canvas UI;
+- Current World Events occupy the strategic top-right area;
+- three quick encounter choices use normal Canvas UI;
+- first schematic minimap;
+- party position is visible;
+- quick encounter anchors are visible;
+- map and list use identical Triangle / Square / Circle slot identity;
+- selecting from either presentation issues the same Encounter Directive;
+- prototype IMGUI strategic panels are no longer the normal presentation.
 
-## 3.0I — Passive Strategic HUD
+## 3.0J — Encounter Workshop MVP
 
-## 3.0J — Expanded Strategic Planner
+Purpose:
 
-## 3.0K — Strategic Expedition Integration
+Reduce the iteration cost of designing encounters now that encounter feel has
+become a meaningful gameplay bottleneck.
+
+Create a dedicated encounter test environment using real runtime systems.
+
+Prove:
+- dedicated `EncounterWorkshop.unity`;
+- isolated authored encounter;
+- rapid replay / reset;
+- Approach scenario;
+- On Top scenario;
+- pre-spawned versus spawn-on-arrival setup;
+- Arrive While Pursued scenario;
+- easy tuning without playing through a full expedition.
+
+The Workshop should exist before the full data-driven encounter-generation
+architecture.
+
+Future Encounter Definition / Site / Runtime Instance work should integrate into
+and improve the Workshop.
+
+## 3.0K — Expanded Strategic Planner
+
+## 3.0L — Strategic Expedition Integration
 
 # 3.1 — Persistent Equipment Progression Trees
 
@@ -126,7 +158,24 @@ milestones.
 
 Do not allow persistent equipment progression to replace expedition buildcraft.
 
-# 3.2 Data-Driven Encounter Generation + Encounter Workshop
+# 3.2 — Data-Driven Encounter Generation + Workshop Integration
+Purpose:
+
+Replace prototype scene-site recycling with the long-term encounter content
+model.
+
+Develop:
+- Encounter Definition;
+- Encounter Site;
+- Runtime Encounter Instance;
+- compatibility / placement rules;
+- encounter pools;
+- repetition control;
+- generated supply.
+
+Integrate these definitions directly into the existing Encounter Workshop so
+designers can load and test authored encounter content without duplicating it
+into the workshop scene.
 
 # 3.3 Escalation + Intensity
 

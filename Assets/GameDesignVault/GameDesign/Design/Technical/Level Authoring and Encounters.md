@@ -593,16 +593,22 @@ Future encounter lifecycle may support:
 
 # Encounter Workshop
 
-A future dedicated encounter-authoring/test scene should allow designers to:
+Encounter quality now requires a dedicated rapid-iteration workflow.
 
-- create or load an encounter;
-- configure spawn rhythm;
-- configure enemy composition;
-- configure activation;
-- configure presentation;
-- immediately run the encounter using real game systems.
+See:
 
-The workshop should reduce the iteration cost of authored encounter content.
+[[Encounter Workshop]]
+
+The Workshop is intentionally being promoted ahead of the complete data-driven
+Encounter Definition / Site / Runtime Instance architecture.
+
+Reason:
+
+> Encounter feel should be iterated while the strategic MVP is still evolving,
+> rather than waiting for the final authoring model.
+
+The Workshop should consume the same encounter/runtime seams used by expedition
+play rather than implementing alternate combat behaviour.
 
 # Open Questions
 

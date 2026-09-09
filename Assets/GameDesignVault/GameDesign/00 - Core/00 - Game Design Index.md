@@ -151,6 +151,7 @@ A previous design that has intentionally been replaced.
 - [[Targeting, Tactics and Encounter Direction]]
 - [[Expedition Scheduling and Encounter Generation]]
 - [[World Events]]
+- [[Encounter Workshop]]
 
 # Project Management
 

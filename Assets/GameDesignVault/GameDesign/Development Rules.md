@@ -1049,3 +1049,211 @@ before adding more features.
 
 Runtime architecture should remain modular while the authoring experience stays
 coherent.
+
+## UI Authoring and Presentation
+
+UI hierarchy is part of the designer-facing authoring API.
+
+Runtime presentation architecture may remain modular, but ordinary UI setup
+should be cohesive and difficult to misconfigure.
+
+### Prefer Composite Views
+
+A repeated or multi-part UI widget should normally have one View component on
+its root.
+
+Example:
+
+EncounterSlot
+├── Symbol
+└── Label
+
+`EncounterSlotView` owns/discovers the Button, Symbol and Label.
+
+A parent controller should reference the Slot View rather than independently
+referencing:
+
+Button
++
+Text
++
+Icon
++
+RectTransform.
+
+### Build Repeated Widgets From One Canonical Child
+
+When several UI items share the same structure:
+
+1. fully configure one canonical child;
+2. validate that child;
+3. duplicate it for the remaining siblings;
+4. let the parent Group assign semantic identity from sibling order or explicit
+   local data.
+
+Do not independently construct several supposedly identical repeated widgets.
+
+Example:
+
+EncounterList
+├── EncounterSlot0
+├── EncounterSlot1
+└── EncounterSlot2
+
+`EncounterSlot0` should be completed first and then duplicated.
+
+All repeated siblings should have structural component parity.
+
+A fixed-count Group should validate the expected number of child Views when
+possible.
+
+If the Group expects three Views and discovers one or two, treat that as an
+authoring error rather than silently continuing.
+
+### Prefer Group-Level Presentation
+
+When repeated UI items share styling, configure that styling on the parent
+Group where practical.
+
+Examples:
+- symbol colour;
+- text colour;
+- normal background;
+- selected background;
+- spacing / layout behaviour.
+
+Avoid repeating identical presentation configuration separately across every
+slot unless individual variation is intentional.
+
+### Avoid Parallel Serialized Arrays
+
+Do not create index-coupled Inspector structures such as:
+
+Button[]
+TMP_Text[]
+RectTransform[]
+Image[]
+
+when every entry represents different parts of the same repeated widget.
+
+Prefer:
+
+SlotView[]
+
+or preferably:
+
+```
+SlotGroup
+└── auto-discovers child SlotViews from hierarchy
+```
+
+ordered by sibling order or another explicit local property.
+
+If several arrays must remain perfectly index-aligned for UI to function, treat  
+that as an authoring smell and refactor before adding more UI.
+
+### Prefer Layout-Driven UI
+
+Repeated, stacked or tabular normal UI should use Unity layout components where  
+appropriate:
+
+- VerticalLayoutGroup;
+- HorizontalLayoutGroup;
+- GridLayoutGroup;
+- LayoutElement;
+- ContentSizeFitter where it genuinely simplifies sizing.
+
+Do not manually position ordinary sibling UI elements one-by-one when a layout  
+relationship describes their intent.
+
+Manual `anchoredPosition` is appropriate for genuinely spatial/freeform  
+presentation such as:
+
+- minimap markers;
+- drag/drop elements;
+- world-to-screen indicators;
+- deliberately overlapping presentation.
+
+### Keep Semantic Identity Separate From Visual Symbols
+
+Critical gameplay symbols, controller prompts, quick-slot identity and map  
+markers must not depend on Unicode/font glyph support.
+
+Do not use strings such as:
+
+Triangle glyph  
+Square glyph  
+Circle glyph  
+Star glyph  
+Diamond glyph
+
+as the authoritative presentation for gameplay controls.
+
+Store semantic identity as data:
+
+slot index  
+enum  
+action identity
+
+and render it with:
+
+- Sprite / Image;
+- dedicated Graphic;
+- another font-independent presentation component.
+
+Text strings are for actual text/status information.
+
+Changing the UI font must not break critical gameplay symbols.
+
+### Keep Wiring Local
+
+A high-level HUD/controller should reference a small number of cohesive panel or  
+group roots.
+
+Local View components may own their internal references.
+
+Prefer:
+
+StrategicHUD  
+├── ForecastView  
+├── EncounterListView  
+└── MinimapView
+
+over one central component containing references to every Text, Button, Icon and  
+RectTransform in the hierarchy.
+
+Automatically discover child components when ownership is unambiguous.
+
+### UI Implementation Instructions
+
+Before giving detailed Unity UI instructions:
+
+1. define the intended hierarchy;
+2. define which containers own layout;
+3. define which elements are genuinely free-positioned;
+4. define the View/Group component ownership;
+5. only then specify required Inspector wiring.
+
+Avoid long lists of fragile child coordinates when layout components can express  
+the relationship.
+
+Instructions should describe the expected final visual grouping so layout errors  
+are easy to identify before further work continues.
+
+### UI Validation
+
+For UI-heavy changes, manually validate at:
+
+- the Canvas reference resolution;
+- at least one other common resolution/aspect ratio.
+
+Check:
+
+- no accidental overlap;
+- no important content outside its parent;
+- readable hierarchy;
+- correct scaling;
+- critical symbols render without relying on font fallback.
+
+When a step substantially changes serialized Canvas/prefab state, use a working  
+zip and/or screenshot checkpoint before building dependent UI work.

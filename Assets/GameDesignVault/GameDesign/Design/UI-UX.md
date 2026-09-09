@@ -108,6 +108,98 @@ The passive forecast should remain small and glanceable.
 
 Detailed schedule explanation belongs to the future expanded strategic planner.
 
+## 3.0I Canvas Strategic HUD
+
+3.0I begins migrating proven strategic information away from prototype IMGUI
+panels into the real combat Canvas.
+
+Top Left:
+- World Time;
+- next three forecast entries.
+
+Top Right:
+- Current World Events;
+- schematic minimap;
+- three quick encounter choices.
+
+The first minimap is deliberately schematic.
+
+It projects:
+- party position;
+- quick encounter anchors;
+- current directive;
+
+into configured world bounds.
+
+It does not yet require:
+- terrain rendering;
+- enemy dots;
+- fog of war;
+- camera-based RenderTexture;
+- full level geometry.
+
+The purpose is to prove the relationship between:
+
+Where is the opportunity?
++
+Which quick slot represents it?
++
+What have I currently selected?
+
+Map markers and encounter-list entries use identical quick-slot symbols.
+
+The slot owns its symbol:
+
+Triangle
+Square
+Circle
+
+If the encounter occupying a slot changes, the corresponding map marker changes
+location with it.
+
+The current Encounter Directive may additionally use a Star marker if it is not
+currently represented by one of the three quick slots.
+
+The Canvas implementation should continue consuming existing gameplay-facing
+systems rather than owning encounter selection, supply, schedule or event state.
+
+### Quick-Slot Presentation
+
+Quick-slot identity is semantic data, not text.
+
+The three prototype slots are:
+
+Slot 0
+Slot 1
+Slot 2
+
+Their current presentation is:
+
+Triangle
+Square
+Circle
+
+Critical slot symbols should use Sprite / Image or dedicated UI Graphics rather
+than Unicode font characters.
+
+This ensures:
+- font replacement cannot break controller symbols;
+- map and list can share identical visual assets;
+- future platform-specific controller presentation can replace the icon layer
+  without changing gameplay-facing slot identity.
+
+### UI Authoring
+
+Repeated strategic HUD items should use cohesive View + Group components.
+
+The parent strategic HUD should consume:
+- encounter list group;
+- minimap view;
+- forecast view/data;
+- world-event view/data;
+
+rather than maintaining parallel arrays for every child Button/Text/Marker.
+
 # Upcoming Schedule
 
 The passive HUD should display the next three upcoming encounter arrivals or
