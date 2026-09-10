@@ -93,45 +93,39 @@ Completed:
 - active World Event HUD;
 - already-generated actors are not rewritten on event expiry.
 
-## 3.0I — Passive Strategic HUD
+## 3.0I — Passive Strategic HUD ✅
+
+Completed:
+- strategic information migrated to normal Canvas UI;
+- World Time and forecast presentation;
+- Current World Events presentation;
+- schematic minimap;
+- unified map/list quick-slot identity;
+- font-independent quick-slot graphics;
+- reusable View / Group UI authoring foundation;
+- stronger UI authoring rules and layout practices.
+
+## 3.0J — Encounter Workshop MVP
 
 **Status: Active**
 
 Prove:
-- World Time and forecast use normal Canvas UI;
-- Current World Events occupy the strategic top-right area;
-- three quick encounter choices use normal Canvas UI;
-- first schematic minimap;
-- party position is visible;
-- quick encounter anchors are visible;
-- map and list use identical Triangle / Square / Circle slot identity;
-- selecting from either presentation issues the same Encounter Directive;
-- prototype IMGUI strategic panels are no longer the normal presentation.
-
-## 3.0J — Encounter Workshop MVP
-
-Purpose:
-
-Reduce the iteration cost of designing encounters now that encounter feel has
-become a meaningful gameplay bottleneck.
-
-Create a dedicated encounter test environment using real runtime systems.
-
-Prove:
 - dedicated `EncounterWorkshop.unity`;
+- real runtime systems;
 - isolated authored encounter;
-- rapid replay / reset;
-- Approach scenario;
-- On Top scenario;
-- pre-spawned versus spawn-on-arrival setup;
-- Arrive While Pursued scenario;
-- easy tuning without playing through a full expedition.
+- one-click replay;
+- deterministic replay option;
+- Approach;
+- Threshold;
+- On Top;
+- Spawn On Arrival;
+- Pre-Spawn From Start;
+- Arrive While Pursued;
+- manual ability use remains available;
+- encounter tuning no longer requires playing a complete expedition.
 
-The Workshop should exist before the full data-driven encounter-generation
-architecture.
-
-Future Encounter Definition / Site / Runtime Instance work should integrate into
-and improve the Workshop.
+The Workshop is a designer iteration environment, not a parallel gameplay
+implementation.
 
 ## 3.0K — Expanded Strategic Planner
 
@@ -186,6 +180,103 @@ into the workshop scene.
 # 3.6 Strategic UI + Controller
 
 # 3.7 Support Characters
+
+# Parallel Track — Art & Presentation
+
+**Status: Available Parallel Track**
+
+Art and presentation should be developed incrementally alongside the playable
+game rather than postponed until all systems are complete.
+
+This track may temporarily become active whenever visual readability, feel or
+content presentation becomes the primary development bottleneck.
+
+It does not replace the main gameplay roadmap.
+
+## Environment Presentation
+
+Potential work:
+- first authored environment art pass;
+- roads / terrain / buildings / landmarks;
+- encounter-site visual language;
+- ambient-route readability;
+- lighting / World Time presentation;
+- region identity;
+- replacing prototype greybox geometry.
+
+## Character / Enemy Presentation
+
+Potential work:
+- character models / sprites;
+- enemy family appearance;
+- Elite / Boss readability;
+- animation integration;
+- attack / locomotion presentation;
+- damage / hit reactions;
+- rare / valuable enemy visual language.
+
+## Combat VFX
+
+Potential work:
+- ability VFX;
+- Charge / Whirlwind / Rage presentation;
+- knockback impact;
+- spawn spectacles;
+- damage / healing feedback;
+- World Event effects;
+- encounter-start presentation.
+
+## UI Visual Design
+
+Potential work:
+- final HUD visual language;
+- controller / quick-slot icon assets;
+- ability icons;
+- equipment icons;
+- portraits;
+- encounter rarity / threat icons;
+- World Event icons;
+- minimap styling;
+- replacing prototype procedural graphics with authored assets where useful.
+
+Gameplay identity should remain semantic and independent from the specific icon
+asset used to render it.
+
+## Animation
+
+Potential work:
+- locomotion;
+- basic attack combos;
+- ability animation;
+- hit reactions;
+- death;
+- spawn / emerge;
+- Elite / Boss presentation;
+- equipment-specific combat animation.
+
+Animation should consume existing gameplay events/state rather than become the
+authority for unrelated gameplay rules unless explicitly designed otherwise.
+
+## Audio Presentation
+
+Future:
+- attacks / impacts;
+- abilities;
+- encounter arrival;
+- forecast warnings;
+- World Events;
+- UI feedback;
+- region ambience;
+- music / pressure layers.
+
+## Art Integration Principle
+
+Prefer replacing prototype presentation around already-working gameplay seams.
+
+Avoid rewriting gameplay architecture solely to accommodate one visual asset
+unless the visual requirement reveals a genuine missing gameplay concept.
+
+Art passes should preserve the game's continuously playable MVP.
 
 
 # Later 3.x

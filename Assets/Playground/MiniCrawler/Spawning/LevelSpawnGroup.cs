@@ -60,8 +60,13 @@ namespace MiniCrawler.Spawning
         private LevelSpawnSource[] spawnSources = Array.Empty<LevelSpawnSource>();
         private int runningEntries;
 
-        public bool StartSpawning => startSpawning;
-        public bool StartCombatActive => startCombatActive;
+        private bool hasRuntimeStartBehaviorOverride;
+        private bool runtimeStartSpawning;
+        private bool runtimeStartCombatActive;
+
+        public bool StartSpawning => hasRuntimeStartBehaviorOverride ? runtimeStartSpawning : startSpawning;
+        public bool StartCombatActive => hasRuntimeStartBehaviorOverride ? runtimeStartCombatActive : startCombatActive;
+        public bool HasRuntimeStartBehaviorOverride => hasRuntimeStartBehaviorOverride;
 
         public bool IsSpawningStarted { get; private set; }
         public bool IsCombatActive { get; private set; }
@@ -113,6 +118,18 @@ namespace MiniCrawler.Spawning
         {
             RefreshSpawnSources();
         }
+        
+        public void SetRuntimeStartBehaviorOverride(bool shouldStartSpawning, bool shouldStartCombatActive)
+        {
+            hasRuntimeStartBehaviorOverride = true;
+            runtimeStartSpawning = shouldStartSpawning;
+            runtimeStartCombatActive = shouldStartCombatActive;
+        }
+
+        public void ClearRuntimeStartBehaviorOverride()
+        {
+            hasRuntimeStartBehaviorOverride = false;
+        }
 
         public void PrepareForLevel()
         {
@@ -123,7 +140,7 @@ namespace MiniCrawler.Spawning
             runningEntries = 0;
 
             IsSpawningStarted = false;
-            IsCombatActive = startCombatActive;
+            IsCombatActive = StartCombatActive;
         }
 
         public bool BeginSpawning()

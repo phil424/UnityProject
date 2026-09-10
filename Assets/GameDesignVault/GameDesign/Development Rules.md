@@ -1257,3 +1257,25 @@ Check:
 
 When a step substantially changes serialized Canvas/prefab state, use a working  
 zip and/or screenshot checkpoint before building dependent UI work.
+
+### Internal Developer Tool UI
+
+The player-facing UI rules do not require every tiny internal development tool
+to use production Canvas architecture.
+
+A simple IMGUI overlay is acceptable for strictly developer-only tooling when:
+- it is not part of normal player presentation;
+- the tool has a small number of controls;
+- using IMGUI materially reduces setup / iteration friction;
+- the gameplay/runtime logic remains outside the UI code.
+
+Examples:
+- Encounter Workshop scenario buttons;
+- temporary developer toggles;
+- compact runtime diagnostics.
+
+Do not use this exception to avoid proper architecture for normal game HUD,
+menus or player-facing interfaces.
+
+If a development tool becomes large, reusable or designer-facing enough that
+IMGUI becomes cumbersome, promote it to a dedicated Editor/UI architecture.

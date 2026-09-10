@@ -21,6 +21,8 @@ namespace MiniCrawler.Encounters
 
         public LevelEncounter SelectedEncounter { get; private set; }
         public bool IsTravelling { get; private set; }
+        
+        public float ArrivalDistance => arrivalDistance;
 
         private void Awake()
         {

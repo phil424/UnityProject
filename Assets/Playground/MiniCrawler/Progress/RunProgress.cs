@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 using MiniCrawler.Core;
 using MiniCrawler.Abilities;
 using MiniCrawler.Expedition;
@@ -11,6 +12,13 @@ namespace MiniCrawler.Progress
         public static event Action Changed;
 
         public static RunState CurrentRun { get; private set; }
+        
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetSession()
+        {
+            CurrentRun = null;
+            Changed = null;
+        }
 
         public static bool HasActiveRun => CurrentRun != null;
 

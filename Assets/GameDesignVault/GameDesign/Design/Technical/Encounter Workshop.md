@@ -318,18 +318,110 @@ run selected scenario.
 
 Do not postpone encounter-quality iteration until this architecture is complete.
 
-# Initial Milestone Boundary
+# 3.0J MVP Implementation
 
-The 3.0J Workshop MVP should prove:
+The first Workshop implementation uses a dedicated:
 
-- dedicated workshop scene;
-- isolated real encounter;
-- Approach scenario;
-- On Top scenario;
-- Pre-Spawned / Spawn-On-Arrival configuration;
-- Arrive While Pursued scenario;
-- one-click or otherwise rapid replay;
-- real combat systems.
+`EncounterWorkshop.unity`
 
-World Event presets, build presets and telemetry may be added immediately if
-cheap, but should not delay the first useful version.
+scene.
+
+It deliberately reuses the real runtime stack rather than creating a parallel
+combat simulator.
+
+## Test Orchestration
+
+`EncounterWorkshopController` owns:
+- scenario selection;
+- temporary RunState creation;
+- party starting position;
+- encounter start-mode override;
+- pursued-scenario setup;
+- reset / replay.
+
+It does not own combat behaviour.
+
+## Arrival Scenarios
+
+Implemented:
+
+### Approach
+Party begins a configurable distance from the encounter and receives a real
+Encounter Directive.
+
+### Threshold
+Party begins immediately outside the real Encounter Directive arrival distance.
+
+### On Top
+Party begins directly at the encounter anchor.
+
+### Arrive While Pursued
+Party begins at approach distance while already-engaged real enemy actors pursue
+from behind.
+
+Pursuers remain separate from the isolated encounter itself.
+
+## Encounter Start Modes
+
+Implemented:
+
+### Spawn On Arrival
+Encounter spawn groups begin only when the real Encounter Directive reaches the
+encounter.
+
+### Pre-Spawn From Start
+The encounter's normal authored spawn schedule begins when the Workshop scenario
+starts, but combat remains inactive until the party reaches the encounter.
+
+This mode intentionally preserves authored spawn timing.
+
+It does not mean that every enemy is forcibly instantiated instantly.
+
+A future `Fully Populated` scenario may be added if concrete encounter-design
+needs justify it.
+
+## Replay
+
+Replay performs a fresh runtime reconstruction:
+
+Workshop runtime
+↓
+clear level actors / state
+↓
+fresh temporary RunState
+↓
+fresh party actor
+↓
+fresh encounter state
+↓
+same scenario begins again.
+
+The first Workshop does not bank persistent rewards or participate in expedition
+progression.
+
+## Deterministic Replay
+
+The Workshop may initialize Unity's random state from a configured seed before
+starting a scenario.
+
+This allows repeated comparisons of encounter changes under approximately the
+same random setup.
+
+Variable replay remains available by disabling deterministic mode.
+
+# Next Workshop Extensions
+
+Add only when they materially improve encounter iteration:
+
+- arbitrary encounter loading;
+- party/build presets;
+- World Event presets;
+- Fully Populated setup;
+- approach-angle presets;
+- lightweight encounter telemetry;
+- deterministic seed controls;
+- scenario save presets;
+- compatible Encounter Site testing.
+
+The Workshop should grow in response to real encounter-authoring friction rather
+than becoming a speculative tool platform.
