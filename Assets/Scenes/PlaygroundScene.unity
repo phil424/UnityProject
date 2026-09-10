@@ -1742,6 +1742,8 @@ MonoBehaviour:
   isAvailable: 0
   isCompleted: 0
   isExpired: 0
+  isCombatActivated: 0
+  currentPhaseIndex: -1
   presentationState: 0
   availabilitySequence: 0
 --- !u!114 &246946506
@@ -2745,6 +2747,8 @@ MonoBehaviour:
   isAvailable: 0
   isCompleted: 0
   isExpired: 0
+  isCombatActivated: 0
+  currentPhaseIndex: -1
   presentationState: 0
   availabilitySequence: 0
 --- !u!1 &379699731
@@ -3151,6 +3155,8 @@ MonoBehaviour:
   isAvailable: 0
   isCompleted: 0
   isExpired: 0
+  isCombatActivated: 0
+  currentPhaseIndex: -1
   presentationState: 0
   availabilitySequence: 0
 --- !u!1 &441528358
@@ -4526,6 +4532,8 @@ MonoBehaviour:
   isAvailable: 0
   isCompleted: 0
   isExpired: 0
+  isCombatActivated: 0
+  currentPhaseIndex: -1
   presentationState: 0
   availabilitySequence: 0
 --- !u!114 &579706918
@@ -4636,6 +4644,91 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!1 &601439316
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 601439317}
+  - component: {fileID: 601439320}
+  - component: {fileID: 601439319}
+  - component: {fileID: 601439318}
+  m_Layer: 0
+  m_Name: Phase 2 - Second Wave
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &601439317
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 601439316}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 641285803}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &601439318
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 601439316}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ec6c5272cff78ab42b58beae9d310062, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Spawning.LevelSpawnSource
+  shape: 1
+  radius: 5
+  boxSize: {x: 3, y: 3}
+--- !u!114 &601439319
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 601439316}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 534eca0a6af4aaf428b51272d5c7238e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Spawning.LevelSpawnGroup
+  startSpawning: 0
+  startCombatActive: 0
+  entries:
+  - actor: {fileID: 11400000, guid: f94bb2855b5c0e24eac3845bce957198, type: 2}
+    count: 4
+    startDelay: 0
+    batchSize: 4
+    timeBetweenSpawns: 0
+    timeBetweenBatches: 0
+--- !u!114 &601439320
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 601439316}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e85d37dee7fd82c48a09743f7ce6251e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Encounters.LevelEncounterPhase
+  displayName: Second Wave
+  advanceAfterSeconds: 0
+  advanceWhenCleared: 1
 --- !u!1 &602258924
 GameObject:
   m_ObjectHideFlags: 0
@@ -5080,8 +5173,6 @@ GameObject:
   m_Component:
   - component: {fileID: 641285803}
   - component: {fileID: 641285804}
-  - component: {fileID: 641285806}
-  - component: {fileID: 641285805}
   m_Layer: 0
   m_Name: Dormant Horde Encounter
   m_TagString: Untagged
@@ -5103,6 +5194,8 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 940666681}
+  - {fileID: 1514965094}
+  - {fileID: 601439317}
   m_Father: {fileID: 907118059}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &641285804
@@ -5129,44 +5222,10 @@ MonoBehaviour:
   isAvailable: 0
   isCompleted: 0
   isExpired: 0
+  isCombatActivated: 0
+  currentPhaseIndex: -1
   presentationState: 0
   availabilitySequence: 0
---- !u!114 &641285805
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 641285802}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ec6c5272cff78ab42b58beae9d310062, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Spawning.LevelSpawnSource
-  shape: 1
-  radius: 5
-  boxSize: {x: 3, y: 3}
---- !u!114 &641285806
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 641285802}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 534eca0a6af4aaf428b51272d5c7238e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Spawning.LevelSpawnGroup
-  startSpawning: 0
-  startCombatActive: 0
-  entries:
-  - actor: {fileID: 11400000, guid: f94bb2855b5c0e24eac3845bce957198, type: 2}
-    count: 8
-    startDelay: 0
-    batchSize: 4
-    timeBetweenSpawns: 0
-    timeBetweenBatches: 8
 --- !u!1 &655685923
 GameObject:
   m_ObjectHideFlags: 0
@@ -6781,6 +6840,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 579706916}
+  - {fileID: 972082706}
   - {fileID: 641285803}
   - {fileID: 392467345}
   - {fileID: 348410349}
@@ -6997,6 +7057,66 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 962459151}
   m_CullTransparentMesh: 1
+--- !u!1 &972082705
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 972082706}
+  - component: {fileID: 972082707}
+  m_Layer: 0
+  m_Name: Workshop Horde Encounter
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &972082706
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 972082705}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 907118059}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &972082707
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 972082705}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e7fea86c1f620448b78d1c3ad8eb4b3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Encounters.LevelEncounter
+  id: workshop-horde
+  displayName: Workshop Horde
+  description: 
+  knownAtLevelStart: 1
+  availableAtLevelStart: 1
+  onCompletedActions:
+    entries: []
+  reusableByPrototypeSupply: 0
+  isKnown: 0
+  isAvailable: 0
+  isCompleted: 0
+  isExpired: 0
+  isCombatActivated: 0
+  currentPhaseIndex: -1
+  presentationState: 0
+  availabilitySequence: 0
 --- !u!1 &1000807406
 GameObject:
   m_ObjectHideFlags: 0
@@ -10026,6 +10146,91 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1505151383}
   m_CullTransparentMesh: 1
+--- !u!1 &1514965093
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1514965094}
+  - component: {fileID: 1514965097}
+  - component: {fileID: 1514965096}
+  - component: {fileID: 1514965095}
+  m_Layer: 0
+  m_Name: Phase 1 - Initial Horde
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1514965094
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1514965093}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 641285803}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1514965095
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1514965093}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ec6c5272cff78ab42b58beae9d310062, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Spawning.LevelSpawnSource
+  shape: 1
+  radius: 5
+  boxSize: {x: 3, y: 3}
+--- !u!114 &1514965096
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1514965093}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 534eca0a6af4aaf428b51272d5c7238e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Spawning.LevelSpawnGroup
+  startSpawning: 0
+  startCombatActive: 0
+  entries:
+  - actor: {fileID: 11400000, guid: f94bb2855b5c0e24eac3845bce957198, type: 2}
+    count: 4
+    startDelay: 0
+    batchSize: 4
+    timeBetweenSpawns: 0
+    timeBetweenBatches: 0
+--- !u!114 &1514965097
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1514965093}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e85d37dee7fd82c48a09743f7ce6251e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Encounters.LevelEncounterPhase
+  displayName: Initial Horde
+  advanceAfterSeconds: 8
+  advanceWhenCleared: 1
 --- !u!1 &1525125872
 GameObject:
   m_ObjectHideFlags: 0

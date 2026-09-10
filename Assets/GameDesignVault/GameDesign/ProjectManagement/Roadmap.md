@@ -105,27 +105,110 @@ Completed:
 - reusable View / Group UI authoring foundation;
 - stronger UI authoring rules and layout practices.
 
-## 3.0J — Encounter Workshop MVP
+## 3.0J — Encounter Workshop & Encounter Iteration
 
-**Status: Active**
+### 3.0J1 — Replay Harness ✅
 
-Prove:
+Completed:
 - dedicated `EncounterWorkshop.unity`;
 - real runtime systems;
 - isolated authored encounter;
 - one-click replay;
-- deterministic replay option;
+- deterministic replay;
 - Approach;
 - Threshold;
 - On Top;
 - Spawn On Arrival;
 - Pre-Spawn From Start;
 - Arrive While Pursued;
-- manual ability use remains available;
-- encounter tuning no longer requires playing a complete expedition.
+- manual ability use remains available.
 
-The Workshop is a designer iteration environment, not a parallel gameplay
-implementation.
+`3.0JComplete.zip` is the completed J1 checkpoint.
+
+### 3.0J2 — Test Build Configuration ✅
+
+Completed:
+- Early / Mid / Late / Extreme presets;
+- direct Weapon / Armour / Focus testing;
+- starting Ability Level controls;
+- runtime stat preview;
+- fresh replay applies selected test build;
+- Workshop testing does not mutate persistent progression.
+
+### 3.0J3 — Encounter Phases & Adaptive Pacing
+
+**Status: Active**
+
+Prove:
+- explicit ordered Encounter Phases;
+- hierarchy-driven phase ownership;
+- phases remain distinct from spawn batches;
+- phase-scoped spawn groups;
+- timer OR early-clear progression;
+- stronger builds may accelerate phase pacing;
+- weaker builds may experience overlapping pressure;
+- external/pursuing enemies do not affect phase completion;
+- Pre-Spawn only prepares the first phase;
+- reusable encounters reset phase state correctly;
+- Dormant Horde becomes the first normal-play phased encounter.
+
+### 3.0J4 — Encounter Identity & Presentation
+
+Make encounter state readable and punchy during normal play.
+
+Prove:
+- Encounter Started announcement;
+- authored encounter Display Name is presented;
+- optional description/subtitle;
+- rapid fade in / hold / fade out;
+- multiple transient announcements may coexist;
+- Encounter Complete announcement;
+- Active Encounters HUD;
+- active encounters display phase progress;
+- multiple simultaneous active encounters remain readable.
+
+Use reusable View/Group UI architecture.
+
+### 3.0J5 — Editable Encounter Draft
+
+Begin interactive Workshop authoring.
+
+Expose the first useful subset:
+- enemy definition;
+- counts;
+- spawn region / shape;
+- radius;
+- start delay;
+- batch size;
+- spawn spacing;
+- batch spacing;
+- phase configuration.
+
+Editing operates on a Workshop Draft rather than silently mutating saved content.
+
+### 3.0J6 — Encounter Definition Save / Load
+
+Introduce the first portable `EncounterDefinition` asset.
+
+Prove:
+
+Workshop Draft
+→ Save / Save As
+→ EncounterDefinition.asset
+→ Load into Workshop
+→ use from expedition encounter site.
+
+### 3.0J7 — Composable Trigger / Action Authoring
+
+Expand Workshop authoring to:
+- proximity / approach triggers;
+- delayed actions;
+- phase transitions;
+- spawn / activation actions;
+- completion actions;
+- future spectacle hooks.
+
+Avoid a giant encounter-type enum.
 
 ## 3.0K — Expanded Strategic Planner
 

@@ -34,6 +34,7 @@ namespace MiniCrawler.Tools
 
         [Header("Test Party")]
         [SerializeField] private PartyMemberDefinition partyMember;
+        [SerializeField] private EncounterWorkshopBuildConfiguration testBuild = new();
 
         [Header("Scenario")]
         [SerializeField] private ArrivalScenario arrivalScenario = ArrivalScenario.Approach;
@@ -65,11 +66,11 @@ namespace MiniCrawler.Tools
             if (encounterDirection == null)
                 encounterDirection = EncounterDirectionController.Instance;
 
+            testBuild.EnsureFor(partyMember);
+
             if (stageDirector != null)
                 stageDirector.LevelFinished += HandleLevelFinished;
 
-            // Let camera/HUD/runtime listeners finish their own Start methods
-            // before the Workshop spawns the first party.
             yield return null;
 
             if (autoStartOnPlay)
@@ -103,6 +104,8 @@ namespace MiniCrawler.Tools
             if (!ValidateConfiguration())
                 return false;
 
+            testBuild.EnsureFor(partyMember);
+
             if (deterministicReplay)
                 Random.InitState(randomSeed);
 
@@ -118,10 +121,12 @@ namespace MiniCrawler.Tools
                 return false;
             }
 
+            RunBuild build = RunProgress.CurrentRun.GetBuild(partyMember);
+            testBuild.ApplyTo(partyMember, build);
+
             if (!stageDirector.StartLevel(RunProgress.CurrentRun))
             {
                 RunProgress.EndRun();
-
                 status = "StageDirector could not start Workshop scenario.";
                 return false;
             }
@@ -141,8 +146,7 @@ namespace MiniCrawler.Tools
             scenarioRunning = true;
             encounterCompletionReported = false;
 
-            status = $"{arrivalScenario} / {encounterStartMode}";
-
+            status = $"{arrivalScenario} / {encounterStartMode} / {testBuild.Preset}";
             return true;
         }
 
@@ -193,10 +197,31 @@ namespace MiniCrawler.Tools
 
         private void ConfigureEncounterStartMode()
         {
-            bool startSpawning = encounterStartMode == EncounterStartMode.PreSpawnFromStart;
+            LevelSpawnGroup[] groups = GetOwnedSpawnGroups();
 
-            foreach (LevelSpawnGroup group in GetOwnedSpawnGroups())
-                group.SetRuntimeStartBehaviorOverride(startSpawning, shouldStartCombatActive: false);
+            // Reset every group to an explicit Workshop baseline first.
+            foreach (LevelSpawnGroup group in groups)
+                group.SetRuntimeStartBehaviorOverride(false, false);
+
+            if (encounterStartMode != EncounterStartMode.PreSpawnFromStart)
+                return;
+
+            if (encounter != null && encounter.PhaseCount > 0)
+            {
+                LevelEncounterPhase firstPhase = encounter.Phases[0];
+
+                if (firstPhase == null)
+                    return;
+
+                foreach (LevelSpawnGroup group in firstPhase.SpawnGroups)
+                    group?.SetRuntimeStartBehaviorOverride(true, false);
+
+                return;
+            }
+
+            // Legacy/non-phased encounters retain the old Workshop behaviour.
+            foreach (LevelSpawnGroup group in groups)
+                group.SetRuntimeStartBehaviorOverride(true, false);
         }
 
         private void ClearSpawnGroupOverrides()
@@ -215,10 +240,7 @@ namespace MiniCrawler.Tools
 
             foreach (LevelSpawnGroup group in candidates)
             {
-                if (group == null)
-                    continue;
-
-                if (group.GetComponentInParent<LevelEncounter>() == encounter)
+                if (group != null && group.GetComponentInParent<LevelEncounter>() == encounter)
                     owned.Add(group);
             }
 
@@ -300,21 +322,35 @@ namespace MiniCrawler.Tools
             if (RunProgress.HasActiveRun)
                 RunProgress.EndRun();
 
-            status = won
-                ? "Workshop level finished."
-                : "Party defeated. Replay when ready.";
+            status = won ? "Workshop level finished." : "Party defeated. Replay when ready.";
         }
 
         private void OnGUI()
         {
+            DrawScenarioPanel();
+            DrawBuildPanel();
+        }
+
+        private void DrawScenarioPanel()
+        {
             const float width = 460f;
-            const float height = 255f;
+            const float height = 280f;
 
             GUILayout.BeginArea(new Rect(10f, 10f, width, height), GUI.skin.box);
 
             GUILayout.Label("ENCOUNTER WORKSHOP");
             GUILayout.Label($"Encounter: {(encounter != null ? encounter.DisplayName : "Missing")}");
             GUILayout.Label($"Status: {status}");
+            
+            if (encounter != null && encounter.PhaseCount > 0)
+            {
+                LevelEncounterPhase currentPhase = encounter.CurrentPhase;
+                string phaseName = currentPhase != null ? currentPhase.DisplayName : "Waiting";
+
+                GUILayout.Label(
+                    $"Phase: {encounter.CurrentPhaseNumber}/{encounter.PhaseCount}  {phaseName}"
+                );
+            }
 
             GUILayout.Space(6f);
             GUILayout.Label($"Arrival: {arrivalScenario}");
@@ -357,6 +393,146 @@ namespace MiniCrawler.Tools
                 StopScenario();
 
             GUILayout.EndArea();
+        }
+
+        private void DrawBuildPanel()
+        {
+            if (testBuild == null)
+                return;
+
+            testBuild.EnsureFor(partyMember);
+
+            const float width = 430f;
+            const float height = 385f;
+
+            GUILayout.BeginArea(new Rect(480f, 10f, width, height), GUI.skin.box);
+
+            GUILayout.Label("TEST BUILD");
+            GUILayout.Label($"Preset: {testBuild.Preset}");
+
+            GUILayout.BeginHorizontal();
+
+            DrawPresetButton("EARLY", EncounterWorkshopPowerPreset.Early);
+            DrawPresetButton("MID", EncounterWorkshopPowerPreset.Mid);
+            DrawPresetButton("LATE", EncounterWorkshopPowerPreset.Late);
+            DrawPresetButton("EXTREME", EncounterWorkshopPowerPreset.Extreme);
+
+            GUILayout.EndHorizontal();
+
+            GUILayout.Space(8f);
+
+            int weaponLevel = DrawIntSlider(
+                partyMember != null ? partyMember.WeaponName : "Weapon",
+                testBuild.WeaponLevel,
+                0,
+                testBuild.MaximumGearLevel
+            );
+
+            if (weaponLevel != testBuild.WeaponLevel)
+                testBuild.SetWeaponLevel(weaponLevel);
+
+            int armourLevel = DrawIntSlider(
+                partyMember != null ? partyMember.ArmourName : "Armour",
+                testBuild.ArmourLevel,
+                0,
+                testBuild.MaximumGearLevel
+            );
+
+            if (armourLevel != testBuild.ArmourLevel)
+                testBuild.SetArmourLevel(armourLevel);
+
+            int focusLevel = DrawIntSlider(
+                "Focus",
+                testBuild.FocusLevel,
+                0,
+                testBuild.MaximumGearLevel
+            );
+
+            if (focusLevel != testBuild.FocusLevel)
+                testBuild.SetFocusLevel(focusLevel);
+
+            if (partyMember != null && partyMember.HealingPerFocusLevel <= 0f)
+                GUILayout.Label("Focus currently has no stat effect for this character.");
+
+            GUILayout.Space(8f);
+            GUILayout.Label("Starting Abilities");
+
+            for (int i = 0; i < testBuild.AbilityLevels.Count; i++)
+            {
+                EncounterWorkshopBuildConfiguration.AbilityLevelSetting ability = testBuild.AbilityLevels[i];
+
+                if (ability?.Ability == null)
+                    continue;
+
+                int level = DrawIntSlider(
+                    ability.Ability.DisplayName,
+                    ability.Level,
+                    1,
+                    ability.Ability.MaxLevel
+                );
+
+                if (level != ability.Level)
+                    testBuild.SetAbilityLevel(i, level);
+            }
+
+            GUILayout.Space(8f);
+            DrawEstimatedStats();
+
+            GUILayout.Space(6f);
+            GUILayout.Label("Changes apply when the scenario is replayed.");
+
+            if (GUILayout.Button("APPLY BUILD & REPLAY"))
+                StartScenario();
+
+            GUILayout.EndArea();
+        }
+
+        private void DrawPresetButton(string label, EncounterWorkshopPowerPreset preset)
+        {
+            if (GUILayout.Button(label))
+                testBuild.SelectPreset(preset, partyMember);
+        }
+
+        private int DrawIntSlider(string label, int value, int minimum, int maximum)
+        {
+            GUILayout.BeginHorizontal();
+
+            GUILayout.Label($"{label}: {value}", GUILayout.Width(175f));
+
+            float sliderValue = GUILayout.HorizontalSlider(
+                value,
+                minimum,
+                maximum,
+                GUILayout.Width(220f)
+            );
+
+            GUILayout.EndHorizontal();
+
+            return Mathf.Clamp(Mathf.RoundToInt(sliderValue), minimum, maximum);
+        }
+
+        private void DrawEstimatedStats()
+        {
+            if (partyMember == null)
+                return;
+
+            float health = partyMember.BaseHealth +
+                           testBuild.ArmourLevel * partyMember.HealthPerArmourLevel;
+
+            float damage = partyMember.BaseDamage +
+                           testBuild.WeaponLevel * partyMember.DamagePerWeaponLevel;
+
+            float armour = partyMember.BaseArmour +
+                           testBuild.ArmourLevel * partyMember.ArmourPerArmourLevel;
+
+            float healing = partyMember.BaseHealing +
+                            testBuild.FocusLevel * partyMember.HealingPerFocusLevel;
+
+            string stats = healing > 0f
+                ? $"Expected Spawn: HP {health:0}   DMG {damage:0.#}   ARM {armour:0.#}   HEAL {healing:0.#}"
+                : $"Expected Spawn: HP {health:0}   DMG {damage:0.#}   ARM {armour:0.#}";
+
+            GUILayout.Label(stats);
         }
 
         private void SelectArrivalScenario(ArrivalScenario scenario)

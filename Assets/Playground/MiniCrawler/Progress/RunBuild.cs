@@ -117,6 +117,25 @@ namespace MiniCrawler.Progress
             return state != null && state.TryIncreaseLevel();
         }
         
+        public bool ConfigureAbilityLevel(AbilityDefinition ability, int level)
+        {
+            if (ability == null)
+                return false;
+
+            RunAbilityState state = GetAbilityState(ability);
+
+            if (state == null)
+            {
+                if (!TryAcquireAbility(ability, level))
+                    return false;
+
+                state = GetAbilityState(ability);
+            }
+
+            state.ConfigureLevel(level);
+            return true;
+        }
+        
         public bool CanAcquireAbilityEvolution(
             AbilityEvolutionDefinition evolution
         )

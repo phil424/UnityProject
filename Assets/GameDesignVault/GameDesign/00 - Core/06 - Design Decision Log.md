@@ -333,3 +333,62 @@ No additional surge population is generated after expiry.
 
 World changes should influence future state without making existing combat
 visibly mutate for purely systemic reasons.
+
+## 2026-09-10 — Encounter phases are distinct from spawn batches
+
+### Decision
+
+Encounters may contain explicit ordered phases above the existing spawn-group
+and spawn-batch layers.
+
+Phase
+→ meaningful encounter stage.
+
+Spawn Group
+→ owned enemy/spawn content.
+
+Spawn Batch
+→ timing/rhythm within that content.
+
+### Reason
+
+Meaningful encounter progression should not be encoded indirectly inside spawn
+batch timing.
+
+Explicit phases provide a future home for:
+- encounter progress UI;
+- named stages;
+- objectives;
+- delayed transitions;
+- spectacle/actions;
+- non-wave completion rules.
+
+### Implications
+
+Existing non-phased encounters remain supported.
+
+Phase ordering is authored through hierarchy.
+
+Phase completion is scoped to owned content rather than global enemy counts.
+
+
+## 2026-09-10 — Phase pacing may advance on timer or early clear
+
+### Decision
+
+A phase may start its successor when either:
+- its authored maximum delay is reached; or
+- its owned content is cleared earlier.
+
+### Reason
+
+Strong builds should not be forced through unnecessary dead time, while weaker
+builds should still experience the intended pressure of overlapping phases.
+
+### Implications
+
+Player power can alter encounter rhythm without dynamically rewriting enemy
+stats.
+
+Phase timers use scaled simulation time and therefore respect Slow, Fast and
+Pause.

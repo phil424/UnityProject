@@ -425,3 +425,232 @@ Add only when they materially improve encounter iteration:
 
 The Workshop should grow in response to real encounter-authoring friction rather
 than becoming a speculative tool platform.
+
+# Encounter Phase Iteration
+
+Encounter phases are a near-term Workshop requirement.
+
+A phase represents a meaningful authored stage of an encounter.
+
+A phase is not synonymous with a spawn batch.
+
+Example:
+
+Dormant Horde
+
+Phase 1 — Initial Horde
+- 4 zombies.
+
+Phase 2 — Second Wave
+- 4 zombies;
+- scheduled after 8 seconds;
+- may start early if Phase 1 is cleared.
+
+This supports a pacing rule:
+
+Scheduled Transition
+OR
+Current Phase Cleared Early
+→
+Start Next Phase
+
+The purpose is to remove unnecessary dead time without eliminating authored
+pressure when the player is struggling.
+
+Phase progress must be scoped to the owning encounter.
+
+Enemies from overlapping encounters must not prevent or accidentally advance
+another encounter's phase.
+
+Future phase completion may depend on:
+- owned enemies defeated;
+- timers;
+- specific targets;
+- objectives;
+- interactions;
+- authored conditions.
+
+The first implementation only needs the concrete enemy-clear / timer proof.
+
+# Encounter Presentation Testing
+
+The Workshop should allow start / phase / completion presentation to be evaluated
+under every supported arrival scenario.
+
+Important cases:
+
+Approach
+→ does the encounter title appear at the right moment?
+
+On Top
+→ is the announcement still readable when combat begins immediately?
+
+Pre-Spawned
+→ does merely seeing dormant enemies incorrectly announce the encounter?
+
+Arrive While Pursued
+→ can encounter identity/progress still be understood during overlapping combat?
+
+Encounter announcements should be short, non-blocking and capable of overlapping
+with other announcements.
+
+The Workshop should become the primary place for tuning this presentation.
+
+# 3.0J2 — Test Build Configuration
+
+The Workshop can configure representative temporary character power before
+spawning the test party.
+
+This configuration is test-only.
+
+It does not modify:
+- `PersistentProgression`;
+- persistent currency;
+- equipment progression;
+- account/meta state.
+
+Flow:
+
+Workshop Test Build
+↓
+fresh RunState
+↓
+fresh RunBuild
+↓
+apply test configuration
+↓
+StageDirector spawns party
+↓
+normal PartyUpgradeApplicator
++
+normal PartyAbilityApplicator
+
+Therefore the encounter is still being tested against the real runtime power
+systems.
+
+## Current Power Axes
+
+The current project does not have a general Character Level system.
+
+Do not invent one purely for Workshop presentation.
+
+The first Workshop build controls therefore expose the power concepts that
+actually exist:
+
+- Weapon Level;
+- Armour Level;
+- Focus Level;
+- individually authored starting Ability Levels.
+
+When future systems become real, the Workshop may also expose:
+- equipment-tree states;
+- ability acquisition;
+- evolutions;
+- augments;
+- supports;
+- prepared loadouts;
+- character level if one is introduced.
+
+## Prototype Power Presets
+
+Initial presets provide convenient comparative bands:
+
+Early
+- baseline gear;
+- authored starting ability levels.
+
+Mid
+- approximately 25% of the configured gear test range;
+- abilities around 40% of their maximum level.
+
+Late
+- approximately 50% of the configured gear test range;
+- abilities around 80% of their maximum level.
+
+Extreme
+- maximum configured test gear;
+- maximum starting ability levels.
+
+These are development conveniences.
+
+They are not final balance definitions for expedition stages.
+
+Direct slider changes move the configuration into `Custom`.
+
+## Replay Rule
+
+Test Build changes are applied when the scenario is reconstructed.
+
+The Workshop does not mutate the already-spawned actor while sliders are being
+edited.
+
+This keeps comparisons clear:
+
+configure
+↓
+Replay
+↓
+observe one fresh scenario.
+
+# 3.0J3 — Encounter Phases & Adaptive Pacing
+
+The Workshop now supports encounters authored as ordered phases.
+
+The first proof converts the old:
+
+8 zombies
+→ two spawn batches
+→ fixed 8 second gap
+
+into:
+
+Phase 1
+→ 4 zombies
+
+Phase 2
+→ 4 zombies
+
+with:
+
+Phase 1 Cleared
+OR
+8 Seconds Elapsed
+→
+Start Phase 2
+
+This moves meaningful encounter pacing out of low-level spawn batching and into
+an explicit encounter structure.
+
+## Pre-Spawn Behaviour
+
+For phased encounters, Workshop `Pre-Spawn From Start` only starts the first
+phase's spawn content.
+
+Phase progression does not advance until encounter combat is activated.
+
+Therefore:
+
+Pre-Spawn
+→ Phase 1 may visually exist while approaching.
+
+Arrival
+→ combat activates;
+→ phase timing begins.
+
+This prevents later phases from silently playing out before the party reaches
+the encounter.
+
+## Build Testing
+
+3.0J2 Test Build controls are particularly useful for phased encounters.
+
+Expected comparisons:
+
+Early
+→ later phases may overlap because timers are reached.
+
+Late / Extreme
+→ early clears may compress downtime and accelerate phases.
+
+The Workshop should be used to decide whether this creates satisfying pacing
+before adding more complex phase conditions.

@@ -137,8 +137,8 @@ namespace MiniCrawler.Encounters
 
             // Prototype default: reaching a selected encounter commits to its gameplay.
             // Existing authored triggers may still begin spawning/activate combat earlier.
-            SelectedEncounter.BeginSpawning();
             SelectedEncounter.ActivateCombat();
+            SelectedEncounter.BeginSpawning();
 
             ClearPartyNavigationIntents();
             IsTravelling = false;

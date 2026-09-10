@@ -12,12 +12,7 @@ namespace MiniCrawler.Encounters
         [SerializeField] private bool activateCombat;
         [SerializeField] private bool expire;
 
-        public bool HasAny =>
-            makeKnown ||
-            makeAvailable ||
-            beginSpawning ||
-            activateCombat ||
-            expire;
+        public bool HasAny => makeKnown || makeAvailable || beginSpawning || activateCombat || expire;
 
         public bool HasPending(LevelEncounter encounter)
         {
@@ -30,10 +25,10 @@ namespace MiniCrawler.Encounters
             if (makeAvailable && !encounter.IsAvailable && !encounter.IsCompleted && !encounter.IsExpired)
                 return true;
 
-            if (activateCombat && encounter.HasInactiveCombatGroups)
+            if (activateCombat && !encounter.IsCombatActivated)
                 return true;
 
-            if (beginSpawning && encounter.HasUnstartedSpawnGroups)
+            if (beginSpawning && !encounter.HasBegunSpawning)
                 return true;
 
             if (expire && !encounter.IsCompleted && !encounter.IsExpired)
@@ -53,7 +48,6 @@ namespace MiniCrawler.Encounters
             if (makeAvailable)
                 encounter.MakeAvailable();
 
-            // Combat first so immediate spawns inherit the intended state.
             if (activateCombat)
                 encounter.ActivateCombat();
 

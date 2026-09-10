@@ -63,6 +63,14 @@ namespace MiniCrawler.Progress
 
             return true;
         }
+        
+        internal void ConfigureLevel(int newLevel)
+        {
+            if (definition == null)
+                return;
+
+            level = definition.ClampLevel(newLevel);
+        }
 
         public bool HasEvolution(
             AbilityEvolutionDefinition evolution

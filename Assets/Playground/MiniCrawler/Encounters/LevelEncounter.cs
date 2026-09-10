@@ -39,15 +39,18 @@ namespace MiniCrawler.Encounters
         [SerializeField] private bool isAvailable;
         [SerializeField] private bool isCompleted;
         [SerializeField] private bool isExpired;
+        [SerializeField] private bool isCombatActivated;
+        [SerializeField] private int currentPhaseIndex = -1;
         [SerializeField] private EncounterPresentationState presentationState = EncounterPresentationState.Unknown;
+        [SerializeField] private long availabilitySequence;
 
         private static long nextAvailabilitySequence;
 
-        [SerializeField] private long availabilitySequence;
-
         private LevelSpawnGroup[] spawnGroups = Array.Empty<LevelSpawnGroup>();
+        private LevelEncounterPhase[] phases = Array.Empty<LevelEncounterPhase>();
 
         public event Action<LevelEncounter, EncounterPresentationState> StateChanged;
+        public event Action<LevelEncounter, LevelEncounterPhase, int> PhaseStarted;
         public event Action<LevelEncounter> Completed;
 
         public string Id => string.IsNullOrWhiteSpace(id) ? name : id;
@@ -58,62 +61,37 @@ namespace MiniCrawler.Encounters
         public Vector3 AnchorPosition => transform.position;
 
         public IReadOnlyList<LevelSpawnGroup> SpawnGroups => spawnGroups;
-        
+        public IReadOnlyList<LevelEncounterPhase> Phases => phases;
+
         public bool ReusableByPrototypeSupply => reusableByPrototypeSupply;
-
-        public bool HasStartedSpawnGroups
-        {
-            get
-            {
-                foreach (LevelSpawnGroup group in spawnGroups)
-                {
-                    if (group != null && group.IsSpawningStarted)
-                        return true;
-                }
-
-                return false;
-            }
-        }
-
         public bool IsKnown => isKnown;
         public bool IsAvailable => isAvailable;
         public bool IsCompleted => isCompleted;
         public bool IsExpired => isExpired;
-
-        public long AvailabilitySequence => availabilitySequence;
-        
+        public bool IsCombatActivated => isCombatActivated;
         public bool IsSelectable => isKnown && isAvailable && !isCompleted && !isExpired;
 
+        public long AvailabilitySequence => availabilitySequence;
         public EncounterPresentationState PresentationState => presentationState;
 
-        public bool HasUnstartedSpawnGroups
-        {
-            get
-            {
-                foreach (LevelSpawnGroup group in spawnGroups)
-                {
-                    if (group != null && group.ConfiguredSpawnCount > 0 && !group.IsSpawningStarted)
-                        return true;
-                }
+        public int PhaseCount => phases.Length;
+        public int CurrentPhaseIndex => currentPhaseIndex;
+        public int CurrentPhaseNumber => currentPhaseIndex >= 0 ? currentPhaseIndex + 1 : 0;
 
-                return false;
-            }
-        }
+        public LevelEncounterPhase CurrentPhase =>
+            currentPhaseIndex >= 0 && currentPhaseIndex < phases.Length
+                ? phases[currentPhaseIndex]
+                : null;
 
-        public bool HasInactiveCombatGroups
-        {
-            get
-            {
-                foreach (LevelSpawnGroup group in spawnGroups)
-                {
-                    if (group != null && group.ConfiguredSpawnCount > 0 && !group.IsCombatActive)
-                        return true;
-                }
+        public bool HasBegunSpawning => phases.Length > 0 ? currentPhaseIndex >= 0 : HasStartedSpawnGroups;
+        public bool HasStartedSpawnGroups => AnySpawnGroup(group => group.IsSpawningStarted);
 
-                return false;
-            }
-        }
-        
+        public bool HasUnstartedSpawnGroups =>
+            AnySpawnGroup(group => group.ConfiguredSpawnCount > 0 && !group.IsSpawningStarted);
+
+        public bool HasInactiveCombatGroups =>
+            AnySpawnGroup(group => group.ConfiguredSpawnCount > 0 && !group.IsCombatActive);
+
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         private static void ResetAvailabilitySequence()
         {
@@ -122,7 +100,7 @@ namespace MiniCrawler.Encounters
 
         private void OnEnable()
         {
-            RefreshOwnedSpawnGroups();
+            RefreshOwnedContent();
             SubscribeToSpawnGroups();
             Health.AnyDied += HandleActorDied;
         }
@@ -133,50 +111,72 @@ namespace MiniCrawler.Encounters
             Health.AnyDied -= HandleActorDied;
         }
 
+        private void Update()
+        {
+            UpdatePhaseProgression(Time.deltaTime);
+        }
+
         public void PrepareForLevel()
         {
             UnsubscribeFromSpawnGroups();
-            RefreshOwnedSpawnGroups();
+            RefreshOwnedContent();
             SubscribeToSpawnGroups();
+
+            foreach (LevelEncounterPhase phase in phases)
+                phase?.PrepareForLevel();
 
             isKnown = knownAtLevelStart || availableAtLevelStart;
             isAvailable = availableAtLevelStart;
             isCompleted = false;
             isExpired = false;
+            isCombatActivated = false;
+            currentPhaseIndex = -1;
             availabilitySequence = 0;
 
             if (isAvailable)
                 StampAvailability();
+
+            ValidatePhaseStructure();
+
+            if (phases.Length > 0 && phases[0] != null && phases[0].WantsLevelStartSpawning)
+                StartPhase(0);
 
             RefreshState();
         }
 
         public void ClearForLevel()
         {
+            foreach (LevelEncounterPhase phase in phases)
+                phase?.PrepareForLevel();
+
             isKnown = false;
             isAvailable = false;
             isCompleted = false;
             isExpired = false;
+            isCombatActivated = false;
+            currentPhaseIndex = -1;
             availabilitySequence = 0;
 
             SetPresentationState(EncounterPresentationState.Unknown);
         }
-        
+
         public bool RearmForPrototypeSupply()
         {
             if (!reusableByPrototypeSupply)
                 return false;
 
             foreach (LevelSpawnGroup group in spawnGroups)
-            {
-                if (group != null)
-                    group.PrepareForLevel();
-            }
+                group?.PrepareForLevel();
+
+            foreach (LevelEncounterPhase phase in phases)
+                phase?.PrepareForLevel();
 
             isKnown = true;
             isAvailable = true;
             isCompleted = false;
             isExpired = false;
+            isCombatActivated = false;
+            currentPhaseIndex = -1;
             availabilitySequence = 0;
 
             StampAvailability();
@@ -210,6 +210,9 @@ namespace MiniCrawler.Encounters
 
         public bool BeginSpawning()
         {
+            if (phases.Length > 0)
+                return currentPhaseIndex < 0 && StartPhase(0);
+
             bool changed = false;
 
             foreach (LevelSpawnGroup group in spawnGroups)
@@ -224,12 +227,24 @@ namespace MiniCrawler.Encounters
 
         public bool ActivateCombat()
         {
-            bool changed = false;
+            bool changed = !isCombatActivated;
+            isCombatActivated = true;
 
-            foreach (LevelSpawnGroup group in spawnGroups)
+            if (phases.Length > 0)
             {
-                if (group != null && group.ActivateCombat())
-                    changed = true;
+                foreach (LevelEncounterPhase phase in phases)
+                {
+                    if (phase != null && phase.IsStarted)
+                        phase.ActivateCombat();
+                }
+            }
+            else
+            {
+                foreach (LevelSpawnGroup group in spawnGroups)
+                {
+                    if (group != null && group.ActivateCombat())
+                        changed = true;
+                }
             }
 
             RefreshState();
@@ -295,23 +310,78 @@ namespace MiniCrawler.Encounters
             Expire();
         }
 
-        private void RefreshOwnedSpawnGroups()
+        private bool StartPhase(int phaseIndex)
         {
-            LevelSpawnGroup[] candidates = GetComponentsInChildren<LevelSpawnGroup>(true);
+            if (phaseIndex < 0 || phaseIndex >= phases.Length)
+                return false;
+
+            LevelEncounterPhase phase = phases[phaseIndex];
+
+            if (phase == null || !phase.StartPhase(isCombatActivated))
+                return false;
+
+            currentPhaseIndex = phaseIndex;
+
+            PhaseStarted?.Invoke(this, phase, phaseIndex);
+
+            Debug.Log(
+                $"Encounter '{DisplayName}' started phase {phaseIndex + 1}/{phases.Length}: {phase.DisplayName}",
+                this
+            );
+
+            RefreshState();
+            return true;
+        }
+
+        private void UpdatePhaseProgression(float deltaTime)
+        {
+            if (isCompleted ||
+                isExpired ||
+                !isCombatActivated ||
+                currentPhaseIndex < 0 ||
+                currentPhaseIndex >= phases.Length - 1)
+            {
+                return;
+            }
+
+            LevelEncounterPhase currentPhase = phases[currentPhaseIndex];
+
+            if (currentPhase == null)
+                return;
+
+            currentPhase.Tick(deltaTime);
+
+            if (currentPhase.ShouldAdvance())
+                StartPhase(currentPhaseIndex + 1);
+        }
+
+        private void RefreshOwnedContent()
+        {
+            LevelSpawnGroup[] groupCandidates = GetComponentsInChildren<LevelSpawnGroup>(true);
             List<LevelSpawnGroup> ownedGroups = new();
 
-            foreach (LevelSpawnGroup group in candidates)
+            foreach (LevelSpawnGroup group in groupCandidates)
             {
-                if (group == null)
-                    continue;
-
-                LevelEncounter owner = group.GetComponentInParent<LevelEncounter>();
-
-                if (owner == this)
+                if (group != null && group.GetComponentInParent<LevelEncounter>() == this)
                     ownedGroups.Add(group);
             }
 
             spawnGroups = ownedGroups.ToArray();
+
+            LevelEncounterPhase[] phaseCandidates = GetComponentsInChildren<LevelEncounterPhase>(true);
+            List<LevelEncounterPhase> ownedPhases = new();
+
+            foreach (LevelEncounterPhase phase in phaseCandidates)
+            {
+                if (phase != null && phase.GetComponentInParent<LevelEncounter>() == this)
+                    ownedPhases.Add(phase);
+            }
+
+            ownedPhases.Sort(
+                (a, b) => a.transform.GetSiblingIndex().CompareTo(b.transform.GetSiblingIndex())
+            );
+
+            phases = ownedPhases.ToArray();
         }
 
         private void SubscribeToSpawnGroups()
@@ -379,7 +449,7 @@ namespace MiniCrawler.Encounters
             if (isCompleted)
                 return EncounterPresentationState.Cleared;
 
-            if (HasActiveCombat())
+            if (isCombatActivated && HasBegunSpawning)
                 return EncounterPresentationState.Active;
 
             if (isExpired)
@@ -389,17 +459,6 @@ namespace MiniCrawler.Encounters
                 return EncounterPresentationState.Locked;
 
             return EncounterPresentationState.Available;
-        }
-
-        private bool HasActiveCombat()
-        {
-            foreach (LevelSpawnGroup group in spawnGroups)
-            {
-                if (group != null && group.IsSpawningStarted && group.IsCombatActive && !group.IsComplete)
-                    return true;
-            }
-
-            return false;
         }
 
         private bool HasCleared()
@@ -420,6 +479,17 @@ namespace MiniCrawler.Encounters
             return hasConfiguredGroup;
         }
 
+        private bool AnySpawnGroup(Func<LevelSpawnGroup, bool> predicate)
+        {
+            foreach (LevelSpawnGroup group in spawnGroups)
+            {
+                if (group != null && predicate(group))
+                    return true;
+            }
+
+            return false;
+        }
+
         private void SetPresentationState(EncounterPresentationState newState)
         {
             if (presentationState == newState)
@@ -428,16 +498,51 @@ namespace MiniCrawler.Encounters
             presentationState = newState;
             StateChanged?.Invoke(this, presentationState);
         }
-        
+
         private void StampAvailability()
         {
             availabilitySequence = ++nextAvailabilitySequence;
+        }
+
+        private void ValidatePhaseStructure()
+        {
+            if (phases.Length == 0)
+                return;
+
+            foreach (LevelEncounterPhase phase in phases)
+            {
+                if (phase != null && phase.transform.parent != transform)
+                {
+                    Debug.LogWarning(
+                        $"Encounter phase '{phase.name}' should be a direct child of encounter '{DisplayName}' so sibling order is unambiguous.",
+                        phase
+                    );
+                }
+            }
+
+            foreach (LevelSpawnGroup group in spawnGroups)
+            {
+                if (group == null || group.ConfiguredSpawnCount <= 0)
+                    continue;
+
+                LevelEncounterPhase phase = group.GetComponentInParent<LevelEncounterPhase>();
+
+                if (phase == null || phase.GetComponentInParent<LevelEncounter>() != this)
+                {
+                    Debug.LogWarning(
+                        $"Encounter '{DisplayName}' uses phases but spawn group '{group.name}' is not owned by a phase.",
+                        group
+                    );
+                }
+            }
         }
 
         private void OnValidate()
         {
             if (availableAtLevelStart)
                 knownAtLevelStart = true;
+
+            RefreshOwnedContent();
         }
 
         private void OnDrawGizmosSelected()

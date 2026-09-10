@@ -610,6 +610,100 @@ Reason:
 The Workshop should consume the same encounter/runtime seams used by expedition
 play rather than implementing alternate combat behaviour.
 
+# Encounter Phases
+
+An encounter may optionally contain ordered authored phases.
+
+Hierarchy is the authoring API.
+
+Example:
+
+Dormant Horde Encounter
+├── Phase 1 - Initial Horde
+│   └── Spawn Group
+└── Phase 2 - Second Wave
+    └── Spawn Group
+
+`LevelEncounterPhase` objects should normally be direct children of the owning
+`LevelEncounter`.
+
+Phase order is determined by hierarchy sibling order.
+
+If an encounter contains phases, configured spawn groups should belong beneath a
+phase rather than also existing unphased on the encounter root.
+
+## Phase vs Spawn Batch
+
+A phase is a meaningful stage of an encounter.
+
+A spawn batch is low-level spawn rhythm inside a `LevelSpawnGroup`.
+
+Do not use the concepts interchangeably.
+
+Example:
+
+Phase 1 — Courtyard Horde
+- Spawn Group A
+  - 12 zombies
+  - batch size 3
+  - 0.5 seconds between batches.
+
+Phase 2 — Elite Arrival
+- Spawn Group B
+  - one Elite.
+
+## 3.0J3 Phase Progression
+
+The first progression rule supports:
+
+Current Phase Cleared
+OR
+Configured Timer Reached
+↓
+Start Next Phase
+
+Example:
+
+Initial Horde
+- 4 zombies;
+- advance after 8 seconds;
+- advance early when cleared.
+
+If all four enemies die in 3 seconds:
+→ next phase starts at 3 seconds.
+
+If enemies remain after 8 seconds:
+→ next phase starts at 8 seconds anyway.
+
+This creates performance-sensitive encounter pressure without dynamically
+changing enemy statistics.
+
+## Phase Ownership
+
+Phase completion is derived from the phase's owned spawn groups.
+
+It must not use global enemy counts.
+
+Therefore enemies from:
+- another encounter;
+- ambient ecology;
+- Workshop pursued scenarios;
+
+do not block or accidentally advance the current phase.
+
+Per-actor Phase Membership should only be introduced when a concrete feature
+requires direct actor-to-phase querying.
+
+## Compatibility
+
+Encounters without phases retain the existing behaviour:
+
+LevelEncounter
+→ directly owns Spawn Groups.
+
+This allows phased authoring to be introduced incrementally rather than requiring
+a migration of every existing encounter.
+
 # Open Questions
 
 - Required versus optional encounter semantics.

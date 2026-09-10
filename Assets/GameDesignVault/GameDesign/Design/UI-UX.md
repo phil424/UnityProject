@@ -561,3 +561,51 @@ Record options:
 Do not choose.
 
 Document that underlying persistent systems should not depend on presentation choice.
+
+# Active Encounter Presentation
+
+Quick Encounters answer:
+
+> Where can I go?
+
+Active Encounters answer:
+
+> What have I already started and how far through it am I?
+
+The normal HUD should support multiple simultaneous active encounters.
+
+Prototype presentation may show:
+
+Dormant Horde
+Phase 2 / 3
+
+Opening Horde
+Phase 1 / 2
+
+Encounter progress must not assume only one active encounter exists.
+
+# Encounter Announcements
+
+Encounter transitions deserve brief non-blocking presentation.
+
+Encounter Start:
+
+DORMANT HORDE
+The dead stir along the road.
+
+Encounter Complete:
+
+ENCOUNTER COMPLETE
+DORMANT HORDE
+
+Announcements should:
+- fade in quickly;
+- remain briefly;
+- fade out quickly;
+- avoid blocking normal combat;
+- support several announcements existing at once;
+- use authored encounter identity;
+- use reusable View / Group UI architecture.
+
+Do not implement encounter announcements as one global Text field that later
+events overwrite.
