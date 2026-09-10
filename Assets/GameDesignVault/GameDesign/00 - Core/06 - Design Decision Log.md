@@ -392,3 +392,46 @@ stats.
 
 Phase timers use scaled simulation time and therefore respect Slow, Fast and
 Pause.
+
+## 2026-09-10 — Encounter start is an explicit gameplay transition
+
+### Decision
+
+An encounter is considered Started only once its content has begun and combat is
+active.
+
+Pre-spawned dormant content alone does not count as encounter start.
+
+### Reason
+
+Encounter identity presentation and Active Encounter UI should correspond to
+actual player commitment, not merely world visibility.
+
+### Implications
+
+- `LevelEncounter` exposes explicit Started state/event;
+- reusable occurrences reset Started state;
+- Availability and Started ordering remain distinct;
+- Workshop Pre-Spawn scenarios do not announce before arrival.
+
+
+## 2026-09-10 — Transient encounter announcements are independent stacked views
+
+### Decision
+
+Encounter start/completion presentation does not use one mutable global banner.
+
+Each event creates its own short-lived presentation View inside a layout-driven
+feed.
+
+### Reason
+
+Strategic redirection allows several encounters to start or complete in rapid
+succession.
+
+### Implications
+
+- announcements may overlap;
+- later events do not erase earlier ones;
+- layout owns stacking;
+- presentation uses unscaled UI time.

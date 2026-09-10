@@ -135,39 +135,33 @@ Completed:
 - fresh replay applies selected test build;
 - Workshop testing does not mutate persistent progression.
 
-### 3.0J3 — Encounter Phases & Adaptive Pacing
+### 3.0J3 — Encounter Phases & Adaptive Pacing ✅
+
+Completed:
+- explicit hierarchy-authored Encounter Phases;
+- phases distinct from spawn batches;
+- phase-scoped progression;
+- timer OR early-clear advancement;
+- overlapping external enemies do not affect phase completion;
+- phased Pre-Spawn behaviour;
+- reusable phase-state reset;
+- Dormant Horde normal-play proof.
+
+### 3.0J4 — Encounter Identity & Presentation
 
 **Status: Active**
 
 Prove:
-- explicit ordered Encounter Phases;
-- hierarchy-driven phase ownership;
-- phases remain distinct from spawn batches;
-- phase-scoped spawn groups;
-- timer OR early-clear progression;
-- stronger builds may accelerate phase pacing;
-- weaker builds may experience overlapping pressure;
-- external/pursuing enemies do not affect phase completion;
-- Pre-Spawn only prepares the first phase;
-- reusable encounters reset phase state correctly;
-- Dormant Horde becomes the first normal-play phased encounter.
-
-### 3.0J4 — Encounter Identity & Presentation
-
-Make encounter state readable and punchy during normal play.
-
-Prove:
-- Encounter Started announcement;
-- authored encounter Display Name is presented;
-- optional description/subtitle;
-- rapid fade in / hold / fade out;
-- multiple transient announcements may coexist;
-- Encounter Complete announcement;
-- Active Encounters HUD;
-- active encounters display phase progress;
-- multiple simultaneous active encounters remain readable.
-
-Use reusable View/Group UI architecture.
+- explicit Encounter Started runtime transition;
+- authored Display Name / description presentation;
+- brief start announcement;
+- brief completion announcement;
+- multiple transient announcements may overlap;
+- Active Encounters strategic HUD;
+- phased encounters display current phase progress;
+- overlapping encounters display independently;
+- reusable encounters restart presentation cleanly;
+- Workshop scenarios exercise the same presentation system.
 
 ### 3.0J5 — Editable Encounter Draft
 

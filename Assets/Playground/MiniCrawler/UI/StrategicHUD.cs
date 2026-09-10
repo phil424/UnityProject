@@ -33,8 +33,61 @@ namespace MiniCrawler.UI
 
         private void Awake()
         {
-            encounterList?.Bind(SelectEncounterSlot);
-            minimap?.Bind(SelectEncounterSlot);
+            CacheReferences();
+
+            if (!ValidateReferences())
+            {
+                enabled = false;
+                return;
+            }
+
+            encounterList.Bind(SelectEncounterSlot);
+            minimap.Bind(SelectEncounterSlot);
+        }
+
+        private void OnValidate()
+        {
+            CacheReferences();
+        }
+
+        private void CacheReferences()
+        {
+            if (minimap == null)
+                minimap = GetComponentInChildren<StrategicMinimapView>(true);
+
+            if (encounterList == null)
+            {
+                foreach (QuickEncounterSlotGroup group in GetComponentsInChildren<QuickEncounterSlotGroup>(true))
+                {
+                    if (minimap != null && group.transform.IsChildOf(minimap.transform))
+                        continue;
+
+                    encounterList = group;
+                    break;
+                }
+            }
+        }
+
+        private bool ValidateReferences()
+        {
+            bool valid =
+                worldTimeText != null &&
+                upcomingText != null &&
+                currentWorldEventsRoot != null &&
+                currentWorldEventsText != null &&
+                encounterList != null &&
+                minimap != null;
+
+            if (!valid)
+            {
+                Debug.LogError(
+                    "StrategicHUD is missing required UI references. " +
+                    "Do not continue with stale/static strategic HUD presentation; repair the Inspector wiring.",
+                    this
+                );
+            }
+
+            return valid;
         }
 
         private void Update()

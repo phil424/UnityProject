@@ -40,22 +40,29 @@ namespace MiniCrawler.Encounters
         [SerializeField] private bool isCompleted;
         [SerializeField] private bool isExpired;
         [SerializeField] private bool isCombatActivated;
+        [SerializeField] private bool isStarted;
         [SerializeField] private int currentPhaseIndex = -1;
         [SerializeField] private EncounterPresentationState presentationState = EncounterPresentationState.Unknown;
         [SerializeField] private long availabilitySequence;
+        [SerializeField] private long startedSequence;
 
         private static long nextAvailabilitySequence;
+        private static long nextStartedSequence;
 
         private LevelSpawnGroup[] spawnGroups = Array.Empty<LevelSpawnGroup>();
         private LevelEncounterPhase[] phases = Array.Empty<LevelEncounterPhase>();
 
         public event Action<LevelEncounter, EncounterPresentationState> StateChanged;
+        public event Action<LevelEncounter> Started;
         public event Action<LevelEncounter, LevelEncounterPhase, int> PhaseStarted;
         public event Action<LevelEncounter> Completed;
 
         public string Id => string.IsNullOrWhiteSpace(id) ? name : id;
         public string DisplayName => string.IsNullOrWhiteSpace(displayName) ? name : displayName;
         public string Description => description ?? string.Empty;
+        
+        public bool HasStarted => isStarted;
+        public long StartedSequence => startedSequence;
 
         public Transform Anchor => transform;
         public Vector3 AnchorPosition => transform.position;
@@ -93,9 +100,10 @@ namespace MiniCrawler.Encounters
             AnySpawnGroup(group => group.ConfiguredSpawnCount > 0 && !group.IsCombatActive);
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-        private static void ResetAvailabilitySequence()
+        private static void ResetRuntimeSequences()
         {
             nextAvailabilitySequence = 0;
+            nextStartedSequence = 0;
         }
 
         private void OnEnable()
@@ -130,6 +138,8 @@ namespace MiniCrawler.Encounters
             isCompleted = false;
             isExpired = false;
             isCombatActivated = false;
+            isStarted = false;
+            startedSequence = 0;
             currentPhaseIndex = -1;
             availabilitySequence = 0;
 
@@ -154,6 +164,8 @@ namespace MiniCrawler.Encounters
             isCompleted = false;
             isExpired = false;
             isCombatActivated = false;
+            isStarted = false;
+            startedSequence = 0;
             currentPhaseIndex = -1;
             availabilitySequence = 0;
 
@@ -176,6 +188,8 @@ namespace MiniCrawler.Encounters
             isCompleted = false;
             isExpired = false;
             isCombatActivated = false;
+            isStarted = false;
+            startedSequence = 0;
             currentPhaseIndex = -1;
             availabilitySequence = 0;
 
@@ -221,7 +235,9 @@ namespace MiniCrawler.Encounters
                     changed = true;
             }
 
+            TryMarkStarted();
             RefreshState();
+
             return changed;
         }
 
@@ -247,6 +263,7 @@ namespace MiniCrawler.Encounters
                 }
             }
 
+            TryMarkStarted();
             RefreshState();
             return changed;
         }
@@ -322,6 +339,7 @@ namespace MiniCrawler.Encounters
 
             currentPhaseIndex = phaseIndex;
 
+            TryMarkStarted();
             PhaseStarted?.Invoke(this, phase, phaseIndex);
 
             Debug.Log(
@@ -412,17 +430,37 @@ namespace MiniCrawler.Encounters
 
         private void HandleSpawningStarted(LevelSpawnGroup group, int spawnCount)
         {
+            if (group != null && group.IsCombatActive)
+                isCombatActivated = true;
+
+            TryMarkStarted();
             RefreshState();
         }
 
         private void HandleGroupStateChanged(LevelSpawnGroup group)
         {
+            if (group != null && group.IsCombatActive)
+                isCombatActivated = true;
+
+            TryMarkStarted();
             RefreshState();
         }
 
         private void HandleActorDied(Health health)
         {
             RefreshState();
+        }
+        
+        private bool TryMarkStarted()
+        {
+            if (isStarted || !isCombatActivated || !HasBegunSpawning)
+                return false;
+
+            isStarted = true;
+            startedSequence = ++nextStartedSequence;
+
+            Started?.Invoke(this);
+            return true;
         }
 
         private void RefreshState()
@@ -449,7 +487,7 @@ namespace MiniCrawler.Encounters
             if (isCompleted)
                 return EncounterPresentationState.Cleared;
 
-            if (isCombatActivated && HasBegunSpawning)
+            if (isStarted)
                 return EncounterPresentationState.Active;
 
             if (isExpired)

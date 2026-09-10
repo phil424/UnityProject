@@ -25,6 +25,10 @@ namespace MiniCrawler.Systems
         public event Action<bool> LevelFinished;
         public event Action<int> CurrencyEarned;
         public event Action RewardChoiceEarned;
+        
+        public event Action<LevelEncounter> EncounterStarted;
+        public event Action<LevelEncounter, LevelEncounterPhase, int> EncounterPhaseStarted;
+        public event Action<LevelEncounter> EncounterCompleted;
 
         public event Action<PartyMemberDefinition, GameObject> PartyMemberSpawned;
         public event Action<PartyMemberDefinition, GameObject> PartyMemberRuntimeChanged;
@@ -206,6 +210,7 @@ namespace MiniCrawler.Systems
         {
             StopMinionSpawnGroups();
             RefreshEncounterContent();
+            SubscribeToEncounterLifecycle();
 
             pendingMinionSpawns = 0;
 
@@ -242,6 +247,8 @@ namespace MiniCrawler.Systems
 
         private void StopMinionSpawnGroups()
         {
+            UnsubscribeFromEncounterLifecycle();
+
             if (minionSpawnGroups == null)
                 return;
 
@@ -491,6 +498,53 @@ namespace MiniCrawler.Systems
             LevelCleared?.Invoke();
 
             SetState(LevelState.Idle);
+        }
+        
+        private void SubscribeToEncounterLifecycle()
+        {
+            if (encounters == null)
+                return;
+
+            foreach (LevelEncounter encounter in encounters)
+            {
+                if (encounter == null)
+                    continue;
+
+                encounter.Started += HandleEncounterStarted;
+                encounter.PhaseStarted += HandleEncounterPhaseStarted;
+                encounter.Completed += HandleEncounterCompleted;
+            }
+        }
+
+        private void UnsubscribeFromEncounterLifecycle()
+        {
+            if (encounters == null)
+                return;
+
+            foreach (LevelEncounter encounter in encounters)
+            {
+                if (encounter == null)
+                    continue;
+
+                encounter.Started -= HandleEncounterStarted;
+                encounter.PhaseStarted -= HandleEncounterPhaseStarted;
+                encounter.Completed -= HandleEncounterCompleted;
+            }
+        }
+
+        private void HandleEncounterStarted(LevelEncounter encounter)
+        {
+            EncounterStarted?.Invoke(encounter);
+        }
+
+        private void HandleEncounterPhaseStarted(LevelEncounter encounter, LevelEncounterPhase phase, int phaseIndex)
+        {
+            EncounterPhaseStarted?.Invoke(encounter, phase, phaseIndex);
+        }
+
+        private void HandleEncounterCompleted(LevelEncounter encounter)
+        {
+            EncounterCompleted?.Invoke(encounter);
         }
         
         private void PrepareEncountersForLevel()

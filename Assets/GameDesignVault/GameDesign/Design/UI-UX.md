@@ -609,3 +609,52 @@ Announcements should:
 
 Do not implement encounter announcements as one global Text field that later
 events overwrite.
+
+## 3.0J4 Prototype Implementation
+
+Encounter identity is now surfaced during normal play.
+
+### Active Encounters
+
+The strategic HUD contains a separate Active Encounters section.
+
+It displays encounters that:
+
+`HasStarted`
++
+not Completed
++
+not Expired.
+
+Phased encounters show:
+
+`Phase N / Total`
+
+Non-phased encounters show:
+
+`Active`.
+
+Multiple overlapping encounters are supported and ordered by when they entered
+active gameplay.
+
+### Transient Announcements
+
+Encounter start and completion presentation use independent runtime
+`EncounterAnnouncementView` instances inside a layout-driven feed.
+
+This allows several announcements to coexist briefly.
+
+Start:
+
+Encounter Display Name
++
+authored Description / fallback status.
+
+Completion:
+
+ENCOUNTER COMPLETE
++
+Encounter Display Name.
+
+Presentation animation uses unscaled UI time so simulation Slow / Fast does not
+distort the readability window.

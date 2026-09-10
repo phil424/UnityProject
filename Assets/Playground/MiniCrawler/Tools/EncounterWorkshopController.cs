@@ -405,7 +405,10 @@ namespace MiniCrawler.Tools
             const float width = 430f;
             const float height = 385f;
 
-            GUILayout.BeginArea(new Rect(480f, 10f, width, height), GUI.skin.box);
+            GUILayout.BeginArea(
+                new Rect(Screen.width - width - 10f, 10f, width, height),
+                GUI.skin.box
+            );
 
             GUILayout.Label("TEST BUILD");
             GUILayout.Label($"Preset: {testBuild.Preset}");

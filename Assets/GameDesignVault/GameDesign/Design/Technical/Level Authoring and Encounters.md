@@ -704,6 +704,39 @@ LevelEncounter
 This allows phased authoring to be introduced incrementally rather than requiring
 a migration of every existing encounter.
 
+# Encounter Started Semantics
+
+An encounter has an explicit runtime `Started` transition.
+
+The transition occurs when:
+
+- encounter content has begun;
+- combat has been activated.
+
+Therefore:
+
+Pre-spawned dormant enemies
+≠
+Encounter Started.
+
+Player reaches / activates that encounter
+=
+Encounter Started.
+
+`LevelEncounter.HasStarted` is occurrence-owned runtime state and resets when a
+reusable encounter is rearmed.
+
+A runtime Start Sequence records the order in which simultaneous encounters
+entered active gameplay.
+
+This is distinct from Availability Sequence:
+
+Availability Sequence
+→ when an opportunity entered strategic supply.
+
+Started Sequence
+→ when the player actually began that encounter.
+
 # Open Questions
 
 - Required versus optional encounter semantics.

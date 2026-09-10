@@ -654,3 +654,29 @@ Late / Extreme
 
 The Workshop should be used to decide whether this creates satisfying pacing
 before adding more complex phase conditions.
+
+# 3.0J4 — Encounter Presentation Testing
+
+The Workshop now consumes the same encounter announcement system as normal play.
+
+This makes arrival scenarios presentation tests as well as combat tests.
+
+Important validations:
+
+Approach
+→ announcement occurs on actual encounter start.
+
+Pre-Spawn
+→ dormant visible enemies do not announce early.
+
+On Top
+→ announcement remains readable when combat begins immediately.
+
+Arrive While Pursued
+→ encounter identity remains understandable during existing combat pressure.
+
+Replay
+→ presentation state resets with the encounter.
+
+The Workshop remains the preferred place for tuning future announcement timing,
+animation, audio and encounter visual language.
