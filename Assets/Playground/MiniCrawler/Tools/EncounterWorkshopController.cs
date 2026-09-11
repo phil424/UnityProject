@@ -1,4 +1,6 @@
+using System;
 using System.Collections;
+using System.Collections.Generic;
 using MiniCrawler.Combat;
 using MiniCrawler.Core;
 using MiniCrawler.Encounters;
@@ -35,6 +37,9 @@ namespace MiniCrawler.Tools
         [Header("Test Party")]
         [SerializeField] private PartyMemberDefinition partyMember;
         [SerializeField] private EncounterWorkshopBuildConfiguration testBuild = new();
+        
+        [Header("Encounter Authoring")]
+        [SerializeField] private ActorDefinition[] authoringActorPalette = Array.Empty<ActorDefinition>();
 
         [Header("Scenario")]
         [SerializeField] private ArrivalScenario arrivalScenario = ArrivalScenario.Approach;
@@ -57,6 +62,12 @@ namespace MiniCrawler.Tools
         private bool scenarioRunning;
         private bool encounterCompletionReported;
         private string status = "Waiting to start.";
+        
+        private readonly List<ActorDefinition> resolvedAuthoringActors = new();
+        private readonly EncounterWorkshopAuthoringPanel authoringPanel = new();
+
+        private EncounterWorkshopDraft encounterDraft;
+        private EncounterDefinition currentDefinition;
 
         private IEnumerator Start()
         {
@@ -67,6 +78,7 @@ namespace MiniCrawler.Tools
                 encounterDirection = EncounterDirectionController.Instance;
 
             testBuild.EnsureFor(partyMember);
+            InitializeEncounterDraft();
 
             if (stageDirector != null)
                 stageDirector.LevelFinished += HandleLevelFinished;
@@ -94,6 +106,7 @@ namespace MiniCrawler.Tools
             if (stageDirector != null)
                 stageDirector.LevelFinished -= HandleLevelFinished;
 
+            encounterDraft?.ClearRuntimeOverrides();
             ClearSpawnGroupOverrides();
         }
 
@@ -105,9 +118,12 @@ namespace MiniCrawler.Tools
                 return false;
 
             testBuild.EnsureFor(partyMember);
+            
+            EnsureEncounterDraft();
+            encounterDraft.ApplyRuntimeOverrides();
 
             if (deterministicReplay)
-                Random.InitState(randomSeed);
+                UnityEngine.Random.InitState(randomSeed);
 
             ConfigureEncounterStartMode();
 
@@ -329,6 +345,17 @@ namespace MiniCrawler.Tools
         {
             DrawScenarioPanel();
             DrawBuildPanel();
+
+            authoringPanel.Draw(
+                encounterDraft,
+                resolvedAuthoringActors,
+                currentDefinition,
+                () => StartScenario(),
+                ResetEncounterDraftAndReplay,
+                LoadEncounterDefinition,
+                SaveEncounterDefinition,
+                SaveEncounterDefinitionAs
+            );
         }
 
         private void DrawScenarioPanel()
@@ -536,6 +563,153 @@ namespace MiniCrawler.Tools
                 : $"Expected Spawn: HP {health:0}   DMG {damage:0.#}   ARM {armour:0.#}";
 
             GUILayout.Label(stats);
+        }
+        
+        private void InitializeEncounterDraft()
+        {
+            currentDefinition = null;
+
+            encounterDraft = new EncounterWorkshopDraft();
+            encounterDraft.CaptureFrom(encounter);
+
+            RefreshAuthoringActorPalette();
+        }
+
+        private void EnsureEncounterDraft()
+        {
+            if (encounterDraft != null && encounterDraft.IsInitialized)
+                return;
+
+            InitializeEncounterDraft();
+        }
+
+        private void ResetEncounterDraftAndReplay()
+        {
+            StopScenario(clearStatus: false);
+
+            encounterDraft?.ClearRuntimeOverrides();
+
+            EncounterWorkshopDraft replacement = new();
+
+            if (currentDefinition != null)
+            {
+                if (!replacement.TryCaptureFromDefinition(
+                        encounter,
+                        currentDefinition,
+                        out string error))
+                {
+                    Debug.LogError(
+                        $"Could not reset Workshop Draft from '{currentDefinition.name}': {error}",
+                        this
+                    );
+
+                    status = "Definition is no longer compatible with the Workshop scene.";
+                    return;
+                }
+            }
+            else
+            {
+                replacement.CaptureFrom(encounter);
+            }
+
+            encounterDraft = replacement;
+
+            RefreshAuthoringActorPalette();
+            StartScenario();
+        }
+        
+        private void SaveEncounterDefinition()
+        {
+            EnsureEncounterDraft();
+
+            if (currentDefinition == null)
+            {
+                SaveEncounterDefinitionAs();
+                return;
+            }
+
+            if (!EncounterWorkshopAssetPersistence.Save(
+                    encounterDraft,
+                    currentDefinition))
+            {
+                status = "Encounter Definition save failed or was cancelled.";
+                return;
+            }
+
+            status = $"Saved '{currentDefinition.name}'.";
+        }
+
+        private void SaveEncounterDefinitionAs()
+        {
+            EnsureEncounterDraft();
+
+            EncounterDefinition saved =
+                EncounterWorkshopAssetPersistence.SaveAs(encounterDraft);
+
+            if (saved == null)
+            {
+                status = "Save As cancelled.";
+                return;
+            }
+
+            currentDefinition = saved;
+            status = $"Saved '{currentDefinition.name}'.";
+        }
+
+        private void LoadEncounterDefinition()
+        {
+            EncounterDefinition definition =
+                EncounterWorkshopAssetPersistence.Load();
+
+            if (definition == null)
+                return;
+
+            EncounterWorkshopDraft candidate = new();
+
+            if (!candidate.TryCaptureFromDefinition(
+                    encounter,
+                    definition,
+                    out string error))
+            {
+                Debug.LogError(
+                    $"Encounter Definition '{definition.name}' is not compatible with " +
+                    $"the Workshop scene: {error}",
+                    this
+                );
+
+                status = "Selected Definition is not compatible with this Workshop structure.";
+                return;
+            }
+
+            StopScenario(clearStatus: false);
+
+            encounterDraft?.ClearRuntimeOverrides();
+
+            encounterDraft = candidate;
+            currentDefinition = definition;
+
+            RefreshAuthoringActorPalette();
+
+            status = $"Loaded '{currentDefinition.name}'.";
+            StartScenario();
+        }
+
+        private void RefreshAuthoringActorPalette()
+        {
+            resolvedAuthoringActors.Clear();
+
+            encounterDraft?.CollectActors(resolvedAuthoringActors);
+
+            foreach (ActorDefinition actor in authoringActorPalette)
+                AddAuthoringActor(actor);
+
+            AddAuthoringActor(pursuerDefinition);
+        }
+
+        private void AddAuthoringActor(ActorDefinition actor)
+        {
+            if (actor != null && !resolvedAuthoringActors.Contains(actor))
+                resolvedAuthoringActors.Add(actor);
         }
 
         private void SelectArrivalScenario(ArrivalScenario scenario)

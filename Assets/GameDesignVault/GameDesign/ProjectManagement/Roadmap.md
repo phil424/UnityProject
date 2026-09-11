@@ -147,50 +147,54 @@ Completed:
 - reusable phase-state reset;
 - Dormant Horde normal-play proof.
 
-### 3.0J4 — Encounter Identity & Presentation
+### 3.0J4 — Encounter Identity & Presentation ✅
+
+Completed:
+- explicit Encounter Started lifecycle;
+- authored start presentation;
+- completion presentation;
+- stacked transient announcements;
+- Active Encounters HUD;
+- phase progress;
+- overlapping active encounter presentation;
+- reusable encounter presentation reset;
+- Workshop presentation testing;
+- transient level-owned announcement cleanup.
+
+### 3.0J5 — Editable Encounter Draft ✅
+
+Completed:
+- editable runtime Draft;
+- identity editing;
+- phase timing editing;
+- enemy selection;
+- spawn count/timing editing;
+- Point/Circle/Box editing;
+- runtime-preview application;
+- Reset From Source;
+- unsaved Play Mode experimentation does not mutate scene content.
+
+### 3.0J6 — Encounter Definition Save / Load
 
 **Status: Active**
 
 Prove:
-- explicit Encounter Started runtime transition;
-- authored Display Name / description presentation;
-- brief start announcement;
-- brief completion announcement;
-- multiple transient announcements may overlap;
-- Active Encounters strategic HUD;
-- phased encounters display current phase progress;
-- overlapping encounters display independently;
-- reusable encounters restart presentation cleanly;
-- Workshop scenarios exercise the same presentation system.
+- portable `EncounterDefinition` ScriptableObject;
+- Workshop Draft can Save As a new Definition;
+- Save updates the current Definition;
+- Load reconstructs a Draft from a Definition;
+- Reset returns to the active source;
+- asset persistence survives Play Mode;
+- normal expedition gameplay does not depend on Workshop tooling;
+- compatible scene encounters can consume Definition content;
+- one physical encounter site can swap between multiple Definition assets;
+- incompatible structural content fails clearly rather than partially applying.
 
-### 3.0J5 — Editable Encounter Draft
+Current limitation:
 
-Begin interactive Workshop authoring.
+Definition deployment requires compatible phase/group/source scene topology.
 
-Expose the first useful subset:
-- enemy definition;
-- counts;
-- spawn region / shape;
-- radius;
-- start delay;
-- batch size;
-- spawn spacing;
-- batch spacing;
-- phase configuration.
-
-Editing operates on a Workshop Draft rather than silently mutating saved content.
-
-### 3.0J6 — Encounter Definition Save / Load
-
-Introduce the first portable `EncounterDefinition` asset.
-
-Prove:
-
-Workshop Draft
-→ Save / Save As
-→ EncounterDefinition.asset
-→ Load into Workshop
-→ use from expedition encounter site.
+General Encounter Site / Runtime Instance construction remains future work.
 
 ### 3.0J7 — Composable Trigger / Action Authoring
 

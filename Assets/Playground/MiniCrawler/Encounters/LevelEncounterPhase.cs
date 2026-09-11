@@ -17,13 +17,30 @@ namespace MiniCrawler.Encounters
 
         private LevelSpawnGroup[] spawnGroups = Array.Empty<LevelSpawnGroup>();
         private float elapsedSeconds;
+        
+        private bool hasRuntimeAuthoringOverride;
+        private string runtimeDisplayName;
+        private float runtimeAdvanceAfterSeconds;
+        private bool runtimeAdvanceWhenCleared;
 
-        public string DisplayName => string.IsNullOrWhiteSpace(displayName) ? name : displayName;
+        public string AuthoredDisplayName => string.IsNullOrWhiteSpace(displayName) ? name : displayName;
+        public float AuthoredAdvanceAfterSeconds => advanceAfterSeconds;
+        public bool AuthoredAdvanceWhenCleared => advanceWhenCleared;
+
+        public string DisplayName => hasRuntimeAuthoringOverride
+            ? ResolveDisplayName(runtimeDisplayName)
+            : AuthoredDisplayName;
+
         public IReadOnlyList<LevelSpawnGroup> SpawnGroups => spawnGroups;
+
         public bool IsStarted { get; private set; }
         public float ElapsedSeconds => elapsedSeconds;
-        public float AdvanceAfterSeconds => advanceAfterSeconds;
-        public bool AdvanceWhenCleared => advanceWhenCleared;
+
+        public float AdvanceAfterSeconds =>
+            hasRuntimeAuthoringOverride ? runtimeAdvanceAfterSeconds : advanceAfterSeconds;
+
+        public bool AdvanceWhenCleared =>
+            hasRuntimeAuthoringOverride ? runtimeAdvanceWhenCleared : advanceWhenCleared;
 
         public bool IsCleared
         {
@@ -63,6 +80,27 @@ namespace MiniCrawler.Encounters
         private void Awake()
         {
             RefreshOwnedSpawnGroups();
+        }
+        
+        public void SetRuntimeAuthoringOverride(string newDisplayName, float newAdvanceAfterSeconds, bool newAdvanceWhenCleared)
+        {
+            hasRuntimeAuthoringOverride = true;
+            runtimeDisplayName = newDisplayName;
+            runtimeAdvanceAfterSeconds = Mathf.Max(0f, newAdvanceAfterSeconds);
+            runtimeAdvanceWhenCleared = newAdvanceWhenCleared;
+        }
+
+        public void ClearRuntimeAuthoringOverride()
+        {
+            hasRuntimeAuthoringOverride = false;
+            runtimeDisplayName = null;
+            runtimeAdvanceAfterSeconds = 0f;
+            runtimeAdvanceWhenCleared = false;
+        }
+
+        private string ResolveDisplayName(string value)
+        {
+            return string.IsNullOrWhiteSpace(value) ? name : value;
         }
 
         public void PrepareForLevel()
@@ -120,10 +158,10 @@ namespace MiniCrawler.Encounters
             if (!IsStarted)
                 return false;
 
-            if (advanceWhenCleared && IsCleared)
+            if (AdvanceWhenCleared && IsCleared)
                 return true;
 
-            return advanceAfterSeconds > 0f && elapsedSeconds >= advanceAfterSeconds;
+            return AdvanceAfterSeconds > 0f && elapsedSeconds >= AdvanceAfterSeconds;
         }
 
         private void RefreshOwnedSpawnGroups()
@@ -136,6 +174,10 @@ namespace MiniCrawler.Encounters
                 if (group != null && group.GetComponentInParent<LevelEncounterPhase>() == this)
                     ownedGroups.Add(group);
             }
+
+            ownedGroups.Sort(
+                (a, b) => a.transform.GetSiblingIndex().CompareTo(b.transform.GetSiblingIndex())
+            );
 
             spawnGroups = ownedGroups.ToArray();
         }

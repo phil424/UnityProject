@@ -680,3 +680,168 @@ Replay
 
 The Workshop remains the preferred place for tuning future announcement timing,
 animation, audio and encounter visual language.
+
+# 3.0J5 — Editable Encounter Draft
+
+The Workshop now maintains an editable runtime `EncounterWorkshopDraft`.
+
+The Draft is initialized from the scene-authored Workshop encounter.
+
+Flow:
+
+Scene Encounter
+↓
+Capture Draft
+↓
+Edit Draft
+↓
+Apply Runtime Overrides
+↓
+Replay Scenario
+
+Draft editing does not directly modify the serialized scene encounter.
+
+Leaving Play Mode therefore discards unsaved Draft experimentation.
+
+## Initial Editable Surface
+
+3.0J5 exposes:
+
+Encounter identity:
+- Display Name;
+- Description.
+
+Phase configuration:
+- Phase Display Name;
+- advance delay;
+- Advance When Cleared.
+
+Spawn entry configuration:
+- Actor Definition from the Workshop authoring palette;
+- Count;
+- Start Delay;
+- Batch Size;
+- Time Between Spawns;
+- Time Between Batches.
+
+Spawn-region configuration:
+- Point;
+- Circle;
+- Box;
+- Circle Radius;
+- Box Width;
+- Box Depth.
+
+The first Draft intentionally edits existing encounter structure.
+
+It does not yet:
+- add or remove phases;
+- add or remove spawn groups;
+- add or remove spawn entries;
+- add/remove triggers;
+- save assets.
+
+Those structural/export operations follow after the Draft data model has been
+proven through actual encounter iteration.
+
+## Runtime Override Seams
+
+The Workshop uses explicit runtime override seams on:
+
+- `LevelEncounter`;
+- `LevelEncounterPhase`;
+- `LevelSpawnGroup`;
+- `LevelSpawnSource`.
+
+Normal scene-authored gameplay continues consuming authored values when no
+runtime override exists.
+
+These seams provide a bridge for future:
+
+`EncounterDefinition`
+↓
+runtime encounter construction / configuration
+
+without requiring the Workshop to mutate serialized scene objects.
+
+## Draft State
+
+The Workshop distinguishes:
+
+Source Copy
+→ no Draft edits have been made.
+
+Modified — Unsaved
+→ Draft differs from its initial source capture.
+
+Preview Current
+→ the running scenario was created from the latest Draft revision.
+
+Replay Required
+→ Draft has changed since the running scenario was created.
+
+This keeps encounter comparisons deliberate rather than mutating an active fight
+halfway through.
+
+# 3.0J6 — Encounter Definition Save / Load
+
+The Workshop Draft may now be persisted into a portable
+`EncounterDefinition` ScriptableObject.
+
+Workflow:
+
+Scene Source
+↓
+Draft
+↓
+Preview / Replay
+↓
+Save As
+↓
+EncounterDefinition.asset
+
+A saved Definition can later be:
+
+Load
+↓
+Draft
+↓
+Edit
+↓
+Replay
+↓
+Save.
+
+## Source Semantics
+
+When no Definition is loaded:
+
+`Reset From Source`
+returns to the scene-authored Workshop encounter.
+
+When a Definition is loaded:
+
+`Reset From Source`
+returns to the latest saved state of that Definition.
+
+## Safety
+
+Draft modifications remain unsaved until explicit:
+
+`Save`
+
+or:
+
+`Save As`.
+
+Applying / replaying a Draft does not itself modify the asset.
+
+## Structural Compatibility
+
+J6 intentionally does not dynamically rebuild Workshop hierarchy.
+
+Loaded Definitions must fit the current Workshop site's phase/group/source
+structure.
+
+This limitation keeps the first persistence step small while preserving a clear
+path toward future Encounter Site / Runtime Instance architecture.

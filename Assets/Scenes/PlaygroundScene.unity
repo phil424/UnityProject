@@ -5188,6 +5188,7 @@ GameObject:
   m_Component:
   - component: {fileID: 641285803}
   - component: {fileID: 641285804}
+  - component: {fileID: 641285805}
   m_Layer: 0
   m_Name: Dormant Horde Encounter
   m_TagString: Untagged
@@ -5243,6 +5244,20 @@ MonoBehaviour:
   presentationState: 0
   availabilitySequence: 0
   startedSequence: 0
+--- !u!114 &641285805
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 641285802}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9fd2438c7fc10f940830b301ad0e59ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Encounters.LevelEncounterDefinitionBinding
+  definition: {fileID: 11400000, guid: 52d08b5623601a44c907e56bddefcf34, type: 2}
+  encounter: {fileID: 641285804}
 --- !u!1 &648789466
 GameObject:
   m_ObjectHideFlags: 0

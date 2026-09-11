@@ -202,14 +202,16 @@
   },
   "active": "f3554c7cd0292fc7",
   "lastOpenFiles": [
-    "Development Rules.md",
-    "ProjectManagement/Roadmap.md",
     "00 - Core/06 - Design Decision Log.md",
-    "Design/Technical/Encounter Workshop.md",
-    "Design/UI-UX.md",
     "Design/Technical/Level Authoring and Encounters.md",
-    "Design/Technical/Encounter Workshop.md.meta",
+    "Design/Technical/Encounter Workshop.md",
     "00 - Core/00 - Game Design Index.md",
+    "Design/Technical/Encounter Definitions.md",
+    "ProjectManagement/Roadmap.md",
+    "Design/Technical/Untitled",
+    "Development Rules.md",
+    "Design/UI-UX.md",
+    "Design/Technical/Encounter Workshop.md.meta",
     "Design/Technical/World Events.md.meta",
     "Design/Technical/Expedition Scheduling and Encounter Generation.md",
     "Design/World/Ecology.md",
@@ -235,7 +237,6 @@
     "Design/Characters/Support Characters.md.meta",
     "Design/Enemies.md",
     "Design/Characters/Abilities.md.meta",
-    "00 - Core/00 - Game Design Index.md.meta",
-    "Design/Combat.meta"
+    "00 - Core/00 - Game Design Index.md.meta"
   ]
 }

@@ -1,0 +1,53 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24d656a2a890b56489e9d278517ae491, type: 3}
+  m_Name: WideHordeDefinition
+  m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Encounters.EncounterDefinition
+  id: WideHordeDefinition
+  displayName: Wide Horde
+  description: A horde covering a large area
+  phases:
+  - displayName: Initial Horde
+    advanceAfterSeconds: 5.042651
+    advanceWhenCleared: 1
+    spawnGroups:
+    - label: Phase 1 - Initial Horde
+      entries:
+      - actor: {fileID: 11400000, guid: f94bb2855b5c0e24eac3845bce957198, type: 2}
+        count: 12
+        startDelay: 0
+        batchSize: 3
+        timeBetweenSpawns: 0
+        timeBetweenBatches: 0
+      spawnSources:
+      - label: Phase 1 - Initial Horde
+        shape: 1
+        radius: 10.0274935
+        boxSize: {x: 3, y: 3}
+  - displayName: Second Wave
+    advanceAfterSeconds: 0
+    advanceWhenCleared: 1
+    spawnGroups:
+    - label: Phase 2 - Second Wave
+      entries:
+      - actor: {fileID: 11400000, guid: bf739fcb6ae22f644b59f5e39568fd7e, type: 2}
+        count: 2
+        startDelay: 0
+        batchSize: 1
+        timeBetweenSpawns: 4.0910006
+        timeBetweenBatches: 0
+      spawnSources:
+      - label: Phase 2 - Second Wave
+        shape: 2
+        radius: 5
+        boxSize: {x: 12.09878, y: 4.0892906}
+  unphasedGroups: []

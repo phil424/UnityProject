@@ -51,6 +51,10 @@ namespace MiniCrawler.Encounters
 
         private LevelSpawnGroup[] spawnGroups = Array.Empty<LevelSpawnGroup>();
         private LevelEncounterPhase[] phases = Array.Empty<LevelEncounterPhase>();
+        
+        private bool hasRuntimeIdentityOverride;
+        private string runtimeDisplayName;
+        private string runtimeDescription;
 
         public event Action<LevelEncounter, EncounterPresentationState> StateChanged;
         public event Action<LevelEncounter> Started;
@@ -58,8 +62,17 @@ namespace MiniCrawler.Encounters
         public event Action<LevelEncounter> Completed;
 
         public string Id => string.IsNullOrWhiteSpace(id) ? name : id;
-        public string DisplayName => string.IsNullOrWhiteSpace(displayName) ? name : displayName;
-        public string Description => description ?? string.Empty;
+
+        public string AuthoredDisplayName => string.IsNullOrWhiteSpace(displayName) ? name : displayName;
+        public string AuthoredDescription => description ?? string.Empty;
+
+        public string DisplayName => hasRuntimeIdentityOverride
+            ? ResolveDisplayName(runtimeDisplayName)
+            : AuthoredDisplayName;
+
+        public string Description => hasRuntimeIdentityOverride
+            ? runtimeDescription ?? string.Empty
+            : AuthoredDescription;
         
         public bool HasStarted => isStarted;
         public long StartedSequence => startedSequence;
@@ -122,6 +135,25 @@ namespace MiniCrawler.Encounters
         private void Update()
         {
             UpdatePhaseProgression(Time.deltaTime);
+        }
+        
+        public void SetRuntimeIdentityOverride(string newDisplayName, string newDescription)
+        {
+            hasRuntimeIdentityOverride = true;
+            runtimeDisplayName = newDisplayName;
+            runtimeDescription = newDescription;
+        }
+
+        public void ClearRuntimeIdentityOverride()
+        {
+            hasRuntimeIdentityOverride = false;
+            runtimeDisplayName = null;
+            runtimeDescription = null;
+        }
+
+        private string ResolveDisplayName(string value)
+        {
+            return string.IsNullOrWhiteSpace(value) ? name : value;
         }
 
         public void PrepareForLevel()

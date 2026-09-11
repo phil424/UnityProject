@@ -152,6 +152,7 @@ A previous design that has intentionally been replaced.
 - [[Expedition Scheduling and Encounter Generation]]
 - [[World Events]]
 - [[Encounter Workshop]]
+- [[Encounter Definitions]]
 
 # Project Management
 

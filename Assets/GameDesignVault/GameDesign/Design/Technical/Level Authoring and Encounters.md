@@ -737,6 +737,81 @@ Availability Sequence
 Started Sequence
 → when the player actually began that encounter.
 
+# Runtime Encounter Authoring Overrides
+
+Scene-authored encounter components remain the current source content model.
+
+3.0J5 introduces runtime authoring overrides so the Encounter Workshop can
+preview experimental values without changing serialized scene content.
+
+Current override surfaces:
+
+`LevelEncounter`
+- Display Name;
+- Description.
+
+`LevelEncounterPhase`
+- Display Name;
+- phase transition delay;
+- advance-on-clear.
+
+`LevelSpawnGroup`
+- spawn-entry schedule.
+
+`LevelSpawnSource`
+- spawn shape;
+- radius;
+- box size.
+
+When no override is present, normal authored component values are used.
+
+The runtime override layer is not itself the final Encounter Definition model.
+
+It is a preview/application seam that can later consume portable authored
+Encounter Definition data.
+
+# Encounter Definition Binding
+
+A scene encounter may optionally receive its gameplay recipe from an
+`EncounterDefinition`.
+
+Authoring shape:
+
+LevelEncounter
+├── LevelEncounterDefinitionBinding
+├── Phase...
+└── ...
+
+The scene hierarchy currently acts as the compatible physical/runtime template.
+
+`LevelEncounterDefinitionBinding` applies the Definition through runtime
+override seams before the expedition uses the encounter.
+
+When no Definition Binding exists, the original scene-authored encounter
+behaviour remains valid.
+
+This allows data-driven encounter content to be introduced incrementally rather
+than requiring an immediate migration of every existing encounter.
+
+## Current Boundary
+
+Encounter Definition answers:
+
+> What happens?
+
+Scene encounter/site answers:
+
+> Where can it happen?
+
+Runtime encounter answers:
+
+> What is happening in this occurrence?
+
+The boundary is still evolving.
+
+Full Encounter Site / Runtime Encounter Instance separation remains future
+architecture.
+
 # Open Questions
 
 - Required versus optional encounter semantics.

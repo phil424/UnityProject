@@ -23,6 +23,40 @@ namespace MiniCrawler.Spawning
             [SerializeField, Min(1)] private int batchSize = 1;
             [SerializeField, Min(0f)] private float timeBetweenSpawns;
             [SerializeField, Min(0f)] private float timeBetweenBatches;
+            
+            public SpawnEntry()
+            {
+            }
+
+            public SpawnEntry(
+                ActorDefinition actor,
+                int count,
+                float startDelay,
+                int batchSize,
+                float timeBetweenSpawns,
+                float timeBetweenBatches)
+            {
+                this.actor = actor;
+                this.count = count;
+                this.startDelay = startDelay;
+                this.batchSize = batchSize;
+                this.timeBetweenSpawns = timeBetweenSpawns;
+                this.timeBetweenBatches = timeBetweenBatches;
+
+                ClampValues();
+            }
+
+            public SpawnEntry Clone()
+            {
+                return new SpawnEntry(
+                    actor,
+                    count,
+                    startDelay,
+                    batchSize,
+                    timeBetweenSpawns,
+                    timeBetweenBatches
+                );
+            }
 
             public ActorDefinition Actor => actor;
             public int Count => count;
@@ -63,10 +97,15 @@ namespace MiniCrawler.Spawning
         private bool hasRuntimeStartBehaviorOverride;
         private bool runtimeStartSpawning;
         private bool runtimeStartCombatActive;
+        private List<SpawnEntry> runtimeEntriesOverride;
 
         public bool StartSpawning => hasRuntimeStartBehaviorOverride ? runtimeStartSpawning : startSpawning;
         public bool StartCombatActive => hasRuntimeStartBehaviorOverride ? runtimeStartCombatActive : startCombatActive;
         public bool HasRuntimeStartBehaviorOverride => hasRuntimeStartBehaviorOverride;
+        
+        public IReadOnlyList<SpawnEntry> AuthoredEntries => entries;
+        public IReadOnlyList<LevelSpawnSource> SpawnSources => spawnSources;
+        public bool HasRuntimeScheduleOverride => runtimeEntriesOverride != null;
 
         public bool IsSpawningStarted { get; private set; }
         public bool IsCombatActive { get; private set; }
@@ -104,7 +143,7 @@ namespace MiniCrawler.Spawning
 
                 int total = 0;
 
-                foreach (SpawnEntry entry in entries)
+                foreach (SpawnEntry entry in GetEffectiveEntries())
                 {
                     if (entry != null && entry.IsConfigured)
                         total += entry.Count;
@@ -117,6 +156,30 @@ namespace MiniCrawler.Spawning
         private void Awake()
         {
             RefreshSpawnSources();
+        }
+        
+        public void SetRuntimeScheduleOverride(IReadOnlyList<SpawnEntry> schedule)
+        {
+            runtimeEntriesOverride = new List<SpawnEntry>();
+
+            if (schedule == null)
+                return;
+
+            foreach (SpawnEntry entry in schedule)
+            {
+                if (entry != null)
+                    runtimeEntriesOverride.Add(entry.Clone());
+            }
+        }
+
+        public void ClearRuntimeScheduleOverride()
+        {
+            runtimeEntriesOverride = null;
+        }
+
+        private IReadOnlyList<SpawnEntry> GetEffectiveEntries()
+        {
+            return runtimeEntriesOverride ?? entries;
         }
         
         public void SetRuntimeStartBehaviorOverride(bool shouldStartSpawning, bool shouldStartCombatActive)
@@ -161,7 +224,7 @@ namespace MiniCrawler.Spawning
             int validEntryCount = 0;
             int spawnCount = 0;
 
-            foreach (SpawnEntry entry in entries)
+            foreach (SpawnEntry entry in GetEffectiveEntries())
             {
                 if (entry == null || !entry.IsConfigured)
                     continue;
@@ -178,7 +241,7 @@ namespace MiniCrawler.Spawning
 
             SpawningStarted?.Invoke(this, spawnCount);
 
-            foreach (SpawnEntry entry in entries)
+            foreach (SpawnEntry entry in GetEffectiveEntries())
             {
                 if (entry != null && entry.IsConfigured)
                     StartCoroutine(RunEntry(entry));
@@ -303,6 +366,10 @@ namespace MiniCrawler.Spawning
                 if (owner == this)
                     ownedSources.Add(source);
             }
+
+            ownedSources.Sort(
+                (a, b) => a.transform.GetSiblingIndex().CompareTo(b.transform.GetSiblingIndex())
+            );
 
             spawnSources = ownedSources.ToArray();
         }

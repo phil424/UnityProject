@@ -11630,6 +11630,10 @@ MonoBehaviour:
     weaponLevel: 0
     armourLevel: 0
     focusLevel: 0
+  authoringActorPalette:
+  - {fileID: 11400000, guid: f94bb2855b5c0e24eac3845bce957198, type: 2}
+  - {fileID: 11400000, guid: bf739fcb6ae22f644b59f5e39568fd7e, type: 2}
+  - {fileID: 11400000, guid: 120bc4ab930fffa4bbf709c602bcb77b, type: 2}
   arrivalScenario: 0
   encounterStartMode: 0
   approachDirection: {x: 0, y: 0, z: 1}

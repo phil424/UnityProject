@@ -435,3 +435,126 @@ succession.
 - later events do not erase earlier ones;
 - layout owns stacking;
 - presentation uses unscaled UI time.
+
+## 2026-09-11 — Workshop editing uses an explicit Draft
+
+### Decision
+
+Encounter Workshop editing occurs against a temporary
+`EncounterWorkshopDraft`.
+
+Changing Workshop controls does not directly mutate saved scene encounter
+content.
+
+The Draft is explicitly applied to runtime override seams when a scenario is
+replayed.
+
+### Reason
+
+Encounter experimentation should be low-risk.
+
+A designer must be free to try extreme values without accidentally replacing
+the saved source encounter.
+
+### Implications
+
+The encounter authoring workflow distinguishes:
+
+Saved / Source Content
+↓
+Editable Draft
+↓
+Runtime Preview.
+
+J6 will add an explicit Save / Save As operation.
+
+
+## 2026-09-11 — Draft changes apply on fresh replay
+
+### Decision
+
+Changing encounter Draft values does not mutate an encounter already in
+progress.
+
+The latest Draft is applied when the Workshop reconstructs the scenario.
+
+### Reason
+
+Encounter comparisons should begin from a consistent fresh runtime state.
+
+This also avoids having to define ambiguous live-edit semantics for already
+spawned actors, running spawn coroutines or active phases.
+
+### Implications
+
+The authoring panel reports when Replay is required.
+
+Future specialised live-tuning may exist, but it is not the default encounter
+authoring behaviour.
+
+## 2026-09-11 — Encounter gameplay content becomes portable data
+
+### Decision
+
+The first reusable encounter-content artifact is
+`EncounterDefinition`, a ScriptableObject.
+
+It stores portable encounter gameplay configuration rather than scene/runtime
+occurrence state.
+
+### Reason
+
+Workshop-authored encounters must be reusable without rebuilding their gameplay
+configuration manually at every location.
+
+### Implications
+
+Encounter content can be authored through:
+
+Workshop
+→ Draft
+→ EncounterDefinition.asset.
+
+Scene encounters may consume these Definitions through a binding/application
+seam.
+
+
+## 2026-09-11 — Encounter Definition and Encounter Site remain distinct
+
+### Decision
+
+J6 does not treat an exported scene prefab as the primary encounter gameplay
+artifact.
+
+`EncounterDefinition`
+owns portable gameplay content.
+
+Scene encounter/site authoring continues to own physical placement and
+geographic references.
+
+### Reason
+
+The same authored encounter recipe should eventually be usable at multiple
+compatible world locations.
+
+Fixed spectacles may still use prefabs/site-specific content where appropriate.
+
+
+## 2026-09-11 — J6 uses structural compatibility rather than dynamic hierarchy generation
+
+### Decision
+
+The first Definition binding requires compatible scene phase/group/source
+topology.
+
+### Reason
+
+Dynamic encounter-instance construction is a larger architectural problem and
+should be informed by actual Workshop usage rather than solved speculatively.
+
+### Implications
+
+J6 proves portable content now.
+
+Future Encounter Definition / Site / Runtime Instance work will remove or relax
+the current compatibility limitation.
