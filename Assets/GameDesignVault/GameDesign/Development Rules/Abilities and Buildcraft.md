@@ -1,3 +1,5 @@
+# Abilities and Buildcraft
+
 **Status: Canonical**
 
 These rules protect the generic ability, reward and buildcraft architecture.

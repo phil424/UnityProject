@@ -1,3 +1,5 @@
+# UI Authoring
+
 **Status: Canonical**
 
 Player-facing UI work must follow this document.

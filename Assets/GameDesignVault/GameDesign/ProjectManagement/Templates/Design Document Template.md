@@ -1,7 +1,7 @@
 # Document Name
 
 **Status:** Working
-**Last Updated:** 2026-08-29
+**Last Updated:** YYYY-MM-DD
 
 ---
 
@@ -52,4 +52,4 @@ This section does NOT mean those systems should be implemented immediately.
 
 ## Related Documents
 
-- Add real `[[Wiki Links]]` here when creating the document.
+- Add real Obsidian links to relevant notes here when creating the document.

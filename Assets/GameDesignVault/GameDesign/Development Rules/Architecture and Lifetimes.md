@@ -1,3 +1,5 @@
+# Architecture and Lifetimes
+
 **Status: Canonical**
 
 These rules protect runtime ownership boundaries and favour incremental,

@@ -1,3 +1,5 @@
+# Unity Authoring
+
 **Status: Canonical**
 
 These rules govern Unity Editor instructions, scene/prefab authoring and

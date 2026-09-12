@@ -27,12 +27,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Development Rules.md",
+                "file": "ProjectManagement/Roadmap.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Development Rules"
+              "title": "Roadmap"
             }
           }
         ],
@@ -200,11 +200,33 @@
       "bases:Create new base": false
     }
   },
-  "active": "ef2b5fd24fc90e6a",
+  "active": "f3554c7cd0292fc7",
   "lastOpenFiles": [
+    "ProjectManagement/Templates/Design Document Template.md",
+    "00 - Core/00 - Game Design Index.md",
+    "Archive/Legacy Design Baselines/Core Design File.md",
+    "Archive/Legacy Design Baselines/00 - Core.md",
+    "Design/Rewards.md",
+    "Design/UI-UX.md",
+    "Development Rules.md",
     "ProjectManagement/Roadmap.md",
-    "Development Rules/Documentation.md",
     "ProjectManagement/Project Structure.md",
+    "Development Rules/Workflow and Validation.md",
+    "Development Rules/Unity Authoring.md",
+    "Development Rules/UI Authoring.md",
+    "Development Rules/Documentation.md",
+    "Development Rules/Architecture and Lifetimes.md",
+    "Development Rules/Abilities and Buildcraft.md",
+    "Development Rules/UI Authoring.md.meta",
+    "Archive/Legacy Design Baselines/Core Design File.md.meta",
+    "Archive/Legacy Design Baselines.meta",
+    "Development Rules.meta",
+    "Archive.meta",
+    "Development Rules/Workflow and Validation.md.meta",
+    "ProjectManagement/Templates/Design Document Template.md.meta",
+    "Development Rules/Abilities and Buildcraft.md.meta",
+    "Design/Technical/Expedition.meta",
+    "Development Rules/Unity Authoring.md.meta",
     "00 - Core/06 - Design Decision Log.md",
     "00 - Core/05 - Open Design Questions.md",
     "00 - Core/04 - Terminology.md",
@@ -212,31 +234,9 @@
     "00 - Core/02 - Core Gameplay Loop.md",
     "00 - Core/01 - Design Pillars.md",
     "00 - Core/00 - Game Vision.md",
-    "00 - Core/00 - Game Design Index.md",
-    "ProjectManagement/Templates/Design Document Template.md",
-    "Archive/Legacy Design Baselines/Core Design File.md",
-    "ProjectManagement/Templates",
-    "Archive/Legacy Design Baselines/00 - Core.md",
-    "Development Rules.md",
-    "Archive/Legacy Design Baselines",
-    "Archive",
-    "Design/Technical/Expedition",
-    "Design/Technical/Encounters",
     "Design/Technical/Untitled.md",
-    "Development Rules/UI Authoring.md",
-    "Development Rules/Unity Authoring.md",
-    "Development Rules/Abilities and Buildcraft.md",
-    "Development Rules/Architecture and Lifetimes.md",
-    "Development Rules/Workflow and Validation.md",
-    "Development Rules",
-    "ProjectManagement/Project Structure.md.meta",
     "Design/Technical/Encounters/Encounter Workshop.md",
     "Design/Technical/Encounters/Encounter Definitions.md",
-    "Design/Technical/Encounters/Level Authoring and Encounters.md",
-    "Design/UI-UX.md",
-    "Design/Technical/Encounter Workshop.md.meta",
-    "Design/Technical/World Events.md.meta",
-    "Design/Technical/Expedition/Expedition Scheduling and Encounter Generation.md",
-    "Design/Technical/Progression Lifetimes.md.meta"
+    "Design/Technical/Encounters/Level Authoring and Encounters.md"
   ]
 }

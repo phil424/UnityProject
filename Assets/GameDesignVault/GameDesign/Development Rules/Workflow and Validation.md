@@ -1,3 +1,5 @@
+# Workflow and Validation
+
 **Status: Canonical**
 
 These rules govern how implementation work is scoped, communicated, validated

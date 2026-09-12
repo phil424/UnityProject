@@ -268,24 +268,28 @@ Completed:
 - oversized technical documents audited without arbitrary splitting;
 - standing test-package declaration cleanup completed.
 
-### 3.0J8D — Structure Validation & Closure
+### 3.0J8D — Structure Validation & Closure ✅
 
-**Status: Active**
-
-Prove:
-- project compiles cleanly;
-- no Missing Script / Missing asset references;
-- normal expedition works;
-- Encounter Workshop works;
-- Game Design Index resolves to current documents;
+Completed:
+- project compiles cleanly after the housekeeping moves;
+- no Missing Script / Missing asset references found in primary scenes;
+- normal expedition flow validated;
+- strategic HUD / encounter presentation validated;
+- current reward path validated;
+- active developer debug tooling validated;
+- Encounter Workshop replay / dynamic topology / authored approach behaviour validated;
+- existing Encounter Definitions load correctly;
+- Game Design Index resolves to current documentation;
 - focused Development Rules are navigable from the canonical entry point;
-- no stale placeholder wiki-links remain in active documentation;
-- archived documents are clearly non-authoritative;
-- final project/document structure is understandable without historical chat context.
+- stale placeholder wiki-links removed from active documentation;
+- archived design baselines are explicitly non-authoritative;
+- final Unity and documentation structure is described by `Project Structure.md`.
 
-Take a Complete snapshot before 3.0K.
+`3.0J8Complete.zip` is the completed housekeeping checkpoint.
 
 ## 3.0K — Expanded Strategic Planner
+
+**Status: Active**
 
 ## 3.0L — Strategic Expedition Integration
 

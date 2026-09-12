@@ -1,3 +1,5 @@
+# Documentation
+
 **Status: Canonical**
 
 These rules govern the embedded Obsidian vault and technical/design
