@@ -174,39 +174,45 @@ Completed:
 - Reset From Source;
 - unsaved Play Mode experimentation does not mutate scene content.
 
-### 3.0J6 — Encounter Definition Save / Load
+### 3.0J6 — Encounter Definition Save / Load ✅
+
+Completed:
+- portable `EncounterDefinition` assets;
+- Save / Save As / Load;
+- Draft reconstruction from saved content;
+- normal expedition Definition binding;
+- one physical site can consume different compatible gameplay recipes;
+- structural compatibility validation;
+- runtime gameplay remains independent from Workshop Editor tooling.
+
+### 3.0J7 — Composable Encounter Authoring
+
+#### 3.0J7A — Trigger / Action Rules ✅
+
+Completed:
+- precision numeric authoring;
+- portable Trigger + Action Rules;
+- proximity/lifecycle/phase triggers;
+- ordered encounter actions;
+- spectacle Signal seam;
+- Rule persistence.
+
+#### 3.0J7B — Dynamic Encounter Topology
 
 **Status: Active**
 
 Prove:
-- portable `EncounterDefinition` ScriptableObject;
-- Workshop Draft can Save As a new Definition;
-- Save updates the current Definition;
-- Load reconstructs a Draft from a Definition;
-- Reset returns to the active source;
-- asset persistence survives Play Mode;
-- normal expedition gameplay does not depend on Workshop tooling;
-- compatible scene encounters can consume Definition content;
-- one physical encounter site can swap between multiple Definition assets;
-- incompatible structural content fails clearly rather than partially applying.
-
-Current limitation:
-
-Definition deployment requires compatible phase/group/source scene topology.
-
-General Encounter Site / Runtime Instance construction remains future work.
-
-### 3.0J7 — Composable Trigger / Action Authoring
-
-Expand Workshop authoring to:
-- proximity / approach triggers;
-- delayed actions;
-- phase transitions;
-- spawn / activation actions;
-- completion actions;
-- future spectacle hooks.
-
-Avoid a giant encounter-type enum.
+- authored approach radius genuinely controls encounter start;
+- stale Workshop actors cannot trigger new encounter occurrences;
+- new basic one-phase encounter Draft;
+- add Phase;
+- duplicate Phase;
+- remove Phase;
+- phase topology exists in data rather than scene structure;
+- EncounterDefinition dynamically materializes runtime phases/groups/sources;
+- Workshop assets may have arbitrary phase counts;
+- normal expedition sites can consume Definitions with different phase counts;
+- existing scene-authored encounters remain valid fallback content.
 
 ## 3.0K — Expanded Strategic Planner
 

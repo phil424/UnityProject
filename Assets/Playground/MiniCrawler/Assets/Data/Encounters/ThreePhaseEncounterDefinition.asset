@@ -1,0 +1,71 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24d656a2a890b56489e9d278517ae491, type: 3}
+  m_Name: ThreePhaseEncounterDefinition
+  m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Encounters.EncounterDefinition
+  id: ThreePhaseEncounterDefinition
+  displayName: New Encounter
+  description: 
+  phases:
+  - displayName: Phase 1 Copy
+    advanceAfterSeconds: 8
+    advanceWhenCleared: 1
+    spawnGroups:
+    - label: Phase 1 Spawn Group
+      entries:
+      - actor: {fileID: 11400000, guid: f94bb2855b5c0e24eac3845bce957198, type: 2}
+        count: 8
+        startDelay: 0
+        batchSize: 2
+        timeBetweenSpawns: 0
+        timeBetweenBatches: 0
+      spawnSources:
+      - label: Phase 1 Spawn Source
+        shape: 1
+        radius: 5
+        boxSize: {x: 3, y: 3}
+  - displayName: Phase 2
+    advanceAfterSeconds: 8
+    advanceWhenCleared: 1
+    spawnGroups:
+    - label: Phase 2 Spawn Group
+      entries:
+      - actor: {fileID: 11400000, guid: bf739fcb6ae22f644b59f5e39568fd7e, type: 2}
+        count: 2
+        startDelay: 0
+        batchSize: 2
+        timeBetweenSpawns: 0
+        timeBetweenBatches: 0
+      spawnSources:
+      - label: Phase 2 Spawn Source
+        shape: 1
+        radius: 5
+        boxSize: {x: 3, y: 3}
+  - displayName: Phase 3
+    advanceAfterSeconds: 0
+    advanceWhenCleared: 1
+    spawnGroups:
+    - label: Phase 3 Spawn Group
+      entries:
+      - actor: {fileID: 11400000, guid: 120bc4ab930fffa4bbf709c602bcb77b, type: 2}
+        count: 1
+        startDelay: 0
+        batchSize: 1
+        timeBetweenSpawns: 0
+        timeBetweenBatches: 0
+      spawnSources:
+      - label: Phase 3 Spawn Source
+        shape: 1
+        radius: 5
+        boxSize: {x: 3, y: 3}
+  unphasedGroups: []
+  rules: []

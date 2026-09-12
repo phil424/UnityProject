@@ -845,3 +845,95 @@ structure.
 
 This limitation keeps the first persistence step small while preserving a clear
 path toward future Encounter Site / Runtime Instance architecture.
+
+# 3.0J7 — Composable Trigger / Action Authoring
+
+The Workshop can now add/remove portable encounter Rules while Play Mode is
+running.
+
+Initial authoring includes:
+- approach/proximity rules;
+- encounter-start rules;
+- delayed rules;
+- phase-start rules;
+- phase-clear rules;
+- multiple ordered actions;
+- phase transitions;
+- group spawn / activation actions;
+- explicit encounter completion;
+- generic spectacle Signals.
+
+A convenience:
+
+`Add Approach Start Rule`
+
+creates:
+
+Party Proximity
+↓
+Activate Encounter Combat
+↓
+Begin Encounter Spawning.
+
+This is only a template.
+
+The resulting Trigger and Actions remain normal editable Rule data.
+
+Rules participate in the existing:
+
+Draft
+→ Replay
+→ Save / Save As
+→ EncounterDefinition.asset
+
+workflow.
+
+## Precision Numeric Authoring
+
+Workshop slider controls now pair:
+
+Slider
++
+Numeric Field.
+
+Sliders use useful snapping increments for rapid iteration.
+
+Direct fields allow exact values.
+
+This prevents serialized encounter assets accumulating accidental values such
+as:
+
+`5.042651`
+
+when the intended authored value was:
+
+`5`.
+
+# Dynamic Encounter Structure
+
+The Workshop is no longer limited by the phase count authored into
+`EncounterWorkshop.unity`.
+
+A Draft may now:
+
+- start as a fresh one-phase encounter;
+- add phases;
+- duplicate phases;
+- remove phases;
+- save arbitrary phase counts;
+- reload those Definitions;
+- preview them through runtime-generated encounter content.
+
+The default new encounter is intentionally minimal:
+
+1 Phase
+1 Spawn Group
+1 Spawn Entry
+4 Zombies
+1 Circle Spawn Region.
+
+This is the baseline from which encounter complexity should be added
+deliberately.
+
+The Workshop scene is therefore a test site / harness rather than the structural
+template for authored Encounter Definitions.

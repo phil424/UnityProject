@@ -1028,6 +1028,27 @@ As a general guide, lines around 120–140 characters are acceptable when still 
 
 Match the style already present in the latest project where practical.
 
+### Braces Around Lifecycle-Critical Conditions
+
+Compact single-line conditionals remain acceptable for trivial early returns and
+simple assignments.
+
+Use braces when a conditional gates important lifecycle behaviour such as:
+
+- spawning;
+- encounter start / completion;
+- progression reset;
+- Run / Level lifetime transitions;
+- reward application;
+- persistence;
+- destruction / cleanup.
+
+Also add braces when modifying an existing single-line conditional to place
+additional statements immediately around it.
+
+The goal is to make the guarded scope visually unambiguous and avoid accidental
+fall-through during later edits.
+
 # Authoring Ergonomics
 
 Preserving runtime separation does not require exposing every runtime seam as
@@ -1479,6 +1500,42 @@ menus or player-facing interfaces.
 
 If a development tool becomes large, reusable or designer-facing enough that
 IMGUI becomes cumbersome, promote it to a dedicated Editor/UI architecture.
+
+#### Numeric Authoring Controls
+
+When an internal authoring tool exposes meaningful numeric gameplay values,
+sliders should not be the only input method.
+
+Prefer:
+
+label
++
+slider
++
+direct numeric field.
+
+The slider should use a sensible domain-specific snapping increment where useful.
+
+Examples:
+- encounter distances: 0.25m;
+- broad timing: 0.25s;
+- fine spawn spacing: 0.05s;
+- integer counts / levels: whole numbers.
+
+The adjacent numeric field should permit direct exact entry within the allowed
+range.
+
+Direct entry should not fight the user's in-progress typing.
+
+In particular, do not rebuild the text string from the parsed numeric value on
+every frame while the field is focused.
+
+Normalize the displayed value after editing instead.
+
+Slider snapping is a usability aid.
+
+Direct numeric entry may intentionally allow values between the slider's snap
+increments when exact tuning is required.
 
 ### Transient UI Lifetime
 

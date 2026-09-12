@@ -101,32 +101,65 @@ normal encounter systems.
 
 The expedition does not depend on Workshop classes.
 
-# Compatibility
+# Runtime Content Materialization
 
-3.0J6 uses compatible scene topology.
+3.0J7B removes the requirement for a scene Encounter to contain matching
+phase/group/source topology.
 
-A Definition may currently be applied when:
+An Encounter Definition may now materialize its runtime content beneath a
+LevelEncounter.
 
-- phased/unphased structure matches;
-- phase count matches;
-- spawn-group count per phase matches;
-- spawn-source count per group matches.
+Example:
 
-Spawn-entry count does not need to match because the runtime schedule may be
-replaced completely.
+EncounterDefinition
 
-This is an intentional intermediate architecture.
+Phase 1
+Phase 2
+Phase 3
 
-Future:
+↓ runtime materialization
 
-Encounter Definition
-+
-Encounter Site
-+
-Runtime Encounter Instance
+LevelEncounter
+└── [Runtime Encounter Content]
+    ├── Phase 1
+    │   └── Spawn Group
+    │       └── Spawn Source
+    ├── Phase 2
+    │   └── Spawn Group
+    │       └── Spawn Source
+    └── Phase 3
+        └── Spawn Group
+            └── Spawn Source
 
-should allow more general construction / compatibility without requiring
-pre-existing matching phase/group hierarchy.
+The generated hierarchy exists only for the runtime occurrence.
+
+The scene no longer needs matching phase GameObjects.
+
+## Fallback Scene Content
+
+Existing scene-authored encounter content remains supported.
+
+When no runtime Definition content is active:
+
+LevelEncounter
+→ consumes authored children.
+
+When Definition content is active:
+
+LevelEncounter
+→ consumes its generated runtime-content root.
+
+This allows gradual migration rather than requiring every existing encounter to
+be converted immediately.
+
+## Current Site Boundary
+
+Generated Spawn Sources are currently relative to the Encounter anchor.
+
+This is sufficient for generic Point / Circle / Box encounters.
+
+Future Encounter Sites may expose named spatial sockets / anchors for fixed
+spectacles and more geographically specific content.
 
 # Save Semantics
 
@@ -174,3 +207,123 @@ Later Encounter Site / Runtime Instance work should address:
 - generated encounter placement;
 - runtime-instance identity;
 - repetition / encounter-pool selection.
+
+# 3.0J7 — Composable Encounter Rules
+
+Encounter Definitions may contain portable one-shot Rules.
+
+A Rule consists of:
+
+Trigger
++
+one or more ordered Actions.
+
+Example:
+
+Party Proximity
+Radius 8m
+
+→ Activate Encounter Combat
+→ Begin Encounter Spawning.
+
+Rules are composition, not Encounter Types.
+
+Do not create combinations such as:
+
+`ProximityAmbushEncounter`
+`DelayedEliteEncounter`
+`ChurchDoorEncounter`
+
+as separate runtime encounter classes when the behaviour can be expressed by
+reusable Trigger + Action vocabulary.
+
+## Initial Trigger Vocabulary
+
+3.0J7 supports:
+
+- Party Proximity;
+- Encounter Started;
+- Delay After Encounter Started;
+- Phase Started;
+- Delay After Phase Started;
+- Phase Cleared.
+
+## Initial Action Vocabulary
+
+3.0J7 supports:
+
+- Activate Encounter Combat;
+- Begin Encounter Spawning;
+- Start Phase;
+- Begin Spawn Group;
+- Activate Spawn Group;
+- Complete Encounter;
+- Raise Signal.
+
+Rules execute their Actions in authored order.
+
+This matters for sequences such as:
+
+Activate Combat
+→
+Begin Spawning.
+
+## Rule Lifetime
+
+Rules are occurrence-owned runtime behaviour.
+
+Each Rule fires at most once per encounter occurrence in the initial
+implementation.
+
+Preparing/rearming the encounter resets Rule runtime state.
+
+The portable Definition stores Rule configuration, not fired state or elapsed
+runtime timers.
+
+## Party Proximity
+
+Party Proximity is expressed relative to the encounter anchor:
+
+Encounter Transform
++
+local trigger offset
++
+radius.
+
+This allows the Workshop to author useful approach behaviour without requiring
+a new scene GameObject for every simple trigger.
+
+Future Encounter Sites may expose named authored anchors when raw local offsets
+are insufficient.
+
+## Encounter Signals
+
+`Raise Signal` provides a generic presentation/spectacle seam.
+
+Example Signal IDs might include:
+
+- `door-burst`;
+- `ground-erupt`;
+- `boss-arrival`;
+- `church-bell`.
+
+The encounter rule does not implement presentation.
+
+Presentation systems may subscribe to the encounter signal and decide what the
+signal means for the current site/content.
+
+This keeps gameplay sequencing separate from VFX/audio implementation.
+
+## Simple Phase Progression vs Rules
+
+The J3 phase fields remain valid shorthand for the common case:
+
+Timer
+OR
+Clear
+→
+next phase.
+
+Rules are an advanced authoring escape hatch.
+
+Do not require a Rule merely to express every ordinary two-wave encounter.

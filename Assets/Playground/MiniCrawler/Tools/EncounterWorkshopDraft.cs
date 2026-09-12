@@ -8,6 +8,334 @@ namespace MiniCrawler.Tools
 {
     public sealed class EncounterWorkshopDraft
     {
+        private EncounterDefinition runtimePreviewDefinition;
+        
+        private static PhaseDraft CreateDefaultPhase(
+            int phaseNumber,
+            ActorDefinition actor)
+        {
+            PhaseDraft phase = new(
+                $"Phase {phaseNumber}",
+                advanceAfterSeconds: 0f,
+                advanceWhenCleared: true
+            );
+
+            SpawnGroupDraft group =
+                new($"Phase {phaseNumber} Spawn Group");
+
+            group.Entries.Add(
+                new SpawnEntryDraft{
+                    Actor = actor,
+                    Count = 4,
+                    StartDelay = 0f,
+                    BatchSize = 4,
+                    TimeBetweenSpawns = 0f,
+                    TimeBetweenBatches = 0f
+                }
+            );
+
+            group.Sources.Add(
+                new SpawnSourceDraft(
+                    $"Phase {phaseNumber} Spawn Source",
+                    LevelSpawnSource.SpawnShape.Circle,
+                    radius: 5f,
+                    boxSize: new Vector2(3f, 3f)
+                )
+            );
+
+            phase.Groups.Add(group);
+
+            return phase;
+        }
+        
+        public void CreateBasic(
+            LevelEncounter encounter,
+            ActorDefinition actor)
+        {
+            ClearRuntimeOverrides();
+
+            sourceEncounter = encounter;
+
+            DisplayName = "New Encounter";
+            Description = string.Empty;
+
+            Phases.Clear();
+            UnphasedGroups.Clear();
+            Rules.Clear();
+
+            Phases.Add(
+                CreateDefaultPhase(
+                    phaseNumber: 1,
+                    actor
+                )
+            );
+
+            ResetRevisions();
+            MarkModified();
+        }
+        
+        public void AddPhase(ActorDefinition actor)
+        {
+            if (Phases.Count == 0 &&
+                UnphasedGroups.Count > 0)
+            {
+                PhaseDraft converted = new(
+                    "Phase 1",
+                    advanceAfterSeconds: 0f,
+                    advanceWhenCleared: true
+                );
+
+                foreach (SpawnGroupDraft group in UnphasedGroups)
+                    converted.Groups.Add(new SpawnGroupDraft(group));
+
+                Phases.Add(converted);
+                UnphasedGroups.Clear();
+            }
+
+            if (Phases.Count > 0)
+            {
+                PhaseDraft previousFinal =
+                    Phases[Phases.Count - 1];
+
+                if (previousFinal.AdvanceAfterSeconds <= 0f)
+                    previousFinal.AdvanceAfterSeconds = 8f;
+
+                previousFinal.AdvanceWhenCleared = true;
+            }
+
+            Phases.Add(
+                CreateDefaultPhase(
+                    Phases.Count + 1,
+                    actor
+                )
+            );
+
+            MarkModified();
+            NormalizeRuleTargets();
+        }
+        
+        public void DuplicatePhase(int phaseIndex)
+        {
+            if (phaseIndex < 0 ||
+                phaseIndex >= Phases.Count)
+            {
+                return;
+            }
+
+            PhaseDraft duplicate =
+                new(Phases[phaseIndex]);
+
+            duplicate.DisplayName =
+                $"{duplicate.DisplayName} Copy";
+
+            Phases.Insert(
+                phaseIndex + 1,
+                duplicate
+            );
+
+            MarkModified();
+            NormalizeRuleTargets();
+        }
+        
+        public bool RemovePhase(int phaseIndex)
+        {
+            if (Phases.Count <= 1)
+                return false;
+
+            if (phaseIndex < 0 ||
+                phaseIndex >= Phases.Count)
+            {
+                return false;
+            }
+
+            Phases.RemoveAt(phaseIndex);
+
+            PhaseDraft finalPhase =
+                Phases[Phases.Count - 1];
+
+            finalPhase.AdvanceAfterSeconds = 0f;
+
+            MarkModified();
+            NormalizeRuleTargets();
+
+            return true;
+        }
+        
+        private void NormalizeRuleTargets()
+        {
+            int phaseCount =
+                Mathf.Max(1, Phases.Count);
+
+            foreach (RuleDraft rule in Rules)
+            {
+                if (rule == null)
+                    continue;
+
+                rule.PhaseIndex = Mathf.Clamp(
+                    rule.PhaseIndex,
+                    0,
+                    phaseCount - 1
+                );
+
+                foreach (RuleActionDraft action in rule.Actions)
+                {
+                    if (action == null)
+                        continue;
+
+                    action.PhaseIndex = Mathf.Clamp(
+                        action.PhaseIndex,
+                        0,
+                        phaseCount - 1
+                    );
+
+                    if (Phases.Count <= 0)
+                        continue;
+
+                    int groupCount = Mathf.Max(
+                        1,
+                        Phases[action.PhaseIndex].Groups.Count
+                    );
+
+                    action.GroupIndex = Mathf.Clamp(
+                        action.GroupIndex,
+                        0,
+                        groupCount - 1
+                    );
+                }
+            }
+        }
+
+        public sealed class RuleActionDraft
+        {
+            public EncounterActionKind Kind { get; set; }
+            public int PhaseIndex { get; set; }
+            public int GroupIndex { get; set; }
+            public string SignalId { get; set; }
+
+            public RuleActionDraft()
+            {
+                Kind = EncounterActionKind.ActivateEncounterCombat;
+            }
+
+            public RuleActionDraft(EncounterActionDefinition source)
+            {
+                Kind = source.Kind;
+                PhaseIndex = source.PhaseIndex;
+                GroupIndex = source.GroupIndex;
+                SignalId = source.SignalId;
+            }
+
+            public EncounterActionDefinition CreateDefinition()
+            {
+                return new EncounterActionDefinition(
+                    Kind,
+                    PhaseIndex,
+                    GroupIndex,
+                    SignalId
+                );
+            }
+        }
+
+        public sealed class RuleDraft
+        {
+            public string DisplayName { get; set; } = "Encounter Rule";
+            public bool Enabled { get; set; } = true;
+
+            public EncounterTriggerKind TriggerKind { get; set; } =
+                EncounterTriggerKind.PartyProximity;
+
+            public bool RequireEncounterAvailable { get; set; } = true;
+            public float ProximityRadius { get; set; } = 5f;
+            public Vector3 LocalOffset { get; set; }
+
+            public float DelaySeconds { get; set; }
+            public int PhaseIndex { get; set; }
+
+            public List<RuleActionDraft> Actions { get; } = new();
+
+            public RuleDraft()
+            {
+            }
+
+            public RuleDraft(EncounterRuleDefinition source)
+            {
+                DisplayName = source.DisplayName;
+                Enabled = source.Enabled;
+
+                EncounterTriggerDefinition trigger = source.Trigger;
+
+                if (trigger != null)
+                {
+                    TriggerKind = trigger.Kind;
+                    RequireEncounterAvailable = trigger.RequireEncounterAvailable;
+                    ProximityRadius = trigger.ProximityRadius;
+                    LocalOffset = trigger.LocalOffset;
+                    DelaySeconds = trigger.DelaySeconds;
+                    PhaseIndex = trigger.PhaseIndex;
+                }
+
+                foreach (EncounterActionDefinition action in source.Actions)
+                {
+                    if (action != null)
+                        Actions.Add(new RuleActionDraft(action));
+                }
+            }
+
+            public EncounterRuleDefinition CreateDefinition()
+            {
+                EncounterTriggerDefinition trigger = new(
+                    TriggerKind,
+                    RequireEncounterAvailable,
+                    ProximityRadius,
+                    LocalOffset,
+                    DelaySeconds,
+                    PhaseIndex
+                );
+
+                List<EncounterActionDefinition> actions = new();
+
+                foreach (RuleActionDraft action in Actions)
+                {
+                    if (action != null)
+                        actions.Add(action.CreateDefinition());
+                }
+
+                return new EncounterRuleDefinition(
+                    DisplayName,
+                    Enabled,
+                    trigger,
+                    actions
+                );
+            }
+
+            public static RuleDraft CreateApproachStartRule()
+            {
+                RuleDraft rule = new()
+                {
+                    DisplayName = "Approach Start",
+                    TriggerKind = EncounterTriggerKind.PartyProximity,
+                    RequireEncounterAvailable = true,
+                    ProximityRadius = 6f
+                };
+
+                rule.Actions.Add(
+                    new RuleActionDraft
+                    {
+                        Kind = EncounterActionKind.ActivateEncounterCombat
+                    }
+                );
+
+                rule.Actions.Add(
+                    new RuleActionDraft
+                    {
+                        Kind = EncounterActionKind.BeginEncounterSpawning
+                    }
+                );
+
+                return rule;
+            }
+        }
+    
         public sealed class SpawnEntryDraft
         {
             public ActorDefinition Actor { get; set; }
@@ -16,6 +344,20 @@ namespace MiniCrawler.Tools
             public int BatchSize { get; set; }
             public float TimeBetweenSpawns { get; set; }
             public float TimeBetweenBatches { get; set; }
+            
+            public SpawnEntryDraft()
+            {
+            }
+            
+            public SpawnEntryDraft(SpawnEntryDraft source)
+            {
+                Actor = source.Actor;
+                Count = source.Count;
+                StartDelay = source.StartDelay;
+                BatchSize = source.BatchSize;
+                TimeBetweenSpawns = source.TimeBetweenSpawns;
+                TimeBetweenBatches = source.TimeBetweenBatches;
+            }
 
             public SpawnEntryDraft(LevelSpawnGroup.SpawnEntry source)
             {
@@ -64,13 +406,14 @@ namespace MiniCrawler.Tools
 
         public sealed class SpawnSourceDraft
         {
-            public LevelSpawnSource Source { get; }
+            public LevelSpawnSource Source { get; private set; }
 
             public LevelSpawnSource.SpawnShape Shape { get; set; }
             public float Radius { get; set; }
             public Vector2 BoxSize { get; set; }
 
-            public string Name => Source != null ? Source.gameObject.name : "Spawn Source";
+            public string Name => string.IsNullOrWhiteSpace(Label) ? "Spawn Source" : Label;
+            public string Label { get; set; } = "Spawn Source";
 
             public SpawnSourceDraft(LevelSpawnSource source)
             {
@@ -78,6 +421,8 @@ namespace MiniCrawler.Tools
                 Shape = source.AuthoredShape;
                 Radius = source.AuthoredRadius;
                 BoxSize = source.AuthoredBoxSize;
+                
+                Label = source != null ? source.gameObject.name : "Spawn Source";
             }
 
             public SpawnSourceDraft(
@@ -88,6 +433,28 @@ namespace MiniCrawler.Tools
                 Shape = definition.Shape;
                 Radius = definition.Radius;
                 BoxSize = definition.BoxSize;
+                
+                Label = string.IsNullOrWhiteSpace(definition.Label) ? "Spawn Source" : definition.Label;
+            }
+            
+            public SpawnSourceDraft(
+                string label,
+                LevelSpawnSource.SpawnShape shape,
+                float radius,
+                Vector2 boxSize)
+            {
+                Label = label;
+                Shape = shape;
+                Radius = radius;
+                BoxSize = boxSize;
+            }
+            
+            public SpawnSourceDraft(SpawnSourceDraft source)
+            {
+                Label = source.Label;
+                Shape = source.Shape;
+                Radius = source.Radius;
+                BoxSize = source.BoxSize;
             }
 
             public void Apply()
@@ -113,12 +480,67 @@ namespace MiniCrawler.Tools
 
         public sealed class SpawnGroupDraft
         {
-            public LevelSpawnGroup Source { get; }
+            public LevelSpawnGroup Source { get; private set; }
 
             public List<SpawnEntryDraft> Entries { get; } = new();
             public List<SpawnSourceDraft> Sources { get; } = new();
 
-            public string Name => Source != null ? Source.gameObject.name : "Spawn Group";
+            public string Name => string.IsNullOrWhiteSpace(Label) ? "Spawn Group" : Label;
+            
+            public string Label { get; set; } = "Spawn Group";
+            
+            public SpawnGroupDraft(string label)
+            {
+                Label = label;
+            }
+            
+            public SpawnGroupDraft(SpawnGroupDraft source)
+            {
+                Label = source.Label;
+
+                foreach (SpawnEntryDraft entry in source.Entries)
+                {
+                    if (entry != null)
+                        Entries.Add(new SpawnEntryDraft(entry));
+                }
+
+                foreach (SpawnSourceDraft spawnSource in source.Sources)
+                {
+                    if (spawnSource != null)
+                        Sources.Add(new SpawnSourceDraft(spawnSource));
+                }
+            }
+            
+            public SpawnGroupDraft(
+                EncounterDefinition.SpawnGroupDefinition definition)
+            {
+                Label = string.IsNullOrWhiteSpace(definition.Label)
+                    ? "Spawn Group"
+                    : definition.Label;
+
+                foreach (EncounterDefinition.SpawnEntryDefinition entry
+                        in definition.Entries)
+                {
+                    if (entry != null)
+                        Entries.Add(new SpawnEntryDraft(entry));
+                }
+
+                foreach (EncounterDefinition.SpawnSourceDefinition source
+                        in definition.SpawnSources)
+                {
+                    if (source == null)
+                        continue;
+
+                    Sources.Add(
+                        new SpawnSourceDraft(
+                            source.Label,
+                            source.Shape,
+                            source.Radius,
+                            source.BoxSize
+                        )
+                    );
+                }
+            }
 
             public SpawnGroupDraft(LevelSpawnGroup source)
             {
@@ -135,6 +557,8 @@ namespace MiniCrawler.Tools
                     if (spawnSource != null)
                         Sources.Add(new SpawnSourceDraft(spawnSource));
                 }
+                
+                Label = source != null ? source.gameObject.name : "Spawn Group";
             }
 
             public SpawnGroupDraft(
@@ -158,6 +582,8 @@ namespace MiniCrawler.Tools
                         )
                     );
                 }
+                
+                Label = string.IsNullOrWhiteSpace(definition.Label) ? "Spawn Group" : definition.Label;
             }
 
             public void Apply()
@@ -211,7 +637,7 @@ namespace MiniCrawler.Tools
 
         public sealed class PhaseDraft
         {
-            public LevelEncounterPhase Source { get; }
+            public LevelEncounterPhase Source { get; private set; }
 
             public string DisplayName { get; set; }
             public float AdvanceAfterSeconds { get; set; }
@@ -231,6 +657,29 @@ namespace MiniCrawler.Tools
                     if (group != null)
                         Groups.Add(new SpawnGroupDraft(group));
                 }
+            }
+            
+            public PhaseDraft(PhaseDraft source)
+            {
+                DisplayName = source.DisplayName;
+                AdvanceAfterSeconds = source.AdvanceAfterSeconds;
+                AdvanceWhenCleared = source.AdvanceWhenCleared;
+
+                foreach (SpawnGroupDraft group in source.Groups)
+                {
+                    if (group != null)
+                        Groups.Add(new SpawnGroupDraft(group));
+                }
+            }
+            
+            public PhaseDraft(
+                string displayName,
+                float advanceAfterSeconds,
+                bool advanceWhenCleared)
+            {
+                DisplayName = displayName;
+                AdvanceAfterSeconds = advanceAfterSeconds;
+                AdvanceWhenCleared = advanceWhenCleared;
             }
 
             public PhaseDraft(
@@ -303,6 +752,7 @@ namespace MiniCrawler.Tools
 
         public List<PhaseDraft> Phases { get; } = new();
         public List<SpawnGroupDraft> UnphasedGroups { get; } = new();
+        public List<RuleDraft> Rules { get; } = new();
 
         public LevelEncounter SourceEncounter => sourceEncounter;
 
@@ -317,6 +767,7 @@ namespace MiniCrawler.Tools
 
             Phases.Clear();
             UnphasedGroups.Clear();
+            Rules.Clear();
 
             if (encounter == null)
             {
@@ -361,20 +812,31 @@ namespace MiniCrawler.Tools
 
             Phases.Clear();
             UnphasedGroups.Clear();
+            Rules.Clear();
 
             DisplayName = definition.DisplayName;
             Description = definition.Description;
 
             if (definition.IsPhased)
             {
-                for (int i = 0; i < definition.Phases.Count; i++)
+                foreach (EncounterDefinition.PhaseDefinition phaseDefinition
+                        in definition.Phases)
                 {
-                    Phases.Add(
-                        new PhaseDraft(
-                            encounter.Phases[i],
-                            definition.Phases[i]
-                        )
+                    PhaseDraft phase = new(
+                        phaseDefinition.DisplayName,
+                        phaseDefinition.AdvanceAfterSeconds,
+                        phaseDefinition.AdvanceWhenCleared
                     );
+
+                    foreach (EncounterDefinition.SpawnGroupDefinition groupDefinition
+                            in phaseDefinition.SpawnGroups)
+                    {
+                        phase.Groups.Add(
+                            new SpawnGroupDraft(groupDefinition)
+                        );
+                    }
+
+                    Phases.Add(phase);
                 }
             }
             else
@@ -390,6 +852,12 @@ namespace MiniCrawler.Tools
                         )
                     );
                 }
+            }
+            
+            foreach (EncounterRuleDefinition rule in definition.Rules)
+            {
+                if (rule != null)
+                    Rules.Add(new RuleDraft(rule));
             }
 
             ResetRevisions();
@@ -411,26 +879,64 @@ namespace MiniCrawler.Tools
             if (sourceEncounter == null)
                 return;
 
-            sourceEncounter.SetRuntimeIdentityOverride(DisplayName, Description);
+            if (runtimePreviewDefinition != null)
+            {
+                UnityEngine.Object.Destroy(
+                    runtimePreviewDefinition
+                );
+            }
 
-            foreach (PhaseDraft phase in Phases)
-                phase?.Apply();
+            runtimePreviewDefinition =
+                ScriptableObject.CreateInstance<EncounterDefinition>();
 
-            foreach (SpawnGroupDraft group in UnphasedGroups)
-                group?.Apply();
+            runtimePreviewDefinition.name =
+                "Workshop Runtime Preview";
+
+            WriteToDefinition(runtimePreviewDefinition);
+
+            runtimePreviewDefinition.EnsureId(
+                "workshop-runtime-preview"
+            );
+
+            if (!EncounterDefinitionRuntimeApplicator.TryApply(
+                    runtimePreviewDefinition,
+                    sourceEncounter,
+                    out string error))
+            {
+                Debug.LogError(
+                    $"Could not apply Workshop Draft: {error}",
+                    sourceEncounter
+                );
+
+                return;
+            }
 
             appliedRevision = revision;
         }
 
         public void ClearRuntimeOverrides()
         {
-            sourceEncounter?.ClearRuntimeIdentityOverride();
+            if (sourceEncounter != null)
+            {
+                EncounterRuleRunner.ClearFrom(
+                    sourceEncounter
+                );
 
-            foreach (PhaseDraft phase in Phases)
-                phase?.Clear();
+                EncounterRuntimeContentBuilder.Clear(
+                    sourceEncounter
+                );
 
-            foreach (SpawnGroupDraft group in UnphasedGroups)
-                group?.Clear();
+                sourceEncounter.ClearRuntimeIdentityOverride();
+            }
+
+            if (runtimePreviewDefinition != null)
+            {
+                UnityEngine.Object.Destroy(
+                    runtimePreviewDefinition
+                );
+
+                runtimePreviewDefinition = null;
+            }
         }
 
         public void WriteToDefinition(EncounterDefinition definition)
@@ -440,6 +946,13 @@ namespace MiniCrawler.Tools
 
             List<EncounterDefinition.PhaseDefinition> phaseDefinitions = new();
             List<EncounterDefinition.SpawnGroupDefinition> unphasedDefinitions = new();
+            List<EncounterRuleDefinition> ruleDefinitions = new();
+
+            foreach (RuleDraft rule in Rules)
+            {
+                if (rule != null)
+                    ruleDefinitions.Add(rule.CreateDefinition());
+            }
 
             foreach (PhaseDraft phase in Phases)
             {
@@ -457,7 +970,8 @@ namespace MiniCrawler.Tools
                 DisplayName,
                 Description,
                 phaseDefinitions,
-                unphasedDefinitions
+                unphasedDefinitions,
+                ruleDefinitions
             );
         }
 

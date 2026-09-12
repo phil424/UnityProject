@@ -135,15 +135,29 @@ namespace MiniCrawler.Encounters
             if (SelectedEncounter == null)
                 return;
 
-            // Prototype default: reaching a selected encounter commits to its gameplay.
-            // Existing authored triggers may still begin spawning/activate combat earlier.
-            SelectedEncounter.ActivateCombat();
-            SelectedEncounter.BeginSpawning();
+            bool hasAuthoredStart =
+                SelectedEncounter.TryGetAuthoredPartyProximityStart(
+                    out _,
+                    out _
+                );
+
+            if (!hasAuthoredStart)
+            {
+                // Legacy/default behaviour for encounters without
+                // an authored start Rule.
+                SelectedEncounter.ActivateCombat();
+                SelectedEncounter.BeginSpawning();
+            }
 
             ClearPartyNavigationIntents();
             IsTravelling = false;
 
-            Debug.Log($"Encounter directive arrived: {SelectedEncounter.DisplayName}", this);
+            Debug.Log(
+                hasAuthoredStart
+                    ? $"Encounter directive reached authored start boundary: {SelectedEncounter.DisplayName}"
+                    : $"Encounter directive arrived: {SelectedEncounter.DisplayName}",
+                this
+            );
         }
 
         private void ApplyTravelIntentToParty()
@@ -166,7 +180,39 @@ namespace MiniCrawler.Encounters
                 if (navigation == null)
                     navigation = partyMember.gameObject.AddComponent<ActorNavigationIntent>();
 
-                navigation.SetDestination(this, SelectedEncounter.AnchorPosition, arrivalDistance, suppressCombatTargeting: true);
+                ResolveTravelTarget(
+                    out Vector3 destination,
+                    out float stoppingDistance
+                );
+
+                navigation.SetDestination(
+                    this,
+                    destination,
+                    stoppingDistance,
+                    suppressCombatTargeting: true
+                );
+            }
+        }
+        
+        private void ResolveTravelTarget(
+            out Vector3 destination,
+            out float stoppingDistance)
+        {
+            destination = SelectedEncounter != null
+                ? SelectedEncounter.AnchorPosition
+                : Vector3.zero;
+
+            stoppingDistance = arrivalDistance;
+
+            if (SelectedEncounter == null)
+                return;
+
+            if (SelectedEncounter.TryGetAuthoredPartyProximityStart(
+                    out Vector3 triggerCentre,
+                    out float triggerRadius))
+            {
+                destination = triggerCentre;
+                stoppingDistance = triggerRadius;
             }
         }
 
@@ -209,12 +255,19 @@ namespace MiniCrawler.Encounters
             }
         }
 
-        private static bool IsLivingPartyMember(PartyMember partyMember)
+        private bool IsLivingPartyMember(PartyMember partyMember)
         {
             if (partyMember == null)
                 return false;
 
+            if (stageDirector != null &&
+                !stageDirector.IsCurrentPartyMember(partyMember))
+            {
+                return false;
+            }
+
             Health health = partyMember.GetComponent<Health>();
+
             return health == null || !health.IsDead;
         }
     }

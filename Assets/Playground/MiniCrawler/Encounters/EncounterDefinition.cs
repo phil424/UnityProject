@@ -227,6 +227,9 @@ namespace MiniCrawler.Encounters
 
         [Header("Legacy / Unphased Content")]
         [SerializeField] private List<SpawnGroupDefinition> unphasedGroups = new();
+        
+        [Header("Rules")]
+        [SerializeField] private List<EncounterRuleDefinition> rules = new();
 
         public string Id => string.IsNullOrWhiteSpace(id) ? name : id;
         public string DisplayName => string.IsNullOrWhiteSpace(displayName) ? name : displayName;
@@ -234,6 +237,7 @@ namespace MiniCrawler.Encounters
 
         public IReadOnlyList<PhaseDefinition> Phases => phases;
         public IReadOnlyList<SpawnGroupDefinition> UnphasedGroups => unphasedGroups;
+        public IReadOnlyList<EncounterRuleDefinition> Rules => rules;
 
         public bool IsPhased => phases.Count > 0;
 
@@ -247,13 +251,15 @@ namespace MiniCrawler.Encounters
             string newDisplayName,
             string newDescription,
             IReadOnlyList<PhaseDefinition> newPhases,
-            IReadOnlyList<SpawnGroupDefinition> newUnphasedGroups)
+            IReadOnlyList<SpawnGroupDefinition> newUnphasedGroups,
+            IReadOnlyList<EncounterRuleDefinition> newRules = null)
         {
             displayName = newDisplayName;
             description = newDescription;
 
             phases = new List<PhaseDefinition>();
             unphasedGroups = new List<SpawnGroupDefinition>();
+            rules = new List<EncounterRuleDefinition>();
 
             if (newPhases != null)
             {
@@ -270,6 +276,15 @@ namespace MiniCrawler.Encounters
                 {
                     if (group != null)
                         unphasedGroups.Add(new SpawnGroupDefinition(group));
+                }
+            }
+            
+            if (newRules != null)
+            {
+                foreach (EncounterRuleDefinition rule in newRules)
+                {
+                    if (rule != null)
+                        rules.Add(new EncounterRuleDefinition(rule));
                 }
             }
 
@@ -289,6 +304,12 @@ namespace MiniCrawler.Encounters
 
             foreach (SpawnGroupDefinition group in unphasedGroups)
                 group?.ClampValues();
+            
+            if(rules == null)
+                rules = new List<EncounterRuleDefinition>();
+            
+            foreach(EncounterRuleDefinition rule in rules)
+                rule?.ClampValues();
         }
     }
 }

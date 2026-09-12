@@ -65,6 +65,7 @@ namespace MiniCrawler.Tools
         
         private readonly List<ActorDefinition> resolvedAuthoringActors = new();
         private readonly EncounterWorkshopAuthoringPanel authoringPanel = new();
+        private readonly EncounterWorkshopNumericControls numericControls = new();
 
         private EncounterWorkshopDraft encounterDraft;
         private EncounterDefinition currentDefinition;
@@ -251,16 +252,20 @@ namespace MiniCrawler.Tools
 
         private LevelSpawnGroup[] GetOwnedSpawnGroups()
         {
-            LevelSpawnGroup[] candidates = encounter.GetComponentsInChildren<LevelSpawnGroup>(true);
-            System.Collections.Generic.List<LevelSpawnGroup> owned = new();
+            if (encounter == null)
+                return Array.Empty<LevelSpawnGroup>();
 
-            foreach (LevelSpawnGroup group in candidates)
+            LevelSpawnGroup[] groups =
+                new LevelSpawnGroup[encounter.SpawnGroups.Count];
+
+            for (int i = 0;
+                i < encounter.SpawnGroups.Count;
+                i++)
             {
-                if (group != null && group.GetComponentInParent<LevelEncounter>() == encounter)
-                    owned.Add(group);
+                groups[i] = encounter.SpawnGroups[i];
             }
 
-            return owned.ToArray();
+            return groups;
         }
 
         private Vector3 CalculatePartyStartPosition()
@@ -361,7 +366,7 @@ namespace MiniCrawler.Tools
         private void DrawScenarioPanel()
         {
             const float width = 460f;
-            const float height = 280f;
+            const float height = 300f;
 
             GUILayout.BeginArea(new Rect(10f, 10f, width, height), GUI.skin.box);
 
@@ -381,6 +386,26 @@ namespace MiniCrawler.Tools
 
             GUILayout.Space(6f);
             GUILayout.Label($"Arrival: {arrivalScenario}");
+            
+            float newApproachDistance =
+                numericControls.DrawFloat(
+                    "scenario.approachDistance",
+                    "Start Distance",
+                    approachDistance,
+                    1f,
+                    40f,
+                    sliderStep: 0.25f,
+                    labelWidth: 130f,
+                    sliderWidth: 210f,
+                    fieldWidth: 70f
+                );
+
+            if (!Mathf.Approximately(
+                    newApproachDistance,
+                    approachDistance))
+            {
+                approachDistance = newApproachDistance;
+            }
 
             GUILayout.BeginHorizontal();
 
@@ -451,31 +476,40 @@ namespace MiniCrawler.Tools
 
             GUILayout.Space(8f);
 
-            int weaponLevel = DrawIntSlider(
+            int weaponLevel = numericControls.DrawInt(
+                "build.weapon",
                 partyMember != null ? partyMember.WeaponName : "Weapon",
                 testBuild.WeaponLevel,
                 0,
-                testBuild.MaximumGearLevel
+                testBuild.MaximumGearLevel,
+                labelWidth: 175f,
+                sliderWidth: 170f
             );
 
             if (weaponLevel != testBuild.WeaponLevel)
                 testBuild.SetWeaponLevel(weaponLevel);
 
-            int armourLevel = DrawIntSlider(
+            int armourLevel = numericControls.DrawInt(
+                "build.armour",
                 partyMember != null ? partyMember.ArmourName : "Armour",
                 testBuild.ArmourLevel,
                 0,
-                testBuild.MaximumGearLevel
+                testBuild.MaximumGearLevel,
+                labelWidth: 175f,
+                sliderWidth: 170f
             );
 
             if (armourLevel != testBuild.ArmourLevel)
                 testBuild.SetArmourLevel(armourLevel);
 
-            int focusLevel = DrawIntSlider(
+            int focusLevel = numericControls.DrawInt(
+                "build.focus",
                 "Focus",
                 testBuild.FocusLevel,
                 0,
-                testBuild.MaximumGearLevel
+                testBuild.MaximumGearLevel,
+                labelWidth: 175f,
+                sliderWidth: 170f
             );
 
             if (focusLevel != testBuild.FocusLevel)
@@ -494,11 +528,14 @@ namespace MiniCrawler.Tools
                 if (ability?.Ability == null)
                     continue;
 
-                int level = DrawIntSlider(
+                int level = numericControls.DrawInt(
+                    $"build.ability.{ability.Ability.Id}",
                     ability.Ability.DisplayName,
                     ability.Level,
                     1,
-                    ability.Ability.MaxLevel
+                    ability.Ability.MaxLevel,
+                    labelWidth: 175f,
+                    sliderWidth: 170f
                 );
 
                 if (level != ability.Level)
@@ -521,24 +558,6 @@ namespace MiniCrawler.Tools
         {
             if (GUILayout.Button(label))
                 testBuild.SelectPreset(preset, partyMember);
-        }
-
-        private int DrawIntSlider(string label, int value, int minimum, int maximum)
-        {
-            GUILayout.BeginHorizontal();
-
-            GUILayout.Label($"{label}: {value}", GUILayout.Width(175f));
-
-            float sliderValue = GUILayout.HorizontalSlider(
-                value,
-                minimum,
-                maximum,
-                GUILayout.Width(220f)
-            );
-
-            GUILayout.EndHorizontal();
-
-            return Mathf.Clamp(Mathf.RoundToInt(sliderValue), minimum, maximum);
         }
 
         private void DrawEstimatedStats()

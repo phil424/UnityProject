@@ -52,6 +52,7 @@ namespace MiniCrawler.Encounters
         private LevelSpawnGroup[] spawnGroups = Array.Empty<LevelSpawnGroup>();
         private LevelEncounterPhase[] phases = Array.Empty<LevelEncounterPhase>();
         
+        private Transform runtimeContentRoot;
         private bool hasRuntimeIdentityOverride;
         private string runtimeDisplayName;
         private string runtimeDescription;
@@ -60,6 +61,8 @@ namespace MiniCrawler.Encounters
         public event Action<LevelEncounter> Started;
         public event Action<LevelEncounter, LevelEncounterPhase, int> PhaseStarted;
         public event Action<LevelEncounter> Completed;
+        public event Action<LevelEncounter> RuntimeReset;
+        public event Action<LevelEncounter, string> SignalRaised;
 
         public string Id => string.IsNullOrWhiteSpace(id) ? name : id;
 
@@ -82,6 +85,26 @@ namespace MiniCrawler.Encounters
 
         public IReadOnlyList<LevelSpawnGroup> SpawnGroups => spawnGroups;
         public IReadOnlyList<LevelEncounterPhase> Phases => phases;
+        
+        public bool HasRuntimeContentOverride => runtimeContentRoot != null;
+        public Transform RuntimeContentRoot => runtimeContentRoot;
+
+        public void SetRuntimeContentRoot(Transform root)
+        {
+            runtimeContentRoot = root;
+            RefreshOwnedContent();
+        }
+
+        public void ClearRuntimeContentRoot()
+        {
+            runtimeContentRoot = null;
+            RefreshOwnedContent();
+        }
+
+        public void RefreshRuntimeContent()
+        {
+            RefreshOwnedContent();
+        }
 
         public bool ReusableByPrototypeSupply => reusableByPrototypeSupply;
         public bool IsKnown => isKnown;
@@ -102,6 +125,21 @@ namespace MiniCrawler.Encounters
             currentPhaseIndex >= 0 && currentPhaseIndex < phases.Length
                 ? phases[currentPhaseIndex]
                 : null;
+        
+        public bool TryStartPhase(int phaseIndex)
+        {
+            return StartPhase(phaseIndex);
+        }
+        
+        public void RaiseSignal(string signalId)
+        {
+            if (string.IsNullOrWhiteSpace(signalId))
+                return;
+
+            Debug.Log($"Encounter '{DisplayName}' raised signal '{signalId}'.", this);
+
+            SignalRaised?.Invoke(this, signalId);
+        }
 
         public bool HasBegunSpawning => phases.Length > 0 ? currentPhaseIndex >= 0 : HasStartedSpawnGroups;
         public bool HasStartedSpawnGroups => AnySpawnGroup(group => group.IsSpawningStarted);
@@ -180,8 +218,12 @@ namespace MiniCrawler.Encounters
 
             ValidatePhaseStructure();
 
+            RuntimeReset?.Invoke(this);
+
             if (phases.Length > 0 && phases[0] != null && phases[0].WantsLevelStartSpawning)
+            {
                 StartPhase(0);
+            }
 
             RefreshState();
         }
@@ -200,6 +242,8 @@ namespace MiniCrawler.Encounters
             startedSequence = 0;
             currentPhaseIndex = -1;
             availabilitySequence = 0;
+            
+            RuntimeReset?.Invoke(this);
 
             SetPresentationState(EncounterPresentationState.Unknown);
         }
@@ -224,6 +268,8 @@ namespace MiniCrawler.Encounters
             startedSequence = 0;
             currentPhaseIndex = -1;
             availabilitySequence = 0;
+            
+            RuntimeReset?.Invoke(this);
 
             StampAvailability();
             RefreshState();
@@ -328,6 +374,27 @@ namespace MiniCrawler.Encounters
 
             return true;
         }
+        
+        public bool TryGetAuthoredPartyProximityStart(
+            out Vector3 worldCentre,
+            out float radius)
+        {
+            EncounterRuleRunner runner =
+                GetComponent<EncounterRuleRunner>();
+
+            if (runner != null)
+            {
+                return runner.TryGetPrimaryPartyProximityStart(
+                    out worldCentre,
+                    out radius
+                );
+            }
+
+            worldCentre = Vector3.zero;
+            radius = 0f;
+
+            return false;
+        }
 
         [ContextMenu("Debug/Make Known")]
         private void DebugMakeKnown()
@@ -407,18 +474,24 @@ namespace MiniCrawler.Encounters
 
         private void RefreshOwnedContent()
         {
-            LevelSpawnGroup[] groupCandidates = GetComponentsInChildren<LevelSpawnGroup>(true);
+            Transform searchRoot = runtimeContentRoot != null ? runtimeContentRoot : transform;
+
+            LevelSpawnGroup[] groupCandidates = searchRoot.GetComponentsInChildren<LevelSpawnGroup>(true);
+
             List<LevelSpawnGroup> ownedGroups = new();
 
             foreach (LevelSpawnGroup group in groupCandidates)
             {
                 if (group != null && group.GetComponentInParent<LevelEncounter>() == this)
+                {
                     ownedGroups.Add(group);
+                }
             }
 
             spawnGroups = ownedGroups.ToArray();
 
-            LevelEncounterPhase[] phaseCandidates = GetComponentsInChildren<LevelEncounterPhase>(true);
+            LevelEncounterPhase[] phaseCandidates = searchRoot.GetComponentsInChildren<LevelEncounterPhase>(true);
+
             List<LevelEncounterPhase> ownedPhases = new();
 
             foreach (LevelEncounterPhase phase in phaseCandidates)
@@ -427,9 +500,7 @@ namespace MiniCrawler.Encounters
                     ownedPhases.Add(phase);
             }
 
-            ownedPhases.Sort(
-                (a, b) => a.transform.GetSiblingIndex().CompareTo(b.transform.GetSiblingIndex())
-            );
+            ownedPhases.Sort((a, b) => a.transform.GetSiblingIndex().CompareTo(b.transform.GetSiblingIndex()));
 
             phases = ownedPhases.ToArray();
         }
@@ -581,7 +652,12 @@ namespace MiniCrawler.Encounters
 
             foreach (LevelEncounterPhase phase in phases)
             {
-                if (phase != null && phase.transform.parent != transform)
+                Transform expectedParent =
+                    runtimeContentRoot != null
+                        ? runtimeContentRoot
+                        : transform;
+
+                if (phase != null && phase.transform.parent != expectedParent)
                 {
                     Debug.LogWarning(
                         $"Encounter phase '{phase.name}' should be a direct child of encounter '{DisplayName}' so sibling order is unambiguous.",

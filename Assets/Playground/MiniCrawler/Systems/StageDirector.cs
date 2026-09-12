@@ -144,12 +144,34 @@ namespace MiniCrawler.Systems
                 encounters = Array.Empty<LevelEncounter>();
                 minionSpawnGroups = Array.Empty<LevelSpawnGroup>();
 
-                Debug.LogWarning("StageDirector has no Encounters Root assigned.", this);
+                Debug.LogWarning(
+                    "StageDirector has no Encounters Root assigned.",
+                    this
+                );
+
                 return;
             }
 
-            encounters = encountersRoot.GetComponentsInChildren<LevelEncounter>(true);
-            minionSpawnGroups = encountersRoot.GetComponentsInChildren<LevelSpawnGroup>(true);
+            encounters =
+                encountersRoot.GetComponentsInChildren<LevelEncounter>(true);
+
+            List<LevelSpawnGroup> ownedGroups = new();
+
+            foreach (LevelEncounter encounter in encounters)
+            {
+                if (encounter == null)
+                    continue;
+
+                encounter.RefreshRuntimeContent();
+
+                foreach (LevelSpawnGroup group in encounter.SpawnGroups)
+                {
+                    if (group != null && !ownedGroups.Contains(group))
+                        ownedGroups.Add(group);
+                }
+            }
+
+            minionSpawnGroups = ownedGroups.ToArray();
         }
 
         private void SpawnSelectedParty(RunState runState)
@@ -195,6 +217,20 @@ namespace MiniCrawler.Systems
             PartyMemberRuntimeChanged?.Invoke(member, actor);
 
             return true;
+        }
+        
+        public bool IsCurrentPartyMember(PartyMember partyMember)
+        {
+            if (partyMember == null)
+                return false;
+
+            foreach (GameObject actor in spawnedPartyActors.Values)
+            {
+                if (actor == partyMember.gameObject)
+                    return true;
+            }
+
+            return false;
         }
         
         public bool TryAwardRewardChoice()

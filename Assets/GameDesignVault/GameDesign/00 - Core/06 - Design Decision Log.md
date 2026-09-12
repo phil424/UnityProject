@@ -558,3 +558,121 @@ J6 proves portable content now.
 
 Future Encounter Definition / Site / Runtime Instance work will remove or relax
 the current compatibility limitation.
+
+## 2026-09-12 — Advanced encounter behaviour uses composable Rules
+
+### Decision
+
+Portable encounter behaviour beyond the common phase progression path is
+authored as:
+
+Trigger
++
+ordered Actions.
+
+### Reason
+
+Encounter variety should come from composing reusable behaviours rather than
+creating a growing set of hardcoded encounter types.
+
+### Implications
+
+The first portable trigger vocabulary includes proximity, lifecycle, delayed
+and phase-state triggers.
+
+The first action vocabulary includes encounter activation, spawning, phase/group
+control, completion and generic Signals.
+
+The vocabulary may grow with concrete design needs, but should remain
+domain-focused rather than becoming a giant universal effect system.
+
+
+## 2026-09-12 — Encounter spectacle uses a generic Signal seam
+
+### Decision
+
+Rules may raise authored Signal IDs without directly owning VFX/audio logic.
+
+### Reason
+
+Encounter sequencing should be able to request moments such as a door burst or
+ground eruption without coupling portable gameplay data to one scene's visual
+objects.
+
+### Implications
+
+Future sites/presentation systems may bind Signals to:
+- animation;
+- VFX;
+- audio;
+- environment state;
+- camera/presentation events.
+
+Signal meaning remains site/presentation-owned.
+
+
+## 2026-09-12 — Workshop sliders require precision input
+
+### Decision
+
+Meaningful Workshop numeric sliders pair snapped slider adjustment with direct
+numeric entry.
+
+### Reason
+
+Pure free-moving sliders produced difficult-to-reproduce floating-point values
+and made exact encounter authoring unnecessarily frustrating.
+
+### Implications
+
+Sliders remain useful for exploratory tuning while direct fields support exact,
+repeatable authored values.
+
+## 2026-09-12 — Encounter Definition owns phase topology
+
+### Decision
+
+Encounter phase count and runtime phase/group/source structure are no longer
+required to exist ahead of time as scene GameObjects.
+
+Encounter Definitions may materialize their runtime content beneath an encounter
+site.
+
+### Reason
+
+Portable encounter authoring must allow designers to create genuinely new
+encounters in the Workshop rather than merely reconfigure a fixed scene
+template.
+
+### Implications
+
+A fresh encounter may begin with one simple phase and grow entirely through
+data.
+
+Definitions with different phase counts may use the same encounter site.
+
+Existing scene-authored encounter content remains a supported fallback.
+
+
+## 2026-09-12 — Authored start Rules own their approach boundary
+
+### Decision
+
+When an Encounter contains an authored Party Proximity start Rule, that Rule
+owns encounter-start timing.
+
+EncounterDirectionController navigates the party to the authored trigger region
+but does not also force the encounter to start at its legacy arrival distance.
+
+### Reason
+
+The previous behaviour allowed the default 2.5m directive arrival threshold to
+override authored proximity values.
+
+### Implications
+
+Without a start Rule:
+→ legacy/default directive arrival starts the encounter.
+
+With a Party Proximity start Rule:
+→ the authored trigger decides when the encounter begins.

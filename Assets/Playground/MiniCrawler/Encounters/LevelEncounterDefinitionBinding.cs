@@ -13,10 +13,6 @@ namespace MiniCrawler.Encounters
         private void Awake()
         {
             CacheEncounter();
-        }
-
-        private void Start()
-        {
             ApplyDefinition();
         }
 

@@ -124,7 +124,7 @@ namespace MiniCrawler.Spawning
         {
             const int segments = 32;
 
-            Vector3 previous = transform.TransformPoint(new Vector3(radius, 0f, 0f));
+            Vector3 previous = transform.TransformPoint(new Vector3(Radius, 0f, 0f));
 
             for (int i = 1; i <= segments; i++)
             {

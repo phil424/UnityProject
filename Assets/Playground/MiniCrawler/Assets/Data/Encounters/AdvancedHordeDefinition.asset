@@ -1,0 +1,104 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24d656a2a890b56489e9d278517ae491, type: 3}
+  m_Name: AdvancedHordeDefinition
+  m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Encounters.EncounterDefinition
+  id: AdvancedHordeDefinition
+  displayName: Workshop Horde
+  description: A 2 phase horde encounter
+  phases:
+  - displayName: Initial Horde
+    advanceAfterSeconds: 0
+    advanceWhenCleared: 0
+    spawnGroups:
+    - label: Phase 1 - Initial Horde
+      entries:
+      - actor: {fileID: 11400000, guid: f94bb2855b5c0e24eac3845bce957198, type: 2}
+        count: 4
+        startDelay: 0
+        batchSize: 4
+        timeBetweenSpawns: 0
+        timeBetweenBatches: 0
+      spawnSources:
+      - label: Phase 1 - Initial Horde
+        shape: 1
+        radius: 5
+        boxSize: {x: 3, y: 3}
+  - displayName: Second Wave
+    advanceAfterSeconds: 0
+    advanceWhenCleared: 1
+    spawnGroups:
+    - label: Phase 2 - Second Wave
+      entries:
+      - actor: {fileID: 11400000, guid: f94bb2855b5c0e24eac3845bce957198, type: 2}
+        count: 4
+        startDelay: 0
+        batchSize: 4
+        timeBetweenSpawns: 0
+        timeBetweenBatches: 0
+      spawnSources:
+      - label: Phase 2 - Second Wave
+        shape: 1
+        radius: 5
+        boxSize: {x: 3, y: 3}
+  unphasedGroups: []
+  rules:
+  - displayName: Approach Start
+    enabled: 1
+    trigger:
+      kind: 0
+      requireEncounterAvailable: 1
+      proximityRadius: 0.5
+      localOffset: {x: 0, y: 0, z: 0}
+      delaySeconds: 0
+      phaseIndex: 0
+    actions:
+    - kind: 0
+      phaseIndex: 0
+      groupIndex: 0
+      signalId: 
+    - kind: 1
+      phaseIndex: 0
+      groupIndex: 0
+      signalId: 
+  - displayName: Timed Reinforcement
+    enabled: 1
+    trigger:
+      kind: 5
+      requireEncounterAvailable: 1
+      proximityRadius: 5
+      localOffset: {x: 0, y: 0, z: 0}
+      delaySeconds: 5
+      phaseIndex: 0
+    actions:
+    - kind: 2
+      phaseIndex: 1
+      groupIndex: 0
+      signalId: 
+  - displayName: Encounter Rule
+    enabled: 1
+    trigger:
+      kind: 5
+      requireEncounterAvailable: 1
+      proximityRadius: 5
+      localOffset: {x: 0, y: 0, z: 0}
+      delaySeconds: 0
+      phaseIndex: 0
+    actions:
+    - kind: 6
+      phaseIndex: 0
+      groupIndex: 0
+      signalId: door-burst
+    - kind: 2
+      phaseIndex: 1
+      groupIndex: 0
+      signalId: 
