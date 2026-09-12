@@ -1,0 +1,294 @@
+**Status: Canonical**
+
+This document defines the intended organisation of the MiniCrawler Unity project
+and embedded GameDesign vault.
+
+It answers:
+
+> Where should a new file go?
+
+It describes ownership and organisation only.
+
+Runtime architecture remains documented in the relevant Technical Design files.
+
+# Unity Project
+
+Primary runtime root:
+
+`Assets/Playground/MiniCrawler/`
+
+## Abilities
+
+`Abilities/`
+
+Generic ability infrastructure belongs under:
+
+`Abilities/Core/`
+
+Concrete ability behaviours remain under:
+
+`Abilities/`
+
+Do not create one folder per ability unless concrete content volume justifies it.
+
+## Camera
+
+`Camera/`
+
+Camera-follow and camera-specific gameplay presentation.
+
+## Combat
+
+`Combat/`
+
+Combat primitives and runtime combat-domain components.
+
+Examples:
+- Health;
+- damage;
+- attacks;
+- buffs;
+- forced motion;
+- combat telemetry.
+
+## Ecology
+
+`Ecology/`
+
+Ambient world-population and ecology behaviour.
+
+## Encounters
+
+`Encounters/`
+
+Portable encounter definitions, encounter runtime state, encounter direction,
+phase/rule behaviour, site bindings and encounter-domain commands/actions.
+
+Do not place Workshop UI/tool orchestration here.
+
+## Expedition
+
+`Expedition/`
+
+Expedition-owned strategic state such as World Time, schedules and World Events.
+
+## Movement
+
+`Movement/`
+
+Actor movement intent / forced-motion primitives.
+
+## Progress
+
+`Progress/`
+
+Progression and reward state.
+
+This folder will receive a dedicated J8 organisation pass.
+
+## Spawning
+
+`Spawning/`
+
+Generic spawn groups and spawn-source primitives.
+
+## Systems
+
+`Systems/`
+
+High-level runtime systems/directors.
+
+This folder will receive a dedicated J8 organisation pass.
+
+## Tools
+
+`Tools/`
+
+Development-only / designer-facing tooling.
+
+Tool-specific implementations should use their own subfolder.
+
+Current:
+
+`Tools/EncounterWorkshop/`
+
+The Workshop may consume runtime systems but gameplay runtime code should not
+depend on Workshop classes.
+
+## UI
+
+`UI/`
+
+Player-facing UI code is grouped by responsibility.
+
+### UI/Combat
+
+Live combat presentation.
+
+Examples:
+- abilities;
+- party health;
+- damage presentation;
+- combat telemetry;
+- world-space health bars.
+
+### UI/Encounter
+
+Presentation of currently-running encounter state.
+
+Examples:
+- Active Encounter rows;
+- encounter start/completion announcements.
+
+### UI/Strategic
+
+Strategic expedition HUD and destination/navigation presentation.
+
+Examples:
+- minimap;
+- quick encounter choices;
+- strategic HUD;
+- slot symbols.
+
+### UI/Progression
+
+Setup, upgrades, rewards and run-build progression presentation.
+
+### UI/Flow
+
+High-level game-flow presentation/orchestration.
+
+### UI/Common
+
+Small shared UI primitives that do not belong to one presentation domain.
+
+# Assets
+
+Primary content root:
+
+`Assets/Playground/MiniCrawler/Assets/`
+
+## Data
+
+`Assets/Data/`
+
+ScriptableObject gameplay/content definitions.
+
+Current domains include:
+- Abilities;
+- Encounters;
+- Enemies;
+- Party;
+- Run Rewards;
+- Run Upgrades;
+- World Events.
+
+Prefer domain subfolders over a flat asset collection.
+
+## Prefabs
+
+`Assets/Prefabs/`
+
+Prefabs are grouped first by broad responsibility.
+
+Current organisation:
+
+- `Abilities/`
+- `Actors/Party/`
+- `Enemies/Zombies/`
+- `UI/Combat/`
+- `UI/Encounter/`
+- `UI/Progression/`
+
+Add a new category only when multiple related assets justify it.
+
+Do not create deeply nested single-file folders merely for theoretical purity.
+
+# Scenes
+
+Playable/test scenes remain under:
+
+`Assets/Scenes/`
+
+Current primary scenes:
+
+- `PlaygroundScene.unity` — normal expedition/playground;
+- `EncounterWorkshop.unity` — encounter authoring/testing environment.
+
+# GameDesign Vault
+
+Canonical design/documentation root:
+
+`Assets/GameDesignVault/GameDesign/`
+
+## 00 - Core
+
+High-level vision, terminology, decisions and cross-domain design.
+
+## Design
+
+Game and technical design documentation.
+
+Technical architecture belongs under:
+
+`Design/Technical/`
+
+## ProjectManagement
+
+Roadmap, project organisation and development-management documents.
+
+Current canonical organisation reference:
+
+`Project Structure.md`
+
+# Structural Rules
+
+## Prefer Responsibility Over File Type
+
+Do not create broad folders such as:
+
+`Scripts/`
+`Misc/`
+`Managers/`
+`Components/`
+
+when a meaningful domain already exists.
+
+## Avoid Premature Depth
+
+A folder should normally exist because several related files benefit from being
+grouped.
+
+Do not produce deep trees containing one file per folder without a concrete
+navigation benefit.
+
+## Preserve Unity GUIDs During Moves
+
+Move Unity assets through Unity's Project window.
+
+Do not recreate an asset solely to move it.
+
+Existing `.meta` files / GUIDs must remain attached to the asset so serialized
+references remain valid.
+
+## Folder Moves Do Not Require Namespace Changes
+
+Namespace architecture and project-folder organisation are related but are not
+required to mirror each other.
+
+Housekeeping moves should not trigger broad namespace rewrites unless there is a
+separate architectural reason.
+
+## Behaviour-Preserving Housekeeping
+
+A housekeeping step should not silently include gameplay architecture changes.
+
+Prefer:
+
+move
+→ compile
+→ validate
+→ continue.
+
+Structural refactoring and behavioural refactoring should remain separate
+whenever practical.

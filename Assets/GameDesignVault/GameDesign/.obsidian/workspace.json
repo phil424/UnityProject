@@ -27,12 +27,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "ProjectManagement/Roadmap.md",
+                "file": "ProjectManagement/Project Structure.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Roadmap"
+              "title": "Project Structure"
             }
           }
         ],
@@ -202,8 +202,10 @@
   },
   "active": "f3554c7cd0292fc7",
   "lastOpenFiles": [
-    "Development Rules.md",
+    "ProjectManagement/Project Structure.md.meta",
     "ProjectManagement/Roadmap.md",
+    "ProjectManagement/Project Structure.md",
+    "Development Rules.md",
     "00 - Core/06 - Design Decision Log.md",
     "Design/Technical/Encounter Workshop.md",
     "Design/Technical/Encounter Definitions.md",
@@ -230,12 +232,10 @@
     "Design/World/World Time and Daily Cycle.md",
     "Design/Rewards.md",
     "Design/World/Expeditions.md",
-    "Design/Technical/Progression Lifetimes.md",
     "Design/World/World Time and Daily Cycle.md.meta",
     "ProjectManagement",
     "Design/Technical/Targeting, Tactics and Encounter Direction.md.meta",
     "Design/Characters/Support Characters.md.meta",
-    "Design/Enemies.md",
     "Design/Characters/Abilities.md.meta",
     "00 - Core/00 - Game Design Index.md.meta"
   ]

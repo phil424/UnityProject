@@ -197,22 +197,81 @@ Completed:
 - spectacle Signal seam;
 - Rule persistence.
 
-#### 3.0J7B — Dynamic Encounter Topology
+#### 3.0J7B — Dynamic Encounter Topology ✅
+
+Completed:
+- authored proximity start rules own their approach boundary;
+- default directive arrival remains the fallback when no authored start rule exists;
+- stale Workshop actors cannot trigger new encounter occurrences;
+- fresh one-phase encounters can be created entirely from data;
+- phases can be added, duplicated and removed in the Workshop;
+- Encounter Definitions own runtime phase/group/source topology;
+- arbitrary Definition phase counts no longer require matching scene GameObjects;
+- runtime encounter content is materialized from Definition data;
+- the same encounter site may consume Definitions with different topology;
+- scene-authored encounter content remains a fallback path;
+- Phase 1 no longer incorrectly starts during level preparation.
+
+`3.0J7Complete.zip` is the completed J7 checkpoint.
+
+## 3.0J8 — Project Housekeeping & Structure
+
+Purpose:
+
+Consolidate the project after the major 3.0J encounter-authoring sequence before
+another large feature area is added.
+
+This is a behaviour-preserving structural pass.
+
+### 3.0J8A — UI, Tooling & Prefab Structure
 
 **Status: Active**
 
 Prove:
-- authored approach radius genuinely controls encounter start;
-- stale Workshop actors cannot trigger new encounter occurrences;
-- new basic one-phase encounter Draft;
-- add Phase;
-- duplicate Phase;
-- remove Phase;
-- phase topology exists in data rather than scene structure;
-- EncounterDefinition dynamically materializes runtime phases/groups/sources;
-- Workshop assets may have arbitrary phase counts;
-- normal expedition sites can consume Definitions with different phase counts;
-- existing scene-authored encounters remain valid fallback content.
+- flat UI scripts are organised by responsibility;
+- Encounter Workshop tooling has one clear folder;
+- reusable UI prefabs are separated from gameplay actor prefabs;
+- retired prototype strategic HUD scripts/components are removed;
+- Unity asset GUID/reference integrity is preserved;
+- `Project Structure.md` defines where future content should live;
+- Playground and Encounter Workshop behave identically after the moves.
+
+### 3.0J8B — Runtime Code & Legacy Cleanup
+
+Audit and reorganise:
+- `Progress`;
+- `Systems`;
+- remaining runtime folders;
+- obsolete prototype/debug seams;
+- stale automated-test infrastructure.
+
+Prefer moves/deletions with clear evidence over speculative architectural
+rewrites.
+
+### 3.0J8C — Documentation & Development Rules
+
+Audit:
+- oversized Development Rules;
+- duplicated/stale design documents;
+- technical-document structure;
+- roadmap/history organisation;
+- decision-log growth.
+
+Split large documents only at meaningful responsibility boundaries.
+
+Preserve one obvious canonical entry point.
+
+### 3.0J8D — Structure Validation & Closure
+
+Prove:
+- project compiles cleanly;
+- no Missing Script / Missing asset references;
+- normal expedition works;
+- Encounter Workshop works;
+- Obsidian links remain usable;
+- the final structure is documented and understandable.
+
+Take a Complete snapshot before 3.0K.
 
 ## 3.0K — Expanded Strategic Planner
 

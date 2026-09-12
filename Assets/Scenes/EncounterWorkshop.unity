@@ -5427,9 +5427,6 @@ GameObject:
   m_Component:
   - component: {fileID: 810166848}
   - component: {fileID: 810166849}
-  - component: {fileID: 810166850}
-  - component: {fileID: 810166851}
-  - component: {fileID: 810166852}
   m_Layer: 5
   m_Name: GameFlowUI
   m_TagString: Untagged
@@ -5490,42 +5487,6 @@ MonoBehaviour:
   runUpgradeOfferRoot: {fileID: 328879906}
   runUpgradeOfferCardPrefab: {fileID: 3867086064608015899, guid: 5b2fe9fb57efd1b44ac1b34d00662505, type: 3}
   combatCurrencyText: {fileID: 733094833}
---- !u!114 &810166850
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 810166847}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d9d7c33b6c4c724418c636cd1d4bdbd0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.UI.QuickEncounterPrototypeHUD
---- !u!114 &810166851
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 810166847}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b23db9c24eab0ca4a9952563493c9a1b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.UI.PrototypeForecastHUD
---- !u!114 &810166852
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 810166847}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d36a5e23d0a40b24cb54fc2a4c351217, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.UI.PrototypeWorldEventHUD
 --- !u!1 &830497294
 GameObject:
   m_ObjectHideFlags: 0
