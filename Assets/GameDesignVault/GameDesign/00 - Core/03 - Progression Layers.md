@@ -1,4 +1,8 @@
-### Persistent collection
+# Progression Layers
+
+**Status: Working**
+
+## Persistent collection
 
 Things the player actually owns.
 
@@ -13,7 +17,7 @@ Potentially:
 - challenges
 - boss discoveries
 
-### Starting configuration
+## Starting configuration
 
 The subset deliberately brought into the run.
 
@@ -26,7 +30,7 @@ Potentially:
 - guaranteed abilities
 - objectives
 
-### Run progression
+## Run progression
 
 Everything temporary.
 
@@ -37,7 +41,7 @@ Everything temporary.
 - temporary effects
 - synergies
 
-### World state
+## World state
 
 A fourth progression axis people often forget.
 

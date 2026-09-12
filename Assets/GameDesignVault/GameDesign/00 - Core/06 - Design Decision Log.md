@@ -1,22 +1,32 @@
-Whenever we actually commit to something:
+# Design Decision Log
 
-```
+**Status: Canonical**
+
+This is the chronological record of design decisions that the project is
+actively designing around.
+
+Do not use this file as a duplicate technical specification.
+
+Detailed behaviour belongs in the relevant design/technical document; this log
+records the decision, reason and implications.
+
 ## 2026-08-29 — No extraction mechanics
 
 ### Decision
+
 Resources earned during an expedition remain owned after death.
 
 ### Reason
+
 The loss condition is the temporary run build ending.
+
 The game should not create extraction-looter tension.
 
 ### Implications
+
 - Material inventory persists.
 - Death does not remove earned materials.
 - Reward economy requires long-term resource sinks.
-```
-
-This might become one of the most valuable documents in the entire repository.
 
 ## 2026-09-06 — Encounter generation and forecasting are separate
 

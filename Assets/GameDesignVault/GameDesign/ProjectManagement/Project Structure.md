@@ -276,29 +276,84 @@ Current primary scenes:
 
 # GameDesign Vault
 
-Canonical design/documentation root:
+Canonical documentation root:
 
 `Assets/GameDesignVault/GameDesign/`
 
+## Development Rules
+
+`Development Rules.md`
+
+is the canonical entry point.
+
+Focused rule documents live under:
+
+`Development Rules/`
+
+Current rulebooks:
+- Workflow and Validation;
+- Architecture and Lifetimes;
+- Abilities and Buildcraft;
+- Unity Authoring;
+- UI Authoring;
+- Documentation.
+
+Do not recreate a large monolithic rules file.
+
 ## 00 - Core
 
-High-level vision, terminology, decisions and cross-domain design.
+Current high-level design authority:
+- Game Vision;
+- Design Pillars;
+- Core Gameplay Loop;
+- Progression Layers;
+- Terminology;
+- Open Design Questions;
+- Design Decision Log.
+
+The canonical navigation page is:
+
+`00 - Game Design Index.md`
 
 ## Design
 
-Game and technical design documentation.
+Current game-design documents.
 
-Technical architecture belongs under:
+Technical architecture lives under:
 
 `Design/Technical/`
 
+Technical documents should use meaningful domain folders when several documents
+share that domain.
+
+Current grouped domains:
+
+`Design/Technical/Encounters/`
+
+`Design/Technical/Expedition/`
+
+Cross-cutting documents may remain directly under `Design/Technical/` rather
+than creating one-file folders.
+
 ## ProjectManagement
 
-Roadmap, project organisation and development-management documents.
+Development planning, project organisation and reusable documentation templates.
 
-Current canonical organisation reference:
+Current:
+- Roadmap;
+- Project Structure;
+- Templates.
 
-`Project Structure.md`
+## Archive
+
+`Archive/`
+
+Historical/deprecated design material retained for context.
+
+Archive documents are not sources of current design authority.
+
+Do not link archived notes from the primary Game Design Index unless historical
+context is explicitly useful.
 
 # Structural Rules
 

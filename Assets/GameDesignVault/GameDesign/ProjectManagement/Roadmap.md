@@ -250,30 +250,38 @@ Completed:
 - obsolete Encounter Definition compatibility alias removed;
 - namespaces and runtime behaviour preserved.
 
-### 3.0J8C — Documentation & Development Rules
+### 3.0J8C — Documentation & Development Rules ✅
 
-**Status: Active**
-
-Audit:
-- oversized Development Rules;
-- duplicated/stale design documents;
-- technical-document structure;
-- roadmap/history organisation;
-- decision-log growth.
-
-Split large documents only at meaningful responsibility boundaries.
-
-Preserve one obvious canonical entry point.
+Completed:
+- Development Rules split into focused canonical rulebooks;
+- concise `Development Rules.md` retained as the mandatory entry point;
+- UI rules isolated into a dedicated high-detail rulebook;
+- technical documentation grouped by meaningful domain;
+- stale hypothetical links removed from the Game Design Index;
+- current Game Design Index now mirrors the actual vault;
+- legacy monolithic design baselines archived and explicitly deprecated;
+- design-document template moved out of Core;
+- initial Core-document scaffolding converted into current documentation;
+- Open Questions and Decision Log examples converted into real entries;
+- Project Structure updated with the canonical documentation model;
+- Decision Log retained as one chronological authority;
+- oversized technical documents audited without arbitrary splitting;
+- standing test-package declaration cleanup completed.
 
 ### 3.0J8D — Structure Validation & Closure
+
+**Status: Active**
 
 Prove:
 - project compiles cleanly;
 - no Missing Script / Missing asset references;
 - normal expedition works;
 - Encounter Workshop works;
-- Obsidian links remain usable;
-- the final structure is documented and understandable.
+- Game Design Index resolves to current documents;
+- focused Development Rules are navigable from the canonical entry point;
+- no stale placeholder wiki-links remain in active documentation;
+- archived documents are clearly non-authoritative;
+- final project/document structure is understandable without historical chat context.
 
 Take a Complete snapshot before 3.0K.
 

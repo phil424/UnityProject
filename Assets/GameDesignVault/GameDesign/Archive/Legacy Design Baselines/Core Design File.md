@@ -1,3 +1,13 @@
+> [!warning] Historical Design Baseline
+> **Status: Deprecated / Archived**
+>
+> This document is retained for historical context only.
+> It is not a current source of design authority.
+>
+> Current design navigation begins at [[00 - Game Design Index]].
+
+---
+
 # My Game Design
 
 ## Working Design Baseline v0.1

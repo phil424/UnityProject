@@ -1,29 +1,31 @@
 # Game Design Index
 
-This directory contains the living design documentation for the project.
+**Status: Canonical**
 
-The documents describe the intended game rather than the current implementation.
-Implementation progress and technical scheduling are tracked separately under ProjectManagement.
+This is the primary navigation page for the living MiniCrawler design vault.
 
----
+The vault documents current design intent and technical architecture.
 
-## Document Status
+Implementation scheduling lives under `ProjectManagement/`.
 
-### Confirmed
-A design decision we are actively designing around.
+Historical/deprecated documents live under `Archive/` and are not design
+authority.
 
-### Working
-The current preferred direction, but still open to revision.
+# Status Vocabulary
 
-### Exploratory
-An idea worth preserving that has not yet been committed to.
+**Confirmed**
+A decision the project is actively designed around.
 
-### Deprecated
-A previous design that has intentionally been replaced.
+**Working**
+The current preferred direction, still open to revision.
 
----
+**Exploratory**
+An idea worth preserving that is not an implementation requirement.
 
-# Core Design
+**Deprecated**
+A previous direction intentionally retained only for historical context.
+
+# Core
 
 - [[00 - Game Vision]]
 - [[01 - Design Pillars]]
@@ -33,127 +35,89 @@ A previous design that has intentionally been replaced.
 - [[05 - Open Design Questions]]
 - [[06 - Design Decision Log]]
 
-# Expeditions
+# Gameplay Design
 
-- [[Expedition Overview]]
-- [[Run Flow]]
-- [[Threat Escalation]]
-- [[Apex System]]
-- [[Pending Rewards and Pacing]]
+## Combat and Buildcraft
 
-# World
+- [[Combat]]
+- [[Buildcraft]]
+- [[Augments]]
+- [[Rewards]]
 
-- [[World Overview]]
-- [[Regions and Zones]]
-- [[Traversal]]
-- [[Fake Seamless Transitions]]
-- [[Map and Schedule]]
+## Characters and Abilities
 
-# Ecology
-
-- [[Ecology Overview]]
-- [[Dynamic Events]]
-- [[Upsurges]]
-- [[Boss Scheduling and Migration]]
-- [[Environmental Modifiers]]
-
-# Combat
-
-- [[Combat Overview]]
-- [[Autonomous Combat]]
-- [[Player Intervention]]
-- [[Damage and Stats]]
-- [[Status Effects]]
-- [[Combat Resources]]
-
-# Equipment
-
-- [[Equipment Overview]]
-- [[Weapon Design]]
-- [[Weapon Combo Model]]
-- [[Weapon Catalogue]]
-- [[Armour Design]]
-- [[Armour Catalogue]]
-- [[Equipment Slots and Loadouts]]
-
-# Characters
-
-- [[Character Design]]
-- [[Character Archetypes]]
-- [[Character Abilities]]
-- [[Character Sustain]]
-- [[Character Catalogue]]
+- [[Characters]]
+- [[Abilities]]
 - [[Support Characters]]
 
-# Abilities
+## Equipment
 
-- [[Ability Design]]
-- [[Ability Activation]]
-- [[Ability Economy]]
-- [[Ability Evolution]]
-- [[Ability Catalogue]]
+- [[Equipment]]
+- [[Weapons]]
+- [[Armour]]
 
-# Augments
-- [[Augment Design]]
-- [[Augment Compatibility]]
-- [[Augment Slots]]
-- [[Permanent vs Run Augments]]
-- [[Augment Catalogue]]
+## Progression and Crafting
 
-# Buildcraft
-- [[Buildcraft Philosophy]]
-- [[Starting Builds]]
-- [[Run Builds]]
-- [[Synergies and Tags]]
-- [[Build Examples]]
+- [[Progression]]
+- [[Crafting]]
 
-# Rewards
-- [[Reward Design]]
-- [[Reward Sources]]
-- [[Reward Tiers]]
-- [[Reward Generation]]
-- [[Reward Weighting]]
-- [[Pending Rewards]]
+## Enemies
 
-# Enemies
-- [[Enemy Design]]
-- [[Monster Families]]
-- [[Boss Design]]
-- [[Boss Catalogue]]
-- [[Monster Reward Identity]]
+- [[Enemies]]
 
-# Crafting
-- [[Crafting Overview]]
-- [[Materials]]
-- [[Recipes]]
-- [[Resource Sinks]]
-- [[Decoration Crafting]]
+# World and Expeditions
 
-# Progression
-- [[Progression Overview]]
-- [[Persistent Collection]]
-- [[Unlocks]]
-- [[Meta Progression]]
-- [[Challenges and Milestones]]
-- [[Long-Term Endgame]]
+- [[World]]
+- [[Expeditions]]
+- [[Ecology]]
+- [[World Time and Daily Cycle]]
 
-# UI UX
-- [[UI Philosophy]]
-- [[Combat HUD]]
-- [[Ability HUD]]
-- [[Map and Schedule UI]]
-- [[Reward UI]]
-- [[Hub and Menus]]
+# UI / UX
+
+- [[UI-UX]]
 
 # Technical Design
 
+## Encounter Architecture
+
 - [[Level Authoring and Encounters]]
-- [[Targeting, Tactics and Encounter Direction]]
+- [[Encounter Definitions]]
+- [[Encounter Workshop]]
+
+## Expedition Architecture
+
 - [[Expedition Scheduling and Encounter Generation]]
 - [[World Events]]
-- [[Encounter Workshop]]
-- [[Encounter Definitions]]
+- [[Progression Lifetimes]]
+
+## Combat Direction / Tactics
+
+- [[Targeting, Tactics and Encounter Direction]]
+
+# Development
+
+The canonical development-rule entry point is:
+
+- [[Development Rules]]
+
+Focused rulebooks:
+
+- [[Workflow and Validation]]
+- [[Architecture and Lifetimes]]
+- [[Abilities and Buildcraft]]
+- [[Unity Authoring]]
+- [[UI Authoring]]
+- [[Documentation]]
 
 # Project Management
 
 - [[Roadmap]]
+- [[Project Structure]]
+- [[Design Document Template]]
+
+# Archive
+
+Historical documents under `Archive/` are intentionally excluded from normal
+design navigation.
+
+Use them only when historical context is specifically useful.

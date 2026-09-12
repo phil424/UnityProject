@@ -1,3 +1,7 @@
+# Core Gameplay Loop
+
+**Status: Working**
+
 ## Moment-to-moment
 
 ```

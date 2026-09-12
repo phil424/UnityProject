@@ -1,8 +1,17 @@
-This should be a **living backlog of questions**, not ideas.
+# Open Design Questions
 
-For example:
+**Status: Working**
 
-```
+This is the living backlog of unresolved design decisions.
+
+An open question is not an implementation requirement.
+
+Record:
+- the question;
+- current thinking;
+- what it blocks;
+- when a decision is actually needed.
+
 ## Ability Capacity
 
 **Question:** How many player abilities can be active simultaneously?
@@ -16,15 +25,6 @@ Potentially around six, but slot structure is unresolved.
 
 **Need to decide by:**
 Before ability loadout architecture is locked.
-```
-
-This lets me tell you:
-> We don't need to answer this yet.
-
-or:
-
-> This has now become a blocker.
-
 
 ## Support Capacity
 

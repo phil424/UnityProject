@@ -52,4 +52,4 @@ This section does NOT mean those systems should be implemented immediately.
 
 ## Related Documents
 
-- [[Related Document]]
+- Add real `[[Wiki Links]]` here when creating the document.
