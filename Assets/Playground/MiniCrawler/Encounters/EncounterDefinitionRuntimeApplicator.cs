@@ -79,19 +79,5 @@ namespace MiniCrawler.Encounters
 
             return true;
         }
-
-        // Compatibility alias so any remaining J6/J7 call sites
-        // continue compiling while the old structural limitation disappears.
-        public static bool ValidateCompatibility(
-            EncounterDefinition definition,
-            LevelEncounter encounter,
-            out string error)
-        {
-            return ValidateDefinition(
-                definition,
-                encounter,
-                out error
-            );
-        }
     }
 }

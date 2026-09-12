@@ -82,9 +82,36 @@ Actor movement intent / forced-motion primitives.
 
 `Progress/`
 
-Progression and reward state.
+Progression is grouped by lifetime / responsibility.
 
-This folder will receive a dedicated J8 organisation pass.
+### Progress/Persistent
+
+Session/persistent progression that survives expedition boundaries.
+
+Current prototype persistence is in-memory for the Play session.
+
+### Progress/Run
+
+Expedition-owned build/state and the seams that apply run progression to runtime
+actors.
+
+Examples:
+- `RunState`;
+- `RunProgress`;
+- `RunBuild`;
+- runtime ability/build applicators.
+
+### Progress/Setup
+
+Pre-expedition party/setup configuration.
+
+### Progress/Rewards
+
+Reward definitions, pending reward choices, offer generation and run-upgrade
+presentation data.
+
+Reward content should remain generic rather than rebuilding separate pipelines
+for every reward type.
 
 ## Spawning
 
@@ -96,9 +123,36 @@ Generic spawn groups and spawn-source primitives.
 
 `Systems/`
 
-High-level runtime systems/directors.
+High-level simulation processors and runtime directors.
 
-This folder will receive a dedicated J8 organisation pass.
+Current organisation:
+
+### Systems/Combat
+
+Cross-actor combat simulation systems such as:
+- targeting;
+- automatic combat;
+- ability updates;
+- healing.
+
+### Systems/Movement
+
+High-level actor movement / avoidance processing.
+
+### Systems/Flow
+
+Run / level lifecycle directors.
+
+### Systems/Expedition
+
+World Clock and World Event runtime systems.
+
+Shared systems that genuinely cross those boundaries may remain directly under
+`Systems/`.
+
+Current example:
+
+`SimulationPause.cs`
 
 ## Tools
 
@@ -108,12 +162,17 @@ Development-only / designer-facing tooling.
 
 Tool-specific implementations should use their own subfolder.
 
-Current:
+Current tool areas:
 
 `Tools/EncounterWorkshop/`
+- encounter authoring and controlled encounter testing.
 
-The Workshop may consume runtime systems but gameplay runtime code should not
-depend on Workshop classes.
+`Tools/Debug/`
+- developer-only runtime diagnostics / controls.
+
+Tool code may consume runtime architecture.
+
+Runtime gameplay code should not depend on developer-tool implementations.
 
 ## UI
 
@@ -292,3 +351,16 @@ move
 
 Structural refactoring and behavioural refactoring should remain separate
 whenever practical.
+
+## Automated Tests
+
+The project does not currently maintain a standing automated/EditMode test
+assembly.
+
+Default validation follows `Development Rules.md`:
+- short focused manual validation;
+- automated tests only when explicitly requested or justified by a concrete
+  high-risk need.
+
+Do not preserve obsolete runtime compatibility APIs solely to support retired
+test code.

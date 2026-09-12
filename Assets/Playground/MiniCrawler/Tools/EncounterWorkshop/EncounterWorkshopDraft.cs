@@ -800,7 +800,7 @@ namespace MiniCrawler.Tools
             EncounterDefinition definition,
             out string error)
         {
-            if (!EncounterDefinitionRuntimeApplicator.ValidateCompatibility(
+            if (!EncounterDefinitionRuntimeApplicator.ValidateDefinition(
                     definition,
                     encounter,
                     out error))

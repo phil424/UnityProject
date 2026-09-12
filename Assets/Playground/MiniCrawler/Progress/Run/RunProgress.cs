@@ -1,0 +1,185 @@
+using System;
+using System.Collections.Generic;
+using UnityEngine;
+using MiniCrawler.Core;
+using MiniCrawler.Abilities;
+using MiniCrawler.Expedition;
+
+namespace MiniCrawler.Progress
+{
+    public static class RunProgress
+    {
+        public static event Action Changed;
+
+        public static RunState CurrentRun { get; private set; }
+        
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetSession()
+        {
+            CurrentRun = null;
+            Changed = null;
+        }
+
+        public static bool HasActiveRun => CurrentRun != null;
+
+        public static int Currency => CurrentRun != null ? CurrentRun.Currency : 0;
+        public static WorldClockState WorldClock => CurrentRun?.WorldClock;
+        public static WorldEventState WorldEvents => CurrentRun?.WorldEvents;
+
+        public static IReadOnlyList<PartyMemberDefinition> SelectedParty =>
+            CurrentRun != null ? CurrentRun.SelectedParty : Array.Empty<PartyMemberDefinition>();
+        
+        public static IReadOnlyList<PendingRewardChoice> PendingRewardChoices =>
+            CurrentRun != null ? CurrentRun.PendingRewardChoices : Array.Empty<PendingRewardChoice>();
+
+        public static int PendingRewardChoiceCount =>
+            CurrentRun != null ? CurrentRun.PendingRewardChoiceCount : 0;
+
+        public static IReadOnlyList<RunUpgradeOffer>
+            CurrentPendingRewardOffers =>
+                CurrentRun != null ? CurrentRun.CurrentPendingRewardOffers : Array.Empty<RunUpgradeOffer>();
+
+        public static bool HasPendingRewardChoice => CurrentRun != null && CurrentRun.HasPendingRewardChoice;
+
+        public static bool BeginRun(RunStartConfiguration configuration)
+        {
+            if (CurrentRun != null)
+                return false;
+
+            if (configuration == null || !configuration.IsValid)
+            {
+                return false;
+            }
+
+            CurrentRun = new RunState(configuration);
+
+            Changed?.Invoke();
+
+            return true;
+        }
+
+        public static void EndRun()
+        {
+            if (CurrentRun == null)
+                return;
+
+            CurrentRun = null;
+
+            Changed?.Invoke();
+        }
+
+        public static void AddCurrency(int amount)
+        {
+            if (CurrentRun == null || amount <= 0)
+                return;
+
+            CurrentRun.AddCurrency(amount);
+
+            Changed?.Invoke();
+        }
+
+        public static RunBuild GetBuild(PartyMemberDefinition definition)
+        {
+            if (CurrentRun == null)
+                return new RunBuild();
+
+            return CurrentRun.GetBuild(definition);
+        }
+        
+        public static bool TryAcquireAbility(PartyMemberDefinition definition, AbilityDefinition ability)
+        {
+            if (CurrentRun == null)
+                return false;
+
+            bool acquired = CurrentRun.TryAcquireAbility(definition, ability);
+
+            if (acquired)
+                Changed?.Invoke();
+
+            return acquired;
+        }
+
+        public static bool EnqueueRewardChoice(IEnumerable<RunUpgradeOffer> offers)
+        {
+            if (CurrentRun == null)
+                return false;
+
+            bool queued = CurrentRun.EnqueueRewardChoice(offers);
+
+            if (queued)
+                Changed?.Invoke();
+
+            return queued;
+        }
+
+        public static bool TryChoosePendingReward(RunUpgradeOffer offer)
+        {
+            if (CurrentRun == null)
+                return false;
+
+            bool chosen = CurrentRun.TryChoosePendingReward(offer);
+
+            if (chosen)
+                Changed?.Invoke();
+
+            return chosen;
+        }
+
+        public static int GetAbilityUpgradeCost(PartyMemberDefinition definition, AbilityDefinition ability)
+        {
+            if (CurrentRun == null)
+                return int.MaxValue;
+
+            return CurrentRun.GetAbilityUpgradeCost(definition, ability);
+        }
+
+        public static bool TryBuyAbilityLevel(PartyMemberDefinition definition, AbilityDefinition ability)
+        {
+            if (CurrentRun == null)
+                return false;
+
+            bool purchased = CurrentRun.TryBuyAbilityLevel(definition, ability);
+
+            if (purchased)
+                Changed?.Invoke();
+
+            return purchased;
+        }
+
+        public static float GetDamageBonus(
+            PartyMemberDefinition definition
+        )
+        {
+            return CurrentRun != null
+                ? CurrentRun.GetDamageBonus(definition)
+                : 0f;
+        }
+
+        public static float GetArmourBonus(
+            PartyMemberDefinition definition
+        )
+        {
+            return CurrentRun != null
+                ? CurrentRun.GetArmourBonus(definition)
+                : 0f;
+        }
+
+        public static float GetHealthBonus(
+            PartyMemberDefinition definition
+        )
+        {
+            return CurrentRun != null
+                ? CurrentRun.GetHealthBonus(definition)
+                : 0f;
+        }
+
+        public static float GetHealingBonus(
+            PartyMemberDefinition definition
+        )
+        {
+            return CurrentRun != null
+                ? CurrentRun.GetHealingBonus(definition)
+                : 0f;
+        }
+    }
+}

@@ -27,12 +27,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "ProjectManagement/Project Structure.md",
+                "file": "ProjectManagement/Roadmap.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Project Structure"
+              "title": "Roadmap"
             }
           }
         ],
@@ -202,9 +202,9 @@
   },
   "active": "f3554c7cd0292fc7",
   "lastOpenFiles": [
-    "ProjectManagement/Project Structure.md.meta",
-    "ProjectManagement/Roadmap.md",
     "ProjectManagement/Project Structure.md",
+    "ProjectManagement/Roadmap.md",
+    "ProjectManagement/Project Structure.md.meta",
     "Development Rules.md",
     "00 - Core/06 - Design Decision Log.md",
     "Design/Technical/Encounter Workshop.md",
@@ -236,7 +236,6 @@
     "ProjectManagement",
     "Design/Technical/Targeting, Tactics and Encounter Direction.md.meta",
     "Design/Characters/Support Characters.md.meta",
-    "Design/Characters/Abilities.md.meta",
-    "00 - Core/00 - Game Design Index.md.meta"
+    "Design/Characters/Abilities.md.meta"
   ]
 }

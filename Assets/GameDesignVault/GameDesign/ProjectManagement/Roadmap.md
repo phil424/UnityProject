@@ -223,32 +223,36 @@ another large feature area is added.
 
 This is a behaviour-preserving structural pass.
 
-### 3.0J8A — UI, Tooling & Prefab Structure
+### 3.0J8A — UI, Tooling & Prefab Structure ✅
 
-**Status: Active**
+Completed:
+- player-facing UI scripts organised by responsibility;
+- Encounter Workshop tooling grouped under `Tools/EncounterWorkshop`;
+- reusable UI prefabs separated from gameplay actor prefabs;
+- party prefabs grouped under `Prefabs/Actors/Party`;
+- retired prototype strategic HUD components/scripts removed;
+- Unity asset GUID/reference integrity preserved;
+- canonical `Project Structure.md` created;
+- Playground and Encounter Workshop preserved after structural moves.
 
-Prove:
-- flat UI scripts are organised by responsibility;
-- Encounter Workshop tooling has one clear folder;
-- reusable UI prefabs are separated from gameplay actor prefabs;
-- retired prototype strategic HUD scripts/components are removed;
-- Unity asset GUID/reference integrity is preserved;
-- `Project Structure.md` defines where future content should live;
-- Playground and Encounter Workshop behave identically after the moves.
+`3.0J8AComplete.zip` is the completed J8A checkpoint.
 
-### 3.0J8B — Runtime Code & Legacy Cleanup
+### 3.0J8B — Runtime Code & Legacy Cleanup ✅
 
-Audit and reorganise:
-- `Progress`;
-- `Systems`;
-- remaining runtime folders;
-- obsolete prototype/debug seams;
-- stale automated-test infrastructure.
-
-Prefer moves/deletions with clear evidence over speculative architectural
-rewrites.
+Completed:
+- Progress organised into Persistent / Rewards / Run / Setup;
+- Systems organised into Combat / Expedition / Flow / Movement;
+- active PrototypeDebugUI moved into developer tooling rather than deleted;
+- retired EditMode test assembly removed;
+- direct project Test Framework dependency removed;
+- test-only reward/progression compatibility APIs removed;
+- unused SimulationPause pause-only compatibility event removed;
+- obsolete Encounter Definition compatibility alias removed;
+- namespaces and runtime behaviour preserved.
 
 ### 3.0J8C — Documentation & Development Rules
+
+**Status: Active**
 
 Audit:
 - oversized Development Rules;

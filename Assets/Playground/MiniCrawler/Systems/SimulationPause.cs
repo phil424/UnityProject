@@ -26,9 +26,6 @@ namespace MiniCrawler.Systems
 
         public event Action<SimulationSpeed> SpeedChanged;
 
-        // Kept for compatibility with anything still interested only in pause state.
-        public event Action<bool> PauseChanged;
-
         private SimulationSpeed currentSpeed = SimulationSpeed.Normal;
         private SimulationSpeed lastRunningSpeed = SimulationSpeed.Normal;
 
@@ -56,8 +53,6 @@ namespace MiniCrawler.Systems
             if (currentSpeed == speed)
                 return;
 
-            bool wasPaused = Paused;
-
             if (speed != SimulationSpeed.Paused)
                 lastRunningSpeed = speed;
 
@@ -67,13 +62,7 @@ namespace MiniCrawler.Systems
 
             SpeedChanged?.Invoke(currentSpeed);
 
-            if (wasPaused != Paused)
-                PauseChanged?.Invoke(Paused);
-
-            Debug.Log(
-                $"[SimulationPause] Speed: {currentSpeed} " +
-                $"({Time.timeScale:0.##}x)"
-            );
+            Debug.Log($"[SimulationPause] Speed: {currentSpeed} " + $"({Time.timeScale:0.##}x)");
         }
 
         public void Pause()

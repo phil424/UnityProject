@@ -5256,7 +5256,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9fd2438c7fc10f940830b301ad0e59ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Encounters.LevelEncounterDefinitionBinding
-  definition: {fileID: 11400000, guid: 2afc7a831666c7844bd062956219c97a, type: 2}
+  definition: {fileID: 11400000, guid: 8c962e01685fac94d9e636c93b2afa6d, type: 2}
   encounter: {fileID: 641285804}
 --- !u!1 &648789466
 GameObject:
