@@ -287,11 +287,127 @@ Completed:
 
 `3.0J8Complete.zip` is the completed housekeeping checkpoint.
 
-## 3.0K — Expanded Strategic Planner
+## 3.0K — Region Route Geography & Traversal
 
 **Status: Active**
 
-## 3.0L — Strategic Expedition Integration
+Purpose:
+
+Promote the 3.0E ambient-route proof into meaningful authored Region geography
+that can support navigation, formal Encounter placement, ambient activity and
+future strategic planning.
+
+### 3.0K1 — Route Geography & Purposeful Traversal Proof
+
+**Status: Active**
+
+Prove:
+- first-class Route Nodes;
+- first-class Route Segments;
+- explicit Route Groups;
+- graph validation;
+- reachable-node queries;
+- shortest authored-route queries;
+- persistent ambient destinations;
+- intermediate route traversal;
+- local combat interruption / route resumption;
+- Encounter Directives continue to override ambient travel;
+- first Village Well ring greybox proof.
+
+Tags and Encounter occupancy are deliberately deferred.
+
+### 3.0K2 — Route Encounter Sites & Directed Travel
+
+Prove:
+- formal Encounter Sites can bind to Route geography;
+- Encounter destinations can use route-aware travel;
+- sites may occupy Node / Segment / path footprints;
+- travelling to a distant Encounter may cross other Encounter footprints;
+- crossed Encounters may activate;
+- enemies from previous Encounters may continue pursuing;
+- route geography remains separate from Encounter lifecycle.
+
+### 3.0K3 — Route / Encounter Compatibility
+
+Develop:
+- small semantic Route-tag model;
+- data-authored tag definitions;
+- Encounter/Site compatibility requirements;
+- route-group/site queries;
+- fixed spectacle vs generic compatible encounters;
+- scheduler-ready placement seams.
+
+Avoid giant hardcoded tag enums.
+
+### 3.0K4 — Ambient Activity Authoring
+
+Improve the lightweight world between formal Encounters.
+
+Working direction:
+- richer ambient population areas;
+- multiple actors;
+- spawn-area authoring;
+- engagement-area authoring;
+- modest local wandering;
+- route-aware ambient placement.
+
+Ambient population does not automatically become formal Encounter content.
+
+### 3.0K5 — Workshop Route Context
+
+Allow Encounter content to be tested against small spatial route contexts.
+
+Working contexts:
+- point;
+- Segment;
+- path;
+- Route Group.
+
+Explore semantic roles such as:
+- Entry;
+- Core;
+- Exit.
+
+The Workshop remains an Encounter test harness rather than the full Region
+editor.
+
+### 3.0K6 — First Playable Region Content Proof
+
+Build one deliberate greybox Region using the completed authoring tools.
+
+Target:
+- meaningful route network;
+- Village Well / loop geography;
+- several formal Encounter Sites;
+- several portable Encounter Definitions;
+- ambient activity;
+- forecast content;
+- at least one World Event;
+- enough content for a 10–15 minute expedition.
+
+Success question:
+
+> Is this expedition enjoyable to let run and strategically intervene in?
+
+
+## 3.0L — Expanded Strategic Planner & Expedition Integration
+
+Purpose:
+
+Give the player a deliberate strategic view over the now-meaningful Region
+geography.
+
+Working direction:
+- expanded planner flow;
+- Region route network;
+- party location;
+- current route;
+- all known Encounter opportunities;
+- route risk / occupied geography;
+- Encounter details;
+- current World Events;
+- forecast / schedule;
+- strategic route and Encounter commitment.
 
 # 3.1 — Persistent Equipment Progression Trees
 
@@ -314,26 +430,89 @@ milestones.
 
 Do not allow persistent equipment progression to replace expedition buildcraft.
 
-# 3.2 — Data-Driven Encounter Generation + Workshop Integration
+# 3.2 — Data-Driven Encounter Generation + Resolution
+
 Purpose:
 
-Replace prototype scene-site recycling with the long-term encounter content
-model.
+Complete the long-term:
+
+Encounter Definition
++
+Encounter Site
++
+Runtime Encounter Instance
+
+model and replace prototype scene-site recycling with generated supply.
 
 Develop:
-- Encounter Definition;
-- Encounter Site;
-- Runtime Encounter Instance;
-- compatibility / placement rules;
-- encounter pools;
+- Encounter Definitions as authored base content;
+- Route-aware Encounter Sites;
+- Runtime Encounter Instances;
+- placement / compatibility rules;
+- Encounter pools;
 - repetition control;
-- generated supply.
+- generated supply;
+- Encounter Resolution Context;
+- resolved occurrence content.
 
-Integrate these definitions directly into the existing Encounter Workshop so
-designers can load and test authored encounter content without duplicating it
-into the workshop scene.
+Working architecture:
 
-# 3.3 Escalation + Intensity
+Base Encounter Definition
++
+Encounter Site
++
+Resolution Context
+↓
+Resolved Encounter
+↓
+Runtime Encounter Instance.
+
+The source Encounter Definition remains immutable.
+
+# 3.3 — Escalation, Encounter Mutation + Intensity
+
+Purpose:
+
+Make expedition difficulty change what the player faces rather than only
+increasing actor statistics.
+
+Potential Escalation levers:
+- health / damage / armour;
+- population;
+- Elite frequency;
+- enemy composition;
+- spawn rhythm;
+- phase timing;
+- extra phases / reinforcements;
+- Encounter Rules;
+- harder Encounter pools;
+- ambient pressure;
+- bosses;
+- World Event pressure.
+
+Working direction:
+
+Escalation
+→ long-term available danger.
+
+Intensity
+→ how aggressively that danger is expressed right now.
+
+Future Encounter resolution should support authored/domain-specific modifiers
+such as:
+
+- add one Elite to the Opening Phase;
+- add additional Zombies;
+- add a reinforcement Phase;
+- compress phase timing;
+- alter Encounter Rules.
+
+Do not reduce Escalation to one universal stat multiplier.
+
+Already-engaged Encounter content should normally remain committed.
+
+The Encounter Workshop should eventually support Escalation / Intensity preview
+and replay of the resolved result.
 
 # 3.4 Ambient Ecology + World Events
 

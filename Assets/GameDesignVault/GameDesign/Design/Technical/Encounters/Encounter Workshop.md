@@ -937,3 +937,50 @@ deliberately.
 
 The Workshop scene is therefore a test site / harness rather than the structural
 template for authored Encounter Definitions.
+
+# Future Route Context Authoring
+
+**Status: Working / Future**
+
+Portable Encounter Definitions should eventually be testable against route-based
+spatial contexts without turning the Encounter Workshop into the complete Region
+editor.
+
+Potential Workshop contexts:
+
+Point Site
+
+Route Segment
+
+Route Path
+Entry → Core → Exit
+
+Route Group.
+
+A portable Encounter should refer to semantic spatial roles rather than concrete
+scene objects where practical.
+
+Example:
+
+Road Blockade
+
+Trigger:
+Party reaches Entry
+
+Spawn:
+Primary Horde around Core
+
+Reinforcement:
+arrives from Exit.
+
+A concrete Region Site may later bind:
+
+Entry → Well NW
+Core → Well West
+Exit → Well SW.
+
+Another Site may map the same Encounter Definition onto completely different
+Route Nodes.
+
+The Workshop should therefore test the spatial requirements/roles of Encounter
+content while Region scene authoring owns the real Route Graph.

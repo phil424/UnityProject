@@ -89,6 +89,7 @@ A previous direction intentionally retained only for historical context.
 - [[Expedition Scheduling and Encounter Generation]]
 - [[World Events]]
 - [[Progression Lifetimes]]
+- [[Route Geography]]
 
 ## Combat Direction / Tactics
 

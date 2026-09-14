@@ -641,6 +641,42 @@ Randomness should primarily decide:
 Avoid replacing authored encounter identity with completely arbitrary procedural
 enemy soup.
 
+# Route Geography and Future Encounter Placement
+
+See:
+
+[[Route Geography]]
+
+The Region route network is persistent geography.
+
+It should not itself become formal Encounter state.
+
+Future Encounter Sites may occupy authored route geography such as:
+
+- a Node;
+- a Segment;
+- a connected multi-Node path;
+- a Route Group.
+
+Example:
+
+Village Entrance
+→ Well Ring
+→ Church Road.
+
+A selected rare Encounter beyond those locations may require the player to travel
+through several formal Encounter footprints on the way.
+
+Those earlier Encounters may activate and their enemies may continue pursuing.
+
+This is compatible with the existing Encounter Membership / redirection model.
+
+Future generation may use route/site semantic tags to determine which Encounter
+Definitions are appropriate for which geography.
+
+Tags remain deliberately deferred until the compatibility system has a concrete
+consumer.
+
 # Encounter Authoring Workshop
 
 Future development should provide a dedicated encounter-authoring/test scene.

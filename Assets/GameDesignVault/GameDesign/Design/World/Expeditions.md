@@ -249,6 +249,35 @@ Examples:
 
 Escalation should support effectively endless post-Apex survival.
 
+Escalation should use multiple difficulty levers rather than only increasing
+enemy statistics.
+
+Raw combat-stat scaling remains valid, but should coexist with changes such as:
+
+- larger encounter populations;
+- additional Elite enemies;
+- different enemy composition;
+- faster / denser spawn rhythm;
+- altered phase timing;
+- additional reinforcement phases;
+- additional Encounter Rules;
+- harder Encounter Definition pools;
+- stronger ambient pressure;
+- World Event pressure.
+
+A higher Escalation level should therefore be capable of changing the shape of
+future encounters, not only the size of their health/damage numbers.
+
+Working direction:
+
+Base Encounter Definition
++
+Escalation / World Context
+↓
+Resolved Encounter Occurrence.
+
+Already-engaged encounters should generally remain stable when Escalation rises.
+
 # Intensity and Pacing
 
 Escalation and current intensity are separate.

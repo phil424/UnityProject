@@ -76,7 +76,9 @@ hero reaches Encounter B
         ↓
 both encounters may participate in the resulting combat
 
-The exact travel/pathing implementation remains open.
+Ambient graph pathing is now established for autonomous region travel.
+
+Route-aware explicit Encounter Direction remains future work.
 
 ## Ambient Travel Intent
 
@@ -142,6 +144,42 @@ This distinction allows:
 to behave differently from:
 
 > Nothing selected; keep exploring automatically.
+
+### 3.0K1 — Persistent Route Destinations
+
+Ambient travel now distinguishes:
+
+Current Route Node
+↓
+Destination Route Node
+↓
+Intermediate Target Node.
+
+The destination normally persists across intermediate Nodes.
+
+Local combat may temporarily remove ambient navigation intent without discarding
+that destination.
+
+When combat ends, the party resumes the same authored route.
+
+Explicit Encounter Direction still discards ambient route state and owns
+navigation immediately.
+
+Current priority remains:
+
+Forced Motion
+↓
+Ability Action Lock
+↓
+Explicit Encounter Navigation
+↓
+Local Combat
+↓
+Ambient Route Navigation.
+
+Formal Encounter Direction does not yet route through the ambient Route Graph.
+
+That becomes future work once Encounter Sites have explicit route geography.
 
 ## Current Encounter Foundation
 

@@ -686,3 +686,101 @@ Without a start Rule:
 
 With a Party Proximity start Rule:
 → the authored trigger decides when the encounter begins.
+
+## 2026-09-14 — Route connections become first-class Region geography
+
+### Decision
+
+Region route authoring is composed from:
+
+Route Nodes
++
+Route Segments
++
+Route Groups.
+
+Connections are no longer represented only as raw Node-to-Node reference lists.
+
+### Reason
+
+Route connections now need to become meaningful Region geography capable of
+supporting future encounter occupancy, strategic routing, Route Groups, semantic
+tags and World Event interaction.
+
+### Implications
+
+Nodes represent meaningful positions.
+
+Segments represent traversable relationships.
+
+Groups identify exact authored collections of route geography.
+
+Future semantic Tags remain separate from Groups.
+
+
+## 2026-09-14 — Routes remain geography rather than Encounter occurrences
+
+### Decision
+
+A route, Route Segment or Route Group is not itself a `LevelEncounter`.
+
+Formal Encounter occurrences may instead occupy route geography through future
+Encounter Sites / footprints.
+
+### Reason
+
+Route geography persists for the Region lifetime.
+
+Encounter state has occurrence lifecycle such as Available, Selected, Started,
+Completed and Expired.
+
+Combining those lifetimes would create ambiguous concepts such as a completed or
+expired road.
+
+### Implications
+
+Future Encounter footprints may occupy:
+- Nodes;
+- Segments;
+- connected paths;
+- Route Groups.
+
+Travelling toward one Encounter may cross other Encounter footprints.
+
+Enemies from those encounters may continue pursuing, preserving existing
+Encounter Membership and redirection behaviour.
+
+
+## 2026-09-14 — Escalation uses encounter-content levers as well as statistics
+
+### Decision
+
+Long-term expedition Escalation should be capable of altering future encounter
+composition and structure in addition to ordinary combat-stat scaling.
+
+### Reason
+
+Difficulty should become qualitatively more dangerous and varied rather than
+only producing enemies with progressively larger numerical stats.
+
+### Implications
+
+Future Escalation levers may include:
+- population;
+- Elite frequency;
+- composition;
+- spawn rhythm;
+- phase timing;
+- additional phases;
+- reinforcement behaviour;
+- Encounter Rules;
+- Encounter pools;
+- ambient pressure;
+- combat statistics.
+
+Authored `EncounterDefinition` assets remain immutable base content.
+
+A future encounter-resolution layer should create the modified occurrence.
+
+The Encounter Workshop should eventually preview resolved encounters at chosen
+Escalation / Intensity contexts.

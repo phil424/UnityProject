@@ -479,30 +479,29 @@ Rare Sighting
 - make a valuable encounter available;
 - surface it to the player through encounter UI.
 
-# Known Limitation
+# Current Strategic Movement Boundary
 
-All current `StageDirector.MinionSpawnGroups` are treated as required encounter
-work.
+Encounter identity and explicit encounter-directed navigation are implemented.
 
-A dormant required group can therefore prevent minion-phase completion if the
-party never reaches its trigger.
+Selecting another Encounter may immediately redirect the party while enemies from
+the previous Encounter continue pursuing.
 
-This is intentionally not solved through fake pending-spawn counts or oversized
-aggro ranges.
+When no Encounter Directive is active:
 
-Future encounter identity and encounter-directed movement should distinguish
-required, optional and opportunistic encounters and provide travel intent when
-no combat target exists.
+Ambient Route Navigation
+→ owns fallback movement.
 
-`LevelEncounter` does not yet control level-completion semantics.
+Local combat may interrupt Ambient Route Navigation.
 
-`StageDirector.MinionSpawnGroups` are still treated as required work separately
-from encounter identity.
+Explicit Encounter Navigation remains higher priority than local combat.
 
-Encounter-directed movement is also not implemented yet.
+3.0K introduces structured Route Geography and destination-oriented ambient
+travel.
 
-A party can therefore still become stationary with no valid combat target while
-an unstarted required group exists elsewhere.
+Explicit Encounter Navigation does not yet calculate a route through the Route
+Graph.
+
+That becomes relevant once Encounter Sites are connected to Route geography.
 
 # Future Reusable Encounter Model
 
@@ -531,37 +530,84 @@ Generic encounters should be capable of using several compatible authored sites.
 Do not refactor the current implementation into these layers until the strategic
 expedition prototype provides concrete requirements.
 
-# Ambient Route Authoring
+# Route Geography Authoring
 
-Ambient navigation is separate from formal encounter authoring.
+Detailed architecture:
 
-A level may contain one or more designer-authored route graphs.
+[[Route Geography]]
 
-Example:
+Ambient navigation remains separate from formal Encounter occurrence state.
+
+The primary authoring root is:
 
 Ambient Route
-├── Route Center
-├── Village Street
-├── Church Road
-├── Cemetery Path
-└── Market Square
+├── Nodes
+├── Segments
+├── Groups
+└── Landmarks.
 
-Each route node represents a meaningful travel location.
+## Nodes
 
-Explicit links describe valid travel relationships.
+Nodes are meaningful travel positions.
 
-The graph, rather than arbitrary random world positions, provides the spatial
-structure for autonomous ambient movement.
+The GameObject name is the authoring label.
 
-Prototype ambient spawn points may live on route nodes.
+Avoid a duplicate serialized display-name field.
 
-Long-term ambient population may instead move/populate dynamically through the
-graph.
+## Segments
 
-Do not model ambient enemies as fake `LevelEncounter`s merely to reuse encounter
-navigation.
+Connections between Nodes are first-class `AmbientRouteSegment` objects.
 
-Encounter choice and ambient exploration are different gameplay concepts.
+A Segment owns:
+
+Node A
++
+Node B.
+
+Initial route traversal is bidirectional.
+
+Segment GameObjects are organisational/data objects.
+
+Keep their Transform at identity.
+
+The endpoint Nodes define their spatial geometry.
+
+## Groups
+
+`AmbientRouteGroup` identifies exact collections of Nodes and Segments.
+
+Groups provide semantic authored geography without requiring a separate runtime
+system for every location.
+
+Route Groups are not formal Encounters.
+
+## Validation
+
+After meaningful route edits use:
+
+Ambient Route
+→ Ambient Route Graph
+→ Debug
+→ Validate Route Geography.
+
+Validation should detect:
+- unconfigured Segments;
+- duplicate Segments;
+- isolated Nodes;
+- disconnected route islands;
+- foreign references;
+- invalid Group membership.
+
+## Ambient Activity
+
+Ambient population may exist along route geography without becoming a formal
+Encounter.
+
+Do not model every ambient enemy as a `LevelEncounter` merely to reuse encounter
+features.
+
+Formal encounters and ambient populations may later coexist on the same Route
+geography.
 
 # Prototype Reusable Encounter Sites
 
