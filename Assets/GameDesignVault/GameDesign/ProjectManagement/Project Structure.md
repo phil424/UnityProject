@@ -176,6 +176,12 @@ Tool code may consume runtime architecture.
 
 Runtime gameplay code should not depend on developer-tool implementations.
 
+`Tools/RouteAuthoring/Editor/`
+- Unity Editor-only authoring tools for Route Geography;
+- automates scene-owned Node / Segment / Group setup;
+- may reference runtime Movement/Route components;
+- runtime code must not depend on this tooling.
+
 ## UI
 
 `UI/`

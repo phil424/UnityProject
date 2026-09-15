@@ -498,8 +498,10 @@ Explicit Encounter Navigation remains higher priority than local combat.
 3.0K introduces structured Route Geography and destination-oriented ambient
 travel.
 
-Explicit Encounter Navigation does not yet calculate a route through the Route
-Graph.
+Explicit Encounter Navigation now follows the Route Graph when the selected
+Encounter has an authored `EncounterRouteSite`.
+
+Unbound Encounters retain the previous direct-travel fallback.
 
 That becomes relevant once Encounter Sites are connected to Route geography.
 
@@ -608,6 +610,39 @@ features.
 
 Formal encounters and ambient populations may later coexist on the same Route
 geography.
+
+## Encounter Route Site Authoring
+
+3.0K3A introduces `EncounterRouteSite`.
+
+The common workflow should use:
+
+`Tools -> MiniCrawler -> Route Geography Authoring`
+
+rather than manually adding/wiring Site components.
+
+Current workflow:
+
+1. select the target `LevelEncounter`;
+2. the Route Authoring tool pins it as `Target Encounter`;
+3. select the desired Route Node(s) and/or Segment(s);
+4. choose `Bind / Replace Site Footprint From Selection`.
+
+The tool:
+- adds `EncounterRouteSite` when missing;
+- assigns the Encounter;
+- writes the selected footprint;
+- preserves Unity Undo;
+- leaves the generated component manually editable.
+
+Do not create a separate Site GameObject solely because Route Site and Encounter
+Occurrence are conceptually different layers.
+
+The current prototype may co-locate those components while their responsibilities
+remain separate.
+
+The long-term Site / Runtime Instance split belongs to generated Encounter
+architecture once that split has concrete runtime requirements.
 
 # Prototype Reusable Encounter Sites
 

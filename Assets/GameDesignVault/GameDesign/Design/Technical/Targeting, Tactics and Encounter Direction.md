@@ -78,7 +78,10 @@ both encounters may participate in the resulting combat
 
 Ambient graph pathing is now established for autonomous region travel.
 
-Route-aware explicit Encounter Direction remains future work.
+Route-aware explicit Encounter Direction is established for Encounters with an
+authored `EncounterRouteSite`.
+
+Encounters without a Route Site continue using direct-travel fallback.
 
 ## Ambient Travel Intent
 
@@ -180,6 +183,52 @@ Ambient Route Navigation.
 Formal Encounter Direction does not yet route through the ambient Route Graph.
 
 That becomes future work once Encounter Sites have explicit route geography.
+
+### 3.0K3A — Route-Aware Encounter Direction
+
+When a selected Encounter has an `EncounterRouteSite`:
+
+Party Position
+↓
+nearest Route Node
+↓
+shortest authored route
+↓
+Site approach Node
+↓
+final local Encounter approach.
+
+The Route Site does not replace Encounter start semantics.
+
+After the Region route is completed, `EncounterDirectionController` resumes its
+existing final-target resolution:
+
+authored PartyProximity boundary
+or
+Encounter anchor.
+
+Explicit Encounter navigation continues to use:
+
+`SuppressCombatTargeting = true`.
+
+Therefore local combat does not interrupt a deliberate player-issued strategic
+travel command.
+
+Current priority remains:
+
+Forced Motion
+↓
+Ability Action Lock
+↓
+Explicit Encounter Route Navigation
+↓
+Local Combat
+↓
+Ambient Route Navigation.
+
+K3A does not yet start other Encounter Sites crossed during the route.
+
+That behaviour belongs to K3B.
 
 ## Current Encounter Foundation
 

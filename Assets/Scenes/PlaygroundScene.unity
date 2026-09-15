@@ -2894,6 +2894,7 @@ GameObject:
   - component: {fileID: 348410352}
   - component: {fileID: 348410351}
   - component: {fileID: 348410350}
+  - component: {fileID: 348410353}
   m_Layer: 0
   m_Name: South Road Horde Encounter
   m_TagString: Untagged
@@ -2910,7 +2911,7 @@ Transform:
   m_GameObject: {fileID: 348410348}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -15, y: 0.5, z: -15}
+  m_LocalPosition: {x: -15.39, y: 0.5, z: -11.8}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2982,6 +2983,22 @@ MonoBehaviour:
   presentationState: 0
   availabilitySequence: 0
   startedSequence: 0
+--- !u!114 &348410353
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 348410348}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02f33efe161111d4584484b7060aeef9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Encounters.EncounterRouteSite
+  encounter: {fileID: 348410352}
+  nodes: []
+  segments:
+  - {fileID: 1923800174}
 --- !u!1 &382263932
 GameObject:
   m_ObjectHideFlags: 0
@@ -3229,6 +3246,7 @@ GameObject:
   - component: {fileID: 392467348}
   - component: {fileID: 392467347}
   - component: {fileID: 392467346}
+  - component: {fileID: 392467349}
   m_Layer: 0
   m_Name: West Road Horde Encounter
   m_TagString: Untagged
@@ -3317,6 +3335,22 @@ MonoBehaviour:
   presentationState: 0
   availabilitySequence: 0
   startedSequence: 0
+--- !u!114 &392467349
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 392467344}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02f33efe161111d4584484b7060aeef9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Encounters.EncounterRouteSite
+  encounter: {fileID: 392467348}
+  nodes: []
+  segments:
+  - {fileID: 273647058}
 --- !u!1 &425489585
 GameObject:
   m_ObjectHideFlags: 0
@@ -4499,6 +4533,7 @@ GameObject:
   - component: {fileID: 579706917}
   - component: {fileID: 579706919}
   - component: {fileID: 579706918}
+  - component: {fileID: 579706920}
   m_Layer: 0
   m_Name: Opening Horde Encounter
   m_TagString: Untagged
@@ -4600,6 +4635,22 @@ MonoBehaviour:
     batchSize: 1
     timeBetweenSpawns: 0
     timeBetweenBatches: 0.5
+--- !u!114 &579706920
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 579706915}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02f33efe161111d4584484b7060aeef9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Encounters.EncounterRouteSite
+  encounter: {fileID: 579706917}
+  nodes: []
+  segments:
+  - {fileID: 1937379564}
 --- !u!1 &581903642
 GameObject:
   m_ObjectHideFlags: 0

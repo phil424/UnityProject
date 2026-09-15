@@ -784,3 +784,38 @@ A future encounter-resolution layer should create the modified occurrence.
 
 The Encounter Workshop should eventually preview resolved encounters at chosen
 Escalation / Intensity contexts.
+
+## 2026-09-15 — Route geography uses editor-assisted scene authoring
+
+### Decision
+
+Route topology remains authored as scene-owned Nodes, Segments and Groups.
+
+A dedicated Unity Editor authoring layer should automate common creation,
+connection, grouping and validation work.
+
+Generated route objects remain normal editable Unity objects.
+
+### Reason
+
+The 3.0K1 runtime representation is useful, but manually creating GameObjects,
+adding components and wiring every relationship places unnecessary repetitive
+work on the designer and is prone to reference mistakes.
+
+Moving the entire spatial graph into a different data model would solve the
+wrong problem.
+
+The immediate problem is the authoring surface, not the runtime representation.
+
+### Implications
+
+The common workflow should be button/tool assisted.
+
+Manual Inspector editing remains available as an advanced escape hatch.
+
+Route validation should be non-destructive.
+
+Runtime route code must not depend on UnityEditor tooling.
+
+Portable concepts such as future Route Tags / Encounter requirements may still
+use data assets when they have a concrete consumer.

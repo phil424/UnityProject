@@ -297,49 +297,95 @@ Promote the 3.0E ambient-route proof into meaningful authored Region geography
 that can support navigation, formal Encounter placement, ambient activity and
 future strategic planning.
 
-### 3.0K1 — Route Geography & Purposeful Traversal Proof
+### 3.0K1 — Route Geography & Purposeful Traversal Proof ✅
 
-**Status: Active**
-
-Prove:
+Completed:
 - first-class Route Nodes;
 - first-class Route Segments;
 - explicit Route Groups;
-- graph validation;
-- reachable-node queries;
-- shortest authored-route queries;
+- graph reachability / shortest-path queries;
+- route validation;
 - persistent ambient destinations;
 - intermediate route traversal;
 - local combat interruption / route resumption;
 - Encounter Directives continue to override ambient travel;
-- first Village Well ring greybox proof.
+- Village Well ring greybox proof;
+- central landmark remains non-traversable Route geography.
 
-Tags and Encounter occupancy are deliberately deferred.
+`3.0K1Complete.zip` is the completed K1 checkpoint.
 
-### 3.0K2 — Route Encounter Sites & Directed Travel
+### 3.0K2 — Route Geography Authoring Workflow ✅
+
+Completed:
+- dockable Route Geography authoring tool;
+- automatic authoring-root creation;
+- one-button Route Node creation;
+- automatic Segment creation / endpoint wiring;
+- duplicate-Segment protection;
+- hierarchy-ordered path creation;
+- spatial loop creation;
+- Route Group creation from selected geography;
+- automatic Group membership wiring;
+- non-destructive validation;
+- Unity Undo support;
+- generated content remains manually editable;
+- runtime code remains independent from Editor tooling.
+
+The Village Well Ring can now be recreated without manually adding route
+components or assigning Segment endpoint / Group membership references.
+
+`3.0K2Complete.zip` is the completed K2 checkpoint.
+
+### 3.0K3 — Route Encounter Sites & Directed Travel
+
+Purpose:
+
+Connect formal Encounter occurrences to persistent Region geography without
+making Routes themselves become Encounter lifecycle objects.
+
+#### 3.0K3A — Route-Bound Sites & Directed Travel ✅
+
+Completed:
+- `EncounterRouteSite` connects formal Encounters to Region Route Geography;
+- Site footprints support Node / Segment / multi-Segment composition;
+- Route Site setup is integrated into the Route Geography authoring window;
+- explicit Encounter Direction follows authored Route paths;
+- route approach hands off to existing authored/default Encounter-start
+  semantics;
+- unbound Encounters retain direct travel fallback;
+- western Village Well route contains the first three formal Encounter Sites.
+
+`3.0K3AComplete.zip` is the completed K3A checkpoint.
+
+#### 3.0K3B — Route Crossing & Multi-Encounter Pursuit
+
+**Status: Active**
 
 Prove:
-- formal Encounter Sites can bind to Route geography;
-- Encounter destinations can use route-aware travel;
-- sites may occupy Node / Segment / path footprints;
-- travelling to a distant Encounter may cross other Encounter footprints;
-- crossed Encounters may activate;
-- enemies from previous Encounters may continue pursuing;
+- explicit Encounter travel can detect other Encounter Sites crossed along the
+  selected route;
+- eligible crossed Encounters may start from traversal;
+- the selected strategic directive remains higher priority than those crossed
+  Encounters;
+- enemies from crossed Encounters may continue pursuing;
+- the party can arrive at the selected Encounter with previous Encounter enemies
+  still present;
+- Encounter Membership keeps progression/completion owned by each Encounter;
 - route geography remains separate from Encounter lifecycle.
 
-### 3.0K3 — Route / Encounter Compatibility
+### 3.0K4 — Route / Encounter Compatibility
 
 Develop:
 - small semantic Route-tag model;
 - data-authored tag definitions;
 - Encounter/Site compatibility requirements;
-- route-group/site queries;
-- fixed spectacle vs generic compatible encounters;
+- Route Group / Site queries;
+- fixed spectacle vs generic compatible Encounters;
 - scheduler-ready placement seams.
 
 Avoid giant hardcoded tag enums.
 
-### 3.0K4 — Ambient Activity Authoring
+### 3.0K5 — Ambient Activity Authoring
 
 Improve the lightweight world between formal Encounters.
 
@@ -353,7 +399,7 @@ Working direction:
 
 Ambient population does not automatically become formal Encounter content.
 
-### 3.0K5 — Workshop Route Context
+### 3.0K6 — Workshop Route Context
 
 Allow Encounter content to be tested against small spatial route contexts.
 
@@ -371,7 +417,7 @@ Explore semantic roles such as:
 The Workshop remains an Encounter test harness rather than the full Region
 editor.
 
-### 3.0K6 — First Playable Region Content Proof
+### 3.0K7 — First Playable Region Demo
 
 Build one deliberate greybox Region using the completed authoring tools.
 
@@ -388,7 +434,6 @@ Target:
 Success question:
 
 > Is this expedition enjoyable to let run and strategically intervene in?
-
 
 ## 3.0L — Expanded Strategic Planner & Expedition Integration
 

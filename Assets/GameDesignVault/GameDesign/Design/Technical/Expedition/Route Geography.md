@@ -83,6 +83,77 @@ A Group answers:
 
 This is different from a future semantic Tag.
 
+# Authoring Workflow
+
+## 3.0K2 — Editor-Assisted Route Authoring
+
+Route geography remains scene-authored spatial data.
+
+The runtime representation remains:
+
+AmbientRouteGraph
+├── AmbientRouteNode
+├── AmbientRouteSegment
+└── AmbientRouteGroup.
+
+Designers should not normally need to construct that serialization manually.
+
+The primary designer-facing workflow is the Route Geography Authoring Editor
+tool.
+
+It can:
+
+- create missing authoring roots;
+- create Route Nodes;
+- connect selected Nodes;
+- create hierarchy-ordered paths;
+- create spatial loops;
+- create Route Groups from selected geography;
+- report route validation issues.
+
+Generated objects remain ordinary Unity scene objects.
+
+The designer may still:
+- move Nodes;
+- rename Nodes / Segments / Groups;
+- edit Segment endpoint references;
+- edit Group membership;
+- add other compatible scene components.
+
+The authoring tool is an acceleration layer rather than a proprietary file
+format.
+
+## Scene Data vs Portable Data
+
+Route topology remains scene-owned for now because positions and connections are
+part of concrete Region geography.
+
+Do not move the entire route graph into ScriptableObjects merely to make
+Inspector authoring easier.
+
+Future reusable semantic content is a stronger candidate for asset-backed data,
+including concepts such as:
+- Route Tags;
+- Encounter compatibility requirements;
+- portable Workshop route contexts.
+
+## Validation
+
+Route validation is non-destructive.
+
+Validation may report:
+- missing Segment endpoints;
+- duplicate Segments;
+- isolated Nodes;
+- disconnected geography;
+- foreign references;
+- invalid Group membership.
+
+Validation should not automatically shrink or rewrite serialized collections
+while the designer is editing them.
+
+Manual Inspector editing remains supported.
+
 # Group vs Tag
 
 A Group identifies specific geography.
@@ -163,6 +234,94 @@ Route Geography
 Encounter Site / Footprint
 ↓
 Encounter Occurrence.
+
+# 3.0K3 — Encounter Route Sites
+
+## K3A — Route-Bound Encounter Sites
+
+`EncounterRouteSite` is the first concrete bridge between persistent Region
+geography and the current scene-authored `LevelEncounter` implementation.
+
+The current prototype authoring workflow co-locates the Route Site component on
+the `LevelEncounter` GameObject.
+
+This is an authoring/runtime bridge, not a statement that Encounter Site and
+Runtime Encounter Instance must remain the same object forever.
+
+The long-term model remains:
+
+Route Geography
+↓
+Encounter Site
+↓
+Encounter Occurrence.
+
+3.2 may later separate Site and Runtime Instance ownership more completely.
+
+## Footprint
+
+A Site may currently contain:
+
+- explicit Route Nodes;
+- explicit Route Segments.
+
+This composition supports:
+
+One Node
+→ point Site.
+
+One Segment
+→ Segment Site.
+
+Several connected Segments
+→ route/path Site.
+
+Segment endpoints are derived for navigation.
+
+Do not duplicate every Segment endpoint into the serialized Node list merely to
+make pathfinding possible.
+
+## Route Approach
+
+For the current prototype, a Site derives its route-approach Node from the
+footprint Node nearest the owning Encounter anchor.
+
+Example:
+
+Opening Horde
+occupies
+Well West ↔ Well NW
+
+Encounter anchor lies northwest
+↓
+approach Node = Well NW.
+
+Once the route-approach Node is reached, Encounter Direction switches to the
+existing local Encounter target.
+
+That target remains:
+
+authored PartyProximity start boundary
+or
+default Encounter anchor.
+
+Therefore:
+
+Route Geography
+answers regional traversal.
+
+Encounter authoring
+continues to own local start semantics.
+
+## Optional Adoption
+
+Encounter Route Sites are optional.
+
+A `LevelEncounter` without an `EncounterRouteSite` continues to use the existing
+direct navigation fallback.
+
+This allows route geography to be adopted incrementally rather than requiring
+all current content to be migrated at once.
 
 # Future Encounter Footprints
 

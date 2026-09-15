@@ -677,6 +677,35 @@ Definitions are appropriate for which geography.
 Tags remain deliberately deferred until the compatibility system has a concrete
 consumer.
 
+## 3.0K3A Current Site Bridge
+
+The first implemented Site seam is:
+
+`EncounterRouteSite`.
+
+For the current scene-authored prototype it is co-located with a
+`LevelEncounter`.
+
+It stores a Route footprint and allows Encounter Direction to calculate a
+regional path before the existing local Encounter approach begins.
+
+This is intentionally smaller than the final generated model.
+
+It does not yet provide:
+- tags;
+- Definition/Site compatibility;
+- generated Runtime Instances;
+- scheduler placement;
+- route-triggered Encounter activation.
+
+Those remain later milestones.
+
+The important seam now exists:
+
+Encounter
+→ has Region geography
+→ Region geography can drive strategic travel.
+
 # Encounter Authoring Workshop
 
 Future development should provide a dedicated encounter-authoring/test scene.
