@@ -323,6 +323,106 @@ direct navigation fallback.
 This allows route geography to be adopted incrementally rather than requiring
 all current content to be migrated at once.
 
+## K3B — Route Traversal Encounter Start
+
+A Route Site may opt into:
+
+`Start Encounter On Traversal`.
+
+This is a Site-level placement policy.
+
+It means:
+
+> crossing this Site through Route Geography may begin the formal Encounter
+> occurrence hosted there.
+
+The same Site policy applies to:
+- explicit Encounter-directed travel;
+- passive Ambient Route exploration.
+
+The navigation mode determines how the party reacts after the Encounter starts.
+
+### Segment Sites
+
+A Segment Site is considered crossed when navigation begins traversing that
+specific Route Segment.
+
+Shared endpoint Nodes do not imply every connected Segment has been crossed.
+
+This avoids false starts at route intersections.
+
+### Explicit Node Sites
+
+An explicit Node Site is considered crossed when the route reaches that Node.
+
+Segment endpoints are not automatically treated as explicit Node footprint
+entries.
+
+### Explicit Encounter Travel
+
+When travelling toward a player-selected Encounter:
+
+cross another eligible Route Site
+↓
+crossed Encounter starts
+↓
+selected strategic directive remains unchanged
+↓
+party continues travelling
+↓
+crossed Encounter enemies may pursue.
+
+The selected destination itself is excluded from traversal-start activation.
+
+Its Route Site guides regional travel, after which the existing local Encounter
+start semantics remain authoritative.
+
+### Ambient Exploration
+
+When no explicit Encounter Directive exists:
+
+ambient route
+↓
+cross traversal-enabled Route Site
+↓
+Encounter starts
+↓
+ambient route navigation pauses
+↓
+normal local combat / Encounter resolution occurs
+↓
+original ambient journey resumes.
+
+Ambient navigation remains paused for the formal Encounter occurrence, including
+short target/spawn/phase gaps.
+
+This prevents the party wandering away merely because no combat target exists
+for a moment.
+
+### Strategic Redirection
+
+If the player selects an explicit Encounter while resolving an
+ambient-traversal Encounter:
+
+ambient route state is discarded
+↓
+explicit Encounter Direction takes ownership
+↓
+the already-started Encounter remains active
+↓
+its enemies may continue pursuing.
+
+### Encounter Ownership
+
+Physical overlap does not merge Encounter state.
+
+Every spawned actor retains its existing Encounter Membership.
+
+Therefore:
+- crossed Encounters complete independently;
+- phase state remains Encounter-owned;
+- several Encounter populations may participate in the same physical fight.
+
 # Future Encounter Footprints
 
 A formal Encounter Site may eventually occupy:

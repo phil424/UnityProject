@@ -338,21 +338,11 @@ namespace MiniCrawler.Tools.RouteAuthoring
         {
             EditorGUILayout.Space();
 
-            EditorGUILayout.LabelField(
-                "Encounter Sites",
-                EditorStyles.boldLabel
-            );
+            EditorGUILayout.LabelField("Encounter Sites", EditorStyles.boldLabel);
 
             EditorGUI.BeginChangeCheck();
 
-            encounterSiteTarget =
-                (LevelEncounter)
-                EditorGUILayout.ObjectField(
-                    "Target Encounter",
-                    encounterSiteTarget,
-                    typeof(LevelEncounter),
-                    true
-                );
+            encounterSiteTarget = (LevelEncounter)EditorGUILayout.ObjectField("Target Encounter", encounterSiteTarget, typeof(LevelEncounter), true);
 
             if (EditorGUI.EndChangeCheck())
                 validationHasRun = false;
@@ -363,13 +353,8 @@ namespace MiniCrawler.Tools.RouteAuthoring
                 MessageType.Info
             );
 
-            List<AmbientRouteNode> selectedNodes =
-                AmbientRouteAuthoringUtility
-                    .GetSelectedNodes(graph);
-
-            List<AmbientRouteSegment> selectedSegments =
-                AmbientRouteAuthoringUtility
-                    .GetSelectedSegments(graph);
+            List<AmbientRouteNode> selectedNodes = AmbientRouteAuthoringUtility.GetSelectedNodes(graph);
+            List<AmbientRouteSegment> selectedSegments = AmbientRouteAuthoringUtility.GetSelectedSegments(graph);
 
             EditorGUILayout.LabelField(
                 "Selected Route Footprint",
@@ -378,9 +363,7 @@ namespace MiniCrawler.Tools.RouteAuthoring
 
             if (encounterSiteTarget != null)
             {
-                EncounterRouteSite existingSite =
-                    encounterSiteTarget
-                        .GetComponent<EncounterRouteSite>();
+                EncounterRouteSite existingSite = encounterSiteTarget.GetComponent<EncounterRouteSite>();
 
                 if (existingSite != null)
                 {
@@ -388,13 +371,27 @@ namespace MiniCrawler.Tools.RouteAuthoring
                         "Current Site",
                         $"{existingSite.Nodes.Count} Nodes / {existingSite.Segments.Count} Segments"
                     );
+
+                    bool startOnTraversal = EditorGUILayout.Toggle(
+                        "Start On Route Traversal",
+                        existingSite.StartEncounterOnTraversal
+                    );
+                    
+                    EditorGUILayout.HelpBox(
+                        "Enabled Sites may start when crossed during explicit Encounter travel or ambient exploration. " +
+                        "Explicit travel continues toward its selected destination; ambient exploration pauses to resolve the crossed Encounter.",
+                        MessageType.None
+                    );
+
+                    if (startOnTraversal != existingSite.StartEncounterOnTraversal)
+                    {
+                        EncounterRouteSiteAuthoringUtility.SetStartEncounterOnTraversal(existingSite, startOnTraversal);
+                        RefreshValidation();
+                    }
                 }
                 else
                 {
-                    EditorGUILayout.LabelField(
-                        "Current Site",
-                        "Not Bound"
-                    );
+                    EditorGUILayout.LabelField("Current Site", "Not Bound");
                 }
             }
 

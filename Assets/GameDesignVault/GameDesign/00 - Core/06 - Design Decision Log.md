@@ -819,3 +819,46 @@ Runtime route code must not depend on UnityEditor tooling.
 
 Portable concepts such as future Route Tags / Encounter requirements may still
 use data assets when they have a concrete consumer.
+
+## 2026-09-15 — Route traversal can start formal Encounters
+
+### Decision
+
+Traversal-enabled Encounter Sites may start when crossed during either explicit
+Encounter travel or passive Ambient Route exploration.
+
+The navigation context determines the party response.
+
+Explicit Encounter travel:
+- crossed Encounter starts;
+- selected strategic directive remains active;
+- party continues travelling;
+- crossed enemies may pursue.
+
+Ambient exploration:
+- crossed Encounter starts;
+- ambient navigation yields;
+- party resolves the formal Encounter;
+- the previous ambient journey resumes afterward.
+
+### Reason
+
+A Route Site should have a consistent spatial meaning regardless of why the
+party entered that geography.
+
+The important distinction is not whether the Site exists, but whether the player
+currently has an explicit strategic navigation command.
+
+This allows passive exploration to discover formal content naturally while still
+supporting deliberate multi-Encounter strategic pulls.
+
+### Implications
+
+- `Start Encounter On Traversal` remains Site-owned;
+- the selected destination is exempt from traversal start while travelling to it;
+- ambient exploration can be interrupted by formal Encounter lifecycle, not only
+  ordinary combat targeting;
+- explicit strategic navigation remains higher priority than crossed Encounter
+  combat;
+- previously-started enemies may continue pursuing after redirection;
+- Encounter Membership preserves independent completion during overlap.

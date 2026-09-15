@@ -17,6 +17,7 @@ namespace MiniCrawler.Encounters
         [SerializeField, Min(0.1f)] private float arrivalDistance = 2.5f;
 
         private readonly List<AmbientRouteNode> routePath = new();
+        private readonly HashSet<EncounterRouteSite> crossedRouteSites = new();
 
         private StageDirector stageDirector;
 
@@ -227,8 +228,16 @@ namespace MiniCrawler.Encounters
                 return;
             }
 
+            AmbientRouteNode reachedNode = routePath[routePathIndex];
+
+            TryStartCrossedEncounterSitesAtNode(reachedNode);
+
             if (routePathIndex < routePath.Count - 1)
             {
+                AmbientRouteNode nextNode = routePath[routePathIndex + 1];
+
+                TryStartCrossedEncounterSitesOnSegment(reachedNode, nextNode);
+
                 routePathIndex++;
                 ApplyTravelIntentToParty();
                 return;
@@ -243,6 +252,69 @@ namespace MiniCrawler.Encounters
             );
 
             ApplyTravelIntentToParty();
+        }
+        
+        private void TryStartCrossedEncounterSitesAtNode(AmbientRouteNode node)
+        {
+            if (node == null)
+                return;
+
+            TryStartCrossedEncounterSites(
+                site => site.ContainsExplicitNode(node)
+            );
+        }
+
+        private void TryStartCrossedEncounterSitesOnSegment(AmbientRouteNode from, AmbientRouteNode to)
+        {
+            if (selectedRouteGraph == null || from == null || to == null)
+                return;
+
+            AmbientRouteSegment segment = selectedRouteGraph.FindSegment(from, to);
+
+            if (segment == null)
+                return;
+
+            TryStartCrossedEncounterSites(
+                site => site.ContainsSegment(segment)
+            );
+        }
+
+        private void TryStartCrossedEncounterSites(Func<EncounterRouteSite, bool> isCrossed)
+        {
+            if (stageDirector == null ||
+                selectedRouteGraph == null ||
+                isCrossed == null)
+            {
+                return;
+            }
+
+            foreach (LevelEncounter encounter in stageDirector.Encounters)
+            {
+                if (encounter == null || encounter == SelectedEncounter)
+                    continue;
+
+                EncounterRouteSite site = encounter.GetComponent<EncounterRouteSite>();
+
+                if (site == null ||
+                    site == selectedRouteSite ||
+                    site.RouteGraph != selectedRouteGraph ||
+                    crossedRouteSites.Contains(site) ||
+                    !isCrossed(site))
+                {
+                    continue;
+                }
+
+                if (!site.TryStartEncounterFromTraversal())
+                    continue;
+
+                crossedRouteSites.Add(site);
+
+                Debug.Log(
+                    $"Route traversal started encounter: {encounter.DisplayName} " +
+                    $"while travelling to {SelectedEncounter.DisplayName}.",
+                    this
+                );
+            }
         }
 
         private void ArriveAtSelectedEncounter()
@@ -425,6 +497,8 @@ namespace MiniCrawler.Encounters
             selectedRouteGraph = null;
 
             routePath.Clear();
+            crossedRouteSites.Clear();
+
             routePathIndex = -1;
             routeTravelActive = false;
         }

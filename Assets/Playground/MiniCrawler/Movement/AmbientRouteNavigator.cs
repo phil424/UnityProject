@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using MiniCrawler.Core;
 using MiniCrawler.Encounters;
@@ -24,6 +25,7 @@ namespace MiniCrawler.Movement
         private readonly List<AmbientRouteNode> fallbackDestinations = new();
         private readonly List<AmbientRouteNode> candidatePath = new();
         private readonly List<AmbientRouteNode> routePath = new();
+        private readonly List<LevelEncounter> activeTraversalEncounters = new();
 
         private AmbientRouteGraph routeGraph;
 
@@ -64,6 +66,12 @@ namespace MiniCrawler.Movement
                 return;
             }
 
+            if (HasActiveTraversalEncounter())
+            {
+                ClearPartyNavigationIntents();
+                return;
+            }
+
             if (HasAnyPartyCombatTarget())
             {
                 ClearPartyNavigationIntents();
@@ -79,8 +87,11 @@ namespace MiniCrawler.Movement
                 return;
             }
 
-            if (HasAnyPartyMemberArrived())
-                HandleReachedTarget();
+            if (HasAnyPartyMemberArrived() && HandleReachedTarget())
+            {
+                ClearPartyNavigationIntents();
+                return;
+            }
 
             ApplyPartyNavigationIntents();
         }
@@ -89,25 +100,17 @@ namespace MiniCrawler.Movement
         {
             RunDirector runDirector = RunDirector.Instance;
 
-            if (runDirector == null ||
-                runDirector.State != RunDirector.RunFlowState.InLevel)
-            {
+            if (runDirector == null || runDirector.State != RunDirector.RunFlowState.InLevel)
                 return false;
-            }
 
             StageDirector stageDirector = StageDirector.Instance;
 
-            if (stageDirector == null ||
-                stageDirector.State != StageDirector.LevelState.FightingMinions)
-            {
+            if (stageDirector == null || stageDirector.State != StageDirector.LevelState.FightingMinions)
                 return false;
-            }
 
-            EncounterDirectionController encounterDirection =
-                EncounterDirectionController.Instance;
+            EncounterDirectionController encounterDirection = EncounterDirectionController.Instance;
 
-            return encounterDirection == null ||
-                   encounterDirection.SelectedEncounter == null;
+            return encounterDirection == null || encounterDirection.SelectedEncounter == null;
         }
 
         private void BeginRouteFromParty(PartyMember leader)
@@ -118,25 +121,103 @@ namespace MiniCrawler.Movement
             routePath.Clear();
             routePathIndex = 0;
 
-            targetNode =
-                routeGraph.FindNearestNode(
-                    leader.transform.position
-                );
+            targetNode = routeGraph.FindNearestNode(leader.transform.position);
         }
 
-        private void HandleReachedTarget()
+        private bool HandleReachedTarget()
         {
             currentNode = targetNode;
 
-            if (routePath.Count > 0 &&
-                routePathIndex < routePath.Count - 1)
+            if (TryStartEncounterSitesAtNode(currentNode))
+                return true;
+
+            if (routePath.Count > 0 && routePathIndex < routePath.Count - 1)
             {
+                AmbientRouteNode nextNode = routePath[routePathIndex + 1];
+
                 routePathIndex++;
-                targetNode = routePath[routePathIndex];
-                return;
+                targetNode = nextNode;
+
+                return TryStartEncounterSitesOnSegment(currentNode, targetNode);
             }
 
             SelectDestinationAndBuildPath();
+
+            if (currentNode == null || targetNode == null || currentNode == targetNode)
+                return false;
+
+            return TryStartEncounterSitesOnSegment(currentNode, targetNode);
+        }
+        
+        private bool TryStartEncounterSitesAtNode(AmbientRouteNode node)
+        {
+            if (node == null)
+                return false;
+
+            return TryStartEncounterSites(site => site.ContainsExplicitNode(node));
+        }
+
+        private bool TryStartEncounterSitesOnSegment(AmbientRouteNode from, AmbientRouteNode to)
+        {
+            if (routeGraph == null || from == null || to == null)
+                return false;
+
+            AmbientRouteSegment segment = routeGraph.FindSegment(from, to);
+
+            if (segment == null)
+                return false;
+
+            return TryStartEncounterSites(site => site.ContainsSegment(segment));
+        }
+
+        private bool TryStartEncounterSites(Func<EncounterRouteSite, bool> isCrossed)
+        {
+            StageDirector stageDirector = StageDirector.Instance;
+
+            if (stageDirector == null || routeGraph == null || isCrossed == null)
+                return false;
+
+            bool startedAny = false;
+
+            foreach (LevelEncounter encounter in stageDirector.Encounters)
+            {
+                if (encounter == null)
+                    continue;
+
+                EncounterRouteSite site = encounter.GetComponent<EncounterRouteSite>();
+
+                if (site == null || site.RouteGraph != routeGraph || !isCrossed(site))
+                    continue;
+
+                if (!site.TryStartEncounterFromTraversal())
+                    continue;
+
+                if (!activeTraversalEncounters.Contains(encounter))
+                    activeTraversalEncounters.Add(encounter);
+
+                startedAny = true;
+
+                Debug.Log(
+                    $"Ambient route traversal started encounter: {encounter.DisplayName}. " +
+                    "Ambient exploration will resume after the encounter resolves.",
+                    this
+                );
+            }
+
+            return startedAny;
+        }
+        
+        private bool HasActiveTraversalEncounter()
+        {
+            for (int i = activeTraversalEncounters.Count - 1; i >= 0; i--)
+            {
+                LevelEncounter encounter = activeTraversalEncounters[i];
+
+                if (encounter == null || !encounter.HasStarted || encounter.IsCompleted || encounter.IsExpired)
+                    activeTraversalEncounters.RemoveAt(i);
+            }
+
+            return activeTraversalEncounters.Count > 0;
         }
 
         private void SelectDestinationAndBuildPath()
@@ -150,35 +231,22 @@ namespace MiniCrawler.Movement
             if (currentNode == null)
                 return;
 
-            routeGraph.GetReachableNodes(
-                currentNode,
-                reachableNodes
-            );
+            routeGraph.GetReachableNodes(currentNode, reachableNodes);
 
             preferredDestinations.Clear();
             fallbackDestinations.Clear();
 
             foreach (AmbientRouteNode candidate in reachableNodes)
             {
-                if (candidate == null ||
-                    candidate == currentNode ||
-                    candidate == previousRouteOriginNode)
-                {
+                if (candidate == null || candidate == currentNode || candidate == previousRouteOriginNode)
                     continue;
-                }
 
                 fallbackDestinations.Add(candidate);
 
-                if (!routeGraph.TryFindShortestPath(
-                        currentNode,
-                        candidate,
-                        candidatePath))
-                {
+                if (!routeGraph.TryFindShortestPath(currentNode, candidate, candidatePath))
                     continue;
-                }
 
-                int hopCount =
-                    Mathf.Max(0, candidatePath.Count - 1);
+                int hopCount = Mathf.Max(0, candidatePath.Count - 1);
 
                 if (hopCount >= preferredMinimumDestinationHops)
                     preferredDestinations.Add(candidate);
@@ -201,16 +269,9 @@ namespace MiniCrawler.Movement
             if (destinationPool.Count == 0)
                 return;
 
-            AmbientRouteNode selectedDestination =
-                destinationPool[
-                    Random.Range(0, destinationPool.Count)
-                ];
+            AmbientRouteNode selectedDestination = destinationPool[UnityEngine.Random.Range(0, destinationPool.Count)];
 
-            if (!routeGraph.TryFindShortestPath(
-                    currentNode,
-                    selectedDestination,
-                    routePath) ||
-                routePath.Count < 2)
+            if (!routeGraph.TryFindShortestPath(currentNode, selectedDestination, routePath) || routePath.Count < 2)
             {
                 routePath.Clear();
                 return;
@@ -228,56 +289,36 @@ namespace MiniCrawler.Movement
             if (targetNode == null)
                 return;
 
-            foreach (PartyMember partyMember in
-                     FindObjectsByType<PartyMember>(
-                         FindObjectsSortMode.None))
+            foreach (PartyMember partyMember in FindObjectsByType<PartyMember>(FindObjectsSortMode.None))
             {
                 if (!IsLivingPartyMember(partyMember))
                     continue;
 
-                AutoTargetMover mover =
-                    partyMember.GetComponent<AutoTargetMover>();
+                AutoTargetMover mover = partyMember.GetComponent<AutoTargetMover>();
 
                 if (mover == null || !mover.isActiveAndEnabled)
                     continue;
 
-                ActorNavigationIntent navigation =
-                    partyMember.GetComponent<ActorNavigationIntent>();
+                ActorNavigationIntent navigation = partyMember.GetComponent<ActorNavigationIntent>();
 
                 if (navigation == null)
-                {
-                    navigation =
-                        partyMember.gameObject
-                            .AddComponent<ActorNavigationIntent>();
-                }
+                    navigation = partyMember.gameObject.AddComponent<ActorNavigationIntent>();
 
-                navigation.SetDestination(
-                    this,
-                    targetNode.Position,
-                    arrivalDistance,
-                    suppressCombatTargeting: false
-                );
+                navigation.SetDestination(this, targetNode.Position, arrivalDistance, suppressCombatTargeting: false);
             }
         }
 
         private bool HasAnyPartyMemberArrived()
         {
-            foreach (PartyMember partyMember in
-                     FindObjectsByType<PartyMember>(
-                         FindObjectsSortMode.None))
+            foreach (PartyMember partyMember in FindObjectsByType<PartyMember>(FindObjectsSortMode.None))
             {
                 if (!IsLivingPartyMember(partyMember))
                     continue;
 
-                ActorNavigationIntent navigation =
-                    partyMember.GetComponent<ActorNavigationIntent>();
+                ActorNavigationIntent navigation = partyMember.GetComponent<ActorNavigationIntent>();
 
-                if (navigation != null &&
-                    navigation.IsOwnedBy(this) &&
-                    navigation.HasArrived(partyMember.transform))
-                {
+                if (navigation != null && navigation.IsOwnedBy(this) && navigation.HasArrived(partyMember.transform))
                     return true;
-                }
             }
 
             return false;
@@ -285,23 +326,15 @@ namespace MiniCrawler.Movement
 
         private bool HasAnyPartyCombatTarget()
         {
-            foreach (PartyMember partyMember in
-                     FindObjectsByType<PartyMember>(
-                         FindObjectsSortMode.None))
+            foreach (PartyMember partyMember in FindObjectsByType<PartyMember>(FindObjectsSortMode.None))
             {
                 if (!IsLivingPartyMember(partyMember))
                     continue;
 
-                AutoTargetMover mover =
-                    partyMember.GetComponent<AutoTargetMover>();
+                AutoTargetMover mover = partyMember.GetComponent<AutoTargetMover>();
 
-                if (mover != null &&
-                    mover.CurrentIntent == TargetIntent.Combat &&
-                    mover.CurrentTarget != null &&
-                    !mover.CurrentTarget.IsDead)
-                {
+                if (mover != null && mover.CurrentIntent == TargetIntent.Combat && mover.CurrentTarget != null && !mover.CurrentTarget.IsDead)
                     return true;
-                }
             }
 
             return false;
@@ -309,9 +342,7 @@ namespace MiniCrawler.Movement
 
         private PartyMember FindLivingPartyMember()
         {
-            foreach (PartyMember partyMember in
-                     FindObjectsByType<PartyMember>(
-                         FindObjectsSortMode.None))
+            foreach (PartyMember partyMember in FindObjectsByType<PartyMember>(FindObjectsSortMode.None))
             {
                 if (IsLivingPartyMember(partyMember))
                     return partyMember;
@@ -327,29 +358,19 @@ namespace MiniCrawler.Movement
 
             StageDirector stageDirector = StageDirector.Instance;
 
-            if (stageDirector != null &&
-                !stageDirector.IsCurrentPartyMember(partyMember))
-            {
+            if (stageDirector != null && !stageDirector.IsCurrentPartyMember(partyMember))
                 return false;
-            }
 
-            Health health =
-                partyMember.GetComponent<Health>();
+            Health health = partyMember.GetComponent<Health>();
 
             return health == null || !health.IsDead;
         }
 
         private void ClearPartyNavigationIntents()
         {
-            foreach (PartyMember partyMember in
-                     FindObjectsByType<PartyMember>(
-                         FindObjectsSortMode.None))
+            foreach (PartyMember partyMember in FindObjectsByType<PartyMember>(FindObjectsSortMode.None))
             {
-                ActorNavigationIntent navigation =
-                    partyMember != null
-                        ? partyMember
-                            .GetComponent<ActorNavigationIntent>()
-                        : null;
+                ActorNavigationIntent navigation = partyMember != null ? partyMember.GetComponent<ActorNavigationIntent>() : null;
 
                 navigation?.Clear(this);
             }
@@ -365,19 +386,15 @@ namespace MiniCrawler.Movement
             targetNode = null;
 
             routePath.Clear();
+            activeTraversalEncounters.Clear();
+
             routePathIndex = 0;
         }
-
         private void OnValidate()
         {
-            arrivalDistance =
-                Mathf.Max(0.1f, arrivalDistance);
+            arrivalDistance = Mathf.Max(0.1f, arrivalDistance);
 
-            preferredMinimumDestinationHops =
-                Mathf.Max(
-                    1,
-                    preferredMinimumDestinationHops
-                );
+            preferredMinimumDestinationHops = Mathf.Max(1, preferredMinimumDestinationHops);
         }
 
         private void OnDrawGizmosSelected()
@@ -387,29 +404,17 @@ namespace MiniCrawler.Movement
 
             Gizmos.color = Color.cyan;
 
-            for (int i = 0;
-                 i < routePath.Count - 1;
-                 i++)
+            for (int i = 0; i < routePath.Count - 1; i++)
             {
                 AmbientRouteNode from = routePath[i];
                 AmbientRouteNode to = routePath[i + 1];
 
                 if (from != null && to != null)
-                {
-                    Gizmos.DrawLine(
-                        from.Position + Vector3.up * 0.1f,
-                        to.Position + Vector3.up * 0.1f
-                    );
-                }
+                    Gizmos.DrawLine(from.Position + Vector3.up * 0.1f, to.Position + Vector3.up * 0.1f);
             }
 
             if (destinationNode != null)
-            {
-                Gizmos.DrawWireSphere(
-                    destinationNode.Position,
-                    0.65f
-                );
-            }
+                Gizmos.DrawWireSphere(destinationNode.Position, 0.65f);
         }
 
         private void OnDestroy()

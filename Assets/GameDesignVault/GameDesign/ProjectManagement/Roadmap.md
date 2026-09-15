@@ -357,23 +357,34 @@ Completed:
 
 `3.0K3AComplete.zip` is the completed K3A checkpoint.
 
-#### 3.0K3B — Route Crossing & Multi-Encounter Pursuit
+#### 3.0K3B — Route Crossing, Ambient Discovery & Multi-Encounter Pursuit ✅
 
-**Status: Active**
-
-Prove:
-- explicit Encounter travel can detect other Encounter Sites crossed along the
-  selected route;
-- eligible crossed Encounters may start from traversal;
-- the selected strategic directive remains higher priority than those crossed
-  Encounters;
+Completed:
+- Route Sites can opt into traversal-start behaviour;
+- explicit Node Sites trigger when their Node is reached;
+- Segment Sites trigger when their specific Segment is entered;
+- explicit Encounter travel starts eligible crossed Encounters;
+- crossed Encounters do not replace the selected strategic directive;
 - enemies from crossed Encounters may continue pursuing;
-- the party can arrive at the selected Encounter with previous Encounter enemies
-  still present;
-- Encounter Membership keeps progression/completion owned by each Encounter;
-- route geography remains separate from Encounter lifecycle.
+- the selected destination is excluded from traversal start and retains its
+  existing final local start semantics;
+- passive Ambient Route exploration also starts eligible crossed Encounter
+  Sites;
+- ambient exploration pauses while the formal traversal-started Encounter is
+  active;
+- ambient exploration resumes its previous journey after Encounter resolution;
+- player-issued strategic redirection can leave an ambient-started Encounter
+  behind while its enemies remain active;
+- Encounter Membership preserves independent Encounter completion during
+  physical overlap;
+- traversal-start authoring remains Site-owned and exposed through the Route
+  Geography tool.
+
+`3.0K3BComplete.zip` is the completed K3B checkpoint.
 
 ### 3.0K4 — Route / Encounter Compatibility
+
+**Status: Active**
 
 Develop:
 - small semantic Route-tag model;

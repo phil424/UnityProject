@@ -99,6 +99,26 @@ namespace MiniCrawler.Tools.RouteAuthoring
 
             return site;
         }
+        
+        public static bool SetStartEncounterOnTraversal(EncounterRouteSite site, bool value)
+        {
+            if (site == null || site.StartEncounterOnTraversal == value)
+                return false;
+
+            Undo.RecordObject(site, "Set Route Site Traversal Start");
+
+            SerializedObject serializedSite = new(site);
+            serializedSite.Update();
+            serializedSite.FindProperty("startEncounterOnTraversal").boolValue = value;
+            serializedSite.ApplyModifiedProperties();
+
+            EditorUtility.SetDirty(site);
+
+            if (site.gameObject.scene.IsValid())
+                EditorSceneManager.MarkSceneDirty(site.gameObject.scene);
+
+            return true;
+        }
 
         public static List<EncounterRouteSite> GetSitesForGraph(
             AmbientRouteGraph graph)

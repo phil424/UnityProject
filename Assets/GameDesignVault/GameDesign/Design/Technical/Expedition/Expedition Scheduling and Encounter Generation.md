@@ -706,6 +706,49 @@ Encounter
 → has Region geography
 → Region geography can drive strategic travel.
 
+## 3.0K3B Route Traversal Activation
+
+Route-bound Encounter Sites may opt into traversal start.
+
+A distant strategic opportunity may therefore require travelling through other
+formal Encounter occurrences.
+
+Explicit travel:
+
+selected destination
+↓
+cross Encounter Site
+↓
+crossed Encounter starts
+↓
+selected directive continues.
+
+Ambient travel:
+
+autonomous exploration
+↓
+cross Encounter Site
+↓
+Encounter starts
+↓
+exploration pauses for local resolution
+↓
+journey resumes.
+
+This makes Route Geography capable of carrying gameplay risk rather than serving
+only as movement topology.
+
+Encounter occurrences remain independently owned even when their enemies overlap
+physically.
+
+Future strategic planning can use these same Site footprints to reason about:
+- known route danger;
+- Encounter crossings;
+- safer versus shorter routes;
+- potential deliberate multi-Encounter pulls.
+
+K3B does not yet alter pathfinding based on threat.
+
 # Encounter Authoring Workshop
 
 Future development should provide a dedicated encounter-authoring/test scene.

@@ -180,10 +180,6 @@ Local Combat
 ↓
 Ambient Route Navigation.
 
-Formal Encounter Direction does not yet route through the ambient Route Graph.
-
-That becomes future work once Encounter Sites have explicit route geography.
-
 ### 3.0K3A — Route-Aware Encounter Direction
 
 When a selected Encounter has an `EncounterRouteSite`:
@@ -226,9 +222,67 @@ Local Combat
 ↓
 Ambient Route Navigation.
 
-K3A does not yet start other Encounter Sites crossed during the route.
+K3B extends Route Site traversal into formal Encounter activation.
 
-That behaviour belongs to K3B.
+### 3.0K3B — Route Crossing Behaviour
+
+Traversal-enabled Encounter Sites may begin when their Route geography is
+crossed.
+
+The response depends on the active navigation mode.
+
+#### Explicit Strategic Travel
+
+Selected Encounter B
+↓
+travel crosses Encounter A
+↓
+Encounter A starts
+↓
+A may pursue
+↓
+party continues toward B.
+
+The party's explicit `ActorNavigationIntent` continues suppressing its autonomous
+combat targeting.
+
+Crossed hostile actors are not disengaged.
+
+The selected destination is not traversal-started; it retains its normal final
+local start semantics.
+
+#### Ambient Exploration
+
+No explicit directive
+↓
+ambient travel crosses Encounter A
+↓
+A starts
+↓
+Ambient Route navigation yields
+↓
+normal local combat resolves A
+↓
+ambient journey resumes.
+
+Ambient exploration waits on the formal Encounter occurrence rather than only on
+the presence of a current combat target.
+
+This preserves behaviour across short spawn/phase/target gaps.
+
+#### Priority
+
+Current movement/control priority remains:
+
+Forced Motion
+↓
+Ability Action Lock
+↓
+Explicit Encounter Navigation
+↓
+Local Combat / Formal Encounter Resolution
+↓
+Ambient Route Navigation.
 
 ## Current Encounter Foundation
 

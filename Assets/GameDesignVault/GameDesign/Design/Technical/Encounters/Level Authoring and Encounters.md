@@ -644,6 +644,54 @@ remain separate.
 The long-term Site / Runtime Instance split belongs to generated Encounter
 architecture once that split has concrete runtime requirements.
 
+### Traversal Start Policy
+
+A Route Site may enable:
+
+`Start On Route Traversal`.
+
+Use this when physically crossing the Site should itself commit/start the
+Encounter occurrence.
+
+Examples:
+- road ambush;
+- occupied street;
+- blockade;
+- hostile checkpoint;
+- dangerous route corridor.
+
+When enabled, the Site may start during both:
+- explicit Encounter-directed route travel;
+- passive Ambient Route exploration.
+
+The reaction differs:
+
+Explicit Encounter travel
+→ crossed Encounter starts
+→ current strategic directive continues.
+
+Ambient exploration
+→ crossed Encounter starts
+→ ambient navigation pauses until the formal Encounter resolves
+→ previous ambient journey resumes.
+
+Disable traversal start when the Site exists only for geography/navigation and
+the Encounter should wait for another start mechanism.
+
+Examples may include:
+- optional shrine;
+- scripted spectacle;
+- schedule-only event;
+- Encounter with intentionally separate authored trigger semantics.
+
+The currently selected strategic destination is excluded from traversal-start
+activation while travelling to it.
+
+Its existing final local start semantics remain authoritative.
+
+This policy is Site-owned and does not modify the source
+`EncounterDefinition`.
+
 # Prototype Reusable Encounter Sites
 
 3.0G introduces a temporary authoring flag:

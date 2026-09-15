@@ -13,6 +13,9 @@ namespace MiniCrawler.Encounters
         [SerializeField] private List<AmbientRouteNode> nodes = new();
         [SerializeField] private List<AmbientRouteSegment> segments = new();
 
+        [Header("Traversal")]
+        [SerializeField] private bool startEncounterOnTraversal = true;
+
         private readonly List<AmbientRouteNode> footprintNodes = new();
 
         public LevelEncounter Encounter =>
@@ -22,6 +25,7 @@ namespace MiniCrawler.Encounters
 
         public IReadOnlyList<AmbientRouteNode> Nodes => nodes;
         public IReadOnlyList<AmbientRouteSegment> Segments => segments;
+        public bool StartEncounterOnTraversal => startEncounterOnTraversal;
 
         public AmbientRouteGraph RouteGraph => ResolveRouteGraph();
 
@@ -32,6 +36,11 @@ namespace MiniCrawler.Encounters
                 CollectFootprintNodes(footprintNodes);
                 return footprintNodes.Count > 0;
             }
+        }
+        
+        public bool ContainsExplicitNode(AmbientRouteNode node)
+        {
+            return node != null && nodes.Contains(node);
         }
 
         public bool ContainsNode(AmbientRouteNode node)
@@ -58,6 +67,24 @@ namespace MiniCrawler.Encounters
         public bool ContainsSegment(AmbientRouteSegment segment)
         {
             return segment != null && segments.Contains(segment);
+        }
+        
+        public bool TryStartEncounterFromTraversal()
+        {
+            LevelEncounter owningEncounter = Encounter;
+
+            if (!startEncounterOnTraversal ||
+                owningEncounter == null ||
+                !owningEncounter.IsSelectable ||
+                owningEncounter.HasStarted)
+            {
+                return false;
+            }
+
+            owningEncounter.ActivateCombat();
+            owningEncounter.BeginSpawning();
+
+            return owningEncounter.HasStarted;
         }
 
         public bool ReferencesGraph(AmbientRouteGraph graph)

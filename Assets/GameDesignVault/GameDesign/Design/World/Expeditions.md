@@ -172,6 +172,56 @@ They may continue pursuing the hero.
 This allows the player to deliberately pull several encounters together into a
 larger fight when their build is capable of handling the additional pressure.
 
+# Route Risk and Ambient Encounter Discovery
+
+**Status: Working / Implemented Foundation**
+
+Formal Encounter Sites can now be encountered naturally while travelling through
+the Region.
+
+During passive exploration:
+
+Route traversal
+↓
+cross traversal-enabled Encounter Site
+↓
+Encounter starts
+↓
+party stops to resolve it
+↓
+exploration resumes.
+
+During an explicit strategic journey:
+
+selected distant Encounter
+↓
+cross another traversal-enabled Encounter Site
+↓
+crossed Encounter starts
+↓
+party continues toward the chosen destination
+↓
+crossed enemies may pursue.
+
+This creates two complementary expedition behaviours:
+
+Passive play discovers trouble organically.
+
+Strategic play may deliberately accept or exploit route danger.
+
+Future route choice may therefore consider more than distance.
+
+Potential considerations include:
+- known Encounter crossings;
+- danger;
+- reward;
+- build suitability;
+- deliberate enemy-density pulls.
+
+Route traversal never merges the underlying Encounter identities.
+
+Each Encounter retains its own lifecycle and completion state.
+
 # Encounter Commitment
 
 Selecting or starting an encounter commits to that opportunity.
