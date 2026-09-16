@@ -266,6 +266,70 @@ Tag validation is non-destructive.
 
 Duplicate or empty references are reported rather than automatically rewritten.
 
+# 3.0K4B — Encounter Compatibility
+
+Encounter Definitions may now query whether an `EncounterRouteSite` is suitable
+for automatic placement.
+
+The query consumes:
+
+Encounter Definition placement requirements
++
+Encounter Route Site effective Tags
+↓
+compatibility result.
+
+## Hard Constraints
+
+A Site is tag-compatible when:
+
+- every Required Tag is present;
+- no Forbidden Tag is present.
+
+The Definition must also explicitly allow automatic placement.
+
+## Preference Fit
+
+Preferred Tags provide soft ranking.
+
+They do not invalidate a Site.
+
+Example:
+
+Definition:
+- Required: Road;
+- Preferred: Village, Narrow.
+
+Site A:
+- Road, Village.
+
+Fit:
+- compatible;
+- 1 / 2 preferred matches.
+
+Site B:
+- Road, Village, Narrow.
+
+Fit:
+- compatible;
+- 2 / 2 preferred matches.
+
+A placement query may therefore rank Site B before Site A.
+
+## Geography Remains Authoritative
+
+Encounter Definitions do not duplicate Site Tags.
+
+The Site continues deriving semantic meaning from its Route footprint.
+
+Compatibility therefore remains:
+
+portable content
+compared with
+concrete Region geography.
+
+Neither layer owns a duplicate copy of the other.
+
 # Navigation
 
 3.0K1 introduces persistent destination-oriented ambient travel.
@@ -508,6 +572,52 @@ Therefore:
 - crossed Encounters complete independently;
 - phase state remains Encounter-owned;
 - several Encounter populations may participate in the same physical fight.
+
+# Ambient Activity Footprints
+
+## 3.0K5A — Route-Bound Ambient Population
+
+Route Geography may host lightweight Ambient Activity independently from formal
+Encounter Sites.
+
+`AmbientActivityArea` owns a Route footprint composed from:
+- Nodes;
+- Segments;
+- Groups.
+
+This means the same Region geography may simultaneously answer:
+
+Where can the party travel?
+→ Route Geography.
+
+Where may a formal Encounter occur?
+→ Encounter Route Site.
+
+Where does lightweight ambient population live?
+→ Ambient Activity Area.
+
+These concepts may overlap spatially without sharing lifecycle ownership.
+
+Ambient Activity remains Region / Level-owned.
+
+Formal Encounter state remains Encounter-owned.
+
+## Spawn Placement
+
+When an Activity Area contains usable Segments, spawn positions are sampled
+along those Segments.
+
+Segment selection is length-weighted so longer portions of an Area naturally
+receive more possible spawn space.
+
+A small authored scatter radius offsets actors locally from the sampled Route
+position.
+
+If no usable Segment exists, authored Nodes provide point-like fallback spawn
+positions.
+
+The Activity Area GameObject Transform is organisational and does not define the
+population location.
 
 # Future Encounter Footprints
 

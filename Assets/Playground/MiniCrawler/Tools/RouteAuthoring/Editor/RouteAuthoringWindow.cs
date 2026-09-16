@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using MiniCrawler.Core;
+using MiniCrawler.Ecology;
 using MiniCrawler.Encounters;
 using MiniCrawler.Movement;
 using UnityEditor;
@@ -11,12 +13,23 @@ namespace MiniCrawler.Tools.RouteAuthoring
         [SerializeField] private AmbientRouteGraph graph;
         [SerializeField] private LevelEncounter encounterSiteTarget;
         [SerializeField] private RouteTagDefinition routeTag;
+        [SerializeField] private EncounterDefinition compatibilityDefinition;
+        [SerializeField] private RouteTagDefinition compatibilityTag;
+        [SerializeField] private AmbientActivityArea ambientActivityTarget;
+        [SerializeField] private ActorDefinition ambientActorDefinition;
 
         private string newNodeName = "Route Node";
         private string newGroupName = "Route Group";
+        private string newAmbientActivityName = "Ambient Activity";
+
+        private int ambientActorCount = 1;
+        private float ambientSpawnScatterRadius = 1.5f;
+        private float ambientEngagementRadius = 3.5f;
 
         private readonly List<string> validationIssues = new();
+        private readonly List<string> compatibilityValidationIssues = new();
         private readonly List<RouteTagDefinition> siteEffectiveTags = new();
+        private readonly List<EncounterRouteCompatibilityResult> compatibleSiteResults = new();
         private bool validationHasRun;
         private Vector2 scrollPosition;
 
@@ -30,6 +43,8 @@ namespace MiniCrawler.Tools.RouteAuthoring
 
             window.TryAdoptGraphFromSelection();
             window.TryAdoptEncounterFromSelection();
+            window.TryAdoptCompatibilityDefinitionFromSelection();
+            window.TryAdoptAmbientActivityFromSelection();
 
             window.Show();
         }
@@ -53,12 +68,16 @@ namespace MiniCrawler.Tools.RouteAuthoring
         {
             TryAdoptGraphFromSelection();
             TryAdoptEncounterFromSelection();
+            TryAdoptCompatibilityDefinitionFromSelection();
+            TryAdoptAmbientActivityFromSelection();
         }
 
         private void OnSelectionChange()
         {
             TryAdoptGraphFromSelection();
             TryAdoptEncounterFromSelection();
+            TryAdoptCompatibilityDefinitionFromSelection();
+            TryAdoptAmbientActivityFromSelection();
 
             Repaint();
         }
@@ -106,7 +125,9 @@ namespace MiniCrawler.Tools.RouteAuthoring
             DrawConnectionTools();
             DrawGroupTools();
             DrawTagTools();
+            DrawAmbientActivityTools();
             DrawEncounterSiteTools();
+            DrawCompatibilityTools();
             DrawValidation();
 
             EditorGUILayout.EndScrollView();
@@ -114,48 +135,20 @@ namespace MiniCrawler.Tools.RouteAuthoring
 
         private void DrawSummary()
         {
-            List<AmbientRouteNode> nodes =
-                AmbientRouteAuthoringUtility
-                    .GetOwnedNodes(graph);
-
-            List<AmbientRouteSegment> segments =
-                AmbientRouteAuthoringUtility
-                    .GetOwnedSegments(graph);
-
-            List<AmbientRouteGroup> groups =
-                AmbientRouteAuthoringUtility
-                    .GetOwnedGroups(graph);
-
-            List<EncounterRouteSite> sites =
-                EncounterRouteSiteAuthoringUtility
-                    .GetSitesForGraph(graph);
+            List<AmbientRouteNode> nodes = AmbientRouteAuthoringUtility.GetOwnedNodes(graph);
+            List<AmbientRouteSegment> segments = AmbientRouteAuthoringUtility.GetOwnedSegments(graph);
+            List<AmbientRouteGroup> groups = AmbientRouteAuthoringUtility.GetOwnedGroups(graph);
+            List<EncounterRouteSite> sites = EncounterRouteSiteAuthoringUtility.GetSitesForGraph(graph);
+            List<AmbientActivityArea> activityAreas = AmbientActivityAuthoringUtility.GetAreasForGraph(graph);
 
             EditorGUILayout.Space();
 
-            EditorGUILayout.LabelField(
-                "Current Geography",
-                EditorStyles.boldLabel
-            );
-
-            EditorGUILayout.LabelField(
-                "Nodes",
-                nodes.Count.ToString()
-            );
-
-            EditorGUILayout.LabelField(
-                "Segments",
-                segments.Count.ToString()
-            );
-
-            EditorGUILayout.LabelField(
-                "Groups",
-                groups.Count.ToString()
-            );
-
-            EditorGUILayout.LabelField(
-                "Encounter Sites",
-                sites.Count.ToString()
-            );
+            EditorGUILayout.LabelField("Current Geography", EditorStyles.boldLabel);
+            EditorGUILayout.LabelField("Nodes", nodes.Count.ToString());
+            EditorGUILayout.LabelField("Segments", segments.Count.ToString());
+            EditorGUILayout.LabelField("Groups", groups.Count.ToString());
+            EditorGUILayout.LabelField("Encounter Sites", sites.Count.ToString());
+            EditorGUILayout.LabelField("Ambient Areas", activityAreas.Count.ToString());
         }
 
         private void DrawStructureTools()
@@ -168,7 +161,7 @@ namespace MiniCrawler.Tools.RouteAuthoring
             );
 
             EditorGUILayout.HelpBox(
-                "Creates any missing Nodes, Segments, Groups and Landmarks roots. Existing roots are preserved.",
+                "Creates any missing Nodes, Segments, Groups, Ambient Activity and Landmarks roots.",
                 MessageType.None
             );
 
@@ -384,6 +377,135 @@ namespace MiniCrawler.Tools.RouteAuthoring
                 }
             }
         }
+        
+        private void DrawAmbientActivityTools()
+        {
+            EditorGUILayout.Space();
+            EditorGUILayout.LabelField("Ambient Activity", EditorStyles.boldLabel);
+
+            List<AmbientRouteNode> selectedNodes = AmbientRouteAuthoringUtility.GetSelectedNodes(graph);
+            List<AmbientRouteSegment> selectedSegments = AmbientRouteAuthoringUtility.GetSelectedSegments(graph);
+            List<AmbientRouteGroup> selectedGroups = AmbientRouteAuthoringUtility.GetSelectedGroups(graph);
+
+            int selectedGeographyCount = selectedNodes.Count + selectedSegments.Count + selectedGroups.Count;
+
+            newAmbientActivityName = EditorGUILayout.TextField("New Area Name", newAmbientActivityName);
+
+            EditorGUILayout.LabelField(
+                "Selected Footprint",
+                $"{selectedNodes.Count} Nodes / {selectedSegments.Count} Segments / {selectedGroups.Count} Groups"
+            );
+
+            using (new EditorGUI.DisabledScope(selectedGeographyCount == 0))
+            {
+                if (GUILayout.Button("Create Ambient Activity Area From Selection"))
+                {
+                    AmbientActivityArea created = AmbientActivityAuthoringUtility.CreateAreaFromSelection(graph, newAmbientActivityName);
+
+                    if (created != null)
+                    {
+                        ambientActivityTarget = created;
+                        SyncAmbientActivityFields();
+                    }
+
+                    RefreshValidation();
+                }
+            }
+
+            EditorGUI.BeginChangeCheck();
+
+            ambientActivityTarget = (AmbientActivityArea)EditorGUILayout.ObjectField(
+                "Target Activity Area",
+                ambientActivityTarget,
+                typeof(AmbientActivityArea),
+                true
+            );
+
+            if (EditorGUI.EndChangeCheck())
+                SyncAmbientActivityFields();
+
+            if (ambientActivityTarget == null)
+            {
+                EditorGUILayout.HelpBox(
+                    "Select existing Route geography and create an Ambient Activity Area, or select an existing Area.",
+                    MessageType.None
+                );
+                return;
+            }
+
+            EditorGUILayout.LabelField(
+                "Current Footprint",
+                $"{ambientActivityTarget.Nodes.Count} Nodes / {ambientActivityTarget.Segments.Count} Segments / " +
+                $"{ambientActivityTarget.Groups.Count} Groups"
+            );
+
+            EditorGUILayout.Space();
+            EditorGUILayout.LabelField("Population", EditorStyles.boldLabel);
+
+            foreach (AmbientPopulationEntry population in ambientActivityTarget.Populations)
+            {
+                string actorName = population?.ActorDefinition != null ? population.ActorDefinition.name : "(missing Actor)";
+                int count = population != null ? population.Count : 0;
+                EditorGUILayout.LabelField(actorName, $"× {count}");
+            }
+
+            ambientActorDefinition = (ActorDefinition)EditorGUILayout.ObjectField(
+                "Actor Definition",
+                ambientActorDefinition,
+                typeof(ActorDefinition),
+                false
+            );
+
+            ambientActorCount = Mathf.Max(1, EditorGUILayout.IntField("Count", ambientActorCount));
+
+            using (new EditorGUI.DisabledScope(ambientActorDefinition == null))
+            {
+                EditorGUILayout.BeginHorizontal();
+
+                if (GUILayout.Button("Add / Update Population"))
+                {
+                    AmbientActivityAuthoringUtility.SetPopulation(
+                        ambientActivityTarget,
+                        ambientActorDefinition,
+                        ambientActorCount
+                    );
+
+                    RefreshValidation();
+                }
+
+                if (GUILayout.Button("Remove Population"))
+                {
+                    AmbientActivityAuthoringUtility.RemovePopulation(ambientActivityTarget, ambientActorDefinition);
+                    RefreshValidation();
+                }
+
+                EditorGUILayout.EndHorizontal();
+            }
+
+            EditorGUILayout.Space();
+            EditorGUILayout.LabelField("Area Settings", EditorStyles.boldLabel);
+
+            ambientSpawnScatterRadius = EditorGUILayout.FloatField("Spawn Scatter Radius", ambientSpawnScatterRadius);
+            ambientEngagementRadius = EditorGUILayout.FloatField("Engagement Radius", ambientEngagementRadius);
+
+            if (GUILayout.Button("Apply Activity Settings"))
+            {
+                AmbientActivityAuthoringUtility.SetSettings(
+                    ambientActivityTarget,
+                    ambientSpawnScatterRadius,
+                    ambientEngagementRadius
+                );
+
+                SyncAmbientActivityFields();
+                RefreshValidation();
+            }
+
+            EditorGUILayout.HelpBox(
+                "Ambient actors spawn from the Area's Route footprint. Segments are preferred when available; " +
+                "Nodes provide point-like fallback placement. Generated Area data remains manually editable.",
+                MessageType.None
+            );
+        }
 
         private void DrawEncounterSiteTools()
         {
@@ -471,6 +593,122 @@ namespace MiniCrawler.Tools.RouteAuthoring
                 }
             }
         }
+        
+        private void DrawCompatibilityTools()
+        {
+            EditorGUILayout.Space();
+            EditorGUILayout.LabelField("Encounter Compatibility", EditorStyles.boldLabel);
+
+            compatibilityDefinition = (EncounterDefinition)EditorGUILayout.ObjectField(
+                "Encounter Definition",
+                compatibilityDefinition,
+                typeof(EncounterDefinition),
+                false
+            );
+
+            if (compatibilityDefinition == null)
+            {
+                EditorGUILayout.HelpBox(
+                    "Select an Encounter Definition asset to preview where it could be automatically placed.",
+                    MessageType.None
+                );
+                return;
+            }
+
+            bool allowAutomaticPlacement = EditorGUILayout.Toggle(
+                "Allow Automatic Placement",
+                compatibilityDefinition.AllowAutomaticPlacement
+            );
+
+            if (allowAutomaticPlacement != compatibilityDefinition.AllowAutomaticPlacement)
+                EncounterCompatibilityAuthoringUtility.SetAutomaticPlacement(compatibilityDefinition, allowAutomaticPlacement);
+
+            EditorGUILayout.LabelField("Required", FormatTags(compatibilityDefinition.RequiredRouteTags));
+            EditorGUILayout.LabelField("Preferred", FormatTags(compatibilityDefinition.PreferredRouteTags));
+            EditorGUILayout.LabelField("Forbidden", FormatTags(compatibilityDefinition.ForbiddenRouteTags));
+
+            compatibilityTag = (RouteTagDefinition)EditorGUILayout.ObjectField(
+                "Constraint Tag",
+                compatibilityTag,
+                typeof(RouteTagDefinition),
+                false
+            );
+
+            using (new EditorGUI.DisabledScope(compatibilityTag == null))
+            {
+                EditorGUILayout.BeginHorizontal();
+
+                if (GUILayout.Button("Set Required"))
+                    EncounterCompatibilityAuthoringUtility.SetTagRole(
+                        compatibilityDefinition,
+                        compatibilityTag,
+                        EncounterCompatibilityTagRole.Required
+                    );
+
+                if (GUILayout.Button("Set Preferred"))
+                    EncounterCompatibilityAuthoringUtility.SetTagRole(
+                        compatibilityDefinition,
+                        compatibilityTag,
+                        EncounterCompatibilityTagRole.Preferred
+                    );
+
+                if (GUILayout.Button("Set Forbidden"))
+                    EncounterCompatibilityAuthoringUtility.SetTagRole(
+                        compatibilityDefinition,
+                        compatibilityTag,
+                        EncounterCompatibilityTagRole.Forbidden
+                    );
+
+                EditorGUILayout.EndHorizontal();
+
+                if (GUILayout.Button("Remove Constraint"))
+                    EncounterCompatibilityAuthoringUtility.RemoveTagConstraint(compatibilityDefinition, compatibilityTag);
+            }
+
+            EditorGUILayout.HelpBox(
+                "Required Tags are hard placement requirements. Forbidden Tags reject a Site. " +
+                "Preferred Tags rank otherwise-compatible Sites without rejecting them.",
+                MessageType.None
+            );
+
+            compatibilityValidationIssues.Clear();
+            EncounterRouteCompatibility.CollectDefinitionValidationIssues(compatibilityDefinition, compatibilityValidationIssues);
+
+            foreach (string issue in compatibilityValidationIssues)
+                EditorGUILayout.HelpBox(issue, MessageType.Warning);
+
+            List<EncounterRouteSite> sites = EncounterRouteSiteAuthoringUtility.GetSitesForGraph(graph);
+
+            EditorGUILayout.LabelField("Site Compatibility Preview", $"{sites.Count} Sites");
+
+            if (sites.Count == 0)
+            {
+                EditorGUILayout.HelpBox("The selected Route Graph has no Encounter Route Sites to preview.", MessageType.None);
+                return;
+            }
+
+            foreach (EncounterRouteSite site in sites)
+                DrawCompatibilityResult(EncounterRouteCompatibility.Evaluate(compatibilityDefinition, site));
+
+            EncounterRouteCompatibility.CollectCompatibleSites(compatibilityDefinition, sites, compatibleSiteResults);
+
+            EditorGUILayout.LabelField("Ranked Compatible Candidates", compatibleSiteResults.Count.ToString());
+
+            if (compatibleSiteResults.Count == 0)
+            {
+                EditorGUILayout.HelpBox("No current Route Sites are valid automatic-placement candidates.", MessageType.None);
+                return;
+            }
+
+            for (int i = 0; i < compatibleSiteResults.Count; i++)
+            {
+                EncounterRouteCompatibilityResult result = compatibleSiteResults[i];
+                EditorGUILayout.LabelField(
+                    $"{i + 1}. {GetSiteDisplayName(result.Site)}",
+                    FormatPreference(result)
+                );
+            }
+        }
 
         private void DrawValidation()
         {
@@ -529,19 +767,33 @@ namespace MiniCrawler.Tools.RouteAuthoring
 
             if (graph != null)
             {
-                graph.CollectValidationIssues(
-                    validationIssues
-                );
-
-                EncounterRouteSiteAuthoringUtility
-                    .AppendValidationIssues(
-                        graph,
-                        validationIssues
-                    );
+                graph.CollectValidationIssues(validationIssues);
+                EncounterRouteSiteAuthoringUtility.AppendValidationIssues(graph, validationIssues);
+                AmbientActivityAuthoringUtility.AppendValidationIssues(graph, validationIssues);
             }
 
             validationHasRun = true;
             Repaint();
+        }
+        
+        private void TryAdoptAmbientActivityFromSelection()
+        {
+            AmbientActivityArea selectedArea = AmbientActivityAuthoringUtility.ResolveAreaFromSelection();
+
+            if (selectedArea == null || selectedArea == ambientActivityTarget)
+                return;
+
+            ambientActivityTarget = selectedArea;
+            SyncAmbientActivityFields();
+        }
+        
+        private void SyncAmbientActivityFields()
+        {
+            if (ambientActivityTarget == null)
+                return;
+
+            ambientSpawnScatterRadius = ambientActivityTarget.SpawnScatterRadius;
+            ambientEngagementRadius = ambientActivityTarget.EngagementRadius;
         }
 
         private void TryAdoptGraphFromSelection()
@@ -574,6 +826,71 @@ namespace MiniCrawler.Tools.RouteAuthoring
 
             encounterSiteTarget = selectedEncounter;
             validationHasRun = false;
+        }
+        
+        private void TryAdoptCompatibilityDefinitionFromSelection()
+        {
+            EncounterDefinition selectedDefinition = Selection.activeObject as EncounterDefinition;
+
+            if (selectedDefinition == null || selectedDefinition == compatibilityDefinition)
+                return;
+
+            compatibilityDefinition = selectedDefinition;
+        }
+        
+        private static void DrawCompatibilityResult(EncounterRouteCompatibilityResult result)
+        {
+            string siteName = GetSiteDisplayName(result.Site);
+            string message;
+            MessageType messageType;
+
+            if (!result.HasValidInputs)
+            {
+                message = $"{siteName}\nInvalid compatibility inputs.";
+                messageType = MessageType.Error;
+            }
+            else if (!result.AutomaticPlacementEnabled)
+            {
+                message = $"{siteName}\nAutomatic placement disabled.";
+                messageType = MessageType.None;
+            }
+            else if (result.IsCompatible)
+            {
+                message = $"{siteName}\nCompatible | {FormatPreference(result)}";
+                messageType = MessageType.Info;
+            }
+            else
+            {
+                message = $"{siteName}\nIncompatible";
+                messageType = MessageType.Warning;
+            }
+
+            message += $"\nSite Tags: {FormatTags(result.EffectiveSiteTags)}";
+
+            if (result.MissingRequiredTags.Count > 0)
+                message += $"\nMissing Required: {FormatTags(result.MissingRequiredTags)}";
+
+            if (result.PresentForbiddenTags.Count > 0)
+                message += $"\nForbidden Present: {FormatTags(result.PresentForbiddenTags)}";
+
+            EditorGUILayout.HelpBox(message, messageType);
+        }
+
+        private static string FormatPreference(EncounterRouteCompatibilityResult result)
+        {
+            if (result.PreferredTagCount == 0)
+                return "No preferred Tags";
+
+            int percent = Mathf.RoundToInt(result.PreferenceScore * 100f);
+            return $"Preferred {result.PreferredMatchCount}/{result.PreferredTagCount} ({percent}%)";
+        }
+
+        private static string GetSiteDisplayName(EncounterRouteSite site)
+        {
+            if (site == null)
+                return "(missing Site)";
+
+            return site.Encounter != null ? site.Encounter.DisplayName : site.name;
         }
         
         private static string FormatTags(IReadOnlyList<RouteTagDefinition> tags)

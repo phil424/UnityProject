@@ -11,6 +11,7 @@ namespace MiniCrawler.Tools.RouteAuthoring
         private const string NodesRootName = "Nodes";
         private const string SegmentsRootName = "Segments";
         private const string GroupsRootName = "Groups";
+        private const string AmbientActivityRootName = "Ambient Activity";
         private const string LandmarksRootName = "Landmarks";
 
         public static AmbientRouteGraph ResolveGraphFromSelection()
@@ -41,12 +42,27 @@ namespace MiniCrawler.Tools.RouteAuthoring
             EnsureRoot(graph, NodesRootName, ref changed);
             EnsureRoot(graph, SegmentsRootName, ref changed);
             EnsureRoot(graph, GroupsRootName, ref changed);
+            EnsureRoot(graph, AmbientActivityRootName, ref changed);
             EnsureRoot(graph, LandmarksRootName, ref changed);
 
             if (changed)
                 MarkSceneDirty(graph);
 
             Undo.CollapseUndoOperations(undoGroup);
+        }
+        
+        public static Transform EnsureAmbientActivityRoot(AmbientRouteGraph graph)
+        {
+            if (graph == null)
+                return null;
+
+            bool changed = false;
+            Transform root = EnsureRoot(graph, AmbientActivityRootName, ref changed);
+
+            if (changed)
+                MarkSceneDirty(graph);
+
+            return root;
         }
 
         public static AmbientRouteNode CreateNode(AmbientRouteGraph graph, string requestedName)
@@ -485,7 +501,7 @@ namespace MiniCrawler.Tools.RouteAuthoring
             return null;
         }
 
-        private static string GetUniqueChildName(Transform parent, string requestedName)
+        internal static string GetUniqueChildName(Transform parent, string requestedName)
         {
             string baseName = string.IsNullOrWhiteSpace(requestedName)
                 ? "Route Item"

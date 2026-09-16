@@ -59,6 +59,14 @@ Examples:
 
 Ambient world-population and ecology behaviour.
 
+Current examples:
+- `AmbientActivityArea` — Region-owned route-bound ambient population;
+- `AmbientEnemy` — lightweight unengaged ambient actor behaviour;
+- `ZombieSurgeAmbientEffect` — World Event effect that increases compatible
+  ambient population.
+
+Ambient ecology remains separate from formal Encounter lifecycle.
+
 ## Encounters
 
 `Encounters/`
@@ -181,6 +189,7 @@ Runtime gameplay code should not depend on developer-tool implementations.
 - automates scene-owned Node / Segment / Group setup;
 - may reference runtime Movement/Route components;
 - runtime code must not depend on this tooling.
+- also authors Route-bound Ambient Activity Areas and their population settings.
 
 ## UI
 

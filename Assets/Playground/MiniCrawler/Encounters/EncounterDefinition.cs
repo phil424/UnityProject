@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using MiniCrawler.Core;
+using MiniCrawler.Movement;
 using MiniCrawler.Spawning;
 using UnityEngine;
 
@@ -222,6 +223,12 @@ namespace MiniCrawler.Encounters
         [SerializeField] private string displayName;
         [SerializeField, TextArea(2, 4)] private string description;
 
+        [Header("Route Compatibility")]
+        [SerializeField] private bool allowAutomaticPlacement;
+        [SerializeField] private List<RouteTagDefinition> requiredRouteTags = new();
+        [SerializeField] private List<RouteTagDefinition> preferredRouteTags = new();
+        [SerializeField] private List<RouteTagDefinition> forbiddenRouteTags = new();
+
         [Header("Phased Content")]
         [SerializeField] private List<PhaseDefinition> phases = new();
 
@@ -234,6 +241,11 @@ namespace MiniCrawler.Encounters
         public string Id => string.IsNullOrWhiteSpace(id) ? name : id;
         public string DisplayName => string.IsNullOrWhiteSpace(displayName) ? name : displayName;
         public string Description => description ?? string.Empty;
+
+        public bool AllowAutomaticPlacement => allowAutomaticPlacement;
+        public IReadOnlyList<RouteTagDefinition> RequiredRouteTags => requiredRouteTags;
+        public IReadOnlyList<RouteTagDefinition> PreferredRouteTags => preferredRouteTags;
+        public IReadOnlyList<RouteTagDefinition> ForbiddenRouteTags => forbiddenRouteTags;
 
         public IReadOnlyList<PhaseDefinition> Phases => phases;
         public IReadOnlyList<SpawnGroupDefinition> UnphasedGroups => unphasedGroups;

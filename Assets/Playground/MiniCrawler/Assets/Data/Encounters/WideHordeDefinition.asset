@@ -15,6 +15,13 @@ MonoBehaviour:
   id: WideHordeDefinition
   displayName: Wide Horde
   description: A horde covering a large area
+  allowAutomaticPlacement: 1
+  requiredRouteTags:
+  - {fileID: 11400000, guid: b58b8a7ffdf0ab74a97a12cd43f54388, type: 2}
+  preferredRouteTags:
+  - {fileID: 11400000, guid: c543c527f52584149977762e1222ff5b, type: 2}
+  forbiddenRouteTags:
+  - {fileID: 11400000, guid: b50527e3e43a06d48bb9b41d9c442605, type: 2}
   phases:
   - displayName: Initial Horde
     advanceAfterSeconds: 5.042651
@@ -51,3 +58,4 @@ MonoBehaviour:
         radius: 5
         boxSize: {x: 12.09878, y: 4.0892906}
   unphasedGroups: []
+  rules: []

@@ -39,7 +39,11 @@ Portable content currently owns:
 - batch spacing;
 - spawn-region shape;
 - circle radius;
-- box dimensions.
+- box dimensions;
+- automatic Route-placement eligibility;
+- required Route Tags;
+- preferred Route Tags;
+- forbidden Route Tags.
 
 ## Scene Encounter / Site
 
@@ -67,6 +71,92 @@ The scene currently still owns:
 - Expired;
 - spawned actors;
 - runtime phase progress.
+
+# Route Compatibility
+
+## 3.0K4B — Automatic Placement Requirements
+
+An `EncounterDefinition` may describe the kinds of Route geography where it is
+appropriate for automatic placement.
+
+Current placement metadata:
+
+- Allow Automatic Placement;
+- Required Route Tags;
+- Preferred Route Tags;
+- Forbidden Route Tags.
+
+This metadata is portable.
+
+A Definition does not reference concrete scene Nodes, Segments, Groups or Sites.
+
+Example:
+
+Dormant Horde
+
+Required:
+- Road.
+
+Preferred:
+- Village;
+- Narrow.
+
+This Definition can therefore be evaluated against any Route Site exposing those
+semantic qualities.
+
+## Required Tags
+
+Every Required Tag must exist in the Site's effective Route Tags.
+
+Missing any Required Tag makes the Site incompatible.
+
+## Forbidden Tags
+
+No Forbidden Tag may exist in the Site's effective Route Tags.
+
+Any Forbidden match makes the Site incompatible.
+
+## Preferred Tags
+
+Preferred Tags do not determine validity.
+
+They produce a fit score among otherwise-compatible Sites.
+
+Current score:
+
+matched preferred Tags
+/
+total preferred Tags.
+
+Required and Forbidden Tags are therefore hard constraints.
+
+Preferred Tags are soft ranking information.
+
+## Automatic Placement Eligibility
+
+`Allow Automatic Placement` is an explicit opt-in.
+
+When disabled, the Definition is not returned as compatible for automatic
+placement even if its Tag requirements would otherwise match.
+
+This preserves bespoke / fixed content.
+
+Manual scene binding remains valid and does not depend on automatic-placement
+eligibility.
+
+## Workshop Boundary
+
+Route compatibility currently lives on the `EncounterDefinition` asset but is
+not edited as part of the Encounter Workshop Draft.
+
+Saving an existing Definition from the Workshop preserves its current
+compatibility metadata.
+
+`Save As` creates a new Definition with automatic placement disabled and empty
+placement requirements.
+
+This is intentionally conservative until Workshop Route Context work becomes
+relevant.
 
 # Authoring Pipeline
 

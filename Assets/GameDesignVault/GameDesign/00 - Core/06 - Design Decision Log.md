@@ -899,3 +899,74 @@ Duplicating Tags onto every Site would create fragile parallel authoring data.
 - Segment Tags do not automatically inherit endpoint Node Tags;
 - future Encounter compatibility can consume Site effective Tags;
 - validation remains non-destructive.
+
+## 2026-09-16 — Encounter placement uses hard semantic constraints plus soft preferences
+
+### Decision
+
+Automatically placeable `EncounterDefinition`s describe geography suitability
+through:
+
+- Required Route Tags;
+- Preferred Route Tags;
+- Forbidden Route Tags.
+
+Automatic placement is explicit opt-in.
+
+### Reason
+
+Encounter content needs to remain portable between Regions while still
+expressing where it makes sense.
+
+A simple yes/no Tag requirement is too restrictive for cases where several Sites
+are valid but some are a better thematic/spatial fit.
+
+### Implications
+
+Required Tags:
+- all must match.
+
+Forbidden Tags:
+- none may match.
+
+Preferred Tags:
+- affect fit/ranking only.
+
+A compatibility query can return ranked Site candidates without choosing or
+instantiating one.
+
+Definitions that should remain bespoke may opt out of automatic placement.
+
+Manual binding remains independent from generated-placement eligibility.
+
+## 2026-09-16 — Ambient population is authored as Route-bound Activity Areas
+
+### Decision
+
+The original per-Node `AmbientSpawnPoint` prototype is replaced by
+`AmbientActivityArea`.
+
+An Activity Area owns:
+- Route geography footprint;
+- one or more ActorDefinition/count population entries;
+- spawn scatter;
+- engagement radius.
+
+### Reason
+
+Per-Node Spawn Points require repetitive scene wiring and treat ambient
+population as isolated points rather than part of authored Region geography.
+
+The Region Route system now provides enough spatial structure to author ambient
+population more coherently.
+
+### Implications
+
+- ambient population remains Region / Level-owned;
+- Activity Areas may occupy Nodes, Segments or Route Groups;
+- Segment-backed Areas distribute actors along the Route;
+- multiple Actor types can share one Area;
+- the Area GameObject Transform is organisational rather than spatial authority;
+- Ambient Activity remains separate from formal Encounter lifecycle;
+- Zombie Surge affects compatible Activity Areas rather than fixed Spawn Points;
+- the old `AmbientSpawnPoint` implementation is retired.

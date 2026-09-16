@@ -71,9 +71,9 @@ Zombie Surge
 ↓
 ZombieSurgeAmbientEffect
 ↓
-AmbientSpawnPoint
+AmbientActivityArea
 ↓
-additional ambient zombies.
+additional ambient zombies distributed through Route-bound activity areas.
 
 # 3.0H Zombie Surge Prototype
 
@@ -82,8 +82,10 @@ The first World Event is:
 Zombie Surge.
 
 Initial prototype effect:
-- adds one extra zombie at each zombie Ambient Spawn Point when the event begins;
-- periodically adds another zombie at each point while the event remains active;
+- adds one extra zombie at each compatible zombie Ambient Activity Area when the
+  event begins;
+- periodically adds another zombie at each compatible Area while the event
+  remains active;
 - uses World Time for pulse timing;
 - stops creating additional surge population when the event expires.
 
@@ -94,6 +96,12 @@ Therefore Zombie Surge is both:
 Threat
 +
 Opportunity.
+
+3.0K5A preserves this behaviour while replacing fixed Spawn Points with
+Route-bound Activity Areas.
+
+A World Event may therefore increase ambient pressure without needing to know
+the concrete Route geometry used by each Area.
 
 # Engagement Snapshot Principle
 

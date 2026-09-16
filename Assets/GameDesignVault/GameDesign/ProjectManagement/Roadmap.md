@@ -410,33 +410,77 @@ Completed:
 
 `3.0K4AComplete.zip` is the completed K4A checkpoint.
 
-#### 3.0K4B — Encounter Compatibility & Placement Queries
+#### 3.0K4B — Encounter Compatibility & Placement Queries ✅
+
+Completed:
+- Encounter Definitions explicitly opt into automatic placement;
+- Definitions support Required Route Tags;
+- Definitions support Preferred Route Tags;
+- Definitions support Forbidden Route Tags;
+- Route compatibility compares portable Definition requirements against
+  Encounter Route Site effective Tags;
+- Required Tags act as hard requirements;
+- Forbidden Tags act as hard exclusions;
+- Preferred Tags provide soft fit scoring;
+- compatible Site candidates can be collected and ranked by preference score;
+- Route Geography authoring can configure compatibility roles without manual
+  list wiring;
+- authoring prevents one Tag occupying several placement roles through the
+  normal tool workflow;
+- manual conflicting Tag authoring is reported non-destructively;
+- compatibility preview explains why each current Site is compatible or
+  incompatible;
+- automatic placement remains opt-in, preserving bespoke/manual Encounter
+  content;
+- no scheduler or generated Encounter supply is implemented yet;
+- West Road gains the reusable `Narrow` semantic Tag;
+- `DormantHordeDefinition` demonstrates preferred-site ranking;
+- `WideHordeDefinition` demonstrates forbidden-site exclusion.
+
+`3.0K4BComplete.zip` is the completed K4B checkpoint.
+
+### 3.0K5 — Ambient Activity Authoring
+
+Purpose:
+
+Make lightweight Region population expressive and easy to author without
+turning ordinary ambient enemies into formal Encounters.
+
+#### 3.0K5A — Route-Bound Ambient Activity Areas ✅
+
+Completed:
+- `AmbientActivityArea` replaces the fixed per-Node `AmbientSpawnPoint`
+  prototype;
+- Activity Areas bind population to Route Nodes / Segments / Groups;
+- Segment-backed Areas distribute spawn positions along authored Route
+  geography;
+- Area population uses ActorDefinition/count entries;
+- one Area may support several Actor population entries;
+- spawn scatter is authored per Area;
+- engagement radius is authored per Area;
+- Route Geography authoring creates Activity Areas from selected geography;
+- population entries and Area settings can be edited through the authoring
+  tool;
+- generated Area data remains manually editable;
+- validation is non-destructive;
+- four Village Well Activity Areas preserve the previous four-Zombie baseline;
+- Zombie Surge now adds population through compatible Activity Areas;
+- legacy `AmbientSpawnPoint` is retired.
+
+`3.0K5AComplete.zip` is the completed K5A checkpoint.
+
+#### 3.0K5B — Local Ambient Wandering
 
 **Status: Active**
 
-Develop:
-- automatic-placement eligibility on Encounter Definitions;
-- required Route Tags;
-- preferred Route Tags;
-- forbidden Route Tags;
-- compatibility query between Encounter Definition and Encounter Route Site;
-- preference/fit scoring;
-- fixed spectacle content can opt out of automatic placement;
-- compatibility preview through authoring tooling;
-- scheduler-ready query seam without implementing generated supply yet.
-### 3.0K5 — Ambient Activity Authoring
-
-Improve the lightweight world between formal Encounters.
-
-Working direction:
-- richer ambient population areas;
-- multiple actors;
-- spawn-area authoring;
-- engagement-area authoring;
-- modest local wandering;
-- route-aware ambient placement.
-
-Ambient population does not automatically become formal Encounter content.
+Prove:
+- disengaged Ambient enemies wander modestly around their local spawn/home area;
+- wandering uses normal Actor navigation rather than bespoke Transform movement;
+- engagement immediately cancels ambient wandering;
+- engaged enemies retain normal combat pursuit;
+- wandering settings are authored at the Ambient Activity Area;
+- Simulation Pause / speed continues to affect ambient movement normally;
+- ambient wandering does not become formal Encounter navigation.
 
 ### 3.0K6 — Workshop Route Context
 

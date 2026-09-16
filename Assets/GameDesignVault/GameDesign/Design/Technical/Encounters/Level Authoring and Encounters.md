@@ -602,13 +602,39 @@ Validation should detect:
 
 ## Ambient Activity
 
-Ambient population may exist along route geography without becoming a formal
+Ambient population may exist along Route geography without becoming a formal
 Encounter.
 
-Do not model every ambient enemy as a `LevelEncounter` merely to reuse encounter
+Current authoring uses `AmbientActivityArea`.
+
+The common workflow should use:
+
+`Tools -> MiniCrawler -> Route Geography Authoring`
+
+An Activity Area is created from selected:
+- Nodes;
+- Segments;
+- Groups.
+
+The tool then allows the designer to:
+- add/update population entries;
+- remove population entries;
+- set spawn scatter;
+- set engagement radius;
+- validate the authored footprint.
+
+Generated Area objects remain normally editable through the Inspector.
+
+Prefer Route Groups for broad coherent activity regions.
+
+Prefer one or more Segments for corridor / street population.
+
+Prefer Nodes for genuinely point-like local population.
+
+Do not model every ambient enemy as a `LevelEncounter` merely to reuse Encounter
 features.
 
-Formal encounters and ambient populations may later coexist on the same Route
+Formal Encounter Sites and Ambient Activity Areas may coexist on the same Route
 geography.
 
 ## Encounter Route Site Authoring
@@ -728,6 +754,32 @@ Do not manually duplicate inherited geography Tags onto every Encounter Site.
 
 Encounter Definition compatibility with these Tags is introduced separately so
 geography authoring does not become coupled to one specific Encounter.
+
+## Encounter Compatibility Preview
+
+The Route Geography Authoring tool can preview an `EncounterDefinition` against
+the current graph's Encounter Route Sites.
+
+The compatibility authoring surface provides:
+
+- Allow Automatic Placement;
+- Required Tags;
+- Preferred Tags;
+- Forbidden Tags;
+- validation of conflicting placement roles;
+- per-Site compatibility reasons;
+- preferred-Tag fit;
+- ranked compatible candidate Sites.
+
+Setting a Tag role through the tool moves that Tag out of any previous role.
+
+Manual Inspector editing remains supported.
+
+Manual invalid states are reported rather than silently rewritten.
+
+Compatibility preview does not bind or instantiate the Definition.
+
+It is a query/authoring aid only.
 
 # Prototype Reusable Encounter Sites
 

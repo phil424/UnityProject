@@ -3,6 +3,7 @@ using MiniCrawler.Expedition;
 using MiniCrawler.Progress;
 using MiniCrawler.Systems;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace MiniCrawler.Ecology
 {
@@ -15,8 +16,8 @@ namespace MiniCrawler.Ecology
         [SerializeField] private ActorDefinition affectedActorDefinition;
 
         [Header("Ambient Pressure")]
-        [SerializeField, Min(0)] private int activationBonusPerSpawnPoint = 1;
-        [SerializeField, Min(0)] private int pulseBonusPerSpawnPoint = 1;
+        [SerializeField, FormerlySerializedAs("activationBonusPerSpawnPoint"), Min(0)] private int activationBonusPerArea = 1;
+        [SerializeField, FormerlySerializedAs("pulseBonusPerSpawnPoint"), Min(0)] private int pulseBonusPerArea = 1;
         [SerializeField, Min(1f)] private float pulseIntervalWorldMinutes = 60f;
 
         private StageDirector stageDirector;
@@ -71,11 +72,11 @@ namespace MiniCrawler.Ecology
 
             if (!appliedForCurrentLevel)
             {
-                SpawnSurgeActors(activationBonusPerSpawnPoint);
+                SpawnSurgeActors(activationBonusPerArea);
 
                 appliedForCurrentLevel = true;
                 nextPulseAt = currentTime.AddMinutes(pulseIntervalWorldMinutes);
-                hasNextPulse = pulseBonusPerSpawnPoint > 0;
+                hasNextPulse = pulseBonusPerArea > 0;
             }
 
             if (!hasNextPulse)
@@ -84,34 +85,28 @@ namespace MiniCrawler.Ecology
             while (currentTime.CompareTo(nextPulseAt) >= 0 &&
                    nextPulseAt.CompareTo(activeEvent.EndsAt) < 0)
             {
-                SpawnSurgeActors(pulseBonusPerSpawnPoint);
+                SpawnSurgeActors(pulseBonusPerArea);
                 nextPulseAt = nextPulseAt.AddMinutes(pulseIntervalWorldMinutes);
             }
         }
 
-        private void SpawnSurgeActors(int amountPerSpawnPoint)
+        private void SpawnSurgeActors(int amountPerArea)
         {
-            if (amountPerSpawnPoint <= 0)
+            if (amountPerArea <= 0)
                 return;
 
             int spawnedCount = 0;
 
-            foreach (AmbientSpawnPoint spawnPoint in
-                     FindObjectsByType<AmbientSpawnPoint>(FindObjectsSortMode.None))
+            foreach (AmbientActivityArea area in FindObjectsByType<AmbientActivityArea>(FindObjectsSortMode.None))
             {
-                if (spawnPoint == null || spawnPoint.ActorDefinition != affectedActorDefinition)
+                if (area == null || !area.SupportsActor(affectedActorDefinition))
                     continue;
 
-                spawnedCount += spawnPoint.SpawnAdditional(amountPerSpawnPoint);
+                spawnedCount += area.SpawnAdditional(affectedActorDefinition, amountPerArea);
             }
 
             if (spawnedCount > 0)
-            {
-                Debug.Log(
-                    $"Zombie Surge added {spawnedCount} ambient enemies.",
-                    this
-                );
-            }
+                Debug.Log($"Zombie Surge added {spawnedCount} ambient enemies.", this);
         }
 
         private void ResetLocalState()

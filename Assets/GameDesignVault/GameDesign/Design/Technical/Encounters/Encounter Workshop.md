@@ -984,3 +984,28 @@ Route Nodes.
 
 The Workshop should therefore test the spatial requirements/roles of Encounter
 content while Region scene authoring owns the real Route Graph.
+
+# Route Compatibility Boundary
+
+**Status: Working / Future Workshop Integration**
+
+3.0K4B adds Route compatibility metadata directly to
+`EncounterDefinition`.
+
+The current Encounter Workshop Draft does not edit this metadata.
+
+Current workflow:
+
+Workshop
+→ author / save encounter content
+
+Route Geography Authoring
+→ configure / preview Route compatibility.
+
+Saving an existing Definition preserves its current compatibility metadata.
+
+Saving a new Definition through `Save As` begins with automatic placement
+disabled until deliberately configured.
+
+Future Workshop Route Context work may bring compatibility preview into the
+Workshop when spatial test contexts exist.

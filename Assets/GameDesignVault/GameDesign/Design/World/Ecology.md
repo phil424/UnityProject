@@ -204,6 +204,46 @@ Ambient enemies provide:
 
 They are not necessarily represented as formal encounters.
 
+## 3.0K5A — Ambient Activity Areas
+
+**Status: Implemented Foundation**
+
+Ambient population is authored through Region-owned `AmbientActivityArea`s.
+
+An Ambient Activity Area answers:
+
+> What lightweight population naturally occupies this piece of Region
+> geography?
+
+An Area owns:
+- a Route geography footprint;
+- one or more population entries;
+- spawn scatter;
+- engagement distance.
+
+A footprint may reference:
+- Route Nodes;
+- Route Segments;
+- Route Groups.
+
+When usable Segments exist, ambient actors are distributed along the authored
+Segments.
+
+Nodes provide point-like fallback placement.
+
+This replaces the earlier fixed `AmbientSpawnPoint` prototype.
+
+Ambient population remains distinct from formal Encounters.
+
+Ambient actors:
+- do not become Encounter choices;
+- do not contribute to formal Encounter completion;
+- may occupy the same geography as formal Encounter Sites;
+- still provide normal lightweight combat and world population.
+
+The initial Village Well migration preserves four ordinary ambient Zombies while
+moving their placement onto Route geography.
+
 # Ambient Route Graph
 
 Ambient population should follow designer-authored paths through interesting

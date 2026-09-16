@@ -451,6 +451,59 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!1 &42829843
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 42829844}
+  - component: {fileID: 42829845}
+  m_Layer: 0
+  m_Name: Village Well Ambient NW
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &42829844
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 42829843}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1831011902}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &42829845
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 42829843}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc72d782984fde84c9d4e907945086b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Ecology.AmbientActivityArea
+  nodes: []
+  segments:
+  - {fileID: 1965840940}
+  groups: []
+  populations:
+  - actorDefinition: {fileID: 11400000, guid: f94bb2855b5c0e24eac3845bce957198, type: 2}
+    count: 1
+  spawnScatterRadius: 1.5
+  engagementRadius: 3.5
 --- !u!1 &82840391
 GameObject:
   m_ObjectHideFlags: 0
@@ -1292,7 +1345,6 @@ GameObject:
   m_Component:
   - component: {fileID: 147068390}
   - component: {fileID: 147068391}
-  - component: {fileID: 147068392}
   m_Layer: 0
   m_Name: Well SW
   m_TagString: Untagged
@@ -1327,22 +1379,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d5811292d23160479d7be4040f6c203, type: 3}
   m_Name: 
   m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Movement.AmbientRouteNode
---- !u!114 &147068392
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 147068389}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d3daf6f9257c96f4cbe602af34f75e89, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Ecology.AmbientSpawnPoint
-  actorDefinition: {fileID: 11400000, guid: f94bb2855b5c0e24eac3845bce957198, type: 2}
-  count: 1
-  spawnRadius: 1.5
-  engagementRadius: 3.5
+  tags: []
 --- !u!1 &156298079
 GameObject:
   m_ObjectHideFlags: 0
@@ -1671,6 +1708,59 @@ MonoBehaviour:
       m_Calls: []
   symbol: 0
   circleSegments: 24
+--- !u!1 &196476671
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 196476672}
+  - component: {fileID: 196476673}
+  m_Layer: 0
+  m_Name: Village Well Ambient NE
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &196476672
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 196476671}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1831011902}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &196476673
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 196476671}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc72d782984fde84c9d4e907945086b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Ecology.AmbientActivityArea
+  nodes: []
+  segments:
+  - {fileID: 243140767}
+  groups: []
+  populations:
+  - actorDefinition: {fileID: 11400000, guid: f94bb2855b5c0e24eac3845bce957198, type: 2}
+    count: 1
+  spawnScatterRadius: 1.5
+  engagementRadius: 3.5
 --- !u!1 &221997189
 GameObject:
   m_ObjectHideFlags: 0
@@ -1749,6 +1839,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Movement.AmbientRouteSegment
   nodeA: {fileID: 333212915}
   nodeB: {fileID: 1459127024}
+  tags:
+  - {fileID: 11400000, guid: c543c527f52584149977762e1222ff5b, type: 2}
 --- !u!4 &243140768
 Transform:
   m_ObjectHideFlags: 0
@@ -2116,6 +2208,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Movement.AmbientRouteSegment
   nodeA: {fileID: 147068391}
   nodeB: {fileID: 1781699814}
+  tags:
+  - {fileID: 11400000, guid: c543c527f52584149977762e1222ff5b, type: 2}
+  - {fileID: 11400000, guid: b50527e3e43a06d48bb9b41d9c442605, type: 2}
 --- !u!4 &273647059
 Transform:
   m_ObjectHideFlags: 0
@@ -2867,6 +2962,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d5811292d23160479d7be4040f6c203, type: 3}
   m_Name: 
   m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Movement.AmbientRouteNode
+  tags: []
 --- !u!4 &333212916
 Transform:
   m_ObjectHideFlags: 0
@@ -2999,6 +3095,7 @@ MonoBehaviour:
   nodes: []
   segments:
   - {fileID: 1923800174}
+  startEncounterOnTraversal: 1
 --- !u!1 &382263932
 GameObject:
   m_ObjectHideFlags: 0
@@ -3351,6 +3448,7 @@ MonoBehaviour:
   nodes: []
   segments:
   - {fileID: 273647058}
+  startEncounterOnTraversal: 1
 --- !u!1 &425489585
 GameObject:
   m_ObjectHideFlags: 0
@@ -4651,6 +4749,7 @@ MonoBehaviour:
   nodes: []
   segments:
   - {fileID: 1937379564}
+  startEncounterOnTraversal: 1
 --- !u!1 &581903642
 GameObject:
   m_ObjectHideFlags: 0
@@ -5774,7 +5873,6 @@ GameObject:
   m_Component:
   - component: {fileID: 655685924}
   - component: {fileID: 655685925}
-  - component: {fileID: 655685926}
   m_Layer: 0
   m_Name: Well SE
   m_TagString: Untagged
@@ -5809,22 +5907,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d5811292d23160479d7be4040f6c203, type: 3}
   m_Name: 
   m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Movement.AmbientRouteNode
---- !u!114 &655685926
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 655685923}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d3daf6f9257c96f4cbe602af34f75e89, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Ecology.AmbientSpawnPoint
-  actorDefinition: {fileID: 11400000, guid: f94bb2855b5c0e24eac3845bce957198, type: 2}
-  count: 1
-  spawnRadius: 1.5
-  engagementRadius: 3.5
+  tags: []
 --- !u!1 &666907402
 GameObject:
   m_ObjectHideFlags: 0
@@ -6029,6 +6112,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Movement.AmbientRouteSegment
   nodeA: {fileID: 1459127024}
   nodeB: {fileID: 1838723880}
+  tags:
+  - {fileID: 11400000, guid: c543c527f52584149977762e1222ff5b, type: 2}
 --- !u!4 &705945607
 Transform:
   m_ObjectHideFlags: 0
@@ -6465,6 +6550,59 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 750762743}
   m_CullTransparentMesh: 1
+--- !u!1 &758669088
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 758669089}
+  - component: {fileID: 758669090}
+  m_Layer: 0
+  m_Name: Village Well Ambient SW
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &758669089
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 758669088}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1831011902}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &758669090
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 758669088}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc72d782984fde84c9d4e907945086b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Ecology.AmbientActivityArea
+  nodes: []
+  segments:
+  - {fileID: 1923800174}
+  groups: []
+  populations:
+  - actorDefinition: {fileID: 11400000, guid: f94bb2855b5c0e24eac3845bce957198, type: 2}
+    count: 1
+  spawnScatterRadius: 1.5
+  engagementRadius: 3.5
 --- !u!1 &765914640
 GameObject:
   m_ObjectHideFlags: 0
@@ -6558,7 +6696,6 @@ GameObject:
   m_Component:
   - component: {fileID: 769938336}
   - component: {fileID: 769938337}
-  - component: {fileID: 769938338}
   m_Layer: 0
   m_Name: Well NW
   m_TagString: Untagged
@@ -6593,22 +6730,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d5811292d23160479d7be4040f6c203, type: 3}
   m_Name: 
   m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Movement.AmbientRouteNode
---- !u!114 &769938338
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 769938335}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d3daf6f9257c96f4cbe602af34f75e89, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Ecology.AmbientSpawnPoint
-  actorDefinition: {fileID: 11400000, guid: f94bb2855b5c0e24eac3845bce957198, type: 2}
-  count: 1
-  spawnRadius: 1.5
-  engagementRadius: 3.5
+  tags: []
 --- !u!1 &775801522
 GameObject:
   m_ObjectHideFlags: 0
@@ -8240,6 +8362,59 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1028295877
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1028295878}
+  - component: {fileID: 1028295879}
+  m_Layer: 0
+  m_Name: Village Well Ambient SE
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1028295878
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1028295877}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1831011902}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1028295879
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1028295877}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc72d782984fde84c9d4e907945086b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Ecology.AmbientActivityArea
+  nodes: []
+  segments:
+  - {fileID: 1698704658}
+  groups: []
+  populations:
+  - actorDefinition: {fileID: 11400000, guid: f94bb2855b5c0e24eac3845bce957198, type: 2}
+    count: 1
+  spawnScatterRadius: 1.5
+  engagementRadius: 3.5
 --- !u!1 &1066719121
 GameObject:
   m_ObjectHideFlags: 0
@@ -9110,6 +9285,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Movement.AmbientRouteSegment
   nodeA: {fileID: 1838723880}
   nodeB: {fileID: 655685925}
+  tags:
+  - {fileID: 11400000, guid: c543c527f52584149977762e1222ff5b, type: 2}
 --- !u!4 &1176409116
 Transform:
   m_ObjectHideFlags: 0
@@ -9187,6 +9364,10 @@ MonoBehaviour:
   - {fileID: 273647058}
   - {fileID: 1937379564}
   - {fileID: 1965840940}
+  tags:
+  - {fileID: 11400000, guid: 8609568d2f5e6f04187d5aa2e1f4ee9e, type: 2}
+  - {fileID: 11400000, guid: eb7c7acb398a17741ad46493e8ea4600, type: 2}
+  - {fileID: 11400000, guid: b58b8a7ffdf0ab74a97a12cd43f54388, type: 2}
 --- !u!1 &1178464272
 GameObject:
   m_ObjectHideFlags: 0
@@ -10453,7 +10634,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1459127023}
   - component: {fileID: 1459127024}
-  - component: {fileID: 1459127025}
   m_Layer: 0
   m_Name: Well NE
   m_TagString: Untagged
@@ -10488,22 +10668,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d5811292d23160479d7be4040f6c203, type: 3}
   m_Name: 
   m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Movement.AmbientRouteNode
---- !u!114 &1459127025
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1459127022}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d3daf6f9257c96f4cbe602af34f75e89, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Ecology.AmbientSpawnPoint
-  actorDefinition: {fileID: 11400000, guid: f94bb2855b5c0e24eac3845bce957198, type: 2}
-  count: 1
-  spawnRadius: 1.5
-  engagementRadius: 3.5
+  tags: []
 --- !u!1 &1473619314
 GameObject:
   m_ObjectHideFlags: 0
@@ -10755,6 +10920,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d5811292d23160479d7be4040f6c203, type: 3}
   m_Name: 
   m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Movement.AmbientRouteNode
+  tags: []
 --- !u!4 &1488876543
 Transform:
   m_ObjectHideFlags: 0
@@ -11630,6 +11796,7 @@ Transform:
   - {fileID: 1178464273}
   - {fileID: 1832343505}
   - {fileID: 859442585}
+  - {fileID: 1831011902}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1644379270
@@ -11646,8 +11813,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Ecology.ZombieSurgeAmbientEffect
   worldEvent: {fileID: 11400000, guid: 6c5a5bdb253b6d44b9da0bad3dfc0e40, type: 2}
   affectedActorDefinition: {fileID: 11400000, guid: f94bb2855b5c0e24eac3845bce957198, type: 2}
-  activationBonusPerSpawnPoint: 1
-  pulseBonusPerSpawnPoint: 1
+  activationBonusPerArea: 1
+  pulseBonusPerArea: 1
   pulseIntervalWorldMinutes: 60
 --- !u!1 &1656925456
 GameObject:
@@ -11757,6 +11924,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Movement.AmbientRouteSegment
   nodeA: {fileID: 655685925}
   nodeB: {fileID: 1488876542}
+  tags:
+  - {fileID: 11400000, guid: c543c527f52584149977762e1222ff5b, type: 2}
 --- !u!4 &1698704659
 Transform:
   m_ObjectHideFlags: 0
@@ -12251,6 +12420,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d5811292d23160479d7be4040f6c203, type: 3}
   m_Name: 
   m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Movement.AmbientRouteNode
+  tags: []
 --- !u!4 &1781699815
 Transform:
   m_ObjectHideFlags: 0
@@ -12265,6 +12435,41 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1846829692}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1831011901
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1831011902}
+  m_Layer: 0
+  m_Name: Ambient Activity
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1831011902
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1831011901}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 42829844}
+  - {fileID: 196476672}
+  - {fileID: 1028295878}
+  - {fileID: 758669089}
+  m_Father: {fileID: 1644379269}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1832343504
 GameObject:
@@ -12466,6 +12671,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d5811292d23160479d7be4040f6c203, type: 3}
   m_Name: 
   m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Movement.AmbientRouteNode
+  tags: []
 --- !u!4 &1838723881
 Transform:
   m_ObjectHideFlags: 0
@@ -13171,6 +13377,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Movement.AmbientRouteSegment
   nodeA: {fileID: 1488876542}
   nodeB: {fileID: 147068391}
+  tags:
+  - {fileID: 11400000, guid: c543c527f52584149977762e1222ff5b, type: 2}
 --- !u!4 &1923800175
 Transform:
   m_ObjectHideFlags: 0
@@ -13217,6 +13425,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Movement.AmbientRouteSegment
   nodeA: {fileID: 1781699814}
   nodeB: {fileID: 769938337}
+  tags:
+  - {fileID: 11400000, guid: c543c527f52584149977762e1222ff5b, type: 2}
 --- !u!4 &1937379565
 Transform:
   m_ObjectHideFlags: 0
@@ -13263,6 +13473,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Movement.AmbientRouteSegment
   nodeA: {fileID: 769938337}
   nodeB: {fileID: 333212915}
+  tags:
+  - {fileID: 11400000, guid: c543c527f52584149977762e1222ff5b, type: 2}
 --- !u!4 &1965840941
 Transform:
   m_ObjectHideFlags: 0

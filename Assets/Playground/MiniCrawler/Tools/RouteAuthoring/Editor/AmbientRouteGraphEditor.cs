@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using MiniCrawler.Ecology;
 using MiniCrawler.Movement;
 using UnityEditor;
 using UnityEngine;
@@ -10,54 +11,26 @@ namespace MiniCrawler.Tools.RouteAuthoring
     {
         public override void OnInspectorGUI()
         {
-            AmbientRouteGraph graph =
-                (AmbientRouteGraph)target;
+            AmbientRouteGraph graph = (AmbientRouteGraph)target;
 
             DrawDefaultInspector();
 
             EditorGUILayout.Space();
 
-            EditorGUILayout.LabelField(
-                "Route Geography",
-                EditorStyles.boldLabel
-            );
+            EditorGUILayout.LabelField("Route Geography", EditorStyles.boldLabel);
 
-            List<AmbientRouteNode> nodes =
-                AmbientRouteAuthoringUtility
-                    .GetOwnedNodes(graph);
+            List<AmbientRouteNode> nodes = AmbientRouteAuthoringUtility.GetOwnedNodes(graph);
+            List<AmbientRouteSegment> segments = AmbientRouteAuthoringUtility.GetOwnedSegments(graph);
+            List<AmbientRouteGroup> groups = AmbientRouteAuthoringUtility.GetOwnedGroups(graph);
 
-            List<AmbientRouteSegment> segments =
-                AmbientRouteAuthoringUtility
-                    .GetOwnedSegments(graph);
+            int siteCount = EncounterRouteSiteAuthoringUtility.GetSitesForGraph(graph).Count;
+            int activityAreaCount = AmbientActivityAuthoringUtility.GetAreasForGraph(graph).Count;
 
-            List<AmbientRouteGroup> groups =
-                AmbientRouteAuthoringUtility
-                    .GetOwnedGroups(graph);
-
-            int siteCount =
-                EncounterRouteSiteAuthoringUtility
-                    .GetSitesForGraph(graph)
-                    .Count;
-
-            EditorGUILayout.LabelField(
-                "Nodes",
-                nodes.Count.ToString()
-            );
-
-            EditorGUILayout.LabelField(
-                "Segments",
-                segments.Count.ToString()
-            );
-
-            EditorGUILayout.LabelField(
-                "Groups",
-                groups.Count.ToString()
-            );
-
-            EditorGUILayout.LabelField(
-                "Encounter Sites",
-                siteCount.ToString()
-            );
+            EditorGUILayout.LabelField("Nodes", nodes.Count.ToString());
+            EditorGUILayout.LabelField("Segments", segments.Count.ToString());
+            EditorGUILayout.LabelField("Groups", groups.Count.ToString());
+            EditorGUILayout.LabelField("Encounter Sites", siteCount.ToString());
+            EditorGUILayout.LabelField("Ambient Areas", activityAreaCount.ToString());
 
             EditorGUILayout.Space();
 
@@ -67,26 +40,14 @@ namespace MiniCrawler.Tools.RouteAuthoring
                 MessageType.Info
             );
 
-            if (GUILayout.Button(
-                    "Open Route Geography Authoring"))
-            {
-                RouteAuthoringWindow
-                    .OpenForGraph(graph);
-            }
+            if (GUILayout.Button("Open Route Geography Authoring"))
+                RouteAuthoringWindow.OpenForGraph(graph);
 
-            if (GUILayout.Button(
-                    "Ensure Authoring Structure"))
-            {
-                AmbientRouteAuthoringUtility
-                    .EnsureAuthoringStructure(graph);
-            }
+            if (GUILayout.Button("Ensure Authoring Structure"))
+                AmbientRouteAuthoringUtility.EnsureAuthoringStructure(graph);
 
-            if (GUILayout.Button(
-                    "Validate Route Geography"))
-            {
-                AmbientRouteAuthoringUtility
-                    .LogValidation(graph);
-            }
+            if (GUILayout.Button("Validate Route Geography"))
+                AmbientRouteAuthoringUtility.LogValidation(graph);
         }
     }
 }

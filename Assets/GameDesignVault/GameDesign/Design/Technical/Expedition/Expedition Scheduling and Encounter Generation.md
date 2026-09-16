@@ -930,9 +930,13 @@ The first ambient-navigation prototype introduces:
 - yields to local combat;
 - resumes route travel when combat ends.
 
-`AmbientSpawnPoint`
-- prototype scene-authored ambient population;
-- spawns lightweight ambient actors around selected route nodes.
+`AmbientActivityArea`
+- Region-owned scene-authored ambient population;
+- binds lightweight population to Route geography;
+- supports multiple Actor Definitions / counts;
+- may occupy Nodes, Segments or Route Groups;
+- samples Segment-based spawn positions when available;
+- exposes local spawn scatter and engagement distance.
 
 `AmbientEnemy`
 - begins combat-disengaged;
@@ -940,11 +944,10 @@ The first ambient-navigation prototype introduces:
 - once engaged, uses normal combat movement/targeting;
 - does not count toward formal encounter/boss progression.
 
-The prototype intentionally does NOT yet implement:
+The current implementation still does NOT yet implement:
 - local wandering;
 - moving population fronts;
 - spawn-ahead visibility rules;
-- dynamic route population;
 - escalation-based density;
 - world-event modifications.
 
@@ -954,6 +957,37 @@ The purpose of 3.0E is to prove:
 
 > Does a designer-authored route plus light combat make the game feel naturally
 > alive when the player chooses not to issue strategic commands?
+
+## 3.0K5A Ambient Activity Authoring
+
+The original per-Node `AmbientSpawnPoint` proof has been retired.
+
+Region ambient population is now authored through `AmbientActivityArea`.
+
+Current data flow:
+
+Route footprint
++
+Ambient population entries
++
+placement / engagement settings
+↓
+Region level begins
+↓
+Area samples Route geography
+↓
+StageDirector spawns Ambient actors
+↓
+actors remain combat-disengaged until locally engaged.
+
+Ambient Areas may contain several population entries without becoming formal
+Encounter definitions.
+
+This preserves the distinction:
+
+Ambient ecology
+!=
+formal strategic Encounter supply.
 
 # World Events
 
@@ -1015,3 +1049,40 @@ The first question to prove is:
 > and managing autonomous travel actually fun?
 
 Only after that is proven should the full encounter-generation system be built.
+
+## 3.0K4B Placement Query Seam
+
+The first scheduler-ready compatibility query is now available.
+
+Input:
+
+Encounter Definition
++
+Encounter Route Site.
+
+Output includes:
+- automatic-placement eligibility;
+- missing Required Tags;
+- matched Preferred Tags;
+- present Forbidden Tags;
+- hard compatibility;
+- preference score.
+
+The query can also collect all compatible Sites and order them by preference
+score.
+
+This does not yet schedule or instantiate Encounter content.
+
+The current seam is intentionally:
+
+available Sites
+↓
+compatibility query
+↓
+ranked candidate Sites.
+
+Future generated supply can consume that result without duplicating semantic
+matching logic.
+
+A Definition with automatic placement disabled is excluded from generated
+placement while remaining usable through explicit/manual authoring.
