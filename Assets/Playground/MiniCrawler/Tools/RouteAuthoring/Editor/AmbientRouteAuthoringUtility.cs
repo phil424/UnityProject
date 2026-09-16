@@ -133,6 +133,31 @@ namespace MiniCrawler.Tools.RouteAuthoring
 
             return result;
         }
+        
+        public static List<AmbientRouteGroup> GetSelectedGroups(AmbientRouteGraph graph)
+        {
+            List<AmbientRouteGroup> result = new();
+
+            if (graph == null)
+                return result;
+
+            foreach (GameObject selected in Selection.gameObjects)
+            {
+                if (selected == null)
+                    continue;
+
+                AmbientRouteGroup group = selected.GetComponent<AmbientRouteGroup>();
+
+                if (group != null &&
+                    group.GetComponentInParent<AmbientRouteGraph>() == graph &&
+                    !result.Contains(group))
+                {
+                    result.Add(group);
+                }
+            }
+
+            return result;
+        }
 
         public static List<AmbientRouteSegment> ConnectSelectedPair(AmbientRouteGraph graph)
         {

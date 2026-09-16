@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace MiniCrawler.Movement
@@ -7,15 +8,14 @@ namespace MiniCrawler.Movement
     {
         [SerializeField] private AmbientRouteNode nodeA;
         [SerializeField] private AmbientRouteNode nodeB;
+        [SerializeField] private List<RouteTagDefinition> tags = new();
 
         public string DisplayName => gameObject.name;
         public AmbientRouteNode NodeA => nodeA;
         public AmbientRouteNode NodeB => nodeB;
+        public IReadOnlyList<RouteTagDefinition> Tags => tags;
 
-        public bool IsConfigured =>
-            nodeA != null &&
-            nodeB != null &&
-            nodeA != nodeB;
+        public bool IsConfigured => nodeA != null && nodeB != null && nodeA != nodeB;
 
         public float Length
         {
@@ -31,15 +31,16 @@ namespace MiniCrawler.Movement
             }
         }
 
-        public Vector3 Midpoint =>
-            IsConfigured
-                ? (nodeA.Position + nodeB.Position) * 0.5f
-                : transform.position;
+        public Vector3 Midpoint => IsConfigured ? (nodeA.Position + nodeB.Position) * 0.5f : transform.position;
+
+        public bool HasTag(RouteTagDefinition tag)
+        {
+            return tag != null && tags.Contains(tag);
+        }
 
         public bool Connects(AmbientRouteNode node)
         {
-            return node != null &&
-                   (node == nodeA || node == nodeB);
+            return node != null && (node == nodeA || node == nodeB);
         }
 
         public AmbientRouteNode GetOther(AmbientRouteNode node)
@@ -69,10 +70,7 @@ namespace MiniCrawler.Movement
             if (!IsConfigured)
                 return;
 
-            UnityEditor.Handles.Label(
-                Midpoint + Vector3.up * 0.35f,
-                DisplayName
-            );
+            UnityEditor.Handles.Label(Midpoint + Vector3.up * 0.35f, DisplayName);
         }
 #endif
     }

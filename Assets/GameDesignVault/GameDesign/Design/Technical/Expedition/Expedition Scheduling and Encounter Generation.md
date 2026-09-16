@@ -749,6 +749,34 @@ Future strategic planning can use these same Site footprints to reason about:
 
 K3B does not yet alter pathfinding based on threat.
 
+## 3.0K4A Semantic Geography
+
+Route geography now exposes reusable semantic Tags.
+
+Current examples:
+- Village;
+- Road;
+- Well;
+- Open.
+
+Encounter Route Sites resolve an effective Tag set from the geography they
+occupy.
+
+This establishes the placement input for future compatibility queries:
+
+Encounter Definition requirements
++
+Encounter Site effective Tags
+↓
+compatibility result.
+
+K4A does not yet decide whether an Encounter Definition is compatible.
+
+That matching policy belongs to K4B.
+
+Tags remain data-authored rather than a hardcoded enum so new region semantics do
+not require runtime code changes.
+
 # Encounter Authoring Workshop
 
 Future development should provide a dedicated encounter-authoring/test scene.

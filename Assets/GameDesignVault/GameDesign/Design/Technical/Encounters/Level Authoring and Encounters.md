@@ -692,6 +692,43 @@ Its existing final local start semantics remain authoritative.
 This policy is Site-owned and does not modify the source
 `EncounterDefinition`.
 
+## Semantic Route Tag Authoring
+
+Route Tags describe geography rather than Encounter identity.
+
+Use:
+
+`Tools -> MiniCrawler -> Route Geography Authoring`
+
+to assign Tags to selected:
+- Nodes;
+- Segments;
+- Groups.
+
+Prefer Group-level Tags when the semantic quality applies to a coherent authored
+area.
+
+Example:
+
+Village Well Ring
+- Village;
+- Well;
+- Open.
+
+Prefer Segment-level Tags for connection-specific qualities.
+
+Example:
+
+Village Well road Segments
+- Road.
+
+Do not manually duplicate inherited geography Tags onto every Encounter Site.
+
+`EncounterRouteSite` derives its effective Tags from its footprint.
+
+Encounter Definition compatibility with these Tags is introduced separately so
+geography authoring does not become coupled to one specific Encounter.
+
 # Prototype Reusable Encounter Sites
 
 3.0G introduces a temporary authoring flag:

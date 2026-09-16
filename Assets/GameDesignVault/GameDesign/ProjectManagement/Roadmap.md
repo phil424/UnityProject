@@ -384,18 +384,46 @@ Completed:
 
 ### 3.0K4 — Route / Encounter Compatibility
 
+Purpose:
+
+Allow authored Encounter content to describe which kinds of Region geography it
+can sensibly occupy without hardcoding specific scene locations.
+
+#### 3.0K4A — Semantic Route Tags & Site Inheritance ✅
+
+Completed:
+- reusable `RouteTagDefinition` assets;
+- direct Tags on Route Nodes, Segments and Groups;
+- Group Tags inherit onto contained geography;
+- Encounter Route Sites derive effective semantic Tags from their footprint;
+- Route Geography authoring can create Tag assets;
+- authoring can add/remove Tags from selected geography;
+- duplicate Tag assignment is prevented by tooling;
+- duplicate/empty manual Tag references are reported non-destructively;
+- first Village Well vocabulary established:
+  - Village;
+  - Road;
+  - Well;
+  - Open;
+- western Encounter Sites resolve inherited Route semantics without duplicate
+  Site authoring.
+
+`3.0K4AComplete.zip` is the completed K4A checkpoint.
+
+#### 3.0K4B — Encounter Compatibility & Placement Queries
+
 **Status: Active**
 
 Develop:
-- small semantic Route-tag model;
-- data-authored tag definitions;
-- Encounter/Site compatibility requirements;
-- Route Group / Site queries;
-- fixed spectacle vs generic compatible Encounters;
-- scheduler-ready placement seams.
-
-Avoid giant hardcoded tag enums.
-
+- automatic-placement eligibility on Encounter Definitions;
+- required Route Tags;
+- preferred Route Tags;
+- forbidden Route Tags;
+- compatibility query between Encounter Definition and Encounter Route Site;
+- preference/fit scoring;
+- fixed spectacle content can opt out of automatic placement;
+- compatibility preview through authoring tooling;
+- scheduler-ready query seam without implementing generated supply yet.
 ### 3.0K5 — Ambient Activity Authoring
 
 Improve the lightweight world between formal Encounters.

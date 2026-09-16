@@ -273,45 +273,58 @@ A working zip does not automatically become an authoritative checkpoint and does
 
 # C# Formatting Style
 
-Code examples and replacement files should use conventional compact C# formatting.
+Code examples, replacement methods and complete files must use compact,
+conventional C# formatting consistent with Visual Studio / Rider-style Unity
+code.
+
+The default is horizontal readability.
+
+Do not format code vertically merely because the answer is being presented in
+chat.
+
+## Default Style
 
 Prefer:
 
-- method signatures on one line when reasonably short;
-- simple method calls on one line;
-- simple conditions on one line;
-- concise early returns;
-- logical expressions grouped naturally;
-- wrapping only when a line becomes genuinely long or readability materially improves.
+- method signatures on one line when they remain readable;
+- constructor calls on one line;
+- ordinary method calls on one line;
+- simple property access and member chains on one line;
+- simple boolean conditions on one line;
+- concise early returns without unnecessary braces;
+- short lambdas on one line;
+- short collection/index expressions on one line;
+- normal assignments on one line;
+- one blank line between logical blocks rather than between individual
+  statements.
 
-Avoid:
+Examples:
 
-- putting individual identifiers or arguments on separate lines unnecessarily;
-- vertically exploding simple expressions;
-- excessive nesting caused purely by formatting;
-- wrapping short boolean expressions across many lines.
+```csharp
+AmbientRouteNode start = routeGraph.FindNearestNode(leader.transform.position);
 
-As a general guide, lines around 120–140 characters are acceptable when still readable, but use judgement rather than enforcing a rigid maximum.
+if (graph == null || start == null || !graph.ContainsNode(start))
+    return false;
 
-Match the style already present in the latest project where practical.
+foreach (PartyMember member in FindObjectsByType<PartyMember>(FindObjectsSortMode.None))
+{
+    ...
+}
 
-### Braces Around Lifecycle-Critical Conditions
+navigation.SetDestination(this, targetNode.Position, arrivalDistance, suppressCombatTargeting: false);
+```
+``
+# Minimise Formatting Churn
 
-Compact single-line conditionals remain acceptable for trivial early returns and
-simple assignments.
+When changing an existing source file, modify the smallest practical region.
 
-Use braces when a conditional gates important lifecycle behaviour such as:
+Do not reformat unrelated methods, whitespace or wrapping merely because a file
+is already being edited.
 
-- spawning;
-- encounter start / completion;
-- progression reset;
-- Run / Level lifetime transitions;
-- reward application;
-- persistence;
-- destruction / cleanup.
+A gameplay change should produce a diff that primarily describes the gameplay
+change.
 
-Also add braces when modifying an existing single-line conditional to place
-additional statements immediately around it.
+Broad formatting cleanup belongs in an explicitly scoped housekeeping step.
 
-The goal is to make the guarded scope visually unambiguous and avoid accidental
-fall-through during later edits.
+When providing replacement code, preserve the established formatting of the
+surrounding file wherever practical.

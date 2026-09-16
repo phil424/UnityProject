@@ -154,31 +154,117 @@ while the designer is editing them.
 
 Manual Inspector editing remains supported.
 
-# Group vs Tag
+# Semantic Route Tags
 
-A Group identifies specific geography.
+**Status: Implemented Foundation**
+
+Route Groups and Route Tags answer different questions.
+
+A Group identifies exact authored geography.
 
 Example:
 
 Village Well Ring
 =
-these exact eight Nodes and eight Segments.
+these exact Nodes and Segments.
 
-A Tag describes what geography means.
+A Tag describes a semantic quality of geography.
 
-Future examples:
+Examples:
 - Village;
 - Road;
 - Well;
-- Open;
-- Narrow;
-- Cemetery.
+- Open.
 
-Tags are deliberately deferred until Encounter/Site compatibility needs them.
+Tags use reusable `RouteTagDefinition` assets.
 
-Do not implement a giant route-tag enum.
+Do not create a giant hardcoded Route Tag enum.
 
-The likely future direction is data-authored tag definitions.
+New geography vocabulary should normally be content rather than a runtime code
+change.
+
+## Direct Tags
+
+Route Nodes, Segments and Groups may own direct Tags.
+
+Example:
+
+Segment:
+Well South -> Well SW
+
+Direct Tags:
+- Road.
+
+## Group Inheritance
+
+Nodes and Segments inherit Tags from Route Groups that explicitly contain them.
+
+Example:
+
+Village Well Ring
+
+Group Tags:
+- Village;
+- Well;
+- Open.
+
+A Segment contained by that Group and directly tagged `Road` therefore resolves:
+
+- Road;
+- Village;
+- Well;
+- Open.
+
+Segment Tags do not automatically inherit semantic Tags from their endpoint
+Nodes.
+
+This prevents ambiguous propagation through shared intersections.
+
+Use Route Groups when a semantic quality applies to a broader authored area.
+
+## Encounter Site Effective Tags
+
+`EncounterRouteSite` derives effective semantic Tags from the Route geography in
+its footprint.
+
+The Site does not serialize duplicate copies of those Tags.
+
+Example:
+
+Opening Horde Site
+occupies
+Well West -> Well NW
+
+Segment Tag:
+- Road.
+
+Containing Group Tags:
+- Village;
+- Well;
+- Open.
+
+Effective Site Tags:
+- Road;
+- Village;
+- Well;
+- Open.
+
+This effective Tag set becomes the input for future Encounter Definition / Site
+compatibility.
+
+## Authoring
+
+The Route Geography authoring tool can:
+- create reusable Route Tag assets;
+- add one Tag to selected Nodes / Segments / Groups;
+- remove one Tag from selected geography;
+- display the effective Tags of the selected Encounter Site.
+
+Generated Tags remain normally editable through the Inspector.
+
+Tag validation is non-destructive.
+
+Duplicate or empty references are reported rather than automatically rewritten.
 
 # Navigation
 

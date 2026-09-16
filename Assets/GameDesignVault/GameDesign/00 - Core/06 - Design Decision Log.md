@@ -862,3 +862,40 @@ supporting deliberate multi-Encounter strategic pulls.
   combat;
 - previously-started enemies may continue pursuing after redirection;
 - Encounter Membership preserves independent completion during overlap.
+
+## 2026-09-15 — Route semantics use data-authored Tags with Group inheritance
+
+### Decision
+
+Route Nodes, Segments and Groups may reference reusable `RouteTagDefinition`
+assets.
+
+Nodes and Segments inherit semantic Tags from Route Groups that explicitly
+contain them.
+
+Encounter Route Sites derive effective Tags from the geography in their
+footprint rather than storing duplicate Site Tags.
+
+### Reason
+
+Encounter placement and future generation need semantic information such as:
+
+- Road;
+- Village;
+- Well;
+- Open.
+
+A hardcoded enum would require runtime code changes whenever the geography
+vocabulary expands.
+
+Duplicating Tags onto every Site would create fragile parallel authoring data.
+
+### Implications
+
+- Route Tags are reusable data assets;
+- Groups remain exact geographic collections;
+- Tags remain semantic descriptions;
+- Site effective Tags can be queried without duplicating data;
+- Segment Tags do not automatically inherit endpoint Node Tags;
+- future Encounter compatibility can consume Site effective Tags;
+- validation remains non-destructive.

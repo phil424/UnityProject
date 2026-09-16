@@ -8,10 +8,12 @@ namespace MiniCrawler.Movement
     {
         [SerializeField] private List<AmbientRouteNode> nodes = new();
         [SerializeField] private List<AmbientRouteSegment> segments = new();
+        [SerializeField] private List<RouteTagDefinition> tags = new();
 
         public string DisplayName => gameObject.name;
         public IReadOnlyList<AmbientRouteNode> Nodes => nodes;
         public IReadOnlyList<AmbientRouteSegment> Segments => segments;
+        public IReadOnlyList<RouteTagDefinition> Tags => tags;
 
         public bool ContainsNode(AmbientRouteNode node)
         {
@@ -21,6 +23,11 @@ namespace MiniCrawler.Movement
         public bool ContainsSegment(AmbientRouteSegment segment)
         {
             return segment != null && segments.Contains(segment);
+        }
+
+        public bool HasTag(RouteTagDefinition tag)
+        {
+            return tag != null && tags.Contains(tag);
         }
 
         private Vector3 GetCentroid()
@@ -37,9 +44,7 @@ namespace MiniCrawler.Movement
                 count++;
             }
 
-            return count > 0
-                ? total / count
-                : transform.position;
+            return count > 0 ? total / count : transform.position;
         }
 
         private void OnDrawGizmosSelected()
@@ -55,19 +60,11 @@ namespace MiniCrawler.Movement
             foreach (AmbientRouteSegment segment in segments)
             {
                 if (segment != null && segment.IsConfigured)
-                {
-                    Gizmos.DrawLine(
-                        segment.NodeA.Position + Vector3.up * 0.1f,
-                        segment.NodeB.Position + Vector3.up * 0.1f
-                    );
-                }
+                    Gizmos.DrawLine(segment.NodeA.Position + Vector3.up * 0.1f, segment.NodeB.Position + Vector3.up * 0.1f);
             }
 
 #if UNITY_EDITOR
-            UnityEditor.Handles.Label(
-                GetCentroid() + Vector3.up * 0.85f,
-                DisplayName
-            );
+            UnityEditor.Handles.Label(GetCentroid() + Vector3.up * 0.85f, DisplayName);
 #endif
         }
     }

@@ -17,6 +17,7 @@ namespace MiniCrawler.Encounters
         [SerializeField] private bool startEncounterOnTraversal = true;
 
         private readonly List<AmbientRouteNode> footprintNodes = new();
+        private readonly List<RouteTagDefinition> tagBuffer = new();
 
         public LevelEncounter Encounter =>
             encounter != null
@@ -67,6 +68,32 @@ namespace MiniCrawler.Encounters
         public bool ContainsSegment(AmbientRouteSegment segment)
         {
             return segment != null && segments.Contains(segment);
+        }
+        
+        public void CollectEffectiveTags(List<RouteTagDefinition> results)
+        {
+            results.Clear();
+
+            AmbientRouteGraph graph = RouteGraph;
+
+            if (graph == null)
+                return;
+
+            foreach (AmbientRouteNode node in nodes)
+            {
+                graph.CollectTags(node, tagBuffer);
+
+                foreach (RouteTagDefinition tag in tagBuffer)
+                    AddUnique(results, tag);
+            }
+
+            foreach (AmbientRouteSegment segment in segments)
+            {
+                graph.CollectTags(segment, tagBuffer);
+
+                foreach (RouteTagDefinition tag in tagBuffer)
+                    AddUnique(results, tag);
+            }
         }
         
         public bool TryStartEncounterFromTraversal()

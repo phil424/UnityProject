@@ -252,6 +252,11 @@ Current domains include:
 
 Prefer domain subfolders over a flat asset collection.
 
+`Assets/Data/RouteTags/`
+- reusable semantic Route Geography Tags;
+- examples include Road, Village, Well and Open;
+- Tags are content assets, not a hardcoded geography enum.
+
 ## Prefabs
 
 `Assets/Prefabs/`

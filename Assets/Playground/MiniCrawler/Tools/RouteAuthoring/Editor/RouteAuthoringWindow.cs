@@ -10,11 +10,13 @@ namespace MiniCrawler.Tools.RouteAuthoring
     {
         [SerializeField] private AmbientRouteGraph graph;
         [SerializeField] private LevelEncounter encounterSiteTarget;
+        [SerializeField] private RouteTagDefinition routeTag;
 
         private string newNodeName = "Route Node";
         private string newGroupName = "Route Group";
 
         private readonly List<string> validationIssues = new();
+        private readonly List<RouteTagDefinition> siteEffectiveTags = new();
         private bool validationHasRun;
         private Vector2 scrollPosition;
 
@@ -103,6 +105,7 @@ namespace MiniCrawler.Tools.RouteAuthoring
             DrawNodeTools();
             DrawConnectionTools();
             DrawGroupTools();
+            DrawTagTools();
             DrawEncounterSiteTools();
             DrawValidation();
 
@@ -333,6 +336,54 @@ namespace MiniCrawler.Tools.RouteAuthoring
                 }
             }
         }
+        
+        private void DrawTagTools()
+        {
+            EditorGUILayout.Space();
+            EditorGUILayout.LabelField("Semantic Tags", EditorStyles.boldLabel);
+
+            routeTag = (RouteTagDefinition)EditorGUILayout.ObjectField("Route Tag", routeTag, typeof(RouteTagDefinition), false);
+
+            if (GUILayout.Button("Create New Route Tag Asset..."))
+            {
+                RouteTagDefinition createdTag = RouteTagAuthoringUtility.CreateTagAsset();
+
+                if (createdTag != null)
+                    routeTag = createdTag;
+            }
+
+            List<AmbientRouteNode> selectedNodes = AmbientRouteAuthoringUtility.GetSelectedNodes(graph);
+            List<AmbientRouteSegment> selectedSegments = AmbientRouteAuthoringUtility.GetSelectedSegments(graph);
+            List<AmbientRouteGroup> selectedGroups = AmbientRouteAuthoringUtility.GetSelectedGroups(graph);
+
+            int selectedCount = selectedNodes.Count + selectedSegments.Count + selectedGroups.Count;
+
+            EditorGUILayout.LabelField(
+                "Selected Geography",
+                $"{selectedNodes.Count} Nodes / {selectedSegments.Count} Segments / {selectedGroups.Count} Groups"
+            );
+
+            EditorGUILayout.HelpBox(
+                "Tags describe semantic geography such as Road, Village, Well or Open. " +
+                "Group Tags are inherited by Nodes/Segments contained by that Group.",
+                MessageType.None
+            );
+
+            using (new EditorGUI.DisabledScope(routeTag == null || selectedCount == 0))
+            {
+                if (GUILayout.Button("Add Tag To Selection"))
+                {
+                    RouteTagAuthoringUtility.AddTagToSelection(graph, routeTag);
+                    RefreshValidation();
+                }
+
+                if (GUILayout.Button("Remove Tag From Selection"))
+                {
+                    RouteTagAuthoringUtility.RemoveTagFromSelection(graph, routeTag);
+                    RefreshValidation();
+                }
+            }
+        }
 
         private void DrawEncounterSiteTools()
         {
@@ -370,6 +421,13 @@ namespace MiniCrawler.Tools.RouteAuthoring
                     EditorGUILayout.LabelField(
                         "Current Site",
                         $"{existingSite.Nodes.Count} Nodes / {existingSite.Segments.Count} Segments"
+                    );
+                    
+                    existingSite.CollectEffectiveTags(siteEffectiveTags);
+
+                    EditorGUILayout.LabelField(
+                        "Effective Tags",
+                        FormatTags(siteEffectiveTags)
                     );
 
                     bool startOnTraversal = EditorGUILayout.Toggle(
@@ -516,6 +574,22 @@ namespace MiniCrawler.Tools.RouteAuthoring
 
             encounterSiteTarget = selectedEncounter;
             validationHasRun = false;
+        }
+        
+        private static string FormatTags(IReadOnlyList<RouteTagDefinition> tags)
+        {
+            if (tags == null || tags.Count == 0)
+                return "(none)";
+
+            List<string> names = new();
+
+            foreach (RouteTagDefinition tag in tags)
+            {
+                if (tag != null)
+                    names.Add(tag.DisplayName);
+            }
+
+            return names.Count > 0 ? string.Join(", ", names) : "(none)";
         }
     }
 }

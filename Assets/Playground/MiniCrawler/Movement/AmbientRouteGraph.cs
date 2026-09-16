@@ -29,6 +29,66 @@ namespace MiniCrawler.Movement
         {
             return OwnsSegment(segment);
         }
+        
+        public void GetGroupsContainingNode(AmbientRouteNode node, List<AmbientRouteGroup> results)
+        {
+            results.Clear();
+
+            if (!OwnsNode(node))
+                return;
+
+            foreach (AmbientRouteGroup group in groups)
+            {
+                if (group != null && group.ContainsNode(node))
+                    results.Add(group);
+            }
+        }
+
+        public void GetGroupsContainingSegment(AmbientRouteSegment segment, List<AmbientRouteGroup> results)
+        {
+            results.Clear();
+
+            if (!OwnsSegment(segment))
+                return;
+
+            foreach (AmbientRouteGroup group in groups)
+            {
+                if (group != null && group.ContainsSegment(segment))
+                    results.Add(group);
+            }
+        }
+        
+        public void CollectTags(AmbientRouteNode node, List<RouteTagDefinition> results)
+        {
+            results.Clear();
+
+            if (!OwnsNode(node))
+                return;
+
+            AddTags(results, node.Tags);
+
+            foreach (AmbientRouteGroup group in groups)
+            {
+                if (group != null && group.ContainsNode(node))
+                    AddTags(results, group.Tags);
+            }
+        }
+
+        public void CollectTags(AmbientRouteSegment segment, List<RouteTagDefinition> results)
+        {
+            results.Clear();
+
+            if (!OwnsSegment(segment))
+                return;
+
+            AddTags(results, segment.Tags);
+
+            foreach (AmbientRouteGroup group in groups)
+            {
+                if (group != null && group.ContainsSegment(segment))
+                    AddTags(results, group.Tags);
+            }
+        }
 
         public AmbientRouteNode FindNearestNode(Vector3 position)
         {
@@ -399,6 +459,24 @@ namespace MiniCrawler.Movement
                     }
                 }
             }
+            
+            foreach (AmbientRouteNode node in nodes)
+            {
+                if (node != null)
+                    CollectTagValidationIssues("Route Node", node.DisplayName, node.Tags, issues);
+            }
+
+            foreach (AmbientRouteSegment segment in segments)
+            {
+                if (segment != null)
+                    CollectTagValidationIssues("Route Segment", segment.DisplayName, segment.Tags, issues);
+            }
+
+            foreach (AmbientRouteGroup group in groups)
+            {
+                if (group != null)
+                    CollectTagValidationIssues("Route Group", group.DisplayName, group.Tags, issues);
+            }
 
             return issues.Count == 0;
         }
@@ -452,6 +530,36 @@ namespace MiniCrawler.Movement
             difference.y = 0f;
 
             return difference.magnitude;
+        }
+        
+        private static void AddTags(List<RouteTagDefinition> results, IReadOnlyList<RouteTagDefinition> tags)
+        {
+            foreach (RouteTagDefinition tag in tags)
+            {
+                if (tag != null && !results.Contains(tag))
+                    results.Add(tag);
+            }
+        }
+
+        private static void CollectTagValidationIssues(
+            string ownerType,
+            string ownerName,
+            IReadOnlyList<RouteTagDefinition> tags,
+            List<string> issues)
+        {
+            HashSet<RouteTagDefinition> seen = new();
+
+            foreach (RouteTagDefinition tag in tags)
+            {
+                if (tag == null)
+                {
+                    issues.Add($"{ownerType} '{ownerName}' contains an empty Route Tag reference.");
+                    continue;
+                }
+
+                if (!seen.Add(tag))
+                    issues.Add($"{ownerType} '{ownerName}' contains duplicate Route Tag '{tag.DisplayName}'.");
+            }
         }
 
         private void RefreshContent()

@@ -170,20 +170,34 @@ See [[Workflow and Validation]].
 
 # Code Style
 
-Use compact conventional C#.
+Use compact, conventional Visual Studio / Rider-style C#.
 
-Avoid vertically exploding ordinary signatures, calls or simple conditions.
+Default to horizontal readability.
 
-Use braces for lifecycle-critical conditions where scope ambiguity could alter:
-- spawning;
-- encounter transitions;
-- progression reset;
-- lifetime transitions;
-- rewards;
-- persistence;
-- destruction / cleanup.
+Keep ordinary:
+- signatures;
+- calls;
+- assignments;
+- member access;
+- lambdas;
+- conditions
 
-See [[Workflow and Validation]] for the full formatting rules.
+on one line when they remain readable.
+
+Do not vertically explode code for presentation in chat.
+
+Around 120–140 characters is an acceptable working range when the result is
+still readable.
+
+Do not reformat unrelated existing code while implementing a feature.
+
+Compact single-line guards are preferred for trivial checks.
+
+Use braces where lifecycle-critical scope must be unmistakable, especially
+around spawning, encounter transitions, progression/lifetime changes, rewards,
+persistence and cleanup.
+
+See [[Workflow and Validation]] for the complete formatting rules.
 
 # Documentation
 
