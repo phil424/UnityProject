@@ -49,10 +49,11 @@ namespace MiniCrawler.Tools
 
             const float width = 560f;
 
-            float height = Mathf.Max(320f, Screen.height - 470f);
+            const float top = 400f;
+            float height = Mathf.Max(300f, Screen.height - top - 10f);
 
             GUILayout.BeginArea(
-                new Rect(10f, 320f, width, height),
+                new Rect(10f, top, width, height),
                 GUI.skin.box
             );
 

@@ -251,6 +251,31 @@ This is sufficient for generic Point / Circle / Box encounters.
 Future Encounter Sites may expose named spatial sockets / anchors for fixed
 spectacles and more geographically specific content.
 
+## 3.0K6 Workshop Spatial Context
+
+The Encounter Workshop can now replay a Definition against Point, Segment, Path
+and Route Group test contexts.
+
+This does not change the portable Spawn Source schema.
+
+Workshop semantic roles currently include:
+
+- Entry;
+- Core;
+- Exit.
+
+These roles belong to the test Site context.
+
+They are not yet referenced by `SpawnSourceDefinition`.
+
+Therefore generated Spawn Sources remain relative to the Encounter anchor /
+Core.
+
+This boundary is intentional.
+
+K6 proves that portable encounter behaviour and Route-based Site geography can
+coexist before introducing a more expressive spatial-socket model.
+
 # Save Semantics
 
 Workshop editing distinguishes:

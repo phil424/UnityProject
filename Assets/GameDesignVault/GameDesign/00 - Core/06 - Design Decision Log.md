@@ -1038,3 +1038,38 @@ to perform one ordinary content-authoring task.
 - detailed issues appear on demand;
 - implementation terms may use simpler designer-facing labels;
 - runtime/data architecture and manual Inspector escape hatches remain intact.
+
+## 2026-09-17 — Workshop Route Context remains separate from portable Encounter content
+
+### Decision
+
+The Encounter Workshop may replay one Encounter against temporary Point,
+Segment, Path and Route Group Site footprints.
+
+The Workshop introduces semantic test roles:
+
+- Entry;
+- Core;
+- Exit.
+
+These roles are not yet persisted into Encounter Definition Spawn Sources.
+
+### Reason
+
+Route-aware Encounter testing is useful immediately, but adding general
+spatial-role binding to portable Encounter Definitions would create a larger
+authoring/runtime contract before the first playable Region needs it.
+
+The Workshop should prove the requirement before expanding the Definition
+schema.
+
+### Implications
+
+- Workshop replay uses real Route Geography;
+- EncounterRouteSite supports runtime footprint overrides;
+- the serialized Site remains unchanged by replay;
+- route compatibility can be previewed inside the Workshop;
+- incompatible placements may still be tested;
+- Spawn Sources remain Encounter-anchor-relative;
+- future Entry/Core/Exit Spawn Source binding remains an explicit later
+  extension rather than an assumed K6 requirement.

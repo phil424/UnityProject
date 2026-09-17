@@ -18,15 +18,23 @@ namespace MiniCrawler.Encounters
 
         private readonly List<AmbientRouteNode> footprintNodes = new();
         private readonly List<RouteTagDefinition> tagBuffer = new();
+        private readonly List<AmbientRouteNode> runtimeNodes = new();
+        private readonly List<AmbientRouteSegment> runtimeSegments = new();
+
+        private bool hasRuntimeFootprintOverride;
+
+        private IReadOnlyList<AmbientRouteNode> ActiveNodes => hasRuntimeFootprintOverride ? runtimeNodes : nodes;
+        private IReadOnlyList<AmbientRouteSegment> ActiveSegments => hasRuntimeFootprintOverride ? runtimeSegments : segments;
 
         public LevelEncounter Encounter =>
             encounter != null
                 ? encounter
                 : GetComponent<LevelEncounter>();
 
-        public IReadOnlyList<AmbientRouteNode> Nodes => nodes;
-        public IReadOnlyList<AmbientRouteSegment> Segments => segments;
+        public IReadOnlyList<AmbientRouteNode> Nodes => ActiveNodes;
+        public IReadOnlyList<AmbientRouteSegment> Segments => ActiveSegments;
         public bool StartEncounterOnTraversal => startEncounterOnTraversal;
+        public bool HasRuntimeFootprintOverride => hasRuntimeFootprintOverride;
 
         public AmbientRouteGraph RouteGraph => ResolveRouteGraph();
 
@@ -41,7 +49,7 @@ namespace MiniCrawler.Encounters
         
         public bool ContainsExplicitNode(AmbientRouteNode node)
         {
-            return node != null && nodes.Contains(node);
+            return node != null && ContainsReference(Nodes, node);
         }
 
         public bool ContainsNode(AmbientRouteNode node)
@@ -49,17 +57,13 @@ namespace MiniCrawler.Encounters
             if (node == null)
                 return false;
 
-            if (nodes.Contains(node))
+            if (ContainsReference(Nodes, node))
                 return true;
 
-            foreach (AmbientRouteSegment segment in segments)
+            foreach (AmbientRouteSegment segment in Segments)
             {
-                if (segment != null &&
-                    segment.IsConfigured &&
-                    segment.Connects(node))
-                {
+                if (segment != null && segment.IsConfigured && segment.Connects(node))
                     return true;
-                }
             }
 
             return false;
@@ -67,7 +71,36 @@ namespace MiniCrawler.Encounters
 
         public bool ContainsSegment(AmbientRouteSegment segment)
         {
-            return segment != null && segments.Contains(segment);
+            return segment != null && ContainsReference(Segments, segment);
+        }
+        
+        public void SetRuntimeFootprintOverride(
+            IReadOnlyList<AmbientRouteNode> overrideNodes,
+            IReadOnlyList<AmbientRouteSegment> overrideSegments)
+        {
+            runtimeNodes.Clear();
+            runtimeSegments.Clear();
+
+            if (overrideNodes != null)
+            {
+                foreach (AmbientRouteNode node in overrideNodes)
+                    AddUnique(runtimeNodes, node);
+            }
+
+            if (overrideSegments != null)
+            {
+                foreach (AmbientRouteSegment segment in overrideSegments)
+                    AddUnique(runtimeSegments, segment);
+            }
+
+            hasRuntimeFootprintOverride = true;
+        }
+
+        public void ClearRuntimeFootprintOverride()
+        {
+            runtimeNodes.Clear();
+            runtimeSegments.Clear();
+            hasRuntimeFootprintOverride = false;
         }
         
         public void CollectEffectiveTags(List<RouteTagDefinition> results)
@@ -79,7 +112,7 @@ namespace MiniCrawler.Encounters
             if (graph == null)
                 return;
 
-            foreach (AmbientRouteNode node in nodes)
+            foreach (AmbientRouteNode node in Nodes)
             {
                 graph.CollectTags(node, tagBuffer);
 
@@ -87,7 +120,7 @@ namespace MiniCrawler.Encounters
                     AddUnique(results, tag);
             }
 
-            foreach (AmbientRouteSegment segment in segments)
+            foreach (AmbientRouteSegment segment in Segments)
             {
                 graph.CollectTags(segment, tagBuffer);
 
@@ -119,13 +152,13 @@ namespace MiniCrawler.Encounters
             if (graph == null)
                 return false;
 
-            foreach (AmbientRouteNode node in nodes)
+            foreach (AmbientRouteNode node in Nodes)
             {
                 if (node != null && graph.ContainsNode(node))
                     return true;
             }
 
-            foreach (AmbientRouteSegment segment in segments)
+            foreach (AmbientRouteSegment segment in Segments)
             {
                 if (segment != null && graph.ContainsSegment(segment))
                     return true;
@@ -213,7 +246,7 @@ namespace MiniCrawler.Encounters
 
             HashSet<AmbientRouteNode> seenNodes = new();
 
-            foreach (AmbientRouteNode node in nodes)
+            foreach (AmbientRouteNode node in Nodes)
             {
                 if (node == null)
                 {
@@ -244,7 +277,7 @@ namespace MiniCrawler.Encounters
 
             HashSet<AmbientRouteSegment> seenSegments = new();
 
-            foreach (AmbientRouteSegment segment in segments)
+            foreach (AmbientRouteSegment segment in Segments)
             {
                 if (segment == null)
                 {
@@ -300,25 +333,23 @@ namespace MiniCrawler.Encounters
 
         private AmbientRouteGraph ResolveRouteGraph()
         {
-            foreach (AmbientRouteNode node in nodes)
+            foreach (AmbientRouteNode node in Nodes)
             {
                 if (node == null)
                     continue;
 
-                AmbientRouteGraph graph =
-                    node.GetComponentInParent<AmbientRouteGraph>();
+                AmbientRouteGraph graph = node.GetComponentInParent<AmbientRouteGraph>();
 
                 if (graph != null)
                     return graph;
             }
 
-            foreach (AmbientRouteSegment segment in segments)
+            foreach (AmbientRouteSegment segment in Segments)
             {
                 if (segment == null)
                     continue;
 
-                AmbientRouteGraph graph =
-                    segment.GetComponentInParent<AmbientRouteGraph>();
+                AmbientRouteGraph graph = segment.GetComponentInParent<AmbientRouteGraph>();
 
                 if (graph != null)
                     return graph;
@@ -327,15 +358,14 @@ namespace MiniCrawler.Encounters
             return null;
         }
 
-        private void CollectFootprintNodes(
-            List<AmbientRouteNode> results)
+        private void CollectFootprintNodes(List<AmbientRouteNode> results)
         {
             results.Clear();
 
-            foreach (AmbientRouteNode node in nodes)
+            foreach (AmbientRouteNode node in Nodes)
                 AddUnique(results, node);
 
-            foreach (AmbientRouteSegment segment in segments)
+            foreach (AmbientRouteSegment segment in Segments)
             {
                 if (segment == null || !segment.IsConfigured)
                     continue;
@@ -350,18 +380,29 @@ namespace MiniCrawler.Encounters
             if (item != null && !items.Contains(item))
                 items.Add(item);
         }
+        
+        private static bool ContainsReference<T>(IReadOnlyList<T> items, T target) where T : Object
+        {
+            for (int i = 0; i < items.Count; i++)
+            {
+                if (items[i] == target)
+                    return true;
+            }
+
+            return false;
+        }
 
         private void OnDrawGizmosSelected()
         {
             Gizmos.color = Color.yellow;
 
-            foreach (AmbientRouteNode node in nodes)
+            foreach (AmbientRouteNode node in Nodes)
             {
                 if (node != null)
                     Gizmos.DrawWireSphere(node.Position, 0.7f);
             }
 
-            foreach (AmbientRouteSegment segment in segments)
+            foreach (AmbientRouteSegment segment in Segments)
             {
                 if (segment == null || !segment.IsConfigured)
                     continue;
@@ -371,33 +412,18 @@ namespace MiniCrawler.Encounters
                     segment.NodeB.Position + Vector3.up * 0.15f
                 );
 
-                Gizmos.DrawWireSphere(
-                    segment.NodeA.Position,
-                    0.7f
-                );
+                Gizmos.DrawWireSphere(segment.NodeA.Position, 0.7f);
 
-                Gizmos.DrawWireSphere(
-                    segment.NodeB.Position,
-                    0.7f
-                );
+                Gizmos.DrawWireSphere(segment.NodeB.Position, 0.7f);
             }
 
             AmbientRouteGraph graph = RouteGraph;
 
-            if (graph != null &&
-                TryGetApproachNode(graph, out AmbientRouteNode approachNode))
+            if (graph != null && TryGetApproachNode(graph, out AmbientRouteNode approachNode))
             {
-                Gizmos.DrawWireSphere(
-                    approachNode.Position,
-                    1f
-                );
+                Gizmos.DrawWireSphere(approachNode.Position, 1f);
 
-                Gizmos.DrawLine(
-                    approachNode.Position,
-                    Encounter != null
-                        ? Encounter.AnchorPosition
-                        : transform.position
-                );
+                Gizmos.DrawLine(approachNode.Position, Encounter != null ? Encounter.AnchorPosition : transform.position);
             }
         }
     }

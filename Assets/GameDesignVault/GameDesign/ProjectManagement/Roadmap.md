@@ -512,27 +512,30 @@ Completed:
 
 `3.0K5CComplete.zip` is the completed K5C checkpoint.
 
-### 3.0K6 — Workshop Route Context
+### 3.0K6 — Workshop Route Context ✅
 
-**Status: Active**
+Completed:
+- Encounter Workshop contains a small real Route Geography test context;
+- Workshop context uses semantic Entry / Core / Exit roles;
+- replay supports None / Point / Segment / Path / Route Group contexts;
+- route-aware scenarios use the real `EncounterDirectionController`;
+- `EncounterRouteSite` supports runtime footprint override without rewriting its
+  serialized fallback footprint;
+- Workshop Route context uses normal Route Tags;
+- loaded Encounter Definitions display read-only Route compatibility against the
+  selected context;
+- compatibility never prevents deliberate Workshop replay;
+- existing Approach / Threshold / On Top / Pursued scenarios remain available;
+- Definition Save / Save As does not persist Workshop Site geography;
+- Spawn Sources remain Encounter-anchor-relative;
+- Entry / Core / Exit are test-context roles rather than portable Definition
+  sockets.
 
-Allow Encounter content to be tested against small spatial route contexts.
-
-Working contexts:
-- point;
-- Segment;
-- path;
-- Route Group.
-
-Explore semantic roles such as:
-- Entry;
-- Core;
-- Exit.
-
-The Workshop remains an Encounter test harness rather than the full Region
-editor.
+`3.0K6Complete.zip` is the completed K6 checkpoint.
 
 ### 3.0K7 — First Playable Region Demo
+
+**Status: Active**
 
 Build one deliberate greybox Region using the completed authoring tools.
 

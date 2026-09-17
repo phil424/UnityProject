@@ -642,6 +642,35 @@ Therefore:
 - phase state remains Encounter-owned;
 - several Encounter populations may participate in the same physical fight.
 
+## Workshop Route Context
+
+3.0K6 adds an isolated Route Geography context to the Encounter Workshop.
+
+The Workshop context reuses the same:
+
+- Route Graph;
+- Points;
+- Connections;
+- Groups;
+- Encounter Route Site;
+- Route Tags;
+- route-aware Encounter Direction
+
+used by Region gameplay.
+
+The context is intentionally small:
+
+Entry -> Core -> Exit.
+
+It exists to test portable Encounter content against spatial Route conditions
+without requiring a complete expedition Region.
+
+The Workshop may temporarily override the runtime footprint of its Site while
+preserving the serialized fallback footprint.
+
+This keeps Workshop test context separate from authored Encounter Definition
+content.
+
 # Ambient Activity Footprints
 
 ## 3.0K5A — Route-Bound Ambient Population

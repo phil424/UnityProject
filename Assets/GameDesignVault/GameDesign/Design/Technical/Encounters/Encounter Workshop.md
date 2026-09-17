@@ -938,74 +938,132 @@ deliberately.
 The Workshop scene is therefore a test site / harness rather than the structural
 template for authored Encounter Definitions.
 
-# Future Route Context Authoring
+# 3.0K6 — Workshop Route Context
 
-**Status: Working / Future**
+**Status: Implemented Foundation**
 
-Portable Encounter Definitions should eventually be testable against route-based
-spatial contexts without turning the Encounter Workshop into the complete Region
-editor.
+Portable Encounter content can now be replayed against a small real Route
+Geography context inside the Encounter Workshop.
 
-Potential Workshop contexts:
+The Workshop remains an Encounter test harness rather than a Region editor.
 
-Point Site
+## Context Geometry
 
-Route Segment
+The Workshop owns a deliberately small authored Route:
 
-Route Path
-Entry → Core → Exit
+Entry
+↓
+Core
+↓
+Exit.
+
+These names are semantic Workshop roles.
+
+`Core` aligns with the Workshop Encounter anchor.
+
+The route uses the same runtime geography components as normal Region content:
+
+- `AmbientRouteGraph`;
+- `AmbientRouteNode`;
+- `AmbientRouteSegment`;
+- `AmbientRouteGroup`;
+- `EncounterRouteSite`.
+
+## Context Modes
+
+The Workshop can replay the current encounter against:
+
+None
+
+Point
+
+Segment
+
+Path
 
 Route Group.
 
-A portable Encounter should refer to semantic spatial roles rather than concrete
-scene objects where practical.
+`None`
+uses the legacy/direct Workshop approach.
 
-Example:
+`Point`
+uses the Core Route Point.
 
-Road Blockade
+`Segment`
+uses the Entry -> Core Connection.
 
-Trigger:
-Party reaches Entry
+`Path`
+uses Entry -> Core -> Exit.
 
-Spawn:
-Primary Horde around Core
+`Route Group`
+expands the Workshop Route Group into its contained Points / Connections.
 
-Reinforcement:
-arrives from Exit.
+The encounter runtime remains unchanged between these tests.
 
-A concrete Region Site may later bind:
+Only the Site geography changes.
 
-Entry → Well NW
-Core → Well West
-Exit → Well SW.
+## Runtime Footprint Override
 
-Another Site may map the same Encounter Definition onto completely different
-Route Nodes.
+`EncounterRouteSite` supports a runtime footprint override.
 
-The Workshop should therefore test the spatial requirements/roles of Encounter
-content while Region scene authoring owns the real Route Graph.
+This allows the Workshop to change Site geography without rewriting the
+scene-authored fallback footprint.
 
-# Route Compatibility Boundary
+The serialized Workshop Site remains bound to Core.
 
-**Status: Working / Future Workshop Integration**
+Runtime replay may temporarily interpret that same Site as a Point, Segment,
+Path or Group-derived footprint.
 
-3.0K4B adds Route compatibility metadata directly to
+The same seam may later support generated Runtime Encounter Instances.
+
+## Route-Aware Replay
+
+The Workshop uses the real `EncounterDirectionController`.
+
+Therefore route-enabled Approach scenarios travel through the Workshop Route
+Graph before handing off to the existing local Encounter start behaviour.
+
+This is not a fake Workshop-only pathing simulation.
+
+## Semantic Roles
+
+K6 establishes the Workshop context vocabulary:
+
+Entry
+
+Core
+
+Exit.
+
+These roles currently describe the test context.
+
+They are not yet serialized as portable Spawn Source roles inside
 `EncounterDefinition`.
 
-The current Encounter Workshop Draft does not edit this metadata.
+Generated Definition Spawn Sources therefore remain relative to the Encounter
+anchor.
 
-Current workflow:
+Spatial role binding should only be promoted into portable Encounter data when a
+real content requirement justifies it.
 
-Workshop
-→ author / save encounter content
+## Compatibility Preview
 
-Encounter Placement Rules
-→ configure / preview Route compatibility.
+When a saved Encounter Definition is loaded, the Workshop displays its K4 Route
+compatibility against the currently selected Route Context.
 
-Saving an existing Definition preserves its current compatibility metadata.
+The preview is informational.
 
-Saving a new Definition through `Save As` begins with automatic placement
-disabled until deliberately configured.
+An incompatible Definition may still be replayed deliberately.
 
-Future Workshop Route Context work may bring compatibility preview into the
-Workshop when spatial test contexts exist.
+This allows designers to test unusual or invalid placements rather than having
+the Workshop enforce generator rules.
+
+The Workshop Route uses semantic Tags so different context shapes can produce
+different compatibility results.
+
+3.0K6 now displays the loaded Definition's Route compatibility against the
+selected Workshop Route Context.
+
+Compatibility metadata remains edited through `Encounter Placement Rules`.
+
+The Workshop preview is read-only.

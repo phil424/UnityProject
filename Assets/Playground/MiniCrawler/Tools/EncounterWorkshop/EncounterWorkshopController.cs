@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using MiniCrawler.Combat;
 using MiniCrawler.Core;
 using MiniCrawler.Encounters;
+using MiniCrawler.Movement;
 using MiniCrawler.Progress;
 using MiniCrawler.Spawning;
 using MiniCrawler.Systems;
@@ -40,6 +41,11 @@ namespace MiniCrawler.Tools
         
         [Header("Encounter Authoring")]
         [SerializeField] private ActorDefinition[] authoringActorPalette = Array.Empty<ActorDefinition>();
+        
+        [Header("Route Context")]
+        [SerializeField] private EncounterWorkshopRouteContext routeContext;
+        [SerializeField] private EncounterWorkshopRouteContext.ContextKind routeContextKind =
+            EncounterWorkshopRouteContext.ContextKind.Path;
 
         [Header("Scenario")]
         [SerializeField] private ArrivalScenario arrivalScenario = ArrivalScenario.Approach;
@@ -64,6 +70,7 @@ namespace MiniCrawler.Tools
         private string status = "Waiting to start.";
         
         private readonly List<ActorDefinition> resolvedAuthoringActors = new();
+        private readonly List<RouteTagDefinition> resolvedRouteTags = new();
         private readonly EncounterWorkshopAuthoringPanel authoringPanel = new();
         private readonly EncounterWorkshopNumericControls numericControls = new();
 
@@ -108,6 +115,7 @@ namespace MiniCrawler.Tools
                 stageDirector.LevelFinished -= HandleLevelFinished;
 
             encounterDraft?.ClearRuntimeOverrides();
+            routeContext?.ClearRuntimeOverride();
             ClearSpawnGroupOverrides();
         }
 
@@ -116,6 +124,9 @@ namespace MiniCrawler.Tools
             StopScenario(clearStatus: false);
 
             if (!ValidateConfiguration())
+                return false;
+
+            if (!ApplyRouteContext())
                 return false;
 
             testBuild.EnsureFor(partyMember);
@@ -188,6 +199,23 @@ namespace MiniCrawler.Tools
             if (clearStatus)
                 status = "Stopped.";
         }
+        
+        private bool ApplyRouteContext()
+        {
+            if (routeContext == null)
+            {
+                status = "Workshop Route Context is missing.";
+                Debug.LogError(status, this);
+                return false;
+            }
+
+            if (routeContext.Apply(routeContextKind, out string error))
+                return true;
+
+            status = string.IsNullOrWhiteSpace(error) ? "Workshop Route Context could not be applied." : error;
+            Debug.LogError(status, this);
+            return false;
+        }
 
         private bool ValidateConfiguration()
         {
@@ -198,6 +226,13 @@ namespace MiniCrawler.Tools
                 partyMember == null)
             {
                 status = "Workshop configuration is incomplete.";
+                Debug.LogError(status, this);
+                return false;
+            }
+            
+            if (routeContext == null || !routeContext.IsConfigured)
+            {
+                status = "Workshop Route Context is incomplete.";
                 Debug.LogError(status, this);
                 return false;
             }
@@ -366,7 +401,7 @@ namespace MiniCrawler.Tools
         private void DrawScenarioPanel()
         {
             const float width = 460f;
-            const float height = 300f;
+            const float height = 380f;
 
             GUILayout.BeginArea(new Rect(10f, 10f, width, height), GUI.skin.box);
 
@@ -383,6 +418,8 @@ namespace MiniCrawler.Tools
                     $"Phase: {encounter.CurrentPhaseNumber}/{encounter.PhaseCount}  {phaseName}"
                 );
             }
+            
+            DrawRouteContextControls();
 
             GUILayout.Space(6f);
             GUILayout.Label($"Arrival: {arrivalScenario}");
@@ -445,6 +482,50 @@ namespace MiniCrawler.Tools
                 StopScenario();
 
             GUILayout.EndArea();
+        }
+        
+        private void DrawRouteContextControls()
+        {
+            GUILayout.Space(6f);
+            GUILayout.Label($"Route Context: {EncounterWorkshopRouteContext.GetDisplayName(routeContextKind)}");
+
+            GUILayout.BeginHorizontal();
+
+            if (GUILayout.Button("None"))
+                SelectRouteContext(EncounterWorkshopRouteContext.ContextKind.None);
+
+            if (GUILayout.Button("Point"))
+                SelectRouteContext(EncounterWorkshopRouteContext.ContextKind.Point);
+
+            if (GUILayout.Button("Segment"))
+                SelectRouteContext(EncounterWorkshopRouteContext.ContextKind.Segment);
+
+            if (GUILayout.Button("Path"))
+                SelectRouteContext(EncounterWorkshopRouteContext.ContextKind.Path);
+
+            if (GUILayout.Button("Group"))
+                SelectRouteContext(EncounterWorkshopRouteContext.ContextKind.RouteGroup);
+
+            GUILayout.EndHorizontal();
+
+            if (routeContextKind == EncounterWorkshopRouteContext.ContextKind.None)
+            {
+                GUILayout.Label("Travel: Direct encounter approach.");
+                return;
+            }
+
+            GUILayout.Label("Roles: Entry → Core → Exit");
+
+            EncounterRouteSite site = routeContext != null ? routeContext.EncounterSite : null;
+
+            if (site == null)
+                return;
+
+            site.CollectEffectiveTags(resolvedRouteTags);
+            GUILayout.Label($"Tags: {FormatRouteTags(resolvedRouteTags)}");
+
+            if (currentDefinition != null)
+                GUILayout.Label($"Placement: {GetRouteCompatibilityText(currentDefinition, site)}");
         }
 
         private void DrawBuildPanel()
@@ -739,6 +820,15 @@ namespace MiniCrawler.Tools
             arrivalScenario = scenario;
             StartScenario();
         }
+        
+        private void SelectRouteContext(EncounterWorkshopRouteContext.ContextKind kind)
+        {
+            if (routeContextKind == kind)
+                return;
+
+            routeContextKind = kind;
+            StartScenario();
+        }
 
         private void SelectStartMode(EncounterStartMode mode)
         {
@@ -747,6 +837,49 @@ namespace MiniCrawler.Tools
 
             encounterStartMode = mode;
             StartScenario();
+        }
+        
+        private static string FormatRouteTags(IReadOnlyList<RouteTagDefinition> tags)
+        {
+            if (tags == null || tags.Count == 0)
+                return "(none)";
+
+            List<string> names = new();
+
+            foreach (RouteTagDefinition tag in tags)
+            {
+                if (tag != null)
+                    names.Add(tag.DisplayName);
+            }
+
+            return names.Count > 0 ? string.Join(", ", names) : "(none)";
+        }
+
+        private static string GetRouteCompatibilityText(EncounterDefinition definition, EncounterRouteSite site)
+        {
+            if (definition == null || site == null)
+                return "Unavailable";
+
+            if (!definition.AllowAutomaticPlacement)
+                return "Manual placement only";
+
+            EncounterRouteCompatibilityResult result = EncounterRouteCompatibility.Evaluate(definition, site);
+
+            if (result.IsCompatible)
+            {
+                if (result.PreferredTagCount == 0)
+                    return "Compatible";
+
+                return $"Compatible — {result.PreferredMatchCount}/{result.PreferredTagCount} preferences";
+            }
+
+            if (result.MissingRequiredTags.Count > 0)
+                return $"Incompatible — missing {FormatRouteTags(result.MissingRequiredTags)}";
+
+            if (result.PresentForbiddenTags.Count > 0)
+                return $"Incompatible — avoid {FormatRouteTags(result.PresentForbiddenTags)}";
+
+            return "Incompatible";
         }
 
         private void OnValidate()

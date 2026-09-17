@@ -195,6 +195,12 @@ Runtime gameplay code should not depend on developer-tool implementations.
 - generated scene/data objects remain manually editable;
 - runtime gameplay code must not depend on this tooling.
 
+`EncounterWorkshopRouteContext`
+- owns the Workshop's small Entry / Core / Exit Route test context;
+- swaps the Workshop Encounter Site between Point / Segment / Path / Group
+  footprints at runtime;
+- does not persist Workshop geography into Encounter Definition assets.
+
 ## UI
 
 `UI/`
