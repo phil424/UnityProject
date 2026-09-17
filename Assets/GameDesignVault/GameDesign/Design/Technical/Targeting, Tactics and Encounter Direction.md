@@ -148,6 +148,37 @@ to behave differently from:
 
 > Nothing selected; keep exploring automatically.
 
+### Ambient Enemy Wander Intent
+
+3.0K5B also uses the generic `ActorNavigationIntent` seam for disengaged Ambient
+enemies.
+
+This is actor-local wandering, not party Route Navigation.
+
+Current flow:
+
+AmbientEnemy
+↓
+owns non-suppressing ActorNavigationIntent
+↓
+MovementSystem performs movement.
+
+Because the actor remains combat-disengaged, TargetingSystem does not acquire
+combat targets during wandering.
+
+When engagement begins:
+
+AmbientEnemy clears its own navigation intent
+↓
+CombatEngagementState becomes engaged
+↓
+TargetingSystem may acquire the party
+↓
+normal combat movement takes over.
+
+This preserves the general movement priority rather than adding bespoke ambient
+Transform movement.
+
 ### 3.0K1 — Persistent Route Destinations
 
 Ambient travel now distinguishes:

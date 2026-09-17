@@ -34,7 +34,13 @@ namespace MiniCrawler.Ecology
         [Header("Engagement")]
         [SerializeField, Min(0.1f)] private float engagementRadius = 3.5f;
 
+        [Header("Wandering")]
+        [SerializeField, Min(0f)] private float wanderRadius = 2.5f;
+        [SerializeField, Min(0f)] private float wanderPauseMinSeconds = 1f;
+        [SerializeField, Min(0f)] private float wanderPauseMaxSeconds = 3f;
+
         private readonly List<AmbientRouteSegment> segmentBuffer = new();
+
         private readonly List<AmbientRouteNode> nodeBuffer = new();
 
         private StageDirector stageDirector;
@@ -47,6 +53,9 @@ namespace MiniCrawler.Ecology
 
         public float SpawnScatterRadius => spawnScatterRadius;
         public float EngagementRadius => engagementRadius;
+        public float WanderRadius => wanderRadius;
+        public float WanderPauseMinSeconds => wanderPauseMinSeconds;
+        public float WanderPauseMaxSeconds => wanderPauseMaxSeconds;
         public AmbientRouteGraph RouteGraph => ResolveRouteGraph();
 
         private void Start()
@@ -228,6 +237,15 @@ namespace MiniCrawler.Ecology
             if (engagementRadius <= 0f)
                 issues.Add($"Ambient Activity Area '{name}' must have a positive Engagement Radius.");
 
+            if (wanderRadius < 0f)
+                issues.Add($"Ambient Activity Area '{name}' has a negative Wander Radius.");
+
+            if (wanderPauseMinSeconds < 0f)
+                issues.Add($"Ambient Activity Area '{name}' has a negative Minimum Wander Pause.");
+
+            if (wanderPauseMaxSeconds < wanderPauseMinSeconds)
+                issues.Add($"Ambient Activity Area '{name}' has a Maximum Wander Pause below its Minimum Wander Pause.");
+
             CollectSpawnSegments(segmentBuffer);
             CollectSpawnNodes(nodeBuffer);
 
@@ -271,7 +289,14 @@ namespace MiniCrawler.Ecology
                 if (!TryGetSpawnPose(out Pose pose))
                     continue;
 
-                GameObject spawned = stageDirector.SpawnAmbientActor(actorDefinition, pose, engagementRadius);
+                GameObject spawned = stageDirector.SpawnAmbientActor(
+                    actorDefinition,
+                    pose,
+                    engagementRadius,
+                    wanderRadius,
+                    wanderPauseMinSeconds,
+                    wanderPauseMaxSeconds
+                );
 
                 if (spawned != null)
                     spawnedCount++;

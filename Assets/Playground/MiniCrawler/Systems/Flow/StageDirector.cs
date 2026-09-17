@@ -382,6 +382,17 @@ namespace MiniCrawler.Systems
         
         public GameObject SpawnAmbientActor(ActorDefinition definition, Pose pose, float engagementRadius)
         {
+            return SpawnAmbientActor(definition, pose, engagementRadius, 0f, 0f, 0f);
+        }
+
+        public GameObject SpawnAmbientActor(
+            ActorDefinition definition,
+            Pose pose,
+            float engagementRadius,
+            float wanderRadius,
+            float wanderPauseMinSeconds,
+            float wanderPauseMaxSeconds)
+        {
             if (state == LevelState.Idle)
                 return null;
 
@@ -395,7 +406,13 @@ namespace MiniCrawler.Systems
             if (ambientEnemy == null)
                 ambientEnemy = spawned.AddComponent<AmbientEnemy>();
 
-            ambientEnemy.Configure(pose.position, engagementRadius);
+            ambientEnemy.Configure(
+                pose.position,
+                engagementRadius,
+                wanderRadius,
+                wanderPauseMinSeconds,
+                wanderPauseMaxSeconds
+            );
 
             return spawned;
         }

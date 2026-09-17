@@ -940,16 +940,19 @@ The first ambient-navigation prototype introduces:
 
 `AmbientEnemy`
 - begins combat-disengaged;
+- may perform modest local wandering around its spawn/home position;
+- wandering uses generic `ActorNavigationIntent`;
 - becomes combat-active when the party approaches;
+- engagement immediately cancels local wandering;
 - once engaged, uses normal combat movement/targeting;
 - does not count toward formal encounter/boss progression.
 
 The current implementation still does NOT yet implement:
-- local wandering;
 - moving population fronts;
 - spawn-ahead visibility rules;
 - escalation-based density;
-- world-event modifications.
+- broad world-event ecology mutation beyond the current Zombie Surge population
+  pressure.
 
 These belong to the later ambient ecology implementation.
 
@@ -988,6 +991,34 @@ This preserves the distinction:
 Ambient ecology
 !=
 formal strategic Encounter supply.
+
+## 3.0K5B Local Ambient Wandering
+
+Ambient Activity Areas now supply local wandering settings to their spawned
+actors.
+
+Current actor flow:
+
+Area samples spawn position
+↓
+spawn position becomes actor home
+↓
+actor wanders within authored radius
+↓
+party enters engagement range
+↓
+wander intent clears
+↓
+normal combat pursuit owns movement.
+
+Wandering uses Simulation Time and the existing Movement System.
+
+Simulation pause therefore freezes both movement and wander timing.
+
+World-event population spawned through an Ambient Activity Area inherits the same
+wandering settings automatically.
+
+This remains lightweight Region ecology rather than formal Encounter behaviour.
 
 # World Events
 

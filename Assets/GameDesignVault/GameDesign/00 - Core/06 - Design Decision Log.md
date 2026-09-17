@@ -970,3 +970,71 @@ population more coherently.
 - Ambient Activity remains separate from formal Encounter lifecycle;
 - Zombie Surge affects compatible Activity Areas rather than fixed Spawn Points;
 - the old `AmbientSpawnPoint` implementation is retired.
+
+## 2026-09-17 — Ambient wandering uses actor navigation and one-way engagement
+
+### Decision
+
+Disengaged ambient enemies may wander locally around their spawn/home position.
+
+Wandering uses `ActorNavigationIntent` and the normal `MovementSystem`.
+
+When an Ambient enemy engages, its wander navigation is cleared and normal
+combat targeting takes over.
+
+Engagement does not currently revert to ambient wandering.
+
+### Reason
+
+Ambient actors should make the Region feel alive without introducing a parallel
+movement implementation or a complex ecology state machine.
+
+The existing navigation seam already provides movement arbitration, Simulation
+Time behaviour and compatibility with combat takeover.
+
+### Implications
+
+- Ambient Activity Areas author wander radius and pause range;
+- each actor owns runtime wander timing/destination state;
+- the spawn position is the actor's local home;
+- wandering remains local rather than traversing the whole Route Graph;
+- Wander Radius `0` disables wandering;
+- World Event-spawned ambient population inherits Area wandering settings;
+- future migration/population-front systems remain separate work.
+
+## 2026-09-17 — Region authoring uses task-focused progressive disclosure
+
+### Decision
+
+The accumulated Route Geography authoring surface is reorganised around three
+designer tasks:
+
+- Route Layout;
+- Ambient Life;
+- Encounter Placement.
+
+Reusable Encounter Definition compatibility moves into a separate focused
+Encounter Placement Rules tool.
+
+Advanced semantic metadata, diagnostics and repair actions are hidden during
+ordinary authoring.
+
+### Reason
+
+The underlying authoring systems became capable but the single scrolling window
+exposed too many unrelated concepts simultaneously.
+
+The designer should not need to understand the complete runtime/data architecture
+to perform one ordinary content-authoring task.
+
+### Implications
+
+- normal Region authoring exposes only contextually useful actions;
+- Route Tags remain available but are advanced authoring;
+- Ambient population/behaviour is edited independently from Encounter placement;
+- Definition compatibility remains available without occupying basic Region
+  authoring;
+- healthy validation becomes a compact status;
+- detailed issues appear on demand;
+- implementation terms may use simpler designer-facing labels;
+- runtime/data architecture and manual Inspector escape hatches remain intact.

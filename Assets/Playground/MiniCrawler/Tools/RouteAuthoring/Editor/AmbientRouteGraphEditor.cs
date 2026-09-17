@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using MiniCrawler.Ecology;
 using MiniCrawler.Movement;
 using UnityEditor;
@@ -15,39 +14,20 @@ namespace MiniCrawler.Tools.RouteAuthoring
 
             DrawDefaultInspector();
 
-            EditorGUILayout.Space();
-
-            EditorGUILayout.LabelField("Route Geography", EditorStyles.boldLabel);
-
-            List<AmbientRouteNode> nodes = AmbientRouteAuthoringUtility.GetOwnedNodes(graph);
-            List<AmbientRouteSegment> segments = AmbientRouteAuthoringUtility.GetOwnedSegments(graph);
-            List<AmbientRouteGroup> groups = AmbientRouteAuthoringUtility.GetOwnedGroups(graph);
-
-            int siteCount = EncounterRouteSiteAuthoringUtility.GetSitesForGraph(graph).Count;
-            int activityAreaCount = AmbientActivityAuthoringUtility.GetAreasForGraph(graph).Count;
-
-            EditorGUILayout.LabelField("Nodes", nodes.Count.ToString());
-            EditorGUILayout.LabelField("Segments", segments.Count.ToString());
-            EditorGUILayout.LabelField("Groups", groups.Count.ToString());
-            EditorGUILayout.LabelField("Encounter Sites", siteCount.ToString());
-            EditorGUILayout.LabelField("Ambient Areas", activityAreaCount.ToString());
+            int nodeCount = AmbientRouteAuthoringUtility.GetOwnedNodes(graph).Count;
+            int segmentCount = AmbientRouteAuthoringUtility.GetOwnedSegments(graph).Count;
+            int activityCount = AmbientActivityAuthoringUtility.GetAreasForGraph(graph).Count;
+            int encounterCount = EncounterRouteSiteAuthoringUtility.GetSitesForGraph(graph).Count;
 
             EditorGUILayout.Space();
-
-            EditorGUILayout.HelpBox(
-                "Use the Route Geography Authoring window for assisted creation, wiring and Encounter Site binding. " +
-                "Generated components remain normal editable scene objects.",
-                MessageType.Info
+            EditorGUILayout.LabelField("Region Authoring", EditorStyles.boldLabel);
+            EditorGUILayout.LabelField(
+                $"Points {nodeCount}  |  Connections {segmentCount}  |  Ambient {activityCount}  |  Encounters {encounterCount}",
+                EditorStyles.miniLabel
             );
 
-            if (GUILayout.Button("Open Route Geography Authoring"))
-                RouteAuthoringWindow.OpenForGraph(graph);
-
-            if (GUILayout.Button("Ensure Authoring Structure"))
-                AmbientRouteAuthoringUtility.EnsureAuthoringStructure(graph);
-
-            if (GUILayout.Button("Validate Route Geography"))
-                AmbientRouteAuthoringUtility.LogValidation(graph);
+            if (GUILayout.Button("Open Region Authoring"))
+                RegionAuthoringWindow.OpenForGraph(graph);
         }
     }
 }

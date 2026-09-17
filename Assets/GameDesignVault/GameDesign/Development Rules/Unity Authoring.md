@@ -81,6 +81,52 @@ before adding more features.
 Runtime architecture should remain modular while the authoring experience stays
 coherent.
 
+# Progressive Disclosure in Designer Tools
+
+Designer-facing tools should be organised around what the designer is trying to
+do, not around every runtime/data system involved in that task.
+
+Prefer task-focused workflows such as:
+
+Route Layout
+
+Ambient Life
+
+Encounter Placement
+
+over one large surface exposing every underlying component simultaneously.
+
+Normal authoring should:
+- show only actions relevant to the current task and selection;
+- keep the number of obvious primary actions small;
+- use contextual actions rather than permanently-disabled controls where
+  practical;
+- hide advanced metadata and repair operations until requested;
+- use short labels and tooltips rather than permanent explanatory paragraphs;
+- keep healthy validation compact;
+- reveal detailed diagnostics only when problems exist or the designer requests
+  them.
+
+Runtime/data terminology does not have to be the primary designer-facing
+terminology.
+
+For example:
+
+`AmbientRouteNode`
+
+may be presented to the designer as:
+
+`Route Point`.
+
+Internal structure should be created automatically by normal authoring actions
+where ownership is unambiguous.
+
+Do not make the designer perform setup/repair operations before the common
+creation workflow can function.
+
+The underlying generated objects and data should remain manually editable
+through normal Unity Inspectors as an advanced escape hatch.
+
 # Non-Destructive Editor Validation
 
 Editor validation must not obstruct ordinary authoring.

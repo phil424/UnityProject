@@ -999,7 +999,7 @@ Current workflow:
 Workshop
 → author / save encounter content
 
-Route Geography Authoring
+Encounter Placement Rules
 → configure / preview Route compatibility.
 
 Saving an existing Definition preserves its current compatibility metadata.

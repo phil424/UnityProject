@@ -165,13 +165,43 @@ namespace MiniCrawler.Tools.RouteAuthoring
             if (area == null)
                 return false;
 
+            return SetSettings(
+                area,
+                spawnScatterRadius,
+                engagementRadius,
+                area.WanderRadius,
+                area.WanderPauseMinSeconds,
+                area.WanderPauseMaxSeconds
+            );
+        }
+
+        public static bool SetSettings(
+            AmbientActivityArea area,
+            float spawnScatterRadius,
+            float engagementRadius,
+            float wanderRadius,
+            float wanderPauseMinSeconds,
+            float wanderPauseMaxSeconds)
+        {
+            if (area == null)
+                return false;
+
+            spawnScatterRadius = Mathf.Max(0f, spawnScatterRadius);
+            engagementRadius = Mathf.Max(0.1f, engagementRadius);
+            wanderRadius = Mathf.Max(0f, wanderRadius);
+            wanderPauseMinSeconds = Mathf.Max(0f, wanderPauseMinSeconds);
+            wanderPauseMaxSeconds = Mathf.Max(wanderPauseMinSeconds, wanderPauseMaxSeconds);
+
             Undo.RecordObject(area, "Set Ambient Activity Settings");
 
             SerializedObject serialized = new(area);
             serialized.Update();
 
-            serialized.FindProperty("spawnScatterRadius").floatValue = Mathf.Max(0f, spawnScatterRadius);
-            serialized.FindProperty("engagementRadius").floatValue = Mathf.Max(0.1f, engagementRadius);
+            serialized.FindProperty("spawnScatterRadius").floatValue = spawnScatterRadius;
+            serialized.FindProperty("engagementRadius").floatValue = engagementRadius;
+            serialized.FindProperty("wanderRadius").floatValue = wanderRadius;
+            serialized.FindProperty("wanderPauseMinSeconds").floatValue = wanderPauseMinSeconds;
+            serialized.FindProperty("wanderPauseMaxSeconds").floatValue = wanderPauseMaxSeconds;
 
             serialized.ApplyModifiedProperties();
 

@@ -185,11 +185,15 @@ Tool code may consume runtime architecture.
 Runtime gameplay code should not depend on developer-tool implementations.
 
 `Tools/RouteAuthoring/Editor/`
-- Unity Editor-only authoring tools for Route Geography;
-- automates scene-owned Node / Segment / Group setup;
-- may reference runtime Movement/Route components;
-- runtime code must not depend on this tooling.
-- also authors Route-bound Ambient Activity Areas and their population settings.
+- Unity Editor-only Region authoring tools;
+- `RegionAuthoringWindow` provides the task-focused Route / Ambient / Encounter
+  scene-authoring workflow;
+- `EncounterPlacementWindow` handles reusable Encounter Definition placement
+  rules and compatibility preview;
+- existing authoring utilities automate Node / Segment / Group, Ambient Activity,
+  Route Tag and Encounter Site wiring;
+- generated scene/data objects remain manually editable;
+- runtime gameplay code must not depend on this tooling.
 
 ## UI
 

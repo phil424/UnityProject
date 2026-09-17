@@ -154,6 +154,75 @@ while the designer is editing them.
 
 Manual Inspector editing remains supported.
 
+## 3.0K5C — Task-Focused Region Authoring
+
+The original Route Geography authoring window accumulated several independent
+workflows into one large scrolling Editor surface.
+
+3.0K5C reorganises the designer-facing workflow around intent.
+
+Primary tool:
+
+`Tools -> MiniCrawler -> Region Authoring`
+
+The Region Authoring window contains three focused modes:
+
+Route
+→ construct and group Route geography.
+
+Ambient
+→ create and configure Ambient Activity.
+
+Encounters
+→ bind formal Encounters to Route geography.
+
+Only the selected mode's common actions are visible.
+
+Advanced Route Tag authoring is hidden behind the Route mode's Advanced
+foldout.
+
+Encounter Definition compatibility is moved to:
+
+`Tools -> MiniCrawler -> Encounter Placement Rules`
+
+because reusable Definition-placement policy is a different task from drawing
+Region geography.
+
+## Validation UX
+
+Region validation remains non-destructive.
+
+The normal healthy state is presented as a compact:
+
+`Status: Ready`
+
+Detailed issues are shown only when validation finds problems and the designer
+requests the details.
+
+Normal creation operations automatically establish required internal authoring
+roots.
+
+`Ensure Authoring Structure` is therefore no longer a normal designer action.
+
+A repair operation remains available under advanced tooling.
+
+## Designer Vocabulary
+
+The runtime architecture remains unchanged.
+
+The authoring surface may use simpler terminology where that improves clarity.
+
+Examples:
+
+`AmbientRouteNode`
+→ Route Point.
+
+`AmbientRouteSegment`
+→ Connection.
+
+The tool is a presentation layer over the existing runtime/data model, not a
+second Region format.
+
 # Semantic Route Tags
 
 **Status: Implemented Foundation**
@@ -618,6 +687,37 @@ positions.
 
 The Activity Area GameObject Transform is organisational and does not define the
 population location.
+
+## Local Ambient Wandering
+
+3.0K5B adds lightweight local movement to actors spawned from Ambient Activity
+Areas.
+
+The Area defines:
+- Wander Radius;
+- Minimum Wander Pause;
+- Maximum Wander Pause.
+
+Each spawned actor treats its sampled spawn position as its local home.
+
+Wandering occurs around that home position rather than across the entire Area or
+Route Graph.
+
+This distinction is intentional:
+
+Route Graph
+→ Region-scale travel geography.
+
+Ambient Activity Area
+→ population placement geography.
+
+Ambient actor home
+→ small runtime wandering neighbourhood.
+
+Local wandering uses `ActorNavigationIntent` and therefore participates in the
+normal actor movement system.
+
+It is not formal Encounter navigation and does not create Encounter membership.
 
 # Future Encounter Footprints
 

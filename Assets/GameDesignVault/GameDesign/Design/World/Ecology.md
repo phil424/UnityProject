@@ -244,6 +244,58 @@ Ambient actors:
 The initial Village Well migration preserves four ordinary ambient Zombies while
 moving their placement onto Route geography.
 
+## 3.0K5B — Local Ambient Wandering
+
+**Status: Implemented Foundation**
+
+Disengaged Ambient enemies may wander modestly around their individual
+spawn/home position.
+
+Wandering is configured by the owning `AmbientActivityArea`.
+
+Current settings:
+- Wander Radius;
+- Minimum Wander Pause;
+- Maximum Wander Pause.
+
+Runtime flow:
+
+Ambient actor spawns
+↓
+local home position captured
+↓
+wait
+↓
+choose local destination
+↓
+travel through `ActorNavigationIntent`
+↓
+wait
+↓
+repeat.
+
+Ambient wandering uses normal actor movement.
+
+`AmbientEnemy` does not directly translate its Transform.
+
+When the party enters the actor's engagement radius:
+
+wander navigation clears
+↓
+Combat Engagement becomes active
+↓
+normal targeting / combat pursuit takes over.
+
+Engagement is currently one-way for the actor lifetime.
+
+An engaged ambient enemy does not return home or resume wandering when the party
+moves away.
+
+This keeps ambient population lightweight and preserves the established combat
+engagement model.
+
+A Wander Radius of `0` disables local wandering for that Area's spawned actors.
+
 # Ambient Route Graph
 
 Ambient population should follow designer-authored paths through interesting

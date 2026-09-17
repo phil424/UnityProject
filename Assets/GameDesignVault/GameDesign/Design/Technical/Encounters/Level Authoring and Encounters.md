@@ -609,19 +609,24 @@ Current authoring uses `AmbientActivityArea`.
 
 The common workflow should use:
 
-`Tools -> MiniCrawler -> Route Geography Authoring`
+`Tools -> MiniCrawler -> Region Authoring -> Ambient`
 
 An Activity Area is created from selected:
 - Nodes;
 - Segments;
 - Groups.
 
-The tool then allows the designer to:
+The Ambient mode allows the designer to:
+- create an Ambient Activity Area from selected Route geography;
 - add/update population entries;
 - remove population entries;
-- set spawn scatter;
-- set engagement radius;
-- validate the authored footprint.
+- edit spawn spread;
+- edit engagement distance;
+- edit local wander distance;
+- edit wander pause range.
+
+Behaviour controls are hidden behind the local `Behaviour` foldout during normal
+population authoring.
 
 Generated Area objects remain normally editable through the Inspector.
 
@@ -643,16 +648,19 @@ geography.
 
 The common workflow should use:
 
-`Tools -> MiniCrawler -> Route Geography Authoring`
+`Tools -> MiniCrawler -> Region Authoring -> Encounters`
 
 rather than manually adding/wiring Site components.
 
 Current workflow:
 
 1. select the target `LevelEncounter`;
-2. the Route Authoring tool pins it as `Target Encounter`;
-3. select the desired Route Node(s) and/or Segment(s);
-4. choose `Bind / Replace Site Footprint From Selection`.
+2. Region Authoring automatically adopts it and opens/switches to Encounters;
+3. select the desired Route Point(s) and/or Connection(s);
+4. choose `Bind To Selection` or `Replace Site With Selection`.
+
+The target Encounter remains pinned while the Scene selection changes to Route
+geography.
 
 The tool:
 - adds `EncounterRouteSite` when missing;
@@ -724,7 +732,7 @@ Route Tags describe geography rather than Encounter identity.
 
 Use:
 
-`Tools -> MiniCrawler -> Route Geography Authoring`
+`Tools -> MiniCrawler -> Region Authoring -> Route -> Advanced`
 
 to assign Tags to selected:
 - Nodes;
@@ -757,8 +765,9 @@ geography authoring does not become coupled to one specific Encounter.
 
 ## Encounter Compatibility Preview
 
-The Route Geography Authoring tool can preview an `EncounterDefinition` against
-the current graph's Encounter Route Sites.
+`Tools -> MiniCrawler -> Encounter Placement Rules`
+
+provides the focused `EncounterDefinition` compatibility workflow.
 
 The compatibility authoring surface provides:
 

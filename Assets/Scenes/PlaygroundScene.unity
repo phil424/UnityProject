@@ -504,6 +504,9 @@ MonoBehaviour:
     count: 1
   spawnScatterRadius: 1.5
   engagementRadius: 3.5
+  wanderRadius: 2.5
+  wanderPauseMinSeconds: 1
+  wanderPauseMaxSeconds: 3
 --- !u!1 &82840391
 GameObject:
   m_ObjectHideFlags: 0
@@ -1761,6 +1764,9 @@ MonoBehaviour:
     count: 1
   spawnScatterRadius: 1.5
   engagementRadius: 3.5
+  wanderRadius: 2.5
+  wanderPauseMinSeconds: 1
+  wanderPauseMaxSeconds: 3
 --- !u!1 &221997189
 GameObject:
   m_ObjectHideFlags: 0
@@ -6603,6 +6609,9 @@ MonoBehaviour:
     count: 1
   spawnScatterRadius: 1.5
   engagementRadius: 3.5
+  wanderRadius: 2.5
+  wanderPauseMinSeconds: 1
+  wanderPauseMaxSeconds: 3
 --- !u!1 &765914640
 GameObject:
   m_ObjectHideFlags: 0
@@ -8415,6 +8424,9 @@ MonoBehaviour:
     count: 1
   spawnScatterRadius: 1.5
   engagementRadius: 3.5
+  wanderRadius: 2.5
+  wanderPauseMinSeconds: 1
+  wanderPauseMaxSeconds: 3
 --- !u!1 &1066719121
 GameObject:
   m_ObjectHideFlags: 0
@@ -11298,6 +11310,62 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1549624286}
   m_CullTransparentMesh: 1
+--- !u!1 &1576045313
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1576045314}
+  - component: {fileID: 1576045315}
+  m_Layer: 0
+  m_Name: Ambient Activity
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1576045314
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1576045313}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1831011902}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1576045315
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1576045313}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc72d782984fde84c9d4e907945086b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Ecology.AmbientActivityArea
+  nodes: []
+  segments:
+  - {fileID: 1698704658}
+  groups: []
+  populations:
+  - actorDefinition: {fileID: 11400000, guid: f94bb2855b5c0e24eac3845bce957198, type: 2}
+    count: 6
+  spawnScatterRadius: 1.5
+  engagementRadius: 3.5
+  wanderRadius: 2.5
+  wanderPauseMinSeconds: 1
+  wanderPauseMaxSeconds: 3
 --- !u!1 &1579713068
 GameObject:
   m_ObjectHideFlags: 0
@@ -12469,6 +12537,7 @@ Transform:
   - {fileID: 196476672}
   - {fileID: 1028295878}
   - {fileID: 758669089}
+  - {fileID: 1576045314}
   m_Father: {fileID: 1644379269}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1832343504

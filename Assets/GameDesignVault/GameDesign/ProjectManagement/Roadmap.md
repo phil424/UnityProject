@@ -469,20 +469,52 @@ Completed:
 
 `3.0K5AComplete.zip` is the completed K5A checkpoint.
 
-#### 3.0K5B — Local Ambient Wandering
+#### 3.0K5B — Local Ambient Wandering ✅
 
-**Status: Active**
+Completed:
+- disengaged Ambient enemies wander modestly around their spawn/home position;
+- wandering uses `ActorNavigationIntent` rather than bespoke Transform movement;
+- Ambient Activity Areas author Wander Radius and wander pause range;
+- each spawned actor retains its own local home and wander timing;
+- party proximity immediately cancels wander navigation and activates combat;
+- engaged Ambient enemies retain normal combat pursuit;
+- engagement does not currently revert to ambient wandering;
+- Wander Radius `0` disables wandering;
+- Simulation Pause / Slow / Normal / Fast naturally affect wandering;
+- Zombie Surge population inherits the Area's wander behaviour;
+- Encounter Workshop pursuers retain their previous non-wandering behaviour.
 
-Prove:
-- disengaged Ambient enemies wander modestly around their local spawn/home area;
-- wandering uses normal Actor navigation rather than bespoke Transform movement;
-- engagement immediately cancels ambient wandering;
-- engaged enemies retain normal combat pursuit;
-- wandering settings are authored at the Ambient Activity Area;
-- Simulation Pause / speed continues to affect ambient movement normally;
-- ambient wandering does not become formal Encounter navigation.
+`3.0K5BComplete.zip` is the completed K5B implementation state.
+
+#### 3.0K5C — Region Authoring UX Consolidation ✅
+
+Completed:
+- the monolithic Route Geography authoring window is retired;
+- `Region Authoring` provides focused Route / Ambient / Encounters modes;
+- normal Route authoring exposes only contextual creation/connection/grouping
+  actions;
+- Route Tags and repair operations are hidden under Advanced;
+- Ambient Activity has its own focused population/behaviour workflow;
+- K5B wandering settings are integrated into Ambient authoring;
+- Encounter Site binding has its own focused workflow;
+- Encounter Definition compatibility is moved to the separate
+  `Encounter Placement Rules` tool;
+- reusable compatibility queries/rules remain unchanged;
+- healthy Region validation collapses to a one-line status;
+- detailed validation diagnostics appear only when requested;
+- long explanatory HelpBoxes are removed from healthy normal workflows;
+- internal Nodes / Segments are presented as designer-facing Points /
+  Connections where appropriate;
+- required authoring roots remain automatically created by common operations;
+- generated scene/data content remains normally editable through Unity
+  Inspectors;
+- runtime/data architecture remains unchanged.
+
+`3.0K5CComplete.zip` is the completed K5C checkpoint.
 
 ### 3.0K6 — Workshop Route Context
+
+**Status: Active**
 
 Allow Encounter content to be tested against small spatial route contexts.
 
