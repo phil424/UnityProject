@@ -451,3 +451,26 @@ Default validation follows `Development Rules.md`:
 
 Do not preserve obsolete runtime compatibility APIs solely to support retired
 test code.
+
+## Guides
+
+`GameDesign/Guides/`
+
+Designer-facing usage documentation.
+
+`Guides/Tutorials/`
+- guided end-to-end learning workflows;
+- start from a known prerequisite state;
+- build a complete working result.
+
+`Guides/How-To/`
+- focused task-oriented instructions;
+- exact Unity/menu/asset locations;
+- concrete examples;
+- validation and troubleshooting.
+
+Guides explain how to operate approved authoring workflows.
+
+They complement rather than replace:
+- player-facing Design documentation;
+- Technical architecture documentation.

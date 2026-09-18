@@ -287,9 +287,9 @@ Completed:
 
 `3.0J8Complete.zip` is the completed housekeeping checkpoint.
 
-## 3.0K — Region Route Geography & Traversal
+## 3.0K — Region Route Geography & Traversal ✅
 
-**Status: Active**
+**Status: Complete**
 
 Purpose:
 
@@ -533,27 +533,277 @@ Completed:
 
 `3.0K6Complete.zip` is the completed K6 checkpoint.
 
-### 3.0K7 — First Playable Region Demo
+3.0K closes at K6.
+
+The previously planned K7 First Playable Region Demo moved later in the 3.0
+roadmap after a production-readiness review identified three missing foundations:
+
+- comprehensive designer-facing Tutorials / How-To documentation;
+- data-driven animated combat/action authoring;
+- the intended three-part Character ability identity and Combat HUD.
+
+These are content-production prerequisites rather than Route Geography work.
+
+## 3.0L — Authoring Documentation & Production Guides
 
 **Status: Active**
 
-Build one deliberate greybox Region using the completed authoring tools.
+Purpose:
 
-Target:
-- meaningful route network;
-- Village Well / loop geography;
-- several formal Encounter Sites;
-- several portable Encounter Definitions;
-- ambient activity;
-- forecast content;
-- at least one World Event;
-- enough content for a 10–15 minute expedition.
+Make the project's approved authoring workflows understandable without requiring
+the designer to inspect source code or reconstruct usage from technical
+documentation.
+
+### 3.0L1 — Authoring Documentation Standard & Guide Index
+
+Develop:
+- canonical `Guides/` documentation area;
+- Tutorials vs How-To distinction;
+- Authoring Guides Index;
+- standard structure for authoring documentation;
+- Development Rules requiring authoring-guide maintenance alongside relevant
+  implementation work.
+
+### 3.0L2 — Region Authoring Tutorial & How-To Pack
+
+Document:
+- Region Authoring tool;
+- Route Points / Connections / Groups;
+- Route Tags;
+- Ambient Activity Areas;
+- validation / diagnostics;
+- worked examples.
+
+### 3.0L3 — Encounter Authoring Tutorial & How-To Pack
+
+Document:
+- Encounter Workshop;
+- Encounter Draft workflow;
+- phases;
+- spawn groups;
+- trigger/action rules;
+- save / load / Save As;
+- Route Context;
+- Encounter Site binding;
+- Encounter Placement Rules;
+- compatibility preview.
+
+### 3.0L4 — Expedition Content How-To Pack
+
+Document current manual/data-authored workflows for:
+- forecast / expedition schedule;
+- Encounter supply;
+- World Events;
+- Zombie Surge;
+- relevant validation and troubleshooting.
+
+Ability / combat-animation authoring guides are deliberately deferred until the
+new production systems are implemented.
 
 Success question:
 
-> Is this expedition enjoyable to let run and strategically intervene in?
+> Can someone unfamiliar with the implementation follow the Guides and create,
+> test and place Region / Encounter content correctly?
 
-## 3.0L — Expanded Strategic Planner & Expedition Integration
+## 3.0M — Animated Combat & Action Authoring
+
+Purpose:
+
+Replace prototype instant basic attacks with a flexible data-driven combat
+action and sprite-presentation pipeline suitable for real character/enemy art.
+
+Core principles:
+- gameplay action timing is authoritative;
+- animation follows gameplay timing rather than owning damage logic;
+- attack speed affects gameplay timing and visual playback coherently;
+- Actor gameplay roots remain separate from swappable visual presentation;
+- existing `DamageResolver`, targeting, movement and ability architecture remain
+  authoritative where appropriate;
+- presentation effects must not secretly own gameplay results.
+
+### 3.0M1 — Sprite Presentation Foundation
+
+Develop:
+- imported sprite-sheet workflow;
+- actor Visual Root convention;
+- reusable animation/presentation data;
+- Idle / Movement proof;
+- Simulation Pause / speed compatibility;
+- swappable character/enemy presentation.
+
+### 3.0M2 — Data-Driven Combat Action Timeline
+
+Develop:
+- Windup;
+- Impact;
+- Recovery;
+- autonomous action locking;
+- damage at authored Impact rather than attack-start;
+- coherent Attack Speed scaling;
+- interrupt seam for player abilities.
+
+### 3.0M3 — Weapon Combo Authoring
+
+Develop:
+- ordered basic-attack sequences;
+- per-step timing;
+- per-step damage coefficients;
+- per-step presentation;
+- combo progression/reset behaviour;
+- different weapon cadence without rewriting autonomous combat.
+
+### 3.0M4 — Hit Reactions, Death & Presentation Cues
+
+Develop:
+- damage-driven hit presentation;
+- gameplay death separated from visual cleanup lifetime;
+- death animation;
+- semantic presentation/effect cue seam;
+- future blood / weapon swipe / impact effects;
+- no gameplay authority hidden inside VFX or animation events.
+
+### 3.0M5 — Combat Authoring Workflow & Guides
+
+Prove:
+- an authored sprite set can be attached to an actor;
+- a new basic attack / combo can be configured primarily through data;
+- presentation can be swapped without rewriting combat logic;
+- complete Tutorials / How-To guides exist for the approved workflow.
+
+## 3.0N — Character Abilities & Combat HUD
+
+Purpose:
+
+Complete the intended three-part Character combat identity and integrate
+abilities with the new animated action/presentation foundation.
+
+### 3.0N1 — Ability Action / Presentation Integration
+
+Prove the shared timing/presentation seam across different ability shapes:
+- instant / short offensive action;
+- timed runtime effect;
+- movement-duration ability.
+
+Use current Whirlwind / Rage / Charge as representative proofs where
+appropriate.
+
+Do not replace meaningful concrete ability behaviour with a giant universal
+effect framework.
+
+### 3.0N2 — Character Core Ability Roles
+
+Implement the confirmed Character foundation:
+
+- Unique / Innate;
+- Utility;
+- Sustain.
+
+The Character/loadout owns the role.
+
+`AbilityDefinition` remains independent from acquisition source or slot role.
+
+Additional run-earned abilities remain unrestricted by the three core roles.
+
+### 3.0N3 — Three Starting Abilities Per Character
+
+Every currently playable Character begins an expedition with:
+- one Unique / Innate action;
+- one Utility action;
+- one Sustain action.
+
+Author the first complete core ability set for each current playable Character.
+
+### 3.0N4 — Combat Ability HUD Wireframe Pass
+
+Move the Ability HUD toward the established combat wireframe:
+- Character portrait / health cluster;
+- visually central Unique ability;
+- Utility;
+- Sustain;
+- additional acquired abilities extending away from the core cluster;
+- clear cooldown / execution state;
+- expandable rather than hard-limited to three abilities.
+
+Follow the player-facing UI Work Contract.
+
+### 3.0N5 — Ability Authoring Workflow & Guides
+
+Create/update:
+- Ability Authoring tutorial;
+- Character Core Ability How-To;
+- animation/timing guide;
+- presentation/effect guide;
+- HUD setup/reference documentation.
+
+## 3.0O — First Playable Demo
+
+Purpose:
+
+Use the completed content-authoring, animated-combat, ability and Region systems
+to produce the first deliberate substantial playable expedition.
+
+Target:
+- approximately 10–15 minutes;
+- readable Region identity;
+- animated autonomous combat;
+- distinct player/enemy attacks;
+- Character core abilities;
+- meaningful build progression;
+- several authored Encounter identities;
+- ambient population;
+- route risk;
+- forecast content;
+- at least one World Event;
+- strategic intervention materially changes the expedition.
+
+### 3.0O1 — Demo Region Layout & Visual Foundation
+
+Build the first substantial Region layout and establish readable world visuals.
+
+### 3.0O2 — Character & Enemy Content Pass
+
+Author the presentation and basic combat content required by the demo roster.
+
+### 3.0O3 — Encounter Content Pack
+
+Author and place a deliberately varied library of Encounter Definitions using
+the Workshop and Region authoring tools.
+
+### 3.0O4 — Ability & Buildcraft Content Pass
+
+Ensure starting abilities, acquired abilities, evolutions and rewards have enough
+content for expedition builds to meaningfully diverge.
+
+### 3.0O5 — Expedition Pacing & World State
+
+Tune:
+- Encounter supply;
+- ambient population;
+- schedule / forecast;
+- Reinforcements;
+- World Events;
+- route risk;
+- opportunity pacing.
+
+Do not build the future generated Encounter Director here.
+
+### 3.0O6 — Demo Playtest, Guide Validation & Closure
+
+Play the complete expedition repeatedly.
+
+Validate both:
+- player experience;
+- content-authoring experience.
+
+Success questions:
+
+> Is the expedition enjoyable to watch autonomously and strategically intervene
+> in?
+
+> Can more Characters, enemies, attacks, abilities, Encounters and Regions now
+> be authored without another architectural rewrite?
+
+## 3.0P — Expanded Strategic Planner & Expedition Integration
 
 Purpose:
 

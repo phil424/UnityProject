@@ -95,43 +95,22 @@ namespace MiniCrawler.Presentation
         {
             RemoveMissingActors();
 
-            if (
-                !TryGetPartyCentre(
-                    out Vector3 centre
-                )
-            )
+            if (SimulationPause.IsPaused)
+                return;
+
+            if (!TryGetPartyCentre(out Vector3 centre))
+                return;
+
+            Vector3 desiredPosition = centre + followOffset;
+
+            if (followSharpness <= 0f)
             {
+                transform.position = desiredPosition;
                 return;
             }
 
-            Vector3 desiredPosition =
-                centre +
-                followOffset;
-
-            if (
-                followSharpness <= 0f ||
-                Time.deltaTime <= 0f
-            )
-            {
-                transform.position =
-                    desiredPosition;
-
-                return;
-            }
-
-            float interpolation =
-                1f -
-                Mathf.Exp(
-                    -followSharpness *
-                    Time.deltaTime
-                );
-
-            transform.position =
-                Vector3.Lerp(
-                    transform.position,
-                    desiredPosition,
-                    interpolation
-                );
+            float interpolation = 1f - Mathf.Exp(-followSharpness * Time.deltaTime);
+            transform.position = Vector3.Lerp(transform.position, desiredPosition, interpolation);
         }
 
         private void HandlePartyMemberSpawned(

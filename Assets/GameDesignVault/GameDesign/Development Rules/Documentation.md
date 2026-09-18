@@ -61,3 +61,59 @@ Technical-design documents primarily describe:
 Technical documents should describe intended structure, not every implementation detail.
 
 Create or expand technical documents when a system becomes architecturally significant rather than creating documents speculatively for every possible future feature.
+
+# Authoring Guides and Tutorials
+
+Technical documentation is not a replacement for designer-facing usage
+documentation.
+
+Whenever a system introduces or materially changes a designer-facing authoring
+workflow, assess whether its Tutorial and/or How-To documentation must also be
+created or updated.
+
+Use:
+
+`Guides/Tutorials/`
+
+for guided end-to-end learning workflows.
+
+Use:
+
+`Guides/How-To/`
+
+for focused task-oriented instructions.
+
+## Authoring Guide Standard
+
+A comprehensive authoring guide should normally document:
+
+- purpose;
+- exact Unity menu / asset / scene location;
+- prerequisites;
+- what the workflow creates or modifies;
+- a short quick-start workflow;
+- detailed step-by-step Unity instructions;
+- at least one concrete project example;
+- important authored fields and their meaning;
+- expected result;
+- validation;
+- common mistakes and troubleshooting;
+- manual Inspector escape hatch where relevant;
+- related Design / Technical documentation.
+
+Do not assume familiarity with an authoring tool merely because its technical
+architecture is documented.
+
+A designer should not need to inspect source code to understand how to use an
+approved content-authoring workflow.
+
+## Documentation Impact
+
+At the end of a meaningful implementation step, assess separately:
+
+- Design Documentation Impact;
+- Technical Documentation Impact;
+- Authoring Guide Impact.
+
+When an existing authoring workflow changes, update its guide in the same
+development step rather than allowing usage documentation to become stale.
