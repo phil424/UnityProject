@@ -20,6 +20,7 @@ GameObject:
   - component: {fileID: 4023943183482052297}
   - component: {fileID: 1570679293471956965}
   - component: {fileID: 967560223058520429}
+  - component: {fileID: 691509329980907801}
   m_Layer: 0
   m_Name: PartyMember
   m_TagString: Untagged
@@ -160,7 +161,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MiniCrawler.Core.Health
   maxHealth: 60
   currentHealth: 60
-  destroyWhenDead: 1
+  destroyWhenDead: 0
 --- !u!114 &484726309432916307
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -234,6 +235,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a3b4c502bc4daa40a40be9109e5ef06, type: 3}
   m_Name: 
   m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Movement.ForcedMotion
+--- !u!114 &691509329980907801
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4594298099328853642}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a9e7817002701b6459e3728bb9b93a5e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Combat.CombatActionState
+  basicAttackAction: {fileID: 11400000, guid: e50e8e0d690053c45a8453121823865d, type: 2}
+  basicAttackSequence: {fileID: 11400000, guid: 54311413723c6f84997823b3c9bc3591, type: 2}
 --- !u!1 &5736878203012054910
 GameObject:
   m_ObjectHideFlags: 0
@@ -247,6 +262,8 @@ GameObject:
   - component: {fileID: 3475342680604172993}
   - component: {fileID: 5855839924529613872}
   - component: {fileID: 2859907570303111605}
+  - component: {fileID: 7157791089404557967}
+  - component: {fileID: 7729292507813625960}
   m_Layer: 0
   m_Name: Visual Root
   m_TagString: Untagged
@@ -372,3 +389,39 @@ MonoBehaviour:
   facingDeadZone: 0.2
   sourceFacesRight: 0
   initialFacingRight: 1
+--- !u!114 &7157791089404557967
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5736878203012054910}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71a844e538715d64ab99eca19f0d8d60, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Presentation.ActorCombatSpritePresenter
+  attackClip: {fileID: 11400000, guid: 97da38ddda4a2474293796e174cd703a, type: 2}
+  actionPresentations:
+  - action: {fileID: 11400000, guid: e50e8e0d690053c45a8453121823865d, type: 2}
+    clip: {fileID: 11400000, guid: 97da38ddda4a2474293796e174cd703a, type: 2}
+  - action: {fileID: 11400000, guid: 08e61af96f1f40948bd1b83bc6ea538e, type: 2}
+    clip: {fileID: 11400000, guid: c10f1b21e019ea14db35cd7b546662c2, type: 2}
+  - action: {fileID: 11400000, guid: 210552f4046b44747aab71e7b73f9def, type: 2}
+    clip: {fileID: 11400000, guid: 7b284bd42c0c9fe4faced5fd959e0c30, type: 2}
+  hitClip: {fileID: 11400000, guid: e1763ed289aa93f439a40feb1aab4ccb, type: 2}
+  hitReactionDuration: 0.12
+--- !u!114 &7729292507813625960
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5736878203012054910}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 636049043f7f27d4eabc0fab37c5f5ab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Presentation.ActorDeathSpritePresenter
+  deathClip: {fileID: 11400000, guid: 7fa31893799c58e4c8deb4f64c3d1f60, type: 2}
+  finalFrameHold: 0.35

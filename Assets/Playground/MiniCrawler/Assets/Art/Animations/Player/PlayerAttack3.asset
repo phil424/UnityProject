@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47412143087c100478c2d588671a9a9e, type: 3}
+  m_Name: PlayerAttack3
+  m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Presentation.SpriteFlipbookClip
+  frames:
+  - {fileID: -1358456017, guid: fecb5eee33ca2c84bb07f7cbad6e867a, type: 3}
+  - {fileID: 300318607, guid: fecb5eee33ca2c84bb07f7cbad6e867a, type: 3}
+  - {fileID: 936369848, guid: fecb5eee33ca2c84bb07f7cbad6e867a, type: 3}
+  - {fileID: 594485435, guid: fecb5eee33ca2c84bb07f7cbad6e867a, type: 3}
+  - {fileID: -1802498702, guid: fecb5eee33ca2c84bb07f7cbad6e867a, type: 3}
+  - {fileID: 1445651016, guid: fecb5eee33ca2c84bb07f7cbad6e867a, type: 3}
+  - {fileID: -436149765, guid: fecb5eee33ca2c84bb07f7cbad6e867a, type: 3}
+  - {fileID: -1617719395, guid: fecb5eee33ca2c84bb07f7cbad6e867a, type: 3}
+  - {fileID: -1862730886, guid: fecb5eee33ca2c84bb07f7cbad6e867a, type: 3}
+  - {fileID: 1637986643, guid: fecb5eee33ca2c84bb07f7cbad6e867a, type: 3}
+  framesPerSecond: 12.5
+  loop: 0

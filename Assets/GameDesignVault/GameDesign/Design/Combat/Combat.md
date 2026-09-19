@@ -24,6 +24,25 @@
 Important principle:
 > Automatic behaviour must never make the character feel unresponsive to player ability input.
 
+# Combat Death Lifetime
+
+**Status: Confirmed**
+
+Gameplay death and visual cleanup are separate lifetimes.
+
+When Health reaches zero:
+
+- the actor is gameplay-dead immediately;
+- targeting, movement, combat and encounter completion must use gameplay death
+  rather than waiting for the GameObject to be destroyed;
+- rewards and progression may resolve immediately from gameplay death;
+- presentation may keep the dead actor visible long enough to play authored
+  death presentation;
+- visual cleanup destroys the remaining runtime object only after that
+  presentation lifetime finishes.
+
+Death animation is presentation only. It must not own or delay gameplay death.
+
 # Targeting and Tactical Direction
 
 Autonomous combat does not mean the player has no influence over target choice.

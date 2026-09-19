@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47412143087c100478c2d588671a9a9e, type: 3}
+  m_Name: Skeleton2Walk
+  m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Presentation.SpriteFlipbookClip
+  frames:
+  - {fileID: -1946778129, guid: e8b67502c500ded4a884dd925b74a564, type: 3}
+  - {fileID: -904064162, guid: e8b67502c500ded4a884dd925b74a564, type: 3}
+  - {fileID: -419254131, guid: e8b67502c500ded4a884dd925b74a564, type: 3}
+  - {fileID: 808204114, guid: e8b67502c500ded4a884dd925b74a564, type: 3}
+  framesPerSecond: 8
+  loop: 1

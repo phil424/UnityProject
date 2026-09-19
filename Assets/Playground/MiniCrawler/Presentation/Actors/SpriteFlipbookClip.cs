@@ -14,6 +14,7 @@ namespace MiniCrawler.Presentation
 
         public int FrameCount => frames != null ? frames.Length : 0;
         public float FramesPerSecond => framesPerSecond;
+        public float Duration => FrameCount <= 0 ? 0f : FrameCount / framesPerSecond;
         public bool Loop => loop;
 
         public Sprite GetFrame(int index)

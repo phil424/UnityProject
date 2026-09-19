@@ -98,6 +98,22 @@ Examples:
 
 Party defeat ends the active expedition.
 
+## Defeat Resolution vs Presentation Cleanup
+
+Expedition defeat and visual level cleanup are separate transitions.
+
+When the final party member becomes gameplay-dead:
+
+- defeat is resolved immediately;
+- expedition-owned `RunProgress` ends immediately;
+- World Time and other expedition-owned runtime state stop immediately;
+- persistent expedition-end bookkeeping may resolve immediately;
+- the Run flow may enter a short ending/presentation state;
+- dead party runtime actors may remain visible while authored death presentation completes;
+- return to preparation and full Region/Level object cleanup occur after that bounded presentation lifetime.
+
+Death presentation must never own, delay or reverse the gameplay defeat result.
+
 Expected flow:
 
 Party Defeated

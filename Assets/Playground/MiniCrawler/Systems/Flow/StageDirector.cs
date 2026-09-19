@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using MiniCrawler.Core;
 using MiniCrawler.Ecology;
@@ -65,6 +66,8 @@ namespace MiniCrawler.Systems
         private int livingMinions;
         private int pendingMinionSpawns;
         private bool bossAlive;
+        private bool levelOutcomeResolved;
+        private Coroutine defeatCleanupRoutine;
 
         public LevelState State => state;
         public string StateName => state.ToString();
@@ -117,6 +120,7 @@ namespace MiniCrawler.Systems
             livingMinions = 0;
             pendingMinionSpawns = 0;
             bossAlive = false;
+            levelOutcomeResolved = false;
 
             SpawnSelectedParty(runState);
 
@@ -498,13 +502,68 @@ namespace MiniCrawler.Systems
 
         private void FinishLevel(bool won)
         {
+            if (levelOutcomeResolved)
+                return;
+
+            levelOutcomeResolved = true;
+
+            if (won)
+            {
+                ClearLevel();
+                LevelFinished?.Invoke(true);
+
+                Debug.Log("Boss defeated. Level complete.");
+                return;
+            }
+
+            StopMinionSpawnGroups();
+
+            LevelFinished?.Invoke(false);
+
+            if (defeatCleanupRoutine != null)
+                StopCoroutine(defeatCleanupRoutine);
+
+            defeatCleanupRoutine = StartCoroutine(CompleteDefeatAfterPartyPresentation());
+
+            Debug.Log("Party defeated. Expedition defeat resolved; waiting for party death presentation cleanup.");
+        }
+        
+        private IEnumerator CompleteDefeatAfterPartyPresentation()
+        {
+            const float safetyTimeout = 5f;
+
+            float remainingTimeout = safetyTimeout;
+
+            yield return null;
+
+            while (HasRemainingPartyRuntimeObjects() && remainingTimeout > 0f)
+            {
+                remainingTimeout -= Time.deltaTime;
+                yield return null;
+            }
+
+            if (HasRemainingPartyRuntimeObjects())
+            {
+                Debug.LogWarning(
+                    "Party defeat presentation did not clean up all party runtime actors before the safety timeout. " +
+                    "The level will now be cleared.",
+                    this
+                );
+            }
+
+            defeatCleanupRoutine = null;
             ClearLevel();
+        }
 
-            LevelFinished?.Invoke(won);
+        private bool HasRemainingPartyRuntimeObjects()
+        {
+            foreach (GameObject actor in spawnedPartyActors.Values)
+            {
+                if (actor != null)
+                    return true;
+            }
 
-            Debug.Log(won
-                ? "Boss defeated. Level complete."
-                : "Party defeated. Level ended.");
+            return false;
         }
 
         private void SetState(LevelState newState)
@@ -536,6 +595,12 @@ namespace MiniCrawler.Systems
 
         public void ClearLevel()
         {
+            if (defeatCleanupRoutine != null)
+            {
+                StopCoroutine(defeatCleanupRoutine);
+                defeatCleanupRoutine = null;
+            }
+
             if (SimulationPause.Instance != null)
                 SimulationPause.Instance.Resume();
 

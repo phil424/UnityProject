@@ -246,7 +246,11 @@ namespace MiniCrawler.UI
 
             upgradePanel.SetActive(runState == RunDirector.RunFlowState.BetweenLevels);
 
-            combatHudPanel.SetActive(runState == RunDirector.RunFlowState.InLevel);
+            bool showCombatView =
+                runState == RunDirector.RunFlowState.InLevel ||
+                runState == RunDirector.RunFlowState.EndingExpedition;
+
+            combatHudPanel.SetActive(showCombatView);
 
             if (runState == RunDirector.RunFlowState.BetweenLevels)
             {

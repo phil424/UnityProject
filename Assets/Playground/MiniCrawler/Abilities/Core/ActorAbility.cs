@@ -1,13 +1,13 @@
 using System;
 using System.Collections.Generic;
+using MiniCrawler.Combat;
 using MiniCrawler.Core;
 using MiniCrawler.Systems;
 using UnityEngine;
 
 namespace MiniCrawler.Abilities
 {
-    public abstract class ActorAbility :
-        MonoBehaviour
+    public abstract class ActorAbility : MonoBehaviour
     {
         private GameObject owner;
 
@@ -19,51 +19,27 @@ namespace MiniCrawler.Abilities
 
         private float cooldownRemaining;
 
-        private AbilityExecutionState
-            executionState;
+        private AbilityExecutionState executionState;
 
-        public GameObject Owner =>
-            owner;
+        public GameObject Owner => owner;
 
-        public AbilityDefinition Definition =>
-            definition;
+        public AbilityDefinition Definition => definition;
 
-        public int Level =>
-            level;
+        public int Level => level;
         
         public IReadOnlyList<AbilityEvolutionDefinition> Evolutions => evolutions;
 
-        public string AbilityName =>
-            definition != null
-                ? definition.DisplayName
-                : GetType().Name;
+        public string AbilityName => definition != null ? definition.DisplayName : GetType().Name;
                 
-        public string DisplayName =>
-            AbilityPresentationResolver
-                .GetDisplayName(
-                    definition,
-                    evolutions
-                );
+        public string DisplayName => AbilityPresentationResolver.GetDisplayName(definition, evolutions);
 
-        public Sprite DisplayIcon =>
-            AbilityPresentationResolver
-                .GetDisplayIcon(
-                    definition,
-                    evolutions
-                );
+        public Sprite DisplayIcon => AbilityPresentationResolver.GetDisplayIcon(definition, evolutions);
 
-        public float Cooldown =>
-            definition != null
-                ? definition.GetCooldown(
-                    level
-                )
-                : 0f;
+        public float Cooldown => definition != null ? definition.GetCooldown(level) : 0f;
 
-        public float CooldownRemaining =>
-            cooldownRemaining;
+        public float CooldownRemaining => cooldownRemaining;
 
-        public bool IsReady =>
-            cooldownRemaining <= 0f;
+        public bool IsReady => cooldownRemaining <= 0f;
 
         public bool IsExecuting
         {
@@ -77,28 +53,13 @@ namespace MiniCrawler.Abilities
             private set;
         }
 
-        public bool IsInitialized =>
-            owner != null &&
-            definition != null;
+        public bool IsInitialized => owner != null && definition != null;
 
-        public bool CanActivateNow =>
-            IsInitialized &&
-            isActiveAndEnabled &&
-            !SimulationPause.IsPaused &&
-            IsOwnerAlive() &&
-            IsReady &&
-            !IsExecuting &&
-            CanActivateAbility();
+        public bool CanActivateNow => IsInitialized && isActiveAndEnabled && !SimulationPause.IsPaused && IsOwnerAlive() && IsReady && !IsExecuting && CanActivateAbility();
 
-        public event Action<ActorAbility>
-            Activated;
+        public event Action<ActorAbility> Activated;
 
-        public void Initialize(
-            GameObject actorOwner,
-            AbilityDefinition abilityDefinition,
-            int abilityLevel,
-            IReadOnlyList<AbilityEvolutionDefinition> abilityEvolutions = null
-        )
+        public void Initialize(GameObject actorOwner, AbilityDefinition abilityDefinition, int abilityLevel, IReadOnlyList<AbilityEvolutionDefinition> abilityEvolutions = null)
         {
             EndExecution();
 
@@ -113,9 +74,7 @@ namespace MiniCrawler.Abilities
             cooldownRemaining = 0f;
         }
 
-        public void TickRuntime(
-            float deltaTime
-        )
+        public void TickRuntime(float deltaTime)
         {
             TickCooldown(deltaTime);
 
@@ -135,9 +94,7 @@ namespace MiniCrawler.Abilities
         public void TickCooldown(float deltaTime)
         {
             if (deltaTime <= 0f || cooldownRemaining <= 0f)
-            {
                 return;
-            }
 
             cooldownRemaining = Mathf.Max(0f, cooldownRemaining - deltaTime);
         }
@@ -150,8 +107,7 @@ namespace MiniCrawler.Abilities
             if (!ExecuteAbility())
                 return false;
 
-            cooldownRemaining =
-                Cooldown;
+            cooldownRemaining = Cooldown;
 
             Activated?.Invoke(this);
 
@@ -171,22 +127,16 @@ namespace MiniCrawler.Abilities
             foreach (AbilityEvolutionDefinition owned in evolutions)
             {
                 if (owned != null && owned.Id == evolution.Id)
-                {
                     return true;
-                }
             }
 
             return false;
         }
 
-        protected bool BeginExecution(
-            bool blockAutonomousActions = true
-        )
+        protected bool BeginExecution(bool blockAutonomousActions = true)
         {
             if (!IsInitialized || IsExecuting)
-            {
                 return false;
-            }
 
             IsExecuting = true;
 
@@ -194,8 +144,10 @@ namespace MiniCrawler.Abilities
 
             if (BlocksAutonomousActions)
             {
-                EnsureExecutionState();
+                CombatActionState combatActionState = owner.GetComponent<CombatActionState>();
+                combatActionState?.Cancel();
 
+                EnsureExecutionState();
                 executionState?.BeginBlocking(this);
             }
 
@@ -208,49 +160,29 @@ namespace MiniCrawler.Abilities
                 return;
 
             if (BlocksAutonomousActions && executionState != null)
-            {
                 executionState.EndBlocking(this);
-            }
 
             IsExecuting = false;
 
             BlocksAutonomousActions = false;
         }
 
-        protected abstract bool
-            CanActivateAbility();
+        protected abstract bool CanActivateAbility();
 
-        protected abstract bool
-            ExecuteAbility();
+        protected abstract bool ExecuteAbility();
 
-        protected virtual void TickExecution(
-            float deltaTime
-        )
-        {
-        }
+        protected virtual void TickExecution(float deltaTime)
+        { }
 
         private void EnsureExecutionState()
         {
-            if (
-                executionState != null ||
-                owner == null
-            )
-            {
+            if (executionState != null || owner == null)
                 return;
-            }
 
-            executionState =
-                owner.GetComponent<
-                    AbilityExecutionState
-                >();
+            executionState = owner.GetComponent<AbilityExecutionState>();
 
             if (executionState == null)
-            {
-                executionState =
-                    owner.AddComponent<
-                        AbilityExecutionState
-                    >();
-            }
+                executionState = owner.AddComponent<AbilityExecutionState>();
         }
 
         private bool IsOwnerAlive()
@@ -258,12 +190,9 @@ namespace MiniCrawler.Abilities
             if (owner == null)
                 return false;
 
-            Health health =
-                owner.GetComponent<Health>();
+            Health health = owner.GetComponent<Health>();
 
-            return
-                health == null ||
-                !health.IsDead;
+            return health == null || !health.IsDead;
         }
 
         [ContextMenu("Debug/Try Activate")]
@@ -271,25 +200,13 @@ namespace MiniCrawler.Abilities
         {
             if (!Application.isPlaying)
             {
-                Debug.LogWarning(
-                    $"[Ability Debug] " +
-                    $"{AbilityName} " +
-                    "can only be activated " +
-                    "in Play Mode."
-                );
-
+                Debug.LogWarning($"[Ability Debug] " + $"{AbilityName} " + "can only be activated " + "in Play Mode.");
                 return;
             }
 
-            bool activated =
-                TryActivate();
+            bool activated = TryActivate();
 
-            Debug.Log(
-                $"[Ability Debug] " +
-                $"{AbilityName} activation " +
-                $"request " +
-                $"{(activated ? "succeeded" : "was rejected")}."
-            );
+            Debug.Log($"[Ability Debug] " + $"{AbilityName} activation " + $"request " + $"{(activated ? "succeeded" : "was rejected")}.");
         }
 
         protected virtual void OnDisable()
@@ -298,7 +215,6 @@ namespace MiniCrawler.Abilities
         }
 
         protected virtual void OnValidate()
-        {
-        }
+        { }
     }
 }

@@ -26,6 +26,7 @@ namespace MiniCrawler.Presentation
         private Transform cameraTransform;
         private SpriteRenderer spriteRenderer;
         private SpriteFlipbookPlayer flipbookPlayer;
+        private bool presentationSuppressed;
         
         private Vector3 baseLocalScale;
 
@@ -66,6 +67,12 @@ namespace MiniCrawler.Presentation
             Vector3 currentPosition = actorTransform.position;
 
             if (SimulationPause.IsPaused)
+            {
+                previousPosition = currentPosition;
+                return;
+            }
+            
+            if (presentationSuppressed)
             {
                 previousPosition = currentPosition;
                 return;
@@ -126,6 +133,33 @@ namespace MiniCrawler.Presentation
 
             transform.localScale = scale;
             spriteRenderer.flipX = false;
+        }
+        
+        public void SetPresentationSuppressed(bool suppressed)
+        {
+            if (presentationSuppressed == suppressed)
+                return;
+
+            presentationSuppressed = suppressed;
+
+            if (actorTransform != null)
+                previousPosition = actorTransform.position;
+
+            if (!presentationSuppressed)
+            {
+                isMoving = false;
+                flipbookPlayer.Play(idleClip, true);
+            }
+        }
+
+        public void FaceWorldDirection(Vector3 worldDirection)
+        {
+            worldDirection.y = 0f;
+
+            if (worldDirection.sqrMagnitude <= 0.0001f)
+                return;
+
+            UpdateFacing(worldDirection.normalized);
         }
 
         private bool TryResolveCamera()

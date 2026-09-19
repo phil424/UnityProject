@@ -500,7 +500,7 @@ MonoBehaviour:
   - {fileID: 1965840940}
   groups: []
   populations:
-  - actorDefinition: {fileID: 11400000, guid: f94bb2855b5c0e24eac3845bce957198, type: 2}
+  - actorDefinition: {fileID: 11400000, guid: b4ff50d288d28614c9516de4bf30a123, type: 2}
     count: 1
   spawnScatterRadius: 1.5
   engagementRadius: 3.5
@@ -1760,7 +1760,7 @@ MonoBehaviour:
   - {fileID: 243140767}
   groups: []
   populations:
-  - actorDefinition: {fileID: 11400000, guid: f94bb2855b5c0e24eac3845bce957198, type: 2}
+  - actorDefinition: {fileID: 11400000, guid: b4ff50d288d28614c9516de4bf30a123, type: 2}
     count: 1
   spawnScatterRadius: 1.5
   engagementRadius: 3.5
@@ -1957,7 +1957,7 @@ MonoBehaviour:
   startSpawning: 0
   startCombatActive: 1
   entries:
-  - actor: {fileID: 11400000, guid: f94bb2855b5c0e24eac3845bce957198, type: 2}
+  - actor: {fileID: 11400000, guid: b4ff50d288d28614c9516de4bf30a123, type: 2}
     count: 3
     startDelay: 0
     batchSize: 3
@@ -3049,7 +3049,7 @@ MonoBehaviour:
   startSpawning: 0
   startCombatActive: 0
   entries:
-  - actor: {fileID: 11400000, guid: f94bb2855b5c0e24eac3845bce957198, type: 2}
+  - actor: {fileID: 11400000, guid: b4ff50d288d28614c9516de4bf30a123, type: 2}
     count: 8
     startDelay: 0
     batchSize: 4
@@ -3402,7 +3402,7 @@ MonoBehaviour:
   startSpawning: 0
   startCombatActive: 0
   entries:
-  - actor: {fileID: 11400000, guid: f94bb2855b5c0e24eac3845bce957198, type: 2}
+  - actor: {fileID: 11400000, guid: b4ff50d288d28614c9516de4bf30a123, type: 2}
     count: 8
     startDelay: 0
     batchSize: 4
@@ -4727,13 +4727,13 @@ MonoBehaviour:
   startSpawning: 0
   startCombatActive: 0
   entries:
-  - actor: {fileID: 11400000, guid: f94bb2855b5c0e24eac3845bce957198, type: 2}
+  - actor: {fileID: 11400000, guid: b4ff50d288d28614c9516de4bf30a123, type: 2}
     count: 8
     startDelay: 0
     batchSize: 8
     timeBetweenSpawns: 0
     timeBetweenBatches: 0
-  - actor: {fileID: 11400000, guid: f94bb2855b5c0e24eac3845bce957198, type: 2}
+  - actor: {fileID: 11400000, guid: b4ff50d288d28614c9516de4bf30a123, type: 2}
     count: 30
     startDelay: 1
     batchSize: 1
@@ -6605,7 +6605,7 @@ MonoBehaviour:
   - {fileID: 1923800174}
   groups: []
   populations:
-  - actorDefinition: {fileID: 11400000, guid: f94bb2855b5c0e24eac3845bce957198, type: 2}
+  - actorDefinition: {fileID: 11400000, guid: b4ff50d288d28614c9516de4bf30a123, type: 2}
     count: 1
   spawnScatterRadius: 1.5
   engagementRadius: 3.5
@@ -7080,6 +7080,8 @@ GameObject:
   - component: {fileID: 846909449}
   - component: {fileID: 846909450}
   - component: {fileID: 846909451}
+  - component: {fileID: 846909452}
+  - component: {fileID: 846909453}
   m_Layer: 0
   m_Name: StageDirector
   m_TagString: Untagged
@@ -7318,6 +7320,34 @@ MonoBehaviour:
   initialExpiryStaggerWorldMinutes: 15
   reuseDelayWorldMinutes: 20
   minimumQuickChoices: 3
+--- !u!114 &846909452
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 846909435}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 77973605fed7b9a408753a69de6ec7f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Systems.CombatActionSystem
+--- !u!114 &846909453
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 846909435}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc64b14124a611b44954c8a810c29009, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Systems.CombatRuntimeTrace
+  logActionEvents: 1
+  logAnimationChanges: 1
+  logDamage: 1
+  actorNameContains: 
 --- !u!1 &859442584
 GameObject:
   m_ObjectHideFlags: 0
@@ -8420,7 +8450,7 @@ MonoBehaviour:
   - {fileID: 1698704658}
   groups: []
   populations:
-  - actorDefinition: {fileID: 11400000, guid: f94bb2855b5c0e24eac3845bce957198, type: 2}
+  - actorDefinition: {fileID: 11400000, guid: b4ff50d288d28614c9516de4bf30a123, type: 2}
     count: 1
   spawnScatterRadius: 1.5
   engagementRadius: 3.5
@@ -11359,7 +11389,7 @@ MonoBehaviour:
   - {fileID: 1698704658}
   groups: []
   populations:
-  - actorDefinition: {fileID: 11400000, guid: f94bb2855b5c0e24eac3845bce957198, type: 2}
+  - actorDefinition: {fileID: 11400000, guid: b4ff50d288d28614c9516de4bf30a123, type: 2}
     count: 6
   spawnScatterRadius: 1.5
   engagementRadius: 3.5
@@ -11879,8 +11909,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7668e02490aa27e4bb139e126418e8bb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Ecology.ZombieSurgeAmbientEffect
-  worldEvent: {fileID: 11400000, guid: 6c5a5bdb253b6d44b9da0bad3dfc0e40, type: 2}
-  affectedActorDefinition: {fileID: 11400000, guid: f94bb2855b5c0e24eac3845bce957198, type: 2}
+  worldEvent: {fileID: 11400000, guid: 1b1ea08d1da924b4abb52a27b3c41318, type: 2}
+  affectedActorDefinition: {fileID: 11400000, guid: b4ff50d288d28614c9516de4bf30a123, type: 2}
   activationBonusPerArea: 1
   pulseBonusPerArea: 1
   pulseIntervalWorldMinutes: 60

@@ -13,6 +13,7 @@ namespace MiniCrawler.Systems
         {
             PreRun,
             InLevel,
+            EndingExpedition,
             BetweenLevels
         }
         
@@ -43,6 +44,7 @@ namespace MiniCrawler.Systems
         private RunSetup setup;
 
         private RunFlowState state = RunFlowState.PreRun;
+        private bool returnToPreRunWhenLevelCleared;
 
         public RunFlowState State => state;
 
@@ -81,6 +83,7 @@ namespace MiniCrawler.Systems
             }
 
             stageDirector.LevelFinished += HandleLevelFinished;
+            stageDirector.LevelCleared += HandleLevelCleared;
             stageDirector.CurrencyEarned += HandleCurrencyEarned;
             stageDirector.RewardChoiceEarned += HandleRewardChoiceEarned;
 
@@ -94,6 +97,7 @@ namespace MiniCrawler.Systems
             if (stageDirector != null)
             {
                 stageDirector.LevelFinished -= HandleLevelFinished;
+                stageDirector.LevelCleared -= HandleLevelCleared;
                 stageDirector.CurrencyEarned -= HandleCurrencyEarned;
                 stageDirector.RewardChoiceEarned -= HandleRewardChoiceEarned;
             }
@@ -104,6 +108,12 @@ namespace MiniCrawler.Systems
 
         public bool BeginRun()
         {
+            if (state != RunFlowState.PreRun)
+            {
+                Debug.LogWarning("Cannot begin a new expedition until the current flow has returned to preparation.");
+                return false;
+            }
+            
             if (RunProgress.HasActiveRun)
             {
                 Debug.LogWarning("Cannot begin a new run while another run is active.");
@@ -198,7 +208,7 @@ namespace MiniCrawler.Systems
 
             if (!won)
             {
-                FinishExpedition(ExpeditionEndReason.Defeat);
+                FinishExpedition(ExpeditionEndReason.Defeat, waitForLevelCleanup: true);
                 return;
             }
 
@@ -206,7 +216,16 @@ namespace MiniCrawler.Systems
             SetState(RunFlowState.BetweenLevels);
         }
         
-        private void FinishExpedition(ExpeditionEndReason reason)
+        private void HandleLevelCleared()
+        {
+            if (!returnToPreRunWhenLevelCleared)
+                return;
+
+            returnToPreRunWhenLevelCleared = false;
+            SetState(RunFlowState.PreRun);
+        }
+        
+        private void FinishExpedition(ExpeditionEndReason reason, bool waitForLevelCleanup = false)
         {
             RunState runState = RunProgress.CurrentRun;
 
@@ -215,8 +234,12 @@ namespace MiniCrawler.Systems
 
             int persistentCurrencyEarned = runState.TotalCurrencyEarned;
 
-            if (stageDirector != null && stageDirector.State != StageDirector.LevelState.Idle)
+            if (!waitForLevelCleanup &&
+                stageDirector != null &&
+                stageDirector.State != StageDirector.LevelState.Idle)
+            {
                 stageDirector.ClearLevel();
+            }
 
             RunProgress.EndRun();
 
@@ -227,7 +250,11 @@ namespace MiniCrawler.Systems
             LastExpeditionEndReason = reason;
             LastLevelWon = false;
 
-            SetState(RunFlowState.PreRun);
+            returnToPreRunWhenLevelCleared = waitForLevelCleanup;
+
+            SetState(waitForLevelCleanup
+                ? RunFlowState.EndingExpedition
+                : RunFlowState.PreRun);
 
             Debug.Log(
                 $"Expedition ended: {reason}. " +

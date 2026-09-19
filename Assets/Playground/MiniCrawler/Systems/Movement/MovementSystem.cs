@@ -1,4 +1,5 @@
 using MiniCrawler.Abilities;
+using MiniCrawler.Combat;
 using MiniCrawler.Core;
 using MiniCrawler.Movement;
 using MiniCrawler.Support;
@@ -32,6 +33,11 @@ namespace MiniCrawler.Systems
                 AbilityExecutionState abilityExecutionState = actor.GetComponent<AbilityExecutionState>();
 
                 if (abilityExecutionState != null && abilityExecutionState.BlocksAutonomousActions)
+                    continue;
+
+                CombatActionState combatActionState = actor.GetComponent<CombatActionState>();
+
+                if (combatActionState != null && combatActionState.BlocksAutonomousActions)
                     continue;
 
                 AutoTargetMover mover = actor.GetComponent<AutoTargetMover>();

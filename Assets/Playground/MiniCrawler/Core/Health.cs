@@ -10,6 +10,7 @@ namespace MiniCrawler.Core
         public static event Action<Health> AnyDied;
 
         public event Action<Health> Changed;
+        public event Action<Health> Died;
 
         [SerializeField] private float maxHealth = 100f;
         [SerializeField] private float currentHealth = 100f;
@@ -18,24 +19,15 @@ namespace MiniCrawler.Core
         private float maxHealthBonus;
         private bool deathProcessed;
 
-        public float MaxHealth =>
-            maxHealth + maxHealthBonus;
+        public float MaxHealth => maxHealth + maxHealthBonus;
 
-        public float CurrentHealth =>
-            currentHealth;
+        public float CurrentHealth => currentHealth;
 
-        public float Normalized =>
-            MaxHealth <= 0f
-                ? 0f
-                : Mathf.Clamp01(
-                    CurrentHealth / MaxHealth
-                );
+        public float Normalized => MaxHealth <= 0f ? 0f : Mathf.Clamp01(CurrentHealth / MaxHealth);
 
-        public bool IsDead =>
-            currentHealth <= 0f;
+        public bool IsDead => currentHealth <= 0f;
 
-        public bool DestroyWhenDead =>
-            destroyWhenDead;
+        public bool DestroyWhenDead => destroyWhenDead;
 
         public void ApplyMaxHealthBonus(float bonus, bool restoreToFull = true)
         {
@@ -43,82 +35,41 @@ namespace MiniCrawler.Core
 
             maxHealthBonus = Mathf.Max(0f, bonus);
 
-            currentHealth = restoreToFull
-                ? MaxHealth
-                : Mathf.Clamp(previousHealth, 0f, MaxHealth);
+            currentHealth = restoreToFull ? MaxHealth : Mathf.Clamp(previousHealth, 0f, MaxHealth);
 
             deathProcessed = false;
 
             Changed?.Invoke(this);
         }
 
-        public void Damage(
-            float amount,
-            GameObject source = null
-        )
+        public void Damage(float amount, GameObject source = null)
         {
-            if (
-                IsDead ||
-                deathProcessed ||
-                amount <= 0f
-            )
-            {
+            if (IsDead || deathProcessed || amount <= 0f)
                 return;
-            }
 
-            currentHealth =
-                Mathf.Max(
-                    0f,
-                    currentHealth - amount
-                );
+            currentHealth = Mathf.Max(0f, currentHealth - amount);
 
             Changed?.Invoke(this);
 
-            string sourceName =
-                source != null
-                    ? source.name
-                    : "Unknown";
+            string sourceName = source != null ? source.name : "Unknown";
 
-            Debug.Log(
-                $"{name} took {amount:0.##} damage " +
-                $"from {sourceName}. " +
-                $"HP: {currentHealth:0.##}/{MaxHealth:0.##}"
-            );
+            Debug.Log($"{name} took {amount:0.##} damage " + $"from {sourceName}. " + $"HP: {currentHealth:0.##}/{MaxHealth:0.##}");
 
             if (IsDead)
                 Die();
         }
 
-        public void Heal(
-            float amount
-        )
+        public void Heal(float amount)
         {
-            if (
-                IsDead ||
-                amount <= 0f
-            )
-            {
+            if (IsDead || amount <= 0f)
                 return;
-            }
 
-            float previousHealth =
-                currentHealth;
+            float previousHealth = currentHealth;
 
-            currentHealth =
-                Mathf.Min(
-                    currentHealth + amount,
-                    MaxHealth
-                );
+            currentHealth = Mathf.Min(currentHealth + amount, MaxHealth);
 
-            if (
-                !Mathf.Approximately(
-                    previousHealth,
-                    currentHealth
-                )
-            )
-            {
+            if (!Mathf.Approximately(previousHealth, currentHealth))
                 Changed?.Invoke(this);
-            }
         }
 
         private void Die()
@@ -128,10 +79,9 @@ namespace MiniCrawler.Core
 
             deathProcessed = true;
 
-            Debug.Log(
-                $"{name} died."
-            );
+            Debug.Log($"{name} died.");
 
+            Died?.Invoke(this);
             AnyDied?.Invoke(this);
 
             if (destroyWhenDead)
@@ -140,18 +90,9 @@ namespace MiniCrawler.Core
 
         private void OnValidate()
         {
-            maxHealth =
-                Mathf.Max(
-                    1f,
-                    maxHealth
-                );
+            maxHealth = Mathf.Max(1f, maxHealth);
 
-            currentHealth =
-                Mathf.Clamp(
-                    currentHealth,
-                    0f,
-                    maxHealth
-                );
+            currentHealth = Mathf.Clamp(currentHealth, 0f, maxHealth);
         }
     }
 }
