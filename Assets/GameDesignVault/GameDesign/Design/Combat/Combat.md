@@ -43,6 +43,52 @@ When Health reaches zero:
 
 Death animation is presentation only. It must not own or delay gameplay death.
 
+# Combat Presentation Cues
+
+**Status: Confirmed**
+
+Combat presentation observes authoritative gameplay events rather than owning
+combat results.
+
+Two current semantic presentation moments are distinct:
+
+### Action Impact
+
+An authored combat action reaches its Impact point.
+
+This may produce source-side presentation such as:
+
+- weapon swipes;
+- attack trails;
+- cast flashes;
+- movement accents.
+
+An Action Impact may still occur when the attack ultimately whiffs.
+
+### Damage Resolved
+
+`DamageResolver` successfully resolves positive damage against a target.
+
+This may produce target-side presentation such as:
+
+- impact sparks;
+- blood;
+- armour flashes;
+- hit particles;
+- damage sounds.
+
+A whiff produces no Damage Resolved cue.
+
+Presentation effects:
+
+- do not apply damage;
+- do not decide whether an attack connects;
+- do not own death;
+- do not determine combo progression;
+- may outlive the gameplay event briefly as bounded visual-only runtime objects.
+
+Gameplay remains authoritative.
+
 # Targeting and Tactical Direction
 
 Autonomous combat does not mean the player has no influence over target choice.

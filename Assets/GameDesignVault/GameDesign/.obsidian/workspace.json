@@ -27,12 +27,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Design/Technical/Progression Lifetimes.md",
+                "file": "ProjectManagement/Roadmap.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Progression Lifetimes"
+              "title": "Roadmap"
             }
           }
         ],
@@ -203,8 +203,10 @@
   },
   "active": "445c54ae6273e79a",
   "lastOpenFiles": [
-    "Design/Combat/Combat.md",
     "Core Instructions - Always Follow.md",
+    "ProjectManagement/Project Structure.md",
+    "Design/Combat/Combat.md",
+    "Design/Technical/Progression Lifetimes.md",
     "Core Instructions - Always Follow.md.meta",
     "Development Rules.md",
     "ProjectManagement/Roadmap.md",
@@ -213,7 +215,6 @@
     "Design/Equipment/Equipment.md",
     "Design/Equipment/Weapons.md",
     "Design/Technical/Targeting, Tactics and Encounter Direction.md",
-    "Design/Technical/Progression Lifetimes.md",
     "Design/World/World Time and Daily Cycle.md",
     "Design/World/World.md",
     "Design/World/Expeditions.md",
@@ -228,7 +229,6 @@
     "Development Rules/Architecture and Lifetimes.md",
     "Development Rules/Abilities and Buildcraft.md",
     "00 - Core/06 - Design Decision Log.md",
-    "ProjectManagement/Project Structure.md",
     "Design/Technical/Expedition/Route Geography.md.meta",
     "Development Rules/UI Authoring.md.meta",
     "Archive/Legacy Design Baselines/Core Design File.md.meta",

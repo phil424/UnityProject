@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 2446412796730311827}
   - component: {fileID: 5250829440486076119}
   - component: {fileID: 221576046902831310}
+  - component: {fileID: 5614629032563813548}
   m_Layer: 0
   m_Name: Visual Root
   m_TagString: Untagged
@@ -170,6 +171,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Presentation.ActorDeathSpritePresenter
   deathClip: {fileID: 11400000, guid: f1f2aeabc0e6ce049ad9a92ddf7656a7, type: 2}
   finalFrameHold: 0.35
+--- !u!114 &5614629032563813548
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7496644793140769976}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 68975a805bff2bd468f0ceb45e70fb40, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Presentation.ActorCombatEffectPresenter
+  actionImpactEffect: {fileID: 11400000, guid: fcc338f46a6ede14f875e25a6c95e1ca, type: 2}
+  actionEffectDistance: 0.75
+  receivedDamageEffect: {fileID: 11400000, guid: 8dbf4fa4e81d72b40953ac270239b157, type: 2}
 --- !u!1 &7542115736443214471
 GameObject:
   m_ObjectHideFlags: 0

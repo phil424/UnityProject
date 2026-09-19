@@ -88,6 +88,34 @@ Expedition-owned strategic state such as World Time, schedules and World Events.
 
 Actor movement intent / forced-motion primitives.
 
+## Presentation
+
+`Presentation/`
+
+Runtime visual presentation that observes gameplay/runtime state without owning
+gameplay results.
+
+### Presentation/Actors
+
+Actor-specific visual presentation such as:
+
+- sprite locomotion;
+- combat animation;
+- billboard behaviour;
+- hit reactions;
+- death presentation.
+
+### Presentation/Effects
+
+Short-lived reusable visual-effect presentation such as:
+
+- weapon swipes;
+- impact bursts;
+- future blood / dust / ability visual cues.
+
+Presentation effects may consume combat events such as Action Impact and Damage
+Resolved, but gameplay code must not depend on presentation implementations.
+
 ## Progress
 
 `Progress/`

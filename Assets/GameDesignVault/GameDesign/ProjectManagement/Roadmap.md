@@ -652,17 +652,28 @@ Develop:
 - combo progression/reset behaviour;
 - different weapon cadence without rewriting autonomous combat.
 
-### 3.0M4 — Hit Reactions, Death & Presentation Cues
+### 3.0M4 — Hit Reactions, Death & Presentation Cues ✅
 
-Develop:
-- damage-driven hit presentation;
-- gameplay death separated from visual cleanup lifetime;
-- death animation;
-- semantic presentation/effect cue seam;
-- future blood / weapon swipe / impact effects;
-- no gameplay authority hidden inside VFX or animation events.
+**Status: Complete**
+
+Completed:
+- damage-driven actor hit reactions;
+- gameplay-authoritative Windup / Impact / Recovery presentation;
+- gameplay death separated from bounded visual cleanup;
+- animated enemy death presentation;
+- animated party death / expedition-defeat presentation;
+- semantic Action Impact and Damage Resolved presentation cues;
+- reusable short-lived sprite VFX;
+- player and enemy weapon-swipe presentation;
+- damage-contact presentation;
+- whiffs visibly distinguish attack execution from successful contact;
+- camera-relative directional effect facing;
+- real animated actor silhouette shadows preserved through attacks, reactions and death;
+- first combat camera / lighting / effect-readability baseline.
 
 ### 3.0M5 — Combat Authoring Workflow & Guides
+
+**Status: Next**
 
 Prove:
 - an authored sprite set can be attached to an actor;
