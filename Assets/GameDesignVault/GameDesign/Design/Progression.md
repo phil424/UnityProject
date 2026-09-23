@@ -38,6 +38,16 @@ It should not make expedition buildcraft irrelevant.
 
 # Incremental Equipment Progression
 
+**Status: Deprecated Direction**
+
+The previous plan centred persistent progression on separate Weapon and Armour
+trees.
+
+That is no longer the current primary direction.
+
+Useful ideas from those tree designs should migrate into future Character
+Mastery / Weapon Mod / Ability progression rather than being discarded.
+
 A major form of persistent progression should be authored skill trees attached
 to weapons and armour.
 
@@ -80,6 +90,75 @@ longer-term anticipation of meaningful unlocks.
 
 Persistent progression should broaden and strengthen the starting build without
 removing the need to build significant temporary power during an expedition.
+
+# Character Mastery
+
+**Status: Working**
+
+Character-focused progression is now the preferred major persistent progression
+surface.
+
+It may eventually contain:
+
+- small stat development;
+- autonomous combat / combo development;
+- Ability progression;
+- Weapon Mod unlocks;
+- Character-specific mechanics;
+- cross-Character/global unlock milestones.
+
+Major progression should increasingly create new options rather than only raw
+numerical superiority.
+
+# Generic Resource Tiers
+
+**Status: Working**
+
+Persistent progression may use broadly reusable tiered resources.
+
+Working placeholder vocabulary:
+
+- Level 1 Resource;
+- Level 2 Resource;
+- Level 3 Resource.
+
+Exact names and values are unresolved.
+
+Resources may potentially convert between tiers.
+
+Important principles:
+
+- lower-tier resources remain useful later;
+- deeper natural acquisition should be substantially more efficient for
+  higher-tier resources than repeatedly farming shallow content;
+- upward conversion should be possible where useful but intentionally
+  expensive;
+- downward conversion may help solve shortages of lower-tier resources;
+- conversion must not create arbitrage;
+- the economy should not make one generic farming strategy optimal for every
+  progression goal.
+
+Future balancing should compare expected resource yield by expedition depth
+against conversion ratios and progression costs.
+
+# Content-Specific Progression
+
+Not every progression requirement should be fungible.
+
+Potential non-generic requirements include:
+
+- Idols;
+- Sigils;
+- Boss Marks;
+- Hunt progress;
+- Character-specific progression;
+- narrative discoveries;
+- special authored unlock conditions.
+
+Generic resources provide economic flexibility.
+
+Content-specific progression preserves reasons to engage with particular
+content.
 
 # Expedition Progression
 

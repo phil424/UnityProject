@@ -245,7 +245,7 @@ Inspect latest Complete.zip
         ↓
 Understand existing seam
         ↓
-Choose smallest extensible change
+Choose coherent extensible change with scope driven by value and dependencies
         ↓
 State scope/files
         ↓

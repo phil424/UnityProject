@@ -74,6 +74,55 @@ Potential sources:
 - threat milestones
 - Apex.
 
+# Reward Vectors
+
+An Encounter does not need to reveal the exact reward for the choice to be
+meaningful.
+
+Instead, it may communicate a Reward Vector.
+
+Potential vectors include:
+
+- Character Growth;
+- Ability;
+- Weapon Mod;
+- Persistent Resource;
+- High Currency / Resource Yield;
+- Hunt Progress;
+- Rare Opportunity;
+- other future categories.
+
+Example:
+
+Encounter
+├── Threat
+├── Reward Vector
+├── Expected Resource Yield
+├── Objective / Hunt Relevance
+└── Urgency
+
+This allows informed choice while preserving uncertainty inside the actual
+reward generation.
+
+# Intention-Changing Rewards
+
+A reward does not always need to make the Character directly stronger.
+
+Some rewards may intentionally change what the player wants to pursue next.
+
+Examples:
+
+- increased Undead resource gain for the next few Encounters;
+- additional Elite rewards;
+- improved rarity on the next Ability-related Encounter;
+- increased Boss resource yield for a limited duration;
+- temporary bonuses connected to a particular Encounter category.
+
+These rewards create future intention.
+
+They may help organically extend a short expedition into a longer one because
+the player discovers a new opportunity worth pursuing.
+
 # Tiers
 Don't confuse this immediately with rarity.
 

@@ -65,6 +65,11 @@ A previous direction intentionally retained only for historical context.
 
 - [[Enemies]]
 
+## Objectives and Narrative
+
+- [[Objectives]]
+- [[Narrative]]
+
 # World and Expeditions
 
 - [[World]]
@@ -112,6 +117,7 @@ Focused rulebooks:
 
 # Project Management
 
+- [[Active Feature Programme]]
 - [[Roadmap]]
 - [[Project Structure]]
 - [[Design Document Template]]

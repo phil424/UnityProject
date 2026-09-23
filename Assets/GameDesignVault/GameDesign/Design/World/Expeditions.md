@@ -26,6 +26,59 @@ An expedition ends when:
 
 Party defeat is an expedition-ending failure.
 
+# Variable Expedition Depth
+
+**Status: Working**
+
+An expedition does not need to reach its maximum possible depth to be
+successful or worthwhile.
+
+A player may deliberately enter with a short-term intention such as:
+
+- gather a small resource requirement;
+- defeat an early Boss;
+- progress an Objective;
+- progress a Hunt;
+- finish a nearby Character progression target.
+
+After satisfying that intention, returning after only a few minutes is valid.
+
+Longer expeditions should offer increasingly valuable opportunities but should
+not make short expeditions meaningless.
+
+# Voluntary Return
+
+**Status: Confirmed Direction**
+
+The player should be able to voluntarily return from an active expedition.
+
+Persistent rewards/resources already earned are retained.
+
+Voluntary return is not intended to create extraction-looter tension.
+
+The strategic decision is:
+
+> Have I accomplished what I came for?
+
+versus:
+
+> Is my current temporary build / current opportunity valuable enough that I
+> want to continue?
+
+The player should not be forced to continue merely to protect rewards already
+earned.
+
+Failure also does not confiscate already-committed persistent ownership.
+
+The primary losses from ending an expedition are:
+
+- the temporary build;
+- future opportunities that were not reached;
+- unfinished expedition-owned progress.
+
+Exact restrictions on when the Return command may be used remain subject to
+playtesting.
+
 ### Party Defeat
 
 Party defeat ends the active expedition.

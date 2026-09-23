@@ -43,6 +43,7 @@ namespace MiniCrawler.UI
 
         [Header("Combat HUD")]
         [SerializeField] private TMP_Text combatCurrencyText;
+        [SerializeField] private Button returnExpeditionButton;
 
         private readonly List<PartyCardUI> selectionCards = new();
         private readonly List<PartyCardUI> upgradeCards = new();
@@ -222,6 +223,17 @@ namespace MiniCrawler.UI
             RunDirector.RunFlowState runState = runDirector.State;
 
             bool betweenLevels = runState == RunDirector.RunFlowState.BetweenLevels;
+            
+            if (returnExpeditionButton != null)
+            {
+                bool canReturn =
+                    runState == RunDirector.RunFlowState.InLevel &&
+                    RunProgress.HasActiveRun &&
+                    !RunProgress.HasPendingRewardChoice;
+
+                returnExpeditionButton.gameObject.SetActive(runState == RunDirector.RunFlowState.InLevel);
+                returnExpeditionButton.interactable = canReturn;
+            }
 
             continueButton.gameObject.SetActive(betweenLevels);
             continueButton.interactable = runDirector.CanContinueRun;

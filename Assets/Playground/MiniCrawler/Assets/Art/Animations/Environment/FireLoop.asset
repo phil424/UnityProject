@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47412143087c100478c2d588671a9a9e, type: 3}
+  m_Name: FireLoop
+  m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Presentation.SpriteFlipbookClip
+  frames:
+  - {fileID: -2017891095, guid: e54403c9f4ba464438c9a7055929d5ee, type: 3}
+  - {fileID: -580872733, guid: e54403c9f4ba464438c9a7055929d5ee, type: 3}
+  - {fileID: -34175159, guid: e54403c9f4ba464438c9a7055929d5ee, type: 3}
+  - {fileID: 491317836, guid: e54403c9f4ba464438c9a7055929d5ee, type: 3}
+  - {fileID: 968475075, guid: e54403c9f4ba464438c9a7055929d5ee, type: 3}
+  - {fileID: -1467705232, guid: e54403c9f4ba464438c9a7055929d5ee, type: 3}
+  framesPerSecond: 10
+  loop: 1

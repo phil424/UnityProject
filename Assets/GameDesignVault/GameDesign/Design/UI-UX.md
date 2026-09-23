@@ -6,6 +6,92 @@ Principles:
 - major rewards deserve strong presentation;
 - UI should communicate future threats, not only current state.
 
+# Preparation / Character Selection
+
+**Status: Working**
+
+The current preparation screen does not yet provide the desired experience.
+
+During the first 3.0N1 observational playtest it felt:
+
+- visually uninteresting;
+- information-heavy;
+- easy to skip without meaningful consideration;
+- more like an administrative prototype than an important part of the game.
+
+The preparation screen should eventually become a visually appealing place where
+the player can:
+
+- choose a Character;
+- understand how that Character plays;
+- inspect the Character's current progression;
+- compare unlocked Characters;
+- prepare for the next expedition;
+- become excited about beginning another run.
+
+## Working Visual Direction
+
+A current concept uses a live presentation scene behind / alongside the UI.
+
+Suggested broad composition:
+
+```text
+┌────────────────────┬──────────────────────────────────────────┐
+│                    │                                          │
+│   LIVE CHARACTER   │        CHARACTER INFORMATION             │
+│      SCENE         │                                          │
+│                    │  [ Overview ] [ Progression ]            │
+│ selected Character │                                          │
+│ animations /       │  Bio                                     │
+│ combat presentation│  Stats                                   │
+│                    │  Abilities                               │
+│                    │  Playstyle description                   │
+│                    │                                          │
+│                    ├──────────────────────────────────────────┤
+│                    │       CHARACTER CAROUSEL                 │
+└────────────────────┴──────────────────────────────────────────┘
+      ~1/3                         ~2/3
+```
+
+# HUD Information Priority
+
+The first N1 playtest exposed significant information overload.
+
+Normal HUD information should be classified as:
+
+## Immediate
+
+Requires attention now.
+
+## Near-Term
+
+Relevant to an upcoming decision.
+
+## Contextual
+
+Useful when the player deliberately opens a larger strategic view.
+
+The existence of a gameplay system does not automatically justify permanent HUD
+space for it.
+
+# Tracked Goals
+
+Working direction:
+
+The expedition HUD should eventually provide a compact tracked-goal area.
+
+Potential tracked information:
+
+- primary Progression Target;
+- active Expedition Objectives;
+- one active Hunt;
+- manually pinned Achievement progress.
+
+Only information relevant to the player's current intentions should normally be
+shown.
+
+The full set of goals belongs in an expanded log rather than the passive HUD.
+
 # Combat HUD
 Document current layout vision.
 
@@ -57,6 +143,70 @@ Document:
 The passive combat HUD should remain glanceable.
 
 Detailed information belongs in deliberately opened expanded panels.
+
+## Information Hierarchy — N1 Finding
+
+**Status: Working**
+
+The first N1 observational playtest identified significant early-expedition
+information overload.
+
+The player was simultaneously presented with concepts including:
+
+- World Time;
+- forecast entries;
+- Encounter choices;
+- minimap information;
+- active Abilities;
+- Active Encounters;
+- day/night state.
+
+Although these systems are individually useful, exposing them with similar
+visual priority makes the first minute difficult to parse.
+
+The HUD should therefore use stronger progressive disclosure.
+
+Working principle:
+
+> Show what requires attention now.
+> Keep useful context visible only when it can remain genuinely glanceable.
+> Move explanation and lower-priority strategic detail into expanded views.
+
+Future HUD review should classify information into at least:
+
+### Immediate
+
+Requires possible action in the next few seconds.
+
+Examples:
+- health;
+- Ability availability;
+- important active combat state;
+- urgent threat/event warning.
+
+### Near-Term
+
+Relevant to a decision likely to occur soon.
+
+Examples:
+- selected Encounter;
+- immediate Encounter alternatives;
+- short forecast countdown;
+- current Objective progress.
+
+### Contextual
+
+Useful when the player deliberately asks for strategic information.
+
+Examples:
+- full forecast;
+- detailed World Time schedule;
+- complete Encounter browser;
+- expanded map;
+- detailed World Event explanation.
+
+The existence of a gameplay system does not automatically justify persistent
+screen space for it.
 
 Primary HUD questions:
 

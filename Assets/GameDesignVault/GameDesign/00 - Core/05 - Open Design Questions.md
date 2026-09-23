@@ -12,6 +12,151 @@ Record:
 - what it blocks;
 - when a decision is actually needed.
 
+## Preparation Screen Role
+
+**Question:** What decisions and information should make the preparation screen
+worth spending time on before starting an expedition?
+
+**Current Thinking:**
+The screen should become a Character-focused presentation and preparation space
+rather than primarily an upgrade transaction.
+
+A current visual direction uses:
+- a live Character-focused scene;
+- Character carousel;
+- Character overview;
+- stats;
+- Abilities;
+- playstyle explanation;
+- Character progression/mastery tab.
+
+The exact layout requires a dedicated UI review.
+
+**Blocks:**
+- final preparation UI;
+- Character selection flow;
+- Character Mastery presentation;
+- pre-run information hierarchy.
+
+**Need to decide by:**
+Before UI Structure & Finalisation is locked.
+
+
+## Combat HUD Information Priority
+
+**Question:** Which information deserves persistent HUD space during normal
+expedition play?
+
+**Current Thinking:**
+The current prototype exposes too many simultaneous systems during the first
+minute.
+
+Information should be separated into:
+- immediate;
+- near-term;
+- contextual / expanded strategic information.
+
+Not every implemented strategic system should remain permanently visible.
+
+**Blocks:**
+- final combat HUD;
+- forecast presentation;
+- Encounter-choice presentation;
+- strategic planner split.
+
+**Need to decide by:**
+Through continued gameplay testing before final UI closure.
+
+
+## Encounter Choice Information
+
+**Question:** What information must an Encounter provide before choosing it for
+the decision to feel meaningful?
+
+**Current Thinking:**
+The current prototype does not communicate enough about:
+- expected reward;
+- difficulty/threat;
+- purpose;
+- relevance.
+
+Likely candidates include:
+- threat level;
+- enemy/Encounter identity;
+- reward category;
+- rarity/opportunity;
+- Objective relevance;
+- expiry/time pressure.
+
+The exact amount of information should preserve some uncertainty rather than
+providing complete omniscience.
+
+**Blocks:**
+- meaningful Encounter selection;
+- reward-source identity;
+- strategic HUD/planner design.
+
+**Need to decide by:**
+Encounter Variety / Rewards development.
+
+
+## Voluntary Expedition Return
+
+**Question:** When may the player voluntarily end an expedition, and what are the
+consequences of doing so?
+
+**Current Thinking:**
+Voluntary Return is now a confirmed part of the intended expedition loop.
+
+Persistent rewards/resources already earned are kept.
+
+The remaining questions concern:
+- whether Return is available during active combat;
+- whether some temporary unresolved states block Return;
+- exact presentation/confirmation behaviour.
+
+Return should not exist primarily as a loot-protection gamble.
+
+The current prototype does not expose this as a normal player action.
+
+**Blocks:**
+- final expedition ending loop;
+- banking/risk design;
+- expedition results UI.
+
+**Need to decide by:**
+Expedition Pacing, Escalation & Endings.
+
+
+## Persistent Power Ceiling
+
+**Question:** How much raw permanent numerical power should Meta Progression
+provide?
+
+**Current Thinking:**
+The existing prototype Armour upgrade can trivialise incoming expedition damage
+too quickly.
+
+Persistent progression should increasingly unlock:
+- possibilities;
+- Characters;
+- Weapon Mods;
+- Abilities;
+- build options;
+
+rather than allowing raw permanent stats to bypass the temporary buildcraft and
+combat decision-making that define the expedition.
+
+Some permanent numerical growth may still be useful.
+
+**Blocks:**
+- Character Mastery design;
+- Meta Progression economy;
+- difficulty scaling assumptions.
+
+**Need to decide by:**
+3.0N4 Meta Progression & Resources.
+
 ## Ability Capacity
 
 **Question:** How many player abilities can be active simultaneously?
@@ -339,3 +484,83 @@ Is Armour a complete set or multiple independently progressed pieces?
 How many prepared ability / augment slots can equipment ultimately expose?
 
 Exactly what form does the universal Heal action take?
+
+## Objective Selection
+
+**Question:** How are the player's active Expedition Objectives chosen?
+
+**Current Thinking:**
+Objectives are the preferred 1–3 minute intention layer.
+
+Potential sources:
+- Progression Targets;
+- generated expedition goals;
+- Hunts;
+- World Events;
+- authored content;
+- player-selected goals.
+
+The normal HUD should show only a small active subset.
+
+**Need to decide by:**
+Objective Foundation / expansion.
+
+
+## Generic Resource Conversion
+
+**Question:** What conversion relationships exist between generic persistent
+resource tiers?
+
+**Current Thinking:**
+Lower tiers should remain useful.
+
+Higher-tier resources should be obtainable by conversion, but deep natural
+acquisition should be dramatically more efficient.
+
+Conversion must not produce arbitrage or make shallow farming universally
+optimal.
+
+**Need to decide by:**
+Meta Progression economy implementation.
+
+
+## Encounter Reward Vector Visibility
+
+**Question:** Which Reward Vector and resource information is visible before the
+player chooses an Encounter?
+
+**Current Thinking:**
+Useful candidates include:
+- threat;
+- Reward Vector;
+- expected resource yield;
+- Objective relevance;
+- Hunt relevance;
+- urgency.
+
+Exact rewards do not necessarily need to be revealed.
+
+**Need to decide by:**
+Reward / Encounter presentation work.
+
+
+## Quick Encounter Focus
+
+**Question:** Can the player bias the three quick Encounter slots toward the type
+of opportunity they currently care about?
+
+**Current Thinking:**
+Potential focuses include:
+- Balanced;
+- Resources;
+- Abilities;
+- Weapon Mods;
+- Objectives;
+- High Value;
+- Boss / Hunt.
+
+If insufficient matching content exists, selection should fall back to the
+normal general-purpose logic.
+
+**Need to decide by:**
+Strategic Encounter-selection development.

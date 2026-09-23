@@ -6,7 +6,39 @@ Game-design intent lives under `Design/`.
 
 Technical architecture lives under `Design/Technical/`.
 
-# Current Checkpoint
+# Active Baseline — 2026-09-22
+
+The development roadmap has been rebaselined around the fifteen active gameplay
+feature areas documented in [[Active Feature Programme]].
+
+Current project state:
+
+- 3.0K Region Route Geography / authoring foundations are complete;
+- 3.0M core animated-combat/action presentation through M4 is complete;
+- post-M4 environment / Tilemap / lighting experimentation is preserved as
+  parallel visual work;
+- 3.0L authoring documentation is intentionally parked;
+- 3.0M5 combat-authoring audit / guides are intentionally parked;
+- the previous 3.0N+ future roadmap is superseded by the programme beginning at
+  3.0N below.
+
+Current gameplay focus:
+
+> Understand and strengthen the complete player loop through Character
+> buildcraft, Rewards, Meta Progression, content variety, expedition structure
+> and player-facing control.
+
+All fifteen areas in [[Active Feature Programme]] are active programme concerns.
+
+Their roadmap order expresses dependency and current expected value rather than
+a Now / Soon / Later classification.
+
+Visual / environment work remains available as an independent parallel track.
+
+The roadmap may be reshaped when implementation or playtesting provides better
+evidence.
+
+# Completed Development History
 
 ## 2.9F — Strategic Expedition Design Closure ✅
 
@@ -546,7 +578,17 @@ These are content-production prerequisites rather than Route Geography work.
 
 ## 3.0L — Authoring Documentation & Production Guides
 
-**Status: Active**
+**Status: Parked**
+
+This programme remains valuable but is deliberately paused while the core
+gameplay systems continue to evolve.
+
+The practical authoring audit showed that documenting workflows before the
+underlying gameplay/content model stabilises risks documenting unnecessary
+implementation plumbing.
+
+Resume this programme when the systems intended for repeated content production
+are sufficiently stable to audit and improve their authoring workflows.
 
 Purpose:
 
@@ -621,7 +663,9 @@ Core principles:
   authoritative where appropriate;
 - presentation effects must not secretly own gameplay results.
 
-### 3.0M1 — Sprite Presentation Foundation
+### 3.0M1 — Sprite Presentation Foundation ✅
+
+**Status: Complete**
 
 Develop:
 - imported sprite-sheet workflow;
@@ -631,7 +675,9 @@ Develop:
 - Simulation Pause / speed compatibility;
 - swappable character/enemy presentation.
 
-### 3.0M2 — Data-Driven Combat Action Timeline
+### 3.0M2 — Data-Driven Combat Action Timeline ✅
+
+**Status: Complete**
 
 Develop:
 - Windup;
@@ -642,7 +688,9 @@ Develop:
 - coherent Attack Speed scaling;
 - interrupt seam for player abilities.
 
-### 3.0M3 — Weapon Combo Authoring
+### 3.0M3 — Weapon Combo Authoring ✅
+
+**Status: Complete**
 
 Develop:
 - ordered basic-attack sequences;
@@ -673,7 +721,15 @@ Completed:
 
 ### 3.0M5 — Combat Authoring Workflow & Guides
 
-**Status: Next**
+**Status: Parked**
+
+The combat-authoring audit and final Tutorials / How-To guides remain planned.
+
+They are intentionally deferred while Character Stats, Weapon Mods, Abilities
+and additional Character/enemy content are still expected to change the combat
+authoring workflow.
+
+Resume M5 as part of the later production-readiness / authoring-audit programme.
 
 Prove:
 - an authored sprite set can be attached to an actor;
@@ -681,274 +737,551 @@ Prove:
 - presentation can be swapped without rewriting combat logic;
 - complete Tutorials / How-To guides exist for the approved workflow.
 
-## 3.0N — Character Abilities & Combat HUD
+# Active Gameplay Programme
+
+The active gameplay programme follows the dependencies documented in
+[[Active Feature Programme]].
+
+All fifteen feature areas are current programme work.
+
+Milestone boundaries are intentionally reviewable.
+
+A later milestone may be reshaped when earlier implementation provides better
+evidence.
+
+# 3.0N — Core Loop, Buildcraft & Persistent Progression
+
+**Status: Active**
 
 Purpose:
 
-Complete the intended three-part Character combat identity and integrate
-abilities with the new animated action/presentation foundation.
+Establish the gameplay and progression vocabulary that the rest of the active
+programme depends upon.
 
-### 3.0N1 — Ability Action / Presentation Integration
+This programme answers:
 
-Prove the shared timing/presentation seam across different ability shapes:
-- instant / short offensive action;
-- timed runtime effect;
-- movement-duration ability.
+> Why is an expedition worth playing, what can the player build during it, what
+> does gameplay reward, and what persists afterward?
 
-Use current Whirlwind / Rage / Charge as representative proofs where
-appropriate.
+## 3.0N0 — Gameplay Roadmap Rebaseline ✅
 
-Do not replace meaningful concrete ability behaviour with a giant universal
-effect framework.
+**Status: Complete**
 
-### 3.0N2 — Character Core Ability Roles
+Known documentation reconciliation is required for older assumptions around:
+- multi-character active parties;
+- swappable weapon identity;
+- equipment progression trees;
+- Armour progression;
+- crafting/resource purpose;
+- Ability acquisition;
+- persistent economy.
 
-Implement the confirmed Character foundation:
+Reconcile these documents incrementally when their corresponding N/O feature
+area becomes active rather than attempting a speculative full-vault rewrite.
 
-- Unique / Innate;
-- Utility;
-- Sustain.
+Documentation-only checkpoint.
 
-The Character/loadout owns the role.
+Complete:
+- establish [[Active Feature Programme]];
+- replace the obsolete future roadmap;
+- park the authoring/tutorial programme;
+- preserve visual work as a parallel track;
+- update development scope guidance;
+- identify existing design documents that require reconciliation.
 
-`AbilityDefinition` remains independent from acquisition source or slot role.
+No gameplay behaviour changes in N0.
 
-Additional run-earned abilities remain unrestricted by the three core roles.
+## 3.0N1 — Player Retention & Core Loop Review
 
-### 3.0N3 — Three Starting Abilities Per Character
-
-Every currently playable Character begins an expedition with:
-- one Unique / Innate action;
-- one Utility action;
-- one Sustain action.
-
-Author the first complete core ability set for each current playable Character.
-
-### 3.0N4 — Combat Ability HUD Wireframe Pass
-
-Move the Ability HUD toward the established combat wireframe:
-- Character portrait / health cluster;
-- visually central Unique ability;
-- Utility;
-- Sustain;
-- additional acquired abilities extending away from the core cluster;
-- clear cooldown / execution state;
-- expandable rather than hard-limited to three abilities.
-
-Follow the player-facing UI Work Contract.
-
-### 3.0N5 — Ability Authoring Workflow & Guides
-
-Create/update:
-- Ability Authoring tutorial;
-- Character Core Ability How-To;
-- animation/timing guide;
-- presentation/effect guide;
-- HUD setup/reference documentation.
-
-## 3.0O — First Playable Demo
+**Status: Active**
 
 Purpose:
 
-Use the completed content-authoring, animated-combat, ability and Region systems
-to produce the first deliberate substantial playable expedition.
+Establish a working model for why the player wants to:
 
-Target:
-- approximately 10–15 minutes;
-- readable Region identity;
-- animated autonomous combat;
-- distinct player/enemy attacks;
-- Character core abilities;
-- meaningful build progression;
-- several authored Encounter identities;
-- ambient population;
-- route risk;
-- forecast content;
-- at least one World Event;
-- strategic intervention materially changes the expedition.
+- continue the current expedition;
+- make another build choice;
+- pursue another objective;
+- complete another Encounter;
+- begin another expedition;
+- unlock and experiment with more content.
 
-### 3.0O1 — Demo Region Layout & Visual Foundation
+Review:
+- intrinsic combat/buildcraft loop;
+- short-term goals;
+- expedition-level goals;
+- persistent goals;
+- failure value;
+- success value;
+- experimentation;
+- mastery/challenge;
+- Character/Mod/Ability collection.
 
-Build the first substantial Region layout and establish readable world visuals.
+This is a working evaluation framework, not an immutable final answer.
 
-### 3.0O2 — Character & Enemy Content Pass
+### 3.0N1A — Retention & Short-Horizon Design Closure
 
-Author the presentation and basic combat content required by the demo roster.
+Documentation/design closure for:
+- playable time horizons;
+- variable expedition depth;
+- safe voluntary Return;
+- Progression Targets;
+- Objectives;
+- Hunts;
+- Achievements;
+- Reward Vectors;
+- generic resource-tier direction;
+- exploratory narrative discovery.
 
-### 3.0O3 — Encounter Content Pack
+### 3.0N1B — Active Expedition Return
 
-Author and place a deliberately varied library of Encounter Definitions using
-the Workshop and Region authoring tools.
-
-### 3.0O4 — Ability & Buildcraft Content Pass
-
-Ensure starting abilities, acquired abilities, evolutions and rewards have enough
-content for expedition builds to meaningfully diverge.
-
-### 3.0O5 — Expedition Pacing & World State
-
-Tune:
-- Encounter supply;
-- ambient population;
-- schedule / forecast;
-- Reinforcements;
-- World Events;
-- route risk;
-- opportunity pacing.
-
-Do not build the future generated Encounter Director here.
-
-### 3.0O6 — Demo Playtest, Guide Validation & Closure
-
-Play the complete expedition repeatedly.
-
-Validate both:
-- player experience;
-- content-authoring experience.
-
-Success questions:
-
-> Is the expedition enjoyable to watch autonomously and strategically intervene
-> in?
-
-> Can more Characters, enemies, attacks, abilities, Encounters and Regions now
-> be authored without another architectural rewrite?
-
-## 3.0P — Expanded Strategic Planner & Expedition Integration
+Expose the already-existing voluntary-expedition-return runtime path to the
+player during normal active expedition play.
 
 Purpose:
 
-Give the player a deliberate strategic view over the now-meaningful Region
-geography.
+Prove that short expeditions can end deliberately once the player has achieved
+their current intention.
 
-Working direction:
-- expanded planner flow;
-- Region route network;
-- party location;
-- current route;
-- all known Encounter opportunities;
-- route risk / occupied geography;
-- Encounter details;
-- current World Events;
-- forecast / schedule;
-- strategic route and Encounter commitment.
+### 3.0N1C — Expedition Objective Foundation
 
-# 3.1 — Persistent Equipment Progression Trees
+Implement the first data-driven tracked Objective foundation.
+
+Initial proof should:
+- be expedition-owned;
+- track progress during normal gameplay;
+- present compact progress;
+- allow Encounter completion to advance Objectives;
+- allow current Encounter opportunities to indicate Objective relevance;
+- avoid assuming the final Meta/resource/reward economy.
+
+Later Objective breadth remains scheduled under 3.0P.
+
+## 3.0N2 — Character Stats & Expedition Buildcraft
 
 Purpose:
 
-Replace the prototype linear Weapon / Armour / Focus levels with authored
-persistent equipment progression.
+Create the Character stat vocabulary and modifier foundation required by the
+rest of buildcraft.
+
+Develop/review:
+- survival stats;
+- movement stats;
+- autonomous attack stats;
+- knockback/control stats;
+- Ability-related stats where justified;
+- persistent / prepared / expedition / runtime modifier ownership;
+- temporary stat reward possibilities;
+- player-facing stat readability.
+
+Avoid introducing general-purpose stats without concrete gameplay consumers.
+
+## 3.0N3 — Rewards & Progression Flow
+
+Purpose:
+
+Define the reward bridge connecting gameplay activity to temporary and
+persistent progression.
+
+Review and implement the necessary foundations for:
+- Ambient rewards;
+- Encounter rewards;
+- Elite/Boss rewards;
+- Objective rewards;
+- World Event rewards;
+- expedition completion/failure rewards;
+- temporary build rewards;
+- persistent rewards;
+- compatibility-aware reward generation;
+- meaningful reward-source identity.
+
+## 3.0N4 — Meta Progression & Resources
+
+Purpose:
+
+Replace the placeholder long-term progression assumptions with a coherent
+persistent progression model.
+
+Review/develop:
+- persistent resource vocabulary;
+- Character progression/mastery;
+- unlock ownership;
+- resource sources/sinks;
+- persistent versus temporary power;
+- cross-character progression direction;
+- replacement of prototype Weapon / Armour / Focus progression;
+- role, if any, of future crafting/material systems.
+
+### 3.0N Review Gate
+
+Before leaving N, reassess:
+
+> Do the core loop, Character stats, reward flow and persistent progression form
+> a coherent reason to play and replay expeditions?
+
+If not, revisit the relevant N step before building large amounts of dependent
+content.
+
+---
+
+# 3.0O — Characters, Weapon Mods & Abilities
+
+Purpose:
+
+Build the player's real combat/buildcraft identity on top of the N foundations.
+
+## 3.0O1 — Characters & Unlocks
+
+Develop/review:
+- one active playable Character per expedition;
+- Character Combat Identity;
+- Character selection;
+- persistent roster ownership;
+- Character unlock conditions/progress;
+- at least one additional meaningfully different playable Character;
+- future Companion flexibility without making active parties the near-term
+  design.
+
+## 3.0O2 — Weapon Mods
+
+Develop the shared Weapon Mod system.
+
+Initial design space:
+- Physical / Melee Mods;
+- Magical / Elemental Mods;
+- Ranged / Projectile Mods.
 
 Prove:
-- first weapon progression tree;
-- first armour progression tree;
-- incremental stat nodes;
-- meaningful unlock / identity nodes;
-- persistent unlocked-node state;
-- preparation UI;
-- reusable effect/modifier application.
+- Character-native Mods;
+- progression-based Mod unlocks;
+- Mod effects on combat/buildcraft;
+- compatibility;
+- cross-character unlock direction;
+- interaction with the Character stat system.
 
-Trees should combine frequent incremental progress with larger mechanical
-milestones.
+Do not lock the final capacity/activation model before gameplay evidence exists.
 
-Do not allow persistent equipment progression to replace expedition buildcraft.
+## 3.0O3 — Abilities
 
-# 3.2 — Data-Driven Encounter Generation + Resolution
+Reassess and expand:
+- three Character core Ability roles;
+- Character-native Abilities;
+- generic Ability pool;
+- compatibility;
+- preparation versus expedition acquisition;
+- levels;
+- Evolutions;
+- runtime/presentation integration.
 
-Purpose:
+Use gameplay testing to decide how much Ability identity comes from preparation
+versus expedition buildcraft.
 
-Complete the long-term:
+## 3.0O4 — Character Buildcraft Integration Review
 
-Encounter Definition
-+
-Encounter Site
-+
-Runtime Encounter Instance
+Play the Character / Weapon Mod / Ability systems together.
 
-model and replace prototype scene-site recycling with generated supply.
+Review:
+- whether Mods and Abilities occupy distinct useful roles;
+- whether different Characters genuinely feel different;
+- whether temporary buildcraft still creates meaningful variation;
+- whether cross-character progression remains desirable;
+- whether the current stat vocabulary is sufficient.
 
-Develop:
-- Encounter Definitions as authored base content;
-- Route-aware Encounter Sites;
-- Runtime Encounter Instances;
-- placement / compatibility rules;
-- Encounter pools;
-- repetition control;
-- generated supply;
-- Encounter Resolution Context;
-- resolved occurrence content.
+### 3.0O Review Gate
 
-Working architecture:
+> Do Characters, Weapon Mods and Abilities create enough identity and flexibility
+> to justify expanding their content?
 
-Base Encounter Definition
-+
-Encounter Site
-+
-Resolution Context
-↓
-Resolved Encounter
-↓
-Runtime Encounter Instance.
+Later O/P work may be reshaped based on this answer.
 
-The source Encounter Definition remains immutable.
+---
 
-# 3.3 — Escalation, Encounter Mutation + Intensity
+# 3.0P — Combat Content, Objectives & World Population
 
 Purpose:
 
-Make expedition difficulty change what the player faces rather than only
-increasing actor statistics.
+Build richer problems for the player's Character/buildcraft systems to solve.
 
-Potential Escalation levers:
-- health / damage / armour;
-- population;
-- Elite frequency;
-- enemy composition;
+## 3.0P1 — Enemy Roster & Combat Roles
+
+Expand the enemy vocabulary.
+
+Develop representative roles such as:
+- swarm;
+- pressure;
+- tank;
+- ranged;
+- support;
+- control;
+- high-damage threat;
+- Elite;
+- rare/high-value target;
+- Boss where useful.
+
+Focus on mechanical differentiation rather than raw enemy count.
+
+## 3.0P2 — Combat Targeting
+
+Develop player-controlled priorities for autonomous combat.
+
+Potential targeting language:
+- Closest;
+- Weakest;
+- Strongest;
+- Highest Damage;
+- Elite;
+- Boss;
+- Rare / Valuable;
+- role-based preferences where useful.
+
+Targeting should complement autonomous combat rather than becoming direct manual
+unit control.
+
+## 3.0P3 — Expedition Objective Expansion
+
+Develop tracked goals capable of providing:
+- expedition rewards;
+- persistent progress;
+- Character unlock progress;
+- Mod/Ability progression;
+- content direction.
+
+Support objective types only as concrete gameplay/content needs emerge.
+
+## 3.0P4 — Encounter Variety
+
+Expand Encounter content using the richer Enemy and Objective vocabulary.
+
+Develop different:
+- compositions;
+- phases;
+- reinforcement patterns;
+- pressure profiles;
+- Elite/Boss opportunities;
+- objective structures;
+- reward identities.
+
+Use the existing Encounter Workshop/Definition/Site architecture rather than
+building a replacement authoring system.
+
+## 3.0P5 — Ambient Enemies & World Population
+
+Move Ambient Activity beyond one-shot population spawning.
+
+Develop/review:
+- population capacity;
+- replenishment;
+- refresh cadence;
 - spawn rhythm;
-- phase timing;
-- extra phases / reinforcements;
-- Encounter Rules;
-- harder Encounter pools;
-- ambient pressure;
-- bosses;
-- World Event pressure.
+- Area-specific population;
+- World Time / World Event pressure;
+- Escalation interaction;
+- rare Ambient actors;
+- migration or temporary local safety where useful.
 
-Working direction:
+### 3.0P Review Gate
 
-Escalation
-→ long-term available danger.
+> Does the world now present sufficiently different combat situations that
+> Character buildcraft, targeting and strategic choices matter?
 
-Intensity
-→ how aggressively that danger is expressed right now.
+---
 
-Future Encounter resolution should support authored/domain-specific modifiers
-such as:
+# 3.0Q — Expedition Shape, Strategy & UI Closure
 
-- add one Elite to the Opening Phase;
-- add additional Zombies;
-- add a reinforcement Phase;
-- compress phase timing;
-- alter Encounter Rules.
+Purpose:
 
-Do not reduce Escalation to one universal stat multiplier.
+Turn the richer gameplay systems into a coherent expedition experience and
+complete the functional player-facing structure around them.
 
-Already-engaged Encounter content should normally remain committed.
+## 3.0Q1 — Expedition Pacing, Escalation & Endings
 
-The Encounter Workshop should eventually support Escalation / Intensity preview
-and replay of the resolved result.
+Design and implement the expedition's overall shape.
 
-# 3.4 Ambient Ecology + World Events
+Review:
+- expedition duration;
+- opening pace;
+- progression cadence;
+- pressure growth;
+- quiet periods;
+- Elites;
+- Boss/Apex pressure;
+- World Events;
+- success condition;
+- voluntary return;
+- continuing after success;
+- risk/reward of staying;
+- failure consequences.
 
-# 3.5 Targeting + Tactics
+Use real N/O/P gameplay content rather than designing pacing from placeholder
+content alone.
 
-# 3.6 Strategic UI + Controller
+## 3.0Q2 — Strategic World Layer Review
 
-# 3.7 Support Characters
+Reassess the existing:
+- Route system;
+- Encounter supply;
+- quick choices;
+- forecast;
+- World Time;
+- World Events;
+- Encounter Sites;
+- map/planner concepts.
+
+Keep and expand the parts that create meaningful decisions.
+
+Simplify or remove complexity that does not earn its place.
+
+## 3.0Q3 — UI Structure & Finalisation
+
+Functional UI work occurs throughout N/O/P/Q.
+
+Q3 closes the overall UI architecture.
+
+Complete/review the functional skeleton for:
+- preparation;
+- Character roster/selection;
+- Character progression;
+- stats;
+- Weapon Mods;
+- Abilities;
+- combat HUD;
+- targeting;
+- Objectives;
+- Encounter choices;
+- forecast;
+- strategic planning;
+- Rewards;
+- resources;
+- results/unlocks;
+- controller navigation.
+
+Final visual skin remains a separable presentation pass.
+
+## 3.0Q4 — Holistic Gameplay Review & Roadmap Reassessment
+
+Play and evaluate the complete active feature programme.
+
+Review:
+- retention loop;
+- expedition buildcraft;
+- Meta Progression;
+- Character identity;
+- Mods;
+- Abilities;
+- Enemy/Encounter variety;
+- Objectives;
+- Ambient population;
+- targeting;
+- pacing;
+- strategic decisions;
+- UI comprehension.
+
+Use the evidence from this review to define the next numbered programme.
+
+Do not preserve N–Q assumptions merely because they were previously written into
+the roadmap.
+
+---
+
+# Superseded Future Roadmap — 2026-09-22
+
+The previous future-roadmap ordering is superseded by the N–Q programme above.
+
+Its useful ideas remain part of the project and have been redistributed.
+
+Previous:
+- 3.0N Character Abilities & Combat HUD
+
+Now:
+- 3.0O Characters / Weapon Mods / Abilities;
+- functional UI developed throughout;
+- final UI structure closed in 3.0Q3.
+
+Previous:
+- 3.0O First Playable Demo
+
+Now:
+- no immediate standalone Demo milestone;
+- the active programme develops the game holistically;
+- a future demo / vertical-slice milestone may be scheduled when doing so becomes
+  useful.
+
+Previous:
+- 3.0P Expanded Strategic Planner
+
+Now:
+- reviewed in 3.0Q2 after richer gameplay exists.
+
+Previous:
+- 3.1 Persistent Equipment Progression Trees
+
+Now:
+- superseded as the assumed primary progression model;
+- persistent progression is reconsidered in 3.0N4;
+- Character-focused progression/mastery is the current working direction.
+
+Previous:
+- 3.2 Data-Driven Encounter Generation + Resolution
+
+Now:
+- still valuable architecture;
+- implementation priority will be reassessed through Encounter Variety and the
+  Strategic World review rather than assumed as the immediate next programme.
+
+Previous:
+- 3.3 Escalation, Encounter Mutation + Intensity
+
+Now:
+- expedition-wide pacing/escalation is addressed in 3.0Q1;
+- deeper generated Encounter mutation remains available when required.
+
+Previous:
+- 3.4 Ambient Ecology + World Events
+
+Now:
+- Ambient population development begins in 3.0P5;
+- broader ecology remains extensible from that foundation.
+
+Previous:
+- 3.5 Targeting + Tactics
+
+Now:
+- active-Character Combat Targeting moves to 3.0P2;
+- future Companion tactics remain separate later work.
+
+Previous:
+- 3.6 Strategic UI + Controller
+
+Now:
+- functional UI evolves continuously;
+- structural UI closure occurs in 3.0Q3.
+
+Previous:
+- 3.7 Support Characters
+
+Now:
+- not part of the current fifteen-feature programme;
+- existing architecture should preserve a future route to autonomous Companions
+  without requiring their implementation now.
 
 # Parallel Track — Art & Presentation
 
 **Status: Available Parallel Track**
+
+Current note:
+
+Post-3.0M4 environment experimentation currently includes:
+- Tilemap / RuleTile terrain;
+- visual roads;
+- environment props;
+- lighting / shadow-receiving ground investigation;
+- environmental mood exploration.
+
+This work may continue independently when useful.
+
+It is not currently a prerequisite for the active N–Q gameplay programme and
+does not need to reach a formal visual-finalisation milestone before gameplay
+development continues.
 
 Art and presentation should be developed incrementally alongside the playable
 game rather than postponed until all systems are complete.
@@ -1044,18 +1377,23 @@ unless the visual requirement reveals a genuine missing gameplay concept.
 Art passes should preserve the game's continuously playable MVP.
 
 
-# Later 3.x
+# Beyond the Active Programme
 
-Potential major directions:
-- encounter rarity / Nobleman-style rare targets;
-- encounter reward previews;
-- build-aware encounter generation;
-- richer enemy families;
-- weapon identity expansion;
-- crafting / monster resources;
-- persistent hub;
-- Apex expansion;
-- full vertical-slice integration.
+Do not pre-schedule another large future roadmap while N–Q are still producing
+major design evidence.
 
-These should be promoted into numbered milestones when their dependencies become
-clear.
+Potential future programmes remain available, including:
+
+- autonomous Support / Companion Characters;
+- multiple production Regions;
+- richer generated Encounter systems;
+- deeper ecology;
+- authoring / production-readiness audits and Guides;
+- optional crafting/resource systems where justified;
+- long-term/endgame challenge systems;
+- persistent hub features if they earn a clear role;
+- formal demo / vertical-slice packaging;
+- larger-scale content production.
+
+Promote these into numbered milestones when current gameplay evidence makes
+their dependencies and value clear.

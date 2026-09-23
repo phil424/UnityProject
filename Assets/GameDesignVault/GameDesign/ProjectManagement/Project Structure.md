@@ -400,9 +400,10 @@ than creating one-file folders.
 Development planning, project organisation and reusable documentation templates.
 
 Current:
-- Roadmap;
-- Project Structure;
-- Templates.
+- Active Feature Programme — canonical high-level active feature list and dependency context;
+- Roadmap — ordered implementation milestones and completed development history;
+- Project Structure — canonical project/document organisation;
+- Templates — reusable documentation templates.
 
 ## Archive
 

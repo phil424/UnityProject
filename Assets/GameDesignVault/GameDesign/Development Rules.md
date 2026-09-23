@@ -212,8 +212,22 @@ See [[Documentation]].
 
 # Working Principle
 
-Build the smallest coherent slice that proves the next useful gameplay or
-architecture behaviour.
+Scope work around the next coherent, high-value gameplay or architecture
+outcome.
+
+Prefer work that:
+- resolves an important design question;
+- creates useful gameplay evidence;
+- unlocks dependent systems;
+- establishes a strong reusable foundation;
+- materially improves the ability to evaluate the game.
+
+Do not reduce a feature to the smallest possible implementation purely for the
+sake of minimising scope when a broader coherent step would provide
+substantially more value.
+
+Work should still remain reviewable and should avoid unrelated speculative
+expansion.
 
 Preserve flexibility where future design is unresolved, but do not delay
 playable progress to solve distant hypothetical requirements.

@@ -10,11 +10,15 @@ Do not use this file as a duplicate technical specification.
 Detailed behaviour belongs in the relevant design/technical document; this log
 records the decision, reason and implications.
 
-## 2026-08-29 — No extraction mechanics
+## 2026-08-29 — No loot-loss extraction
 
 ### Decision
 
-Resources earned during an expedition remain owned after death.
+Persistent rewards/resources already earned during an expedition are not
+confiscated because the player dies or returns.
+
+The meaningful expedition loss is the temporary build ending and future
+opportunities being abandoned.
 
 ### Reason
 
@@ -1073,3 +1077,73 @@ schema.
 - Spawn Sources remain Encounter-anchor-relative;
 - future Entry/Core/Exit Spawn Source binding remains an explicit later
   extension rather than an assumed K6 requirement.
+
+## 2026-09-22 — Expeditions support variable commitment
+
+### Decision
+
+A meaningful expedition may last only a few minutes or may develop into a much
+longer run.
+
+The player should be able to return after completing the goal they entered for.
+
+Longer play should be encouraged through additional opportunities and increasing
+value rather than by invalidating shallow expedition play.
+
+### Reason
+
+Different player goals naturally require different commitment lengths.
+
+A player may only need a small resource requirement or short Objective, while a
+strong temporary build may make continuing much more attractive.
+
+### Implications
+
+- voluntary Return becomes a normal player action;
+- short-run resources remain useful;
+- deeper content must provide increasingly attractive opportunities;
+- reward curves must avoid making repeated opening resets the universally
+  optimal strategy.
+
+
+## 2026-09-22 — Objectives provide short-horizon intention
+
+### Decision
+
+Expedition Objectives are the current preferred mechanism for strengthening the
+1–3 minute gameplay horizon.
+
+### Reason
+
+The current combat and first Encounter already provide short-term engagement,
+but the player lacks a clear reason to prefer one subsequent Encounter over
+another.
+
+Objectives can turn Encounter selection into progress toward a concrete goal.
+
+### Implications
+
+- Objective Foundation moves earlier in the roadmap;
+- Encounter presentation should eventually expose Objective relevance;
+- later Objective expansion can still depend on richer enemies/content;
+- Objectives should integrate with Rewards, Meta Progression and Hunts.
+
+
+## 2026-09-22 — Narrative discovery is non-fungible progression
+
+### Decision
+
+Future narrative/discovery state is structurally distinct from generic resource
+progression.
+
+### Reason
+
+Knowledge, recurring NPC relationships, Hunts and story discoveries should
+provide content-specific progression that cannot simply be purchased by farming
+the most efficient generic currency.
+
+### Implications
+
+- future progression systems should leave hooks for authored discoveries;
+- Hunts/Objectives/Achievements may advance narrative state;
+- narrative remains Exploratory until dedicated writing/design work occurs.
