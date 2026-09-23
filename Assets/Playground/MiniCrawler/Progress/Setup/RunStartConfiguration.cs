@@ -6,24 +6,35 @@ namespace MiniCrawler.Progress
     public sealed class RunStartConfiguration
     {
         private readonly List<PartyMemberDefinition> party = new();
+        private readonly List<ExpeditionObjectiveDefinition> objectives = new();
 
         public IReadOnlyList<PartyMemberDefinition> Party => party;
+        public IReadOnlyList<ExpeditionObjectiveDefinition> Objectives => objectives;
 
         public bool IsValid => party.Count > 0;
 
-        public RunStartConfiguration(
-            IEnumerable<PartyMemberDefinition> startingParty
-        )
+        public RunStartConfiguration(IEnumerable<PartyMemberDefinition> startingParty, IEnumerable<ExpeditionObjectiveDefinition> startingObjectives)
         {
-            if (startingParty == null)
+            if (startingParty != null)
+            {
+                foreach (PartyMemberDefinition member in startingParty)
+                {
+                    if (member == null || party.Contains(member))
+                        continue;
+
+                    party.Add(member);
+                }
+            }
+
+            if (startingObjectives == null)
                 return;
 
-            foreach (PartyMemberDefinition member in startingParty)
+            foreach (ExpeditionObjectiveDefinition objective in startingObjectives)
             {
-                if (member == null || party.Contains(member))
+                if (objective == null || objectives.Contains(objective))
                     continue;
 
-                party.Add(member);
+                objectives.Add(objective);
             }
         }
     }

@@ -141,7 +141,7 @@ namespace MiniCrawler.Tools
 
             partySpawnPoint.position = CalculatePartyStartPosition();
 
-            RunStartConfiguration configuration = new(new[] { partyMember });
+            RunStartConfiguration configuration = new(new[] { partyMember }, startingObjectives: null);
 
             if (!RunProgress.BeginRun(configuration))
             {

@@ -795,18 +795,10 @@ namespace MiniCrawler.Tools
             ResetRevisions();
         }
 
-        public bool TryCaptureFromDefinition(
-            LevelEncounter encounter,
-            EncounterDefinition definition,
-            out string error)
+        public bool TryCaptureFromDefinition(LevelEncounter encounter, EncounterDefinition definition, out string error)
         {
-            if (!EncounterDefinitionRuntimeApplicator.ValidateDefinition(
-                    definition,
-                    encounter,
-                    out error))
-            {
+            if (!EncounterDefinitionRuntimeApplicator.ValidateDefinition(definition, encounter, out error))
                 return false;
-            }
 
             sourceEncounter = encounter;
 
@@ -819,8 +811,7 @@ namespace MiniCrawler.Tools
 
             if (definition.IsPhased)
             {
-                foreach (EncounterDefinition.PhaseDefinition phaseDefinition
-                        in definition.Phases)
+                foreach (EncounterDefinition.PhaseDefinition phaseDefinition in definition.Phases)
                 {
                     PhaseDraft phase = new(
                         phaseDefinition.DisplayName,
@@ -828,12 +819,9 @@ namespace MiniCrawler.Tools
                         phaseDefinition.AdvanceWhenCleared
                     );
 
-                    foreach (EncounterDefinition.SpawnGroupDefinition groupDefinition
-                            in phaseDefinition.SpawnGroups)
+                    foreach (EncounterDefinition.SpawnGroupDefinition groupDefinition in phaseDefinition.SpawnGroups)
                     {
-                        phase.Groups.Add(
-                            new SpawnGroupDraft(groupDefinition)
-                        );
+                        phase.Groups.Add(new SpawnGroupDraft(groupDefinition));
                     }
 
                     Phases.Add(phase);
@@ -845,12 +833,7 @@ namespace MiniCrawler.Tools
 
                 for (int i = 0; i < definition.UnphasedGroups.Count; i++)
                 {
-                    UnphasedGroups.Add(
-                        new SpawnGroupDraft(
-                            groups[i],
-                            definition.UnphasedGroups[i]
-                        )
-                    );
+                    UnphasedGroups.Add(new SpawnGroupDraft(groups[i], definition.UnphasedGroups[i]));
                 }
             }
             
@@ -880,36 +863,23 @@ namespace MiniCrawler.Tools
                 return;
 
             if (runtimePreviewDefinition != null)
-            {
-                UnityEngine.Object.Destroy(
-                    runtimePreviewDefinition
-                );
-            }
+                UnityEngine.Object.Destroy(runtimePreviewDefinition);
 
-            runtimePreviewDefinition =
-                ScriptableObject.CreateInstance<EncounterDefinition>();
+            runtimePreviewDefinition = ScriptableObject.CreateInstance<EncounterDefinition>();
 
-            runtimePreviewDefinition.name =
-                "Workshop Runtime Preview";
+            runtimePreviewDefinition.name = "Workshop Runtime Preview";
 
             WriteToDefinition(runtimePreviewDefinition);
 
-            runtimePreviewDefinition.EnsureId(
-                "workshop-runtime-preview"
-            );
+            runtimePreviewDefinition.EnsureId("workshop-runtime-preview");
 
-            if (!EncounterDefinitionRuntimeApplicator.TryApply(
-                    runtimePreviewDefinition,
-                    sourceEncounter,
-                    out string error))
+            if (!EncounterDefinitionRuntimeApplicator.TryApply(runtimePreviewDefinition, sourceEncounter,out string error))
             {
-                Debug.LogError(
-                    $"Could not apply Workshop Draft: {error}",
-                    sourceEncounter
-                );
-
+                Debug.LogError($"Could not apply Workshop Draft: {error}", sourceEncounter);
                 return;
             }
+
+            sourceEncounter.SetRuntimeIdentityOverride(runtimePreviewDefinition.DisplayName, runtimePreviewDefinition.Description);
 
             appliedRevision = revision;
         }
@@ -918,23 +888,14 @@ namespace MiniCrawler.Tools
         {
             if (sourceEncounter != null)
             {
-                EncounterRuleRunner.ClearFrom(
-                    sourceEncounter
-                );
-
-                EncounterRuntimeContentBuilder.Clear(
-                    sourceEncounter
-                );
-
+                EncounterRuleRunner.ClearFrom(sourceEncounter);
+                EncounterRuntimeContentBuilder.Clear(sourceEncounter);
                 sourceEncounter.ClearRuntimeIdentityOverride();
             }
 
             if (runtimePreviewDefinition != null)
             {
-                UnityEngine.Object.Destroy(
-                    runtimePreviewDefinition
-                );
-
+                UnityEngine.Object.Destroy(runtimePreviewDefinition);
                 runtimePreviewDefinition = null;
             }
         }

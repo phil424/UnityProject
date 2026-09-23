@@ -29,7 +29,7 @@ MonoBehaviour:
     spawnGroups:
     - label: Phase 1 - Initial Horde
       entries:
-      - actor: {fileID: 11400000, guid: f94bb2855b5c0e24eac3845bce957198, type: 2}
+      - actor: {fileID: 11400000, guid: b4ff50d288d28614c9516de4bf30a123, type: 2}
         count: 12
         startDelay: 0
         batchSize: 3

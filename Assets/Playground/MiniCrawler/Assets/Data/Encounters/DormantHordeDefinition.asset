@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Encounters.EncounterDefinition
   id: DormantHordeDefinition
   displayName: Dormant Horde
-  description: A dormant horde of zombies
+  description: A dormant horde of Skeletons
   allowAutomaticPlacement: 1
   requiredRouteTags:
   - {fileID: 11400000, guid: c543c527f52584149977762e1222ff5b, type: 2}
@@ -29,7 +29,7 @@ MonoBehaviour:
     spawnGroups:
     - label: Phase 1 - Initial Horde
       entries:
-      - actor: {fileID: 11400000, guid: f94bb2855b5c0e24eac3845bce957198, type: 2}
+      - actor: {fileID: 11400000, guid: b4ff50d288d28614c9516de4bf30a123, type: 2}
         count: 4
         startDelay: 0
         batchSize: 4
@@ -46,7 +46,7 @@ MonoBehaviour:
     spawnGroups:
     - label: Phase 2 - Second Wave
       entries:
-      - actor: {fileID: 11400000, guid: f94bb2855b5c0e24eac3845bce957198, type: 2}
+      - actor: {fileID: 11400000, guid: b4ff50d288d28614c9516de4bf30a123, type: 2}
         count: 6
         startDelay: 0
         batchSize: 4

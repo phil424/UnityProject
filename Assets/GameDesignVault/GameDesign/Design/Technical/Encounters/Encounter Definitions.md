@@ -25,8 +25,8 @@ rather than:
 
 Portable content currently owns:
 
-- Display Name;
-- Description;
+- content / template Display Name;
+- content / template Description;
 - ordered phases;
 - phase transition timing;
 - Advance When Cleared;
@@ -57,6 +57,8 @@ The scene currently still owns:
 - reusable supply behaviour;
 - region placement;
 - future spectacle anchors.
+- player-facing occurrence Display Name;
+- player-facing occurrence Description;
 
 ## Runtime Encounter
 
@@ -442,3 +444,44 @@ next phase.
 Rules are an advanced authoring escape hatch.
 
 Do not require a Rule merely to express every ordinary two-wave encounter.
+
+# Definition Identity vs Occurrence Identity
+
+An `EncounterDefinition` describes reusable encounter content.
+
+Example:
+
+`Dormant Horde`
+
+A scene `LevelEncounter` represents a particular occurrence of that content.
+
+Examples:
+
+- South Road Horde;
+- West Road Horde;
+- Old Cemetery Horde.
+
+Binding a Definition to a scene Encounter applies the Definition's gameplay
+content but does not replace the scene Encounter's authored player-facing
+identity.
+
+Therefore:
+
+DormantHordeDefinition
+↓
+South Road Horde
+
+and:
+
+DormantHordeDefinition
+↓
+West Road Horde
+
+may share the same phases, enemies, Rules and Objective classification while
+remaining distinct player-facing world opportunities.
+
+The Encounter Workshop is a special preview context.
+
+Workshop runtime previews may temporarily use the Draft / Definition identity so
+that changes to the portable content's Display Name and Description can be
+previewed directly.

@@ -23,11 +23,6 @@ namespace MiniCrawler.Encounters
                 return false;
             }
 
-            encounter.SetRuntimeIdentityOverride(
-                definition.DisplayName,
-                definition.Description
-            );
-
             EncounterRuleRunner.ApplyTo(
                 encounter,
                 definition.Rules

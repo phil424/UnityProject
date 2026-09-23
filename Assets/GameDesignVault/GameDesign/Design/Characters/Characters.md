@@ -1,16 +1,34 @@
 # Overview
-Current structure:
-```
-Character
-├── Innate / Core Mechanic
-├── Stat Profile
-├── Utility
-├── Sustain
-└── Passives
-```
 
-Principle:
-> Characters create identity without prescribing weapon choice.
+**Status: Working**
+
+Near-term expeditions use one active playable Character.
+
+A Character owns a distinct combat identity.
+
+Current structure:
+
+Character
+├── Visual Identity
+├── Base Stat Profile
+├── Basic Attack / Weapon Identity
+├── Core Abilities
+├── Native Weapon Mods
+├── Compatibility With Shared Content
+└── Character Mastery / Progression
+
+Current principle:
+
+> A playable Character should have a recognisable baseline combat identity before
+> Expedition buildcraft begins.
+
+Near-term Characters do not assume freely interchangeable weapon identities.
+
+Weapon Mods, Abilities, temporary stats and other Expedition progression then
+allow the player to meaningfully alter that starting identity.
+
+Existing multi-allied-actor runtime architecture should remain generic enough to
+support future Companions or other allied actors.
 
 # Archetypes
 Document that archetypes can combine.

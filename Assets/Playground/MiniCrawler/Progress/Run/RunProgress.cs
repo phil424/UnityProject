@@ -36,10 +36,12 @@ namespace MiniCrawler.Progress
             CurrentRun != null ? CurrentRun.PendingRewardChoiceCount : 0;
 
         public static IReadOnlyList<RunUpgradeOffer>
-            CurrentPendingRewardOffers =>
-                CurrentRun != null ? CurrentRun.CurrentPendingRewardOffers : Array.Empty<RunUpgradeOffer>();
+            CurrentPendingRewardOffers => CurrentRun != null ? CurrentRun.CurrentPendingRewardOffers : Array.Empty<RunUpgradeOffer>();
 
         public static bool HasPendingRewardChoice => CurrentRun != null && CurrentRun.HasPendingRewardChoice;
+        
+        public static IReadOnlyList<ExpeditionObjectiveState> Objectives =>
+            CurrentRun != null ? CurrentRun.Objectives : Array.Empty<ExpeditionObjectiveState>();
 
         public static bool BeginRun(RunStartConfiguration configuration)
         {
@@ -97,6 +99,19 @@ namespace MiniCrawler.Progress
                 Changed?.Invoke();
 
             return acquired;
+        }
+        
+        public static bool TryAddObjectiveProgress(ExpeditionObjectiveDefinition definition, int amount)
+        {
+            if (CurrentRun == null)
+                return false;
+
+            bool changed = CurrentRun.TryAddObjectiveProgress(definition, amount);
+
+            if (changed)
+                Changed?.Invoke();
+
+            return changed;
         }
 
         public static bool EnqueueRewardChoice(IEnumerable<RunUpgradeOffer> offers)

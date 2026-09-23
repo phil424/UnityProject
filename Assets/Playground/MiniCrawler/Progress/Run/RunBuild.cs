@@ -21,10 +21,11 @@ namespace MiniCrawler.Progress
         public int ArmourLevel { get; private set; }
         public int FocusLevel { get; private set; }
 
-        public float FlatDamageBonus { get; private set; }
+        public float FlatBasicAttackDamageBonus { get; private set; }
         public float MoveSpeedPercentBonus { get; private set; }
-        public float AttackSpeedPercentBonus { get; private set; }
+        public float BasicAttackSpeedPercentBonus { get; private set; }
         public float FlatArmourBonus { get; private set; }
+        public float FlatMaxHealthBonus { get; private set; }
 
         public IReadOnlyList<RunAbilityState> Abilities =>
             abilities;
@@ -255,24 +256,24 @@ namespace MiniCrawler.Progress
 
             switch (upgrade.EffectType)
             {
-                case RunUpgradeEffectType.FlatDamage:
-                    FlatDamageBonus +=
-                        upgrade.Amount;
+                case RunUpgradeEffectType.FlatBasicAttackDamage:
+                    FlatBasicAttackDamageBonus += upgrade.Amount;
                     break;
 
                 case RunUpgradeEffectType.MoveSpeedPercent:
-                    MoveSpeedPercentBonus +=
-                        upgrade.Amount;
+                    MoveSpeedPercentBonus += upgrade.Amount;
                     break;
 
-                case RunUpgradeEffectType.AttackSpeedPercent:
-                    AttackSpeedPercentBonus +=
-                        upgrade.Amount;
+                case RunUpgradeEffectType.BasicAttackSpeedPercent:
+                    BasicAttackSpeedPercentBonus += upgrade.Amount;
                     break;
 
                 case RunUpgradeEffectType.FlatArmour:
-                    FlatArmourBonus +=
-                        upgrade.Amount;
+                    FlatArmourBonus += upgrade.Amount;
+                    break;
+
+                case RunUpgradeEffectType.FlatMaxHealth:
+                    FlatMaxHealthBonus += upgrade.Amount;
                     break;
             }
         }

@@ -791,9 +791,9 @@ Complete:
 
 No gameplay behaviour changes in N0.
 
-## 3.0N1 — Player Retention & Core Loop Review
+## 3.0N1 — Player Retention & Core Loop Review ✅
 
-**Status: Active**
+**Status: Complete**
 
 Purpose:
 
@@ -819,7 +819,9 @@ Review:
 
 This is a working evaluation framework, not an immutable final answer.
 
-### 3.0N1A — Retention & Short-Horizon Design Closure
+### 3.0N1A — Retention & Short-Horizon Design Closure ✅
+
+**Status: Complete**
 
 Documentation/design closure for:
 - playable time horizons;
@@ -833,7 +835,9 @@ Documentation/design closure for:
 - generic resource-tier direction;
 - exploratory narrative discovery.
 
-### 3.0N1B — Active Expedition Return
+### 3.0N1B — Active Expedition Return ✅
+
+**Status: Complete**
 
 Expose the already-existing voluntary-expedition-return runtime path to the
 player during normal active expedition play.
@@ -843,7 +847,9 @@ Purpose:
 Prove that short expeditions can end deliberately once the player has achieved
 their current intention.
 
-### 3.0N1C — Expedition Objective Foundation
+### 3.0N1C — Expedition Objective Foundation ✅
+
+**Status: Complete**
 
 Implement the first data-driven tracked Objective foundation.
 
@@ -858,6 +864,28 @@ Initial proof should:
 Later Objective breadth remains scheduled under 3.0P.
 
 ## 3.0N2 — Character Stats & Expedition Buildcraft
+
+**Status: Active**
+
+### 3.0N2A — Core Character Stats & Max Health Buildcraft
+
+**Status: Active**
+
+Purpose:
+
+Establish the first intentional Character-stat vocabulary using concrete
+gameplay consumers rather than speculative RPG statistics.
+
+This step:
+- clarifies Damage as Basic Attack Damage;
+- clarifies Attack Speed as Basic Attack Speed;
+- preserves Movement Speed and Armour;
+- adds Max Health as an Expedition stat;
+- ensures the run stat readout includes actual Expedition stat bonuses;
+- preserves the existing temporary/persistent/runtime lifetime boundaries.
+
+Additional stats should only be introduced when their gameplay consumers are
+clear.
 
 Purpose:
 

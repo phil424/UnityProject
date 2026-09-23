@@ -296,20 +296,24 @@ During the first N1 observational playtest:
 - there was little explicit sense of a larger expedition objective;
 - continuing largely happened because the playtest required continued
   interaction;
-- there is currently no normal voluntary expedition-ending flow available to the
-  player;
+- voluntary Return is now available during active expedition play;
+- the missing piece is meaningful short-term intention that tells the player
+  when returning actually makes sense.
 - the prototype does not yet create a meaningful risk/reward decision about when
   to leave.
 
 ## Current Weaknesses / Unknowns
 
-- Voluntary return/extraction is not currently implemented as a normal player
-  decision.
+- Voluntary Return now exists as a normal player decision.
+- Objectives / rewards / progression do not yet create enough context for the
+  timing of that decision to feel meaningful.
 - Expedition success/end conditions remain incomplete.
-- Objectives are not yet providing direction.
+- The first Expedition Objective foundation now provides a concrete
+  short-horizon reason to prefer relevant Encounters.
+- Objective selection, variety and rewards are still intentionally shallow.
 - Escalation/pacing is not yet strong enough to create a clear expedition arc.
-- Reward banking/risk is not yet meaningful.
-- The game does not yet make staying versus leaving a deliberate decision.
+- Safe voluntary Return exists, but Rewards and deeper opportunities do not yet
+  make continuing versus returning a rich decision.
 
 # Meta Loop
 

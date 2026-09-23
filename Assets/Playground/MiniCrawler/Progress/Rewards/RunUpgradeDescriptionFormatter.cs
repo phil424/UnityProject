@@ -4,46 +4,35 @@ namespace MiniCrawler.Progress
 {
     public static class RunUpgradeDescriptionFormatter
     {
-        public static string Format(
-            RunUpgradeEffectType effectType,
-            float amount
-        )
+        public static string Format(RunUpgradeEffectType effectType, float amount)
         {
-            string formattedAmount =
-                FormatAmount(amount);
+            string formattedAmount = FormatAmount(amount);
 
             switch (effectType)
             {
-                case RunUpgradeEffectType.FlatDamage:
-                    return
-                        $"Deal {formattedAmount} additional damage.";
+                case RunUpgradeEffectType.FlatBasicAttackDamage:
+                    return $"Basic attacks deal {formattedAmount} additional damage.";
 
                 case RunUpgradeEffectType.MoveSpeedPercent:
-                    return
-                        $"Move {formattedAmount}% faster.";
+                    return $"Move {formattedAmount}% faster.";
 
-                case RunUpgradeEffectType.AttackSpeedPercent:
-                    return
-                        $"Attack {formattedAmount}% faster.";
+                case RunUpgradeEffectType.BasicAttackSpeedPercent:
+                    return $"Basic attacks occur {formattedAmount}% faster.";
 
                 case RunUpgradeEffectType.FlatArmour:
-                    return
-                        $"Gain {formattedAmount} armour.";
+                    return $"Gain {formattedAmount} armour.";
+
+                case RunUpgradeEffectType.FlatMaxHealth:
+                    return $"Gain {formattedAmount} maximum health.";
 
                 default:
-                    return
-                        "Unknown upgrade effect.";
+                    return "Unknown upgrade effect.";
             }
         }
 
-        private static string FormatAmount(
-            float amount
-        )
+        private static string FormatAmount(float amount)
         {
-            return amount.ToString(
-                "0.##",
-                CultureInfo.InvariantCulture
-            );
+            return amount.ToString("0.##", CultureInfo.InvariantCulture);
         }
     }
 }

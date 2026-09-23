@@ -8,37 +8,49 @@
 - several viable build paths are preferable to one optimal solution.
 
 # Starting Build
-Potential controllable elements:
-- character
-- weapon
-- armour
-- augmentations
-- guaranteed abilities
-- possibly starting objectives.
+
+**Status: Working**
+
+The player begins an expedition with a deliberate direction rather than a
+finished build.
+
+Potential prepared elements include:
+
+- active Character;
+- Character's fixed basic attack / weapon identity;
+- Character progression/mastery;
+- prepared or native Weapon Mods;
+- starting/native Abilities;
+- future configurable shared Abilities where compatible;
+- tracked Progression Target;
+- starting Objective context where appropriate.
 
 Document:
+
 > Starting setup establishes build intent rather than final build completion.
 
 # Prepared / Persistent Build
 
-The prepared build exists outside the expedition and survives failure.
+The prepared build exists outside the expedition and survives expedition end.
 
-Potential components:
-- character;
-- weapon;
-- armour;
-- persistent gear upgrades;
-- selected starting abilities;
-- persistent augments / sockets where appropriate;
-- support configuration.
+The current preferred direction is Character-centric rather than centred on
+swappable Weapon / Armour loadouts.
 
-The prepared build establishes intention and baseline capability.
+Potential persistent preparation includes:
 
-It should not fully determine the finished expedition build.
+- Character ownership;
+- Character Mastery;
+- Weapon Mod unlocks;
+- Ability unlocks;
+- selected compatible preparation options;
+- cross-Character unlocks;
+- persistent progression resources.
 
-Weapon and armour progression trees are intended to gradually expand the
-prepared build's available mechanics and slots, not merely increase its base
-statistics.
+The existing Weapon / Armour / Focus progression implementation is prototype
+architecture pending replacement during the Meta Progression programme.
+
+Persistent progression should broaden available possibilities without replacing
+the need for meaningful Expedition buildcraft.
 
 # Expedition Build
 Expedition build can contain:

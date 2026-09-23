@@ -24,6 +24,8 @@ namespace MiniCrawler.Encounters
             if (definition == null || encounter == null)
                 return;
 
+            encounter.ClearRuntimeIdentityOverride();
+
             if (!EncounterDefinitionRuntimeApplicator.TryApply(
                     definition,
                     encounter,

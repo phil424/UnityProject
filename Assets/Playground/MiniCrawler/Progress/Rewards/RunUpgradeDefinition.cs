@@ -5,10 +5,11 @@ namespace MiniCrawler.Progress
 {
     public enum RunUpgradeEffectType
     {
-        FlatDamage,
+        FlatBasicAttackDamage,
         MoveSpeedPercent,
-        AttackSpeedPercent,
-        FlatArmour
+        BasicAttackSpeedPercent,
+        FlatArmour,
+        FlatMaxHealth
     }
 
     [CreateAssetMenu(

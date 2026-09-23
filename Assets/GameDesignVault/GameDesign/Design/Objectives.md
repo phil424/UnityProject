@@ -280,3 +280,36 @@ be questioned.
 - When should an Objective reveal exact rewards versus Reward Vectors?
 - How much Hunt progress should be possible in one expedition?
 - Should some Objectives become optional bonus conditions inside Encounters?
+
+# First Runtime Proof
+
+**Status: Implemented Foundation**
+
+The first Objective runtime proof uses authored
+`EncounterCompletionObjectiveDefinition` assets.
+
+Current flow:
+
+Objective Definition
+↓
+Run Setup / Run Start Configuration
+↓
+Expedition-owned Objective State
+↓
+Encounter completion event
+↓
+Objective progress
+↓
+tracked HUD presentation
+
+The first proof deliberately provides no Objective reward.
+
+Its purpose is to validate:
+
+- expedition lifetime;
+- data-driven Objective identity;
+- Encounter relevance;
+- short-horizon intention;
+- UI progress feedback.
+
+Additional Objective types and reward integration remain future expansion.

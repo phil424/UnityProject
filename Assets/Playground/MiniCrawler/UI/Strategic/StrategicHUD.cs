@@ -277,6 +277,9 @@ namespace MiniCrawler.UI
                 if (occurrence > 1)
                     status += $" x{occurrence}";
             }
+            
+            if (ExpeditionObjectiveMatching.IsEncounterRelevant(encounter))
+                status += "  OBJECTIVE";
 
             bool selected = direction != null && direction.SelectedEncounter == encounter;
 

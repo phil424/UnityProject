@@ -8,77 +8,64 @@ namespace MiniCrawler.Progress
     {
         public event Action Changed;
 
-        private readonly List<PartyMemberDefinition>
-            selectedParty = new();
+        private readonly List<PartyMemberDefinition> selectedParty = new();
+        private readonly List<ExpeditionObjectiveDefinition> selectedObjectives = new();
 
         private readonly int maximumPartySize;
 
-        public IReadOnlyList<PartyMemberDefinition>
-            SelectedParty =>
-                selectedParty;
+        public IReadOnlyList<PartyMemberDefinition> SelectedParty => selectedParty;
+        public IReadOnlyList<ExpeditionObjectiveDefinition> SelectedObjectives => selectedObjectives;
 
-        public int MaximumPartySize =>
-            maximumPartySize;
+        public int MaximumPartySize => maximumPartySize;
 
-        public RunSetup(
-            int maximumPartySize = 4
-        )
+        public RunSetup(int maximumPartySize = 4)
         {
-            this.maximumPartySize =
-                Math.Max(
-                    1,
-                    maximumPartySize
-                );
+            this.maximumPartySize = Math.Max(1, maximumPartySize);
         }
 
-        public bool IsSelected(
-            PartyMemberDefinition definition
-        )
+        public bool IsSelected(PartyMemberDefinition definition)
         {
-            return
-                definition != null &&
-                selectedParty.Contains(
-                    definition
-                );
+            return definition != null && selectedParty.Contains(definition);
         }
 
-        public bool TogglePartyMember(
-            PartyMemberDefinition definition
-        )
+        public bool TogglePartyMember(PartyMemberDefinition definition)
         {
             if (definition == null)
                 return false;
 
-            if (
-                selectedParty.Contains(
-                    definition
-                )
-            )
+            if (selectedParty.Contains(definition))
             {
-                selectedParty.Remove(
-                    definition
-                );
-
+                selectedParty.Remove(definition);
                 Changed?.Invoke();
-
                 return true;
             }
 
-            if (
-                selectedParty.Count >=
-                maximumPartySize
-            )
-            {
+            if (selectedParty.Count >= maximumPartySize)
                 return false;
-            }
 
-            selectedParty.Add(
-                definition
-            );
+            selectedParty.Add(definition);
 
             Changed?.Invoke();
 
             return true;
+        }
+        
+        public void SetObjectives(IEnumerable<ExpeditionObjectiveDefinition> objectives)
+        {
+            selectedObjectives.Clear();
+
+            if (objectives != null)
+            {
+                foreach (ExpeditionObjectiveDefinition objective in objectives)
+                {
+                    if (objective == null || selectedObjectives.Contains(objective))
+                        continue;
+
+                    selectedObjectives.Add(objective);
+                }
+            }
+
+            Changed?.Invoke();
         }
 
         public void Clear()
@@ -91,12 +78,9 @@ namespace MiniCrawler.Progress
             Changed?.Invoke();
         }
 
-        public RunStartConfiguration
-            CreateConfiguration()
+        public RunStartConfiguration CreateConfiguration()
         {
-            return new RunStartConfiguration(
-                selectedParty
-            );
+            return new RunStartConfiguration(selectedParty, selectedObjectives);
         }
     }
 }

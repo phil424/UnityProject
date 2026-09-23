@@ -100,6 +100,10 @@ A previous direction intentionally retained only for historical context.
 
 - [[Targeting, Tactics and Encounter Direction]]
 
+## Character Stats
+
+- [[Character Stats]]
+
 # Development
 
 The canonical development-rule entry point is:

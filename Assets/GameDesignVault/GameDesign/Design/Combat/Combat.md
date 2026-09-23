@@ -148,19 +148,94 @@ the player meaningful control over what the autonomous character is trying to
 achieve.
 
 # Damage and Stats
-### Core Combat Stats
-Potential:
-- Health
-- Attack
-- Armour
-- Movement Speed
-- Attack Speed
-- Ability Cooldown
-- Critical hits
-- Dodge
-- Resistance
-- Healing power
-- Cooldown reduction
+
+## Current Character Stat Vocabulary
+
+**Status: Working**
+
+A stat should only become part of the general Character vocabulary when it has a
+clear gameplay consumer.
+
+### Survival
+
+**Max Health**
+
+Controls the Character's maximum Health capacity.
+
+Current consumer:
+`Health`.
+
+**Armour**
+
+Flat reduction against incoming damage.
+
+Current consumer:
+`CombatStats` / `DamageResolver`.
+
+### Mobility
+
+**Movement Speed**
+
+Controls normal autonomous navigation speed.
+
+Current consumer:
+`AutoTargetMover` / `MovementSystem`.
+
+Forced movement such as Charge or Knockback is not automatically scaled by
+normal Movement Speed.
+
+### Basic Attack
+
+**Basic Attack Damage**
+
+Controls baseline autonomous attack damage.
+
+It does not automatically increase Ability damage.
+
+Current consumer:
+`CombatStats`.
+
+**Basic Attack Speed**
+
+Controls autonomous basic-attack cadence.
+
+It does not automatically reduce Ability cooldowns.
+
+Current consumer:
+`CombatStats`.
+
+**Basic Attack Range**
+
+Controls valid range for autonomous basic-attack impact.
+
+The base stat already exists.
+
+Expedition modification / movement-positioning behaviour requires further N2
+work before Range becomes a normal reward.
+
+## Working Candidate Stats
+
+The following have concrete future consumers but are not yet confirmed as normal
+Expedition reward stats:
+
+- Knockback Power;
+- Knockback Resistance;
+- Ability Cooldown Recovery.
+
+They should be implemented only alongside their real gameplay consumer.
+
+## Deferred / Unproven Stats
+
+Do not introduce these merely because they are common RPG statistics:
+
+- Critical Chance;
+- Dodge;
+- generic Resistance;
+- Healing Power;
+- Ability Power;
+- Status Power.
+
+They remain available if later mechanics establish a clear need.
 
 ### Weapon-Specific Values
 - attack coefficients

@@ -1603,6 +1603,97 @@ MonoBehaviour:
   m_FlexibleWidth: -1
   m_FlexibleHeight: 0
   m_LayoutPriority: 1
+--- !u!1 &167568967
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 167568968}
+  - component: {fileID: 167568971}
+  - component: {fileID: 167568970}
+  - component: {fileID: 167568969}
+  m_Layer: 5
+  m_Name: ObjectiveTrackerPanel
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &167568968
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 167568967}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 2118013286}
+  m_Father: {fileID: 1579713069}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 20, y: -280}
+  m_SizeDelta: {x: 360, y: 120}
+  m_Pivot: {x: 0, y: 1}
+--- !u!114 &167568969
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 167568967}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9656a1b101af68f4ba5c0305ee88713c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.UI.ExpeditionObjectiveTrackerView
+  objectiveText: {fileID: 2118013287}
+  maxVisibleObjectives: 3
+--- !u!114 &167568970
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 167568967}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.392}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
+  m_Type: 1
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &167568971
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 167568967}
+  m_CullTransparentMesh: 1
 --- !u!1 &187098808
 GameObject:
   m_ObjectHideFlags: 0
@@ -3180,6 +3271,7 @@ GameObject:
   - component: {fileID: 348410351}
   - component: {fileID: 348410350}
   - component: {fileID: 348410353}
+  - component: {fileID: 348410354}
   m_Layer: 0
   m_Name: South Road Horde Encounter
   m_TagString: Untagged
@@ -3285,6 +3377,20 @@ MonoBehaviour:
   segments:
   - {fileID: 1923800174}
   startEncounterOnTraversal: 1
+--- !u!114 &348410354
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 348410348}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9fd2438c7fc10f940830b301ad0e59ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Encounters.LevelEncounterDefinitionBinding
+  definition: {fileID: 11400000, guid: 89c9331fa9555484a901cc15c174eb9a, type: 2}
+  encounter: {fileID: 348410352}
 --- !u!1 &382263932
 GameObject:
   m_ObjectHideFlags: 0
@@ -3533,6 +3639,7 @@ GameObject:
   - component: {fileID: 392467347}
   - component: {fileID: 392467346}
   - component: {fileID: 392467349}
+  - component: {fileID: 392467350}
   m_Layer: 0
   m_Name: West Road Horde Encounter
   m_TagString: Untagged
@@ -3638,6 +3745,20 @@ MonoBehaviour:
   segments:
   - {fileID: 273647058}
   startEncounterOnTraversal: 1
+--- !u!114 &392467350
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 392467344}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9fd2438c7fc10f940830b301ad0e59ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Encounters.LevelEncounterDefinitionBinding
+  definition: {fileID: 11400000, guid: 52d08b5623601a44c907e56bddefcf34, type: 2}
+  encounter: {fileID: 392467348}
 --- !u!1 &425489585
 GameObject:
   m_ObjectHideFlags: 0
@@ -4821,6 +4942,7 @@ GameObject:
   - component: {fileID: 579706919}
   - component: {fileID: 579706918}
   - component: {fileID: 579706920}
+  - component: {fileID: 579706921}
   m_Layer: 0
   m_Name: Opening Horde Encounter
   m_TagString: Untagged
@@ -4939,6 +5061,20 @@ MonoBehaviour:
   segments:
   - {fileID: 1937379564}
   startEncounterOnTraversal: 1
+--- !u!114 &579706921
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 579706915}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9fd2438c7fc10f940830b301ad0e59ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Encounters.LevelEncounterDefinitionBinding
+  definition: {fileID: 11400000, guid: 52d08b5623601a44c907e56bddefcf34, type: 2}
+  encounter: {fileID: 579706917}
 --- !u!1 &581903642
 GameObject:
   m_ObjectHideFlags: 0
@@ -5259,91 +5395,6 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
---- !u!1 &601439316
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 601439317}
-  - component: {fileID: 601439320}
-  - component: {fileID: 601439319}
-  - component: {fileID: 601439318}
-  m_Layer: 0
-  m_Name: Phase 2 - Second Wave
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &601439317
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 601439316}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 641285803}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &601439318
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 601439316}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ec6c5272cff78ab42b58beae9d310062, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Spawning.LevelSpawnSource
-  shape: 1
-  radius: 5
-  boxSize: {x: 3, y: 3}
---- !u!114 &601439319
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 601439316}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 534eca0a6af4aaf428b51272d5c7238e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Spawning.LevelSpawnGroup
-  startSpawning: 0
-  startCombatActive: 0
-  entries:
-  - actor: {fileID: 11400000, guid: f94bb2855b5c0e24eac3845bce957198, type: 2}
-    count: 4
-    startDelay: 0
-    batchSize: 4
-    timeBetweenSpawns: 0
-    timeBetweenBatches: 0
---- !u!114 &601439320
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 601439316}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e85d37dee7fd82c48a09743f7ce6251e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Encounters.LevelEncounterPhase
-  displayName: Second Wave
-  advanceAfterSeconds: 0
-  advanceWhenCleared: 1
 --- !u!1 &602258924
 GameObject:
   m_ObjectHideFlags: 0
@@ -5755,10 +5806,7 @@ Transform:
   m_LocalPosition: {x: 15, y: 0.5, z: 15}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 940666681}
-  - {fileID: 1514965094}
-  - {fileID: 601439317}
+  m_Children: []
   m_Father: {fileID: 907118059}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &641285804
@@ -5803,7 +5851,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9fd2438c7fc10f940830b301ad0e59ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Encounters.LevelEncounterDefinitionBinding
-  definition: {fileID: 11400000, guid: 2539fe17c9813ac439b8180bec730b11, type: 2}
+  definition: {fileID: 11400000, guid: 52d08b5623601a44c907e56bddefcf34, type: 2}
   encounter: {fileID: 641285804}
 --- !u!1 &648789466
 GameObject:
@@ -68836,58 +68884,6 @@ Transform:
   - {fileID: 246946504}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &940666680
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 940666681}
-  - component: {fileID: 940666682}
-  m_Layer: 0
-  m_Name: Approach Trigger
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &940666681
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 940666680}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -29.441132, y: -0.5, z: 0.53050995}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 641285803}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &940666682
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 940666680}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1dce4c6e967eed44587c0d4b450f9b3e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Encounters.LevelEncounterProximityTrigger
-  triggerRadius: 4
-  requireEncounterAvailable: 1
-  commands:
-    makeKnown: 0
-    makeAvailable: 0
-    beginSpawning: 0
-    activateCombat: 1
-    expire: 0
 --- !u!1 &962459151
 GameObject:
   m_ObjectHideFlags: 0
@@ -79328,91 +79324,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1846829692}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1514965093
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1514965094}
-  - component: {fileID: 1514965097}
-  - component: {fileID: 1514965096}
-  - component: {fileID: 1514965095}
-  m_Layer: 0
-  m_Name: Phase 1 - Initial Horde
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1514965094
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1514965093}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 641285803}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1514965095
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1514965093}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ec6c5272cff78ab42b58beae9d310062, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Spawning.LevelSpawnSource
-  shape: 1
-  radius: 5
-  boxSize: {x: 3, y: 3}
---- !u!114 &1514965096
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1514965093}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 534eca0a6af4aaf428b51272d5c7238e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Spawning.LevelSpawnGroup
-  startSpawning: 0
-  startCombatActive: 0
-  entries:
-  - actor: {fileID: 11400000, guid: f94bb2855b5c0e24eac3845bce957198, type: 2}
-    count: 4
-    startDelay: 0
-    batchSize: 4
-    timeBetweenSpawns: 0
-    timeBetweenBatches: 0
---- !u!114 &1514965097
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1514965093}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e85d37dee7fd82c48a09743f7ce6251e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Encounters.LevelEncounterPhase
-  displayName: Initial Horde
-  advanceAfterSeconds: 8
-  advanceWhenCleared: 1
 --- !u!1 &1525125872
 GameObject:
   m_ObjectHideFlags: 0
@@ -79786,6 +79697,7 @@ RectTransform:
   - {fileID: 425489586}
   - {fileID: 1404628867}
   - {fileID: 114951468}
+  - {fileID: 167568968}
   m_Father: {fileID: 1267911871}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -91174,6 +91086,7 @@ GameObject:
   - component: {fileID: 1773141661}
   - component: {fileID: 1773141662}
   - component: {fileID: 1773141663}
+  - component: {fileID: 1773141664}
   m_Layer: 0
   m_Name: RunDirector
   m_TagString: Untagged
@@ -91210,6 +91123,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Systems.RunDirector
   stageDirector: {fileID: 846909436}
   maximumPartySize: 4
+  defaultExpeditionObjectives:
+  - {fileID: 11400000, guid: 73a13b63957edc841818480b926d412e, type: 2}
   availableRunRewards:
   - {fileID: 11400000, guid: 309b8389bb587ba40be86ca876c4a398, type: 2}
   - {fileID: 11400000, guid: 0a8f4aa459b0ed646894d14534dd9d91, type: 2}
@@ -91217,6 +91132,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 971e914b5566b2d4eb1152183e78ba09, type: 2}
   - {fileID: 11400000, guid: 2904d326533f9104fbae33755a5c83cc, type: 2}
   - {fileID: 11400000, guid: a95be3a71591801438e716ec8239a3db, type: 2}
+  - {fileID: 11400000, guid: db0cbf4f5b5419240843a3570d355a24, type: 2}
   runUpgradeOfferCount: 3
 --- !u!114 &1773141662
 MonoBehaviour:
@@ -91244,6 +91160,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bcd384e46f615db4986fe4f18e4c9481, type: 3}
   m_Name: 
   m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Systems.WorldEventSystem
+--- !u!114 &1773141664
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1773141659}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da832521dce9e374099c1b5ab7bc28cc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Systems.ExpeditionObjectiveSystem
 --- !u!1 &1781699813
 GameObject:
   m_ObjectHideFlags: 0
@@ -183169,6 +183097,145 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
+--- !u!1 &2118013285
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2118013286}
+  - component: {fileID: 2118013288}
+  - component: {fileID: 2118013287}
+  m_Layer: 5
+  m_Name: ObjectiveText
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &2118013286
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2118013285}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 167568968}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: -20, y: -20}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &2118013287
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2118013285}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 0
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_text: 'OBJECTIVES
+
+    Cull Dormant Hordes  0/2'
+  m_isRightToLeft: 0
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontSharedMaterials: []
+  m_fontMaterial: {fileID: 0}
+  m_fontMaterials: []
+  m_fontColor32:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+  m_enableVertexGradient: 0
+  m_colorMode: 3
+  m_fontColorGradient:
+    topLeft: {r: 1, g: 1, b: 1, a: 1}
+    topRight: {r: 1, g: 1, b: 1, a: 1}
+    bottomLeft: {r: 1, g: 1, b: 1, a: 1}
+    bottomRight: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColorGradientPreset: {fileID: 0}
+  m_spriteAsset: {fileID: 0}
+  m_tintAllSprites: 0
+  m_StyleSheet: {fileID: 0}
+  m_TextStyleHashCode: -1183493901
+  m_overrideHtmlColors: 0
+  m_faceColor:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontSize: 18
+  m_fontSizeBase: 18
+  m_fontWeight: 400
+  m_enableAutoSizing: 0
+  m_fontSizeMin: 18
+  m_fontSizeMax: 72
+  m_fontStyle: 0
+  m_HorizontalAlignment: 1
+  m_VerticalAlignment: 256
+  m_textAlignment: 65535
+  m_characterSpacing: 0
+  m_characterHorizontalScale: 1
+  m_wordSpacing: 0
+  m_lineSpacing: 0
+  m_lineSpacingMax: 0
+  m_paragraphSpacing: 0
+  m_charWidthMaxAdj: 0
+  m_TextWrappingMode: 1
+  m_wordWrappingRatios: 0.4
+  m_overflowMode: 0
+  m_linkedTextComponent: {fileID: 0}
+  parentLinkedComponent: {fileID: 0}
+  m_enableKerning: 0
+  m_ActiveFontFeatures: 6e72656b
+  m_enableExtraPadding: 0
+  checkPaddingRequired: 0
+  m_isRichText: 1
+  m_EmojiFallbackSupport: 1
+  m_parseCtrlCharacters: 1
+  m_isOrthographic: 1
+  m_isCullingEnabled: 0
+  m_horizontalMapping: 0
+  m_verticalMapping: 0
+  m_uvLineOffset: 0
+  m_geometrySortingOrder: 0
+  m_IsTextObjectScaleStatic: 0
+  m_VertexBufferAutoSizeReduction: 0
+  m_useMaxVisibleDescender: 1
+  m_pageToDisplay: 1
+  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_isUsingLegacyAnimationComponent: 0
+  m_isVolumetricText: 0
+  m_hasFontAssetChanged: 0
+  m_baseMaterial: {fileID: 0}
+  m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!222 &2118013288
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2118013285}
+  m_CullTransparentMesh: 1
 --- !u!1 &2143103478
 GameObject:
   m_ObjectHideFlags: 0

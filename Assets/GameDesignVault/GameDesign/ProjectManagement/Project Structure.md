@@ -139,6 +139,11 @@ Examples:
 - `RunBuild`;
 - runtime ability/build applicators.
 
+`Progress/Run/Objectives/`
+- expedition-owned Objective definitions/state;
+- first concrete Objective type tracks Encounter Definition completion;
+- Objective progress lives in `RunState` and resets when the expedition ends.
+
 ### Progress/Setup
 
 Pre-expedition party/setup configuration.
@@ -259,10 +264,11 @@ Examples:
 Strategic expedition HUD and destination/navigation presentation.
 
 Examples:
-- minimap;
-- quick encounter choices;
-- strategic HUD;
-- slot symbols.
+- minimap
+- quick encounter choices
+- strategic HUD
+- slot symbols
+- compact tracked Expedition Objectives
 
 ### UI/Progression
 
@@ -289,13 +295,14 @@ Primary content root:
 ScriptableObject gameplay/content definitions.
 
 Current domains include:
-- Abilities;
-- Encounters;
-- Enemies;
-- Party;
-- Run Rewards;
-- Run Upgrades;
-- World Events.
+- Abilities
+- Encounters
+- Enemies
+- Party
+- Run Rewards
+- Run Upgrades
+- World Events
+- Objectives
 
 Prefer domain subfolders over a flat asset collection.
 

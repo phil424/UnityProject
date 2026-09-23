@@ -33,6 +33,9 @@ namespace MiniCrawler.Systems
 
         [Header("Setup")]
         [SerializeField, Min(1)] private int maximumPartySize = 4;
+        
+        [Header("Prototype Objectives")]
+        [SerializeField] private ExpeditionObjectiveDefinition[] defaultExpeditionObjectives;
 
         [Header("Run Rewards")]
         [FormerlySerializedAs("availableRunUpgrades")]
@@ -66,6 +69,7 @@ namespace MiniCrawler.Systems
             Instance = this;
 
             setup = new RunSetup(maximumPartySize);
+            setup.SetObjectives(defaultExpeditionObjectives);
         }
 
         private void Start()

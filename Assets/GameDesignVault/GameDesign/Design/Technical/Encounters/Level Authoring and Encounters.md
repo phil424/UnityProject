@@ -185,6 +185,13 @@ Current authored data includes:
 - initial availability;
 - one or more `LevelSpawnGroup` references.
 
+When an `EncounterDefinition` is bound to the encounter, the Definition provides
+portable gameplay content but does not replace the authored occurrence Display
+Name or Description.
+
+This allows multiple world occurrences to share the same portable Definition
+while remaining distinguishable to the player.
+
 # Encounter State Axes
 
 Encounter lifecycle state is intentionally stored as independent concepts rather

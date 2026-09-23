@@ -12,6 +12,7 @@ namespace MiniCrawler.Progress
         private readonly List<PartyMemberDefinition> selectedParty = new();
         private readonly Dictionary<string, RunBuild> memberBuilds = new();
         private readonly List<PendingRewardChoice> pendingRewardChoices = new();
+        private readonly List<ExpeditionObjectiveState> objectives = new();
 
         public int Currency { get; private set; }
         public int TotalCurrencyEarned { get; private set; }
@@ -20,27 +21,42 @@ namespace MiniCrawler.Progress
 
         public IReadOnlyList<PartyMemberDefinition> SelectedParty => selectedParty;
         public IReadOnlyList<PendingRewardChoice> PendingRewardChoices => pendingRewardChoices;
+        public IReadOnlyList<ExpeditionObjectiveState> Objectives => objectives;
 
         public int PendingRewardChoiceCount => pendingRewardChoices.Count;
-
         public bool HasPendingRewardChoice => pendingRewardChoices.Count > 0;
 
-        public IReadOnlyList<RunUpgradeOffer> CurrentPendingRewardOffers => pendingRewardChoices.Count > 0
-                    ? pendingRewardChoices[0].Offers
-                    : Array.Empty<RunUpgradeOffer>();
+        public IReadOnlyList<RunUpgradeOffer> CurrentPendingRewardOffers => pendingRewardChoices.Count > 0 ? pendingRewardChoices[0].Offers : Array.Empty<RunUpgradeOffer>();
 
         public RunState(RunStartConfiguration configuration)
         {
             if (configuration == null)
                 return;
+            
+            foreach (ExpeditionObjectiveDefinition definition in configuration.Objectives)
+            {
+                if (definition == null)
+                    continue;
 
-            foreach (PartyMemberDefinition member in configuration.Party
-            )
+                bool alreadyAdded = false;
+
+                foreach (ExpeditionObjectiveState objective in objectives)
+                {
+                    if (objective.Definition != definition)
+                        continue;
+
+                    alreadyAdded = true;
+                    break;
+                }
+
+                if (!alreadyAdded)
+                    objectives.Add(new ExpeditionObjectiveState(definition));
+            }
+
+            foreach (PartyMemberDefinition member in configuration.Party)
             {
                 if (member == null || selectedParty.Contains(member))
-                {
                     continue;
-                }
 
                 selectedParty.Add(member);
 
@@ -66,32 +82,20 @@ namespace MiniCrawler.Progress
             TotalCurrencyEarned += amount;
         }
 
-        public bool IsSelected(
-            PartyMemberDefinition definition
-        )
+        public bool IsSelected(PartyMemberDefinition definition)
         {
-            return definition != null &&
-                   selectedParty.Contains(definition);
+            return definition != null && selectedParty.Contains(definition);
         }
 
-        public RunBuild GetBuild(
-            PartyMemberDefinition definition
-        )
+        public RunBuild GetBuild(PartyMemberDefinition definition)
         {
             if (definition == null)
                 return new RunBuild();
 
-            if (!memberBuilds.TryGetValue(
-                    definition.Id,
-                    out RunBuild build
-                ))
+            if (!memberBuilds.TryGetValue(definition.Id, out RunBuild build))
             {
                 build = new RunBuild();
-
-                memberBuilds.Add(
-                    definition.Id,
-                    build
-                );
+                memberBuilds.Add(definition.Id, build);
             }
 
             return build;
@@ -99,19 +103,10 @@ namespace MiniCrawler.Progress
         
         public bool TryAcquireAbility(PartyMemberDefinition definition, AbilityDefinition ability)
         {
-            if (
-                !IsSelected(definition) ||
-                ability == null
-            )
-            {
+            if (!IsSelected(definition) || ability == null)
                 return false;
-            }
 
-            return
-                GetBuild(definition)
-                    .TryAcquireAbility(
-                        ability
-                    );
+            return GetBuild(definition).TryAcquireAbility(ability);
         }
 
         public bool EnqueueRewardChoice(IEnumerable<RunUpgradeOffer> offers)
@@ -119,37 +114,22 @@ namespace MiniCrawler.Progress
             if (offers == null)
                 return false;
 
-            List<RunUpgradeOffer> validOffers =
-                new();
+            List<RunUpgradeOffer> validOffers = new();
 
-            foreach (
-                RunUpgradeOffer offer
-                    in offers
-            )
+            foreach (RunUpgradeOffer offer in offers)
             {
-                if (
-                    offer == null ||
-                    !offer.IsValid ||
-                    !IsSelected(offer.Member)
-                )
-                {
+                if (offer == null || !offer.IsValid || !IsSelected(offer.Member))
                     continue;
-                }
 
                 validOffers.Add(offer);
             }
 
-            PendingRewardChoice choice =
-                new PendingRewardChoice(
-                    validOffers
-                );
+            PendingRewardChoice choice = new PendingRewardChoice(validOffers);
 
             if (!choice.IsValid)
                 return false;
 
-            pendingRewardChoices.Add(
-                choice
-            );
+            pendingRewardChoices.Add(choice);
 
             return true;
         }
@@ -179,142 +159,108 @@ namespace MiniCrawler.Progress
 
         public bool TryChoosePendingReward(RunUpgradeOffer offer)
         {
-            if (
-                offer == null ||
-                !offer.IsValid ||
-                pendingRewardChoices.Count <= 0
-            )
-            {
+            if (offer == null || !offer.IsValid || pendingRewardChoices.Count <= 0)
                 return false;
-            }
 
-            PendingRewardChoice currentChoice =
-                pendingRewardChoices[0];
+            PendingRewardChoice currentChoice = pendingRewardChoices[0];
 
-            if (
-                !currentChoice.Contains(offer) ||
-                !IsSelected(offer.Member)
-            )
-            {
+            if (!currentChoice.Contains(offer) || !IsSelected(offer.Member))
                 return false;
-            }
 
-            RunBuild build =
-                GetBuild(
-                    offer.Member
-                );
+            RunBuild build = GetBuild(offer.Member);
 
-            if (
-                !offer.Reward.TryApply(
-                    offer.Member,
-                    build
-                )
-            )
-            {
+            if (!offer.Reward.TryApply(offer.Member, build))
                 return false;
-            }
 
             pendingRewardChoices.RemoveAt(0);
 
             return true;
         }
+        
+        public bool TryAddObjectiveProgress(ExpeditionObjectiveDefinition definition, int amount)
+        {
+            if (definition == null || amount <= 0)
+                return false;
+
+            foreach (ExpeditionObjectiveState objective in objectives)
+            {
+                if (objective.Definition != definition)
+                    continue;
+
+                return objective.AddProgress(amount);
+            }
+
+            return false;
+        }
 
         public int GetAbilityUpgradeCost(PartyMemberDefinition definition, AbilityDefinition ability)
         {
-            if (
-                !IsSelected(definition) ||
-                ability == null
-            )
-            {
+            if (!IsSelected(definition) || ability == null)
                 return int.MaxValue;
-            }
 
             RunAbilityState state = GetBuild(definition).GetAbilityState(ability);
 
-            if (
-                state == null ||
-                state.IsMaxLevel
-            )
-            {
+            if (state == null || state.IsMaxLevel)
                 return int.MaxValue;
-            }
 
             int completedUpgrades = Mathf.Max(0, state.Level - 1);
 
-            return
-                definition.BaseAbilityUpgradeCost +
-                completedUpgrades *
-                definition.AbilityUpgradeCostStep;
+            return definition.BaseAbilityUpgradeCost + completedUpgrades * definition.AbilityUpgradeCostStep;
         }
 
         public bool TryBuyAbilityLevel(PartyMemberDefinition definition, AbilityDefinition ability)
         {
             int cost = GetAbilityUpgradeCost(definition, ability);
 
-            if (
-                cost == int.MaxValue ||
-                Currency < cost
-            )
-            {
+            if (cost == int.MaxValue || Currency < cost)
                 return false;
-            }
 
             RunBuild build = GetBuild(definition);
 
-            if (
-                !build.TryIncreaseAbilityLevel(ability)
-            )
-            {
+            if (!build.TryIncreaseAbilityLevel(ability))
                 return false;
-            }
 
             Currency -= cost;
 
             return true;
         }
 
-        public float GetDamageBonus(
-            PartyMemberDefinition definition
-        )
+        public float GetDamageBonus(PartyMemberDefinition definition)
         {
             if (definition == null)
                 return 0f;
 
-            return GetBuild(definition).WeaponLevel *
-                   definition.DamagePerWeaponLevel;
+            RunBuild build = GetBuild(definition);
+
+            return build.WeaponLevel * definition.DamagePerWeaponLevel + build.FlatBasicAttackDamageBonus;
         }
 
-        public float GetArmourBonus(
-            PartyMemberDefinition definition
-        )
+        public float GetArmourBonus(PartyMemberDefinition definition)
         {
             if (definition == null)
                 return 0f;
 
-            return GetBuild(definition).ArmourLevel *
-                   definition.ArmourPerArmourLevel;
+            RunBuild build = GetBuild(definition);
+
+            return build.ArmourLevel * definition.ArmourPerArmourLevel + build.FlatArmourBonus;
         }
 
-        public float GetHealthBonus(
-            PartyMemberDefinition definition
-        )
+        public float GetHealthBonus(PartyMemberDefinition definition)
         {
             if (definition == null)
                 return 0f;
 
-            return GetBuild(definition).ArmourLevel *
-                   definition.HealthPerArmourLevel;
+            RunBuild build = GetBuild(definition);
+
+            return build.ArmourLevel * definition.HealthPerArmourLevel + build.FlatMaxHealthBonus;
         }
 
-        public float GetHealingBonus(
-            PartyMemberDefinition definition
-        )
+        public float GetHealingBonus(PartyMemberDefinition definition)
         {
             if (definition == null)
                 return 0f;
 
-            return GetBuild(definition).FocusLevel *
-                   definition.HealingPerFocusLevel;
+            return GetBuild(definition).FocusLevel * definition.HealingPerFocusLevel;
         }
     }
 }
