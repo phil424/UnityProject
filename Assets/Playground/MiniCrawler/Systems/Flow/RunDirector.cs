@@ -216,7 +216,7 @@ namespace MiniCrawler.Systems
                 return;
             }
 
-            GenerateRunRewardOffers();
+            GenerateRunRewardOffers(new RunRewardContext(RunRewardVector.Any, "Area Clear"));
             SetState(RunFlowState.BetweenLevels);
         }
         
@@ -267,7 +267,7 @@ namespace MiniCrawler.Systems
             );
         }
 
-        private void GenerateRunRewardOffers(RunRewardVector rewardVector = RunRewardVector.Any)
+        private void GenerateRunRewardOffers(RunRewardContext context)
         {
             RunState runState = RunProgress.CurrentRun;
 
@@ -278,21 +278,21 @@ namespace MiniCrawler.Systems
                 runState,
                 availableRunRewards,
                 runUpgradeOfferCount,
-                rewardVector
+                context.RewardVector
             );
 
             if (offers.Count == 0)
             {
-                Debug.Log($"No eligible run rewards were available for reward vector '{rewardVector}'.");
+                Debug.Log(
+                    $"No eligible run rewards were available for reward vector '{context.RewardVector}' " +
+                    $"from source '{context.SourceLabel}'."
+                );
+
                 return;
             }
 
-            if (!RunProgress.EnqueueRewardChoice(offers))
-            {
-                Debug.LogWarning(
-                    "Eligible run rewards were generated but could not be queued."
-                );
-            }
+            if (!RunProgress.EnqueueRewardChoice(offers, context))
+                Debug.LogWarning("Eligible run rewards were generated but could not be queued.");
         }
         
         [ContextMenu("Debug/Queue Reward Choice")]
@@ -307,13 +307,13 @@ namespace MiniCrawler.Systems
                 return;
             }
 
-            if (!stageDirector.TryAwardRewardChoice())
+            if (!stageDirector.TryAwardRewardChoice(RunRewardVector.Any, "Debug Reward"))
                 Debug.LogWarning("The current level could not award a reward choice.");
         }
         
-        private void HandleRewardChoiceEarned(RunRewardVector rewardVector)
+        private void HandleRewardChoiceEarned(RunRewardContext context)
         {
-            GenerateRunRewardOffers(rewardVector);
+            GenerateRunRewardOffers(context);
         }
 
         private void HandleCurrencyEarned(int amount)

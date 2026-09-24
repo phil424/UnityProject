@@ -15,7 +15,7 @@ namespace MiniCrawler.Progress
             {
                 RunRewardVector.CharacterGrowth => "GROWTH",
                 RunRewardVector.Ability => "ABILITY",
-                _ => "ANY"
+                _ => "GENERAL"
             };
         }
     }

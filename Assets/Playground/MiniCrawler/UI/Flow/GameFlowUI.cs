@@ -40,6 +40,7 @@ namespace MiniCrawler.UI
         [SerializeField] private GameObject runUpgradeRewardSection;
         [SerializeField] private Transform runUpgradeOfferRoot;
         [SerializeField] private RunUpgradeOfferCardUI runUpgradeOfferCardPrefab;
+        [SerializeField] private TMP_Text runUpgradeRewardTitleText;
 
         [Header("Combat HUD")]
         [SerializeField] private TMP_Text combatCurrencyText;
@@ -192,6 +193,16 @@ namespace MiniCrawler.UI
             if (runDirector == null || !runDirector.TryChoosePendingReward(offer))
                 Debug.LogWarning("Could not resolve pending reward.");
         }
+        
+        private void RefreshRunRewardTitle()
+        {
+            if (runUpgradeRewardTitleText == null)
+                return;
+
+            PendingRewardChoice choice = RunProgress.CurrentPendingRewardChoice;
+
+            runUpgradeRewardTitleText.text = choice != null ? RunRewardContextPresentation.GetTitle(choice.Context) : "Choose a Run Reward";
+        }
 
         private void RefreshAll()
         {
@@ -202,6 +213,7 @@ namespace MiniCrawler.UI
 
             RebuildUpgradeCards();
             RebuildRunUpgradeOfferCards();
+            RefreshRunRewardTitle();
 
             int setupPartyCount = runDirector != null ? runDirector.Setup.SelectedParty.Count : 0;
 

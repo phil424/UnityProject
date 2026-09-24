@@ -19,6 +19,7 @@ namespace MiniCrawler.UI
         [SerializeField] private Transform offerRoot;
         [SerializeField] private RunUpgradeOfferCardUI offerCardPrefab;
         [SerializeField] private Button closeButton;
+        [SerializeField] private TMP_Text rewardTitleText;
 
         private readonly List<RunUpgradeOfferCardUI> offerCards = new();
 
@@ -114,6 +115,8 @@ namespace MiniCrawler.UI
         {
             int pendingCount = RunProgress.PendingRewardChoiceCount;
             bool showButton = IsInCombat && pendingCount > 0;
+            
+            RefreshRewardTitle();
 
             if (pendingRewardsButton != null)
                 pendingRewardsButton.gameObject.SetActive(showButton);
@@ -131,6 +134,16 @@ namespace MiniCrawler.UI
 
             if (rewardOverlay != null && rewardOverlay.activeSelf)
                 RebuildOfferCards();
+        }
+        
+        private void RefreshRewardTitle()
+        {
+            if (rewardTitleText == null)
+                return;
+
+            PendingRewardChoice choice = RunProgress.CurrentPendingRewardChoice;
+
+            rewardTitleText.text = choice != null ? RunRewardContextPresentation.GetTitle(choice.Context) : "Pending Reward";
         }
 
         private void RebuildOfferCards()

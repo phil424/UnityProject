@@ -51,7 +51,7 @@ namespace MiniCrawler.Progress
 
             for (int i = 0; i < resultCount; i++)
             {
-                int swapIndex =Random.Range(i, candidates.Count);
+                int swapIndex = Random.Range(i, candidates.Count);
                 (candidates[i], candidates[swapIndex]) = (candidates[swapIndex], candidates[i]);
             }
 

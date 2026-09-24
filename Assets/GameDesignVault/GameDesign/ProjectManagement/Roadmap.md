@@ -983,9 +983,9 @@ Review and implement the necessary foundations for:
 - compatibility-aware reward generation;
 - meaningful reward-source identity.
 
-### 3.0N3A — Encounter Reward Vectors
+### 3.0N3A — Encounter Reward Vectors ✅
 
-**Status: Active**
+**Status: Complete**
 
 Purpose:
 
@@ -1006,6 +1006,28 @@ Initial implemented vectors:
 `Any` preserves existing generic/debug/legacy reward sources.
 
 Future vectors should only be added when their reward systems actually exist.
+
+### 3.0N3B — Reward Provenance & Pending Choice Context
+
+**Status: Active**
+
+Purpose:
+
+Preserve the reason a reward exists from the gameplay trigger through pending
+reward presentation.
+
+This step proves:
+
+- reward triggers create a `RunRewardContext`;
+- context carries Reward Vector and source label;
+- pending reward choices preserve that context;
+- Encounter rewards identify their Encounter occurrence;
+- enemy reward choices identify the defeated actor;
+- Area Clear rewards retain their own source identity;
+- both combat and between-level reward UI expose the current reward context.
+
+This establishes a reusable provenance seam before additional reward sources are
+introduced.
 
 ## 3.0N4 — Meta Progression & Resources
 

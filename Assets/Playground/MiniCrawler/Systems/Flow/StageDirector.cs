@@ -25,7 +25,7 @@ namespace MiniCrawler.Systems
 
         public event Action<bool> LevelFinished;
         public event Action<int> CurrencyEarned;
-        public event Action<RunRewardVector> RewardChoiceEarned;
+        public event Action<RunRewardContext> RewardChoiceEarned;
         
         public event Action<LevelEncounter> EncounterStarted;
         public event Action<LevelEncounter, LevelEncounterPhase, int> EncounterPhaseStarted;
@@ -237,12 +237,12 @@ namespace MiniCrawler.Systems
             return false;
         }
         
-        public bool TryAwardRewardChoice(RunRewardVector rewardVector = RunRewardVector.Any)
+        public bool TryAwardRewardChoice(RunRewardVector rewardVector = RunRewardVector.Any, string sourceLabel = null)
         {
             if (state == LevelState.Idle)
                 return false;
 
-            RewardChoiceEarned?.Invoke(rewardVector);
+            RewardChoiceEarned?.Invoke(new RunRewardContext(rewardVector, sourceLabel));
             return true;
         }
         
@@ -483,8 +483,14 @@ namespace MiniCrawler.Systems
 
             CurrencyEarned?.Invoke(enemy.CurrencyReward);
 
-            for (int i = 0; i < enemy.RewardChoicesOnDeath; i++)
-                TryAwardRewardChoice();
+            if (enemy.RewardChoicesOnDeath > 0)
+            {
+                Actor deadActor = deadObject.GetComponent<Actor>();
+                string rewardSourceLabel = deadActor != null ? deadActor.ActorName : deadObject.name;
+
+                for (int i = 0; i < enemy.RewardChoicesOnDeath; i++)
+                    TryAwardRewardChoice(RunRewardVector.Any, rewardSourceLabel);
+            }
 
             if (deadObject.GetComponent<AmbientEnemy>() != null)
                 return;
@@ -674,7 +680,7 @@ namespace MiniCrawler.Systems
                 return;
 
             for (int i = 0; i < definition.RewardChoicesOnCompletion; i++)
-                TryAwardRewardChoice(definition.RewardVector);
+                TryAwardRewardChoice(definition.RewardVector, encounter.DisplayName);
         }
         
         private void PrepareEncountersForLevel()

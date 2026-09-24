@@ -26,7 +26,9 @@ namespace MiniCrawler.Progress
         public int PendingRewardChoiceCount => pendingRewardChoices.Count;
         public bool HasPendingRewardChoice => pendingRewardChoices.Count > 0;
 
-        public IReadOnlyList<RunUpgradeOffer> CurrentPendingRewardOffers => pendingRewardChoices.Count > 0 ? pendingRewardChoices[0].Offers : Array.Empty<RunUpgradeOffer>();
+        public PendingRewardChoice CurrentPendingRewardChoice => pendingRewardChoices.Count > 0 ? pendingRewardChoices[0] : null;
+
+        public IReadOnlyList<RunUpgradeOffer> CurrentPendingRewardOffers => CurrentPendingRewardChoice != null ? CurrentPendingRewardChoice.Offers : Array.Empty<RunUpgradeOffer>();
 
         public RunState(RunStartConfiguration configuration)
         {
@@ -109,7 +111,7 @@ namespace MiniCrawler.Progress
             return GetBuild(definition).TryAcquireAbility(ability);
         }
 
-        public bool EnqueueRewardChoice(IEnumerable<RunUpgradeOffer> offers)
+        public bool EnqueueRewardChoice(IEnumerable<RunUpgradeOffer> offers, RunRewardContext context)
         {
             if (offers == null)
                 return false;
@@ -124,7 +126,7 @@ namespace MiniCrawler.Progress
                 validOffers.Add(offer);
             }
 
-            PendingRewardChoice choice = new PendingRewardChoice(validOffers);
+            PendingRewardChoice choice = new PendingRewardChoice(validOffers, context);
 
             if (!choice.IsValid)
                 return false;

@@ -168,6 +168,118 @@ Do not give vague instructions such as:
 
 State exactly what to edit.
 
+# Instruction Clarity and Dependency Ordering
+
+Implementation instructions must be executable from top to bottom without the
+user having to infer missing dependencies or edit locations.
+
+## Shared Contract Changes
+
+Before changing any shared contract such as:
+
+- constructor signatures;
+- method signatures;
+- events / delegates;
+- abstract members;
+- interfaces;
+- shared enums;
+- shared data types;
+
+inspect the current project for:
+
+- all direct call sites;
+- all subclasses / implementers;
+- editor or Workshop tooling that uses the same API;
+- debug paths;
+- runtime paths.
+
+Every currently affected project-owned file must appear in the implementation
+scope.
+
+Do not rely on compilation errors to discover predictable call sites after the
+instructions have already been given.
+
+## Dependency Order
+
+Instructions must introduce dependencies before their consumers.
+
+Prefer:
+
+Shared Type
+↓
+Shared Contract
+↓
+Concrete Implementers
+↓
+Call Sites
+↓
+Presentation
+↓
+Unity Authoring
+↓
+Documentation
+
+When a new shared type is required, create it before instructing edits that
+reference it.
+
+After a substantial shared-contract change, include a compilation gate before
+scene / prefab / asset authoring when practical.
+
+## Exact Code Edit Locations
+
+For partial-file edits:
+
+- name the exact file;
+- name the enclosing method / property / class;
+- show a unique existing code block to find;
+- show the exact replacement or exact insertion point;
+- include enough surrounding context to distinguish similar call sites.
+
+Avoid instructions such as:
+
+> update the normal call
+
+or:
+
+> add this near the reward code
+
+when multiple plausible locations exist.
+
+Prefer:
+
+> In `HandleLevelFinished(bool won)`, find:
+>
+> `GenerateRunUpgradeOffers();`
+>
+> replace it with:
+>
+> `GenerateRunRewardOffers();`
+
+## Documentation Edit Locations
+
+Documentation instructions follow the same standard.
+
+Always identify:
+
+- the exact document;
+- the exact heading;
+- whether text is being inserted before, after or replacing another block;
+- the final Markdown to use.
+
+Do not require the user to decide where a design paragraph belongs.
+
+## Compile Failures After Instructions
+
+When compilation fails:
+
+1. inspect the actual errors;
+2. identify whether they are one root error with cascading failures;
+3. correct the smallest missing dependency / call site;
+4. do not make unrelated changes merely because many compiler errors are shown.
+
+A wall of compiler errors caused by one missing shared type should be treated as
+one missing dependency, not many independent bugs.
+
 # Diagnose Problems from Evidence
 
 When something fails:

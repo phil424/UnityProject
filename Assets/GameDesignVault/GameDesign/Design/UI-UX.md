@@ -697,7 +697,9 @@ Include:
 - travel presentation
 - reward acquisition order
 - ability evolution presentation
-- rarity feedback.
+- rarity feedback
+- current reward source / provenance
+- current Reward Vector
 
 # Hub and Menus
 Record options:

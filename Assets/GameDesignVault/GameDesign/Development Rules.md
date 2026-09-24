@@ -158,6 +158,22 @@ Unity Editor work must also identify exact scenes/prefabs/assets involved.
 Player-facing UI work must additionally provide the mandatory UI Work Contract
 from [[UI Authoring]].
 
+Implementation instructions must be executable in the order presented.
+
+Shared contract changes such as new types, constructor/signature changes,
+abstract members and events require an explicit dependency/call-site audit before
+instructions are given.
+
+Exact edit instructions must identify the enclosing method, property, class or
+documentation heading rather than relying on phrases such as:
+
+- "the normal call";
+- "that section";
+- "the existing block";
+- "update the manager".
+
+See [[Workflow and Validation]] for the complete instruction-clarity contract.
+
 # Testing
 
 Do not routinely add automated/EditMode tests.

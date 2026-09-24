@@ -137,6 +137,39 @@ Future vectors such as Weapon Mods or persistent resources should be introduced
 alongside their real reward implementations rather than predeclared
 speculatively.
 
+# Reward Provenance
+
+**Status: Implemented Foundation**
+
+A pending reward should retain enough context for the player to understand where
+it came from.
+
+Current reward context contains:
+
+- Reward Vector;
+- source label.
+
+Examples:
+
+South Road Horde
+→ Growth Reward
+
+Wide Graveyard Horde
+→ Ability Reward
+
+Elite Zombie
+→ General Reward
+
+Area Clear
+→ General Reward
+
+This becomes increasingly important as several reward sources can exist in the
+same expedition and multiple reward choices may be queued before the player
+opens them.
+
+Reward source context should survive into Pending Rewards rather than being lost
+when offers are generated.
+
 # Intention-Changing Rewards
 
 A reward does not always need to make the Character directly stronger.

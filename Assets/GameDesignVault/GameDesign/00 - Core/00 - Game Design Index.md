@@ -104,6 +104,10 @@ A previous direction intentionally retained only for historical context.
 
 - [[Character Stats]]
 
+## Reward Architecture
+
+- [[Rewards and Pending Choices]]
+
 # Development
 
 The canonical development-rule entry point is:

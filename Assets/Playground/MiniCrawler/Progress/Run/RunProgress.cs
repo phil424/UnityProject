@@ -26,22 +26,19 @@ namespace MiniCrawler.Progress
         public static WorldClockState WorldClock => CurrentRun?.WorldClock;
         public static WorldEventState WorldEvents => CurrentRun?.WorldEvents;
 
-        public static IReadOnlyList<PartyMemberDefinition> SelectedParty =>
-            CurrentRun != null ? CurrentRun.SelectedParty : Array.Empty<PartyMemberDefinition>();
+        public static IReadOnlyList<PartyMemberDefinition> SelectedParty => CurrentRun != null ? CurrentRun.SelectedParty : Array.Empty<PartyMemberDefinition>();
         
-        public static IReadOnlyList<PendingRewardChoice> PendingRewardChoices =>
-            CurrentRun != null ? CurrentRun.PendingRewardChoices : Array.Empty<PendingRewardChoice>();
+        public static IReadOnlyList<PendingRewardChoice> PendingRewardChoices => CurrentRun != null ? CurrentRun.PendingRewardChoices : Array.Empty<PendingRewardChoice>();
 
-        public static int PendingRewardChoiceCount =>
-            CurrentRun != null ? CurrentRun.PendingRewardChoiceCount : 0;
+        public static int PendingRewardChoiceCount => CurrentRun != null ? CurrentRun.PendingRewardChoiceCount : 0;
 
-        public static IReadOnlyList<RunUpgradeOffer>
-            CurrentPendingRewardOffers => CurrentRun != null ? CurrentRun.CurrentPendingRewardOffers : Array.Empty<RunUpgradeOffer>();
+        public static PendingRewardChoice CurrentPendingRewardChoice => CurrentRun?.CurrentPendingRewardChoice;
+
+        public static IReadOnlyList<RunUpgradeOffer> CurrentPendingRewardOffers => CurrentRun != null ? CurrentRun.CurrentPendingRewardOffers : Array.Empty<RunUpgradeOffer>();
 
         public static bool HasPendingRewardChoice => CurrentRun != null && CurrentRun.HasPendingRewardChoice;
         
-        public static IReadOnlyList<ExpeditionObjectiveState> Objectives =>
-            CurrentRun != null ? CurrentRun.Objectives : Array.Empty<ExpeditionObjectiveState>();
+        public static IReadOnlyList<ExpeditionObjectiveState> Objectives => CurrentRun != null ? CurrentRun.Objectives : Array.Empty<ExpeditionObjectiveState>();
 
         public static bool BeginRun(RunStartConfiguration configuration)
         {
@@ -114,12 +111,12 @@ namespace MiniCrawler.Progress
             return changed;
         }
 
-        public static bool EnqueueRewardChoice(IEnumerable<RunUpgradeOffer> offers)
+        public static bool EnqueueRewardChoice(IEnumerable<RunUpgradeOffer> offers, RunRewardContext context)
         {
             if (CurrentRun == null)
                 return false;
 
-            bool queued = CurrentRun.EnqueueRewardChoice(offers);
+            bool queued = CurrentRun.EnqueueRewardChoice(offers, context);
 
             if (queued)
                 Changed?.Invoke();

@@ -4,51 +4,34 @@ namespace MiniCrawler.Progress
 {
     public sealed class PendingRewardChoice
     {
-        private readonly List<RunUpgradeOffer>
-            offers = new();
+        private readonly List<RunUpgradeOffer> offers = new();
 
-        public IReadOnlyList<RunUpgradeOffer>
-            Offers => offers;
+        public IReadOnlyList<RunUpgradeOffer> Offers => offers;
+        public RunRewardContext Context { get; }
 
-        public int OfferCount =>
-            offers.Count;
+        public int OfferCount => offers.Count;
 
-        public bool IsValid =>
-            offers.Count > 0;
+        public bool IsValid => offers.Count > 0;
 
-        public PendingRewardChoice(
-            IEnumerable<RunUpgradeOffer>
-                rewardOffers
-        )
+        public PendingRewardChoice(IEnumerable<RunUpgradeOffer> rewardOffers, RunRewardContext context)
         {
+            Context = context;
+            
             if (rewardOffers == null)
                 return;
 
-            foreach (
-                RunUpgradeOffer offer
-                    in rewardOffers
-            )
+            foreach (RunUpgradeOffer offer in rewardOffers)
             {
-                if (
-                    offer == null ||
-                    !offer.IsValid ||
-                    offers.Contains(offer)
-                )
-                {
+                if (offer == null || !offer.IsValid || offers.Contains(offer))
                     continue;
-                }
 
                 offers.Add(offer);
             }
         }
 
-        public bool Contains(
-            RunUpgradeOffer offer
-        )
+        public bool Contains(RunUpgradeOffer offer)
         {
-            return
-                offer != null &&
-                offers.Contains(offer);
+            return offer != null && offers.Contains(offer);
         }
     }
 }
