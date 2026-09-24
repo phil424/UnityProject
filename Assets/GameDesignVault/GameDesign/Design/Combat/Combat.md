@@ -235,16 +235,29 @@ motion for longer.
 Knockback Resistance remains a future counterpart once enemies or other systems
 can meaningfully apply forced movement to the playable Character.
 
-## Working Candidate Stats
+## Deferred Candidate Stats
 
-The following have concrete future consumers but are not yet confirmed as normal
-Expedition reward stats:
+The following remain plausible but should not be implemented until their
+gameplay behaviour is deliberately resolved.
 
-- Knockback Power;
-- Knockback Resistance;
-- Ability Cooldown Recovery.
+### Basic Attack Range
 
-They should be implemented only alongside their real gameplay consumer.
+Base support already exists.
+
+A normal Expedition reward remains deferred because increasing attack range also
+raises a movement/positioning question:
+
+> Should autonomous combat deliberately maintain the newly increased preferred
+> distance?
+
+Do not treat Range as only a larger hit-validation radius.
+
+### Knockback Resistance
+
+Remain deferred until enemies or other gameplay systems provide meaningful
+incoming forced movement against the playable Character.
+
+A stat should not exist merely because it has a conceptual opposite.
 
 ## Deferred / Unproven Stats
 

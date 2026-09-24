@@ -863,9 +863,9 @@ Initial proof should:
 
 Later Objective breadth remains scheduled under 3.0P.
 
-## 3.0N2 — Character Stats & Expedition Buildcraft
+## 3.0N2 — Character Stats & Expedition Buildcraft ✅
 
-**Status: Active**
+**Status: Complete**
 
 ### 3.0N2A — Core Character Stats & Max Health Buildcraft ✅
 
@@ -902,9 +902,9 @@ It includes:
 
 This checkpoint did not expand the Character-stat vocabulary.
 
-### 3.0N2C — Tactical Stat Consumers
+### 3.0N2C — Tactical Stat Consumers ✅
 
-**Status: Active**
+**Status: Complete**
 
 Purpose:
 
@@ -929,7 +929,42 @@ gameplay exists.
 
 Basic Attack Range remains deferred until preferred combat-distance behaviour is
 designed alongside it.
+### 3.0N2 Review
+
+N2 establishes the first intentional Expedition stat vocabulary:
+
+#### Survival
+- Max Health;
+- Armour.
+
+#### Mobility
+- Movement Speed.
+
+#### Basic Attack
+- Basic Attack Damage;
+- Basic Attack Speed.
+
+#### Ability
+- Ability Cooldown Recovery.
+
+#### Control
+- Knockback Power.
+
+This is sufficient vocabulary to continue developing Reward and Encounter flow.
+
+Additional Character stats should now be introduced because later gameplay
+creates a concrete need rather than continuing to expand the stat list for its
+own sake.
+
+Deferred:
+- Basic Attack Range as a normal reward;
+- Knockback Resistance;
+- speculative RPG statistics without current consumers.
+
+
 ## 3.0N3 — Rewards & Progression Flow
+
+**Status: Active**
 
 Purpose:
 
@@ -947,6 +982,30 @@ Review and implement the necessary foundations for:
 - persistent rewards;
 - compatibility-aware reward generation;
 - meaningful reward-source identity.
+
+### 3.0N3A — Encounter Reward Vectors
+
+**Status: Active**
+
+Purpose:
+
+Connect Encounter selection to the type of Expedition reward the player is
+pursuing.
+
+The first implementation proves:
+- reward definitions expose a Reward Vector;
+- Encounter Definitions author a completion Reward Vector;
+- completing an Encounter can request a vector-specific reward choice;
+- reward generation filters eligible offers by that vector;
+- quick Encounter choices telegraph the vector before commitment.
+
+Initial implemented vectors:
+- Character Growth;
+- Ability.
+
+`Any` preserves existing generic/debug/legacy reward sources.
+
+Future vectors should only be added when their reward systems actually exist.
 
 ## 3.0N4 — Meta Progression & Resources
 

@@ -43,7 +43,9 @@ Portable content currently owns:
 - automatic Route-placement eligibility;
 - required Route Tags;
 - preferred Route Tags;
-- forbidden Route Tags.
+- forbidden Route Tags;
+- Reward Vector;
+- reward-choice count on completion.
 
 ## Scene Encounter / Site
 
@@ -73,6 +75,41 @@ The scene currently still owns:
 - Expired;
 - spawned actors;
 - runtime phase progress.
+
+# Reward Identity
+
+An `EncounterDefinition` may describe the broad reward opportunity associated
+with completing that reusable encounter content.
+
+The Definition owns the Reward Vector because it describes what kind of
+opportunity the encounter represents.
+
+The scene `LevelEncounter` still owns occurrence identity and location.
+
+Example:
+
+`DormantHordeDefinition`
+→ Character Growth reward vector
+
+South Road Horde
+→ scene occurrence
+
+West Road Horde
+→ another scene occurrence
+
+Both occurrences can advertise Character Growth while retaining different
+player-facing names.
+
+The Reward Vector describes the category of reward opportunity rather than an
+exact guaranteed reward.
+
+Current implemented vectors are:
+
+- Character Growth;
+- Ability.
+
+`Any` remains available for reward sources that should use the general eligible
+reward pool.
 
 # Route Compatibility
 

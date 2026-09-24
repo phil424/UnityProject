@@ -34,6 +34,7 @@ namespace MiniCrawler.Progress
         public override string Description => RunUpgradeDescriptionFormatter.Format(effectType, amount);
         public override Sprite Icon => icon;
         public override RunUpgradeRarity Rarity => rarity;
+        public override RunRewardVector RewardVector => RunRewardVector.CharacterGrowth;
 
         public RunUpgradeEffectType EffectType => effectType;
         public float Amount => amount;

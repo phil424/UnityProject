@@ -5,14 +5,10 @@ using UnityEngine;
 namespace MiniCrawler.Progress
 {
     [CreateAssetMenu(
-        fileName =
-            "New Ability Evolution Reward",
-        menuName =
-            "Mini Crawler/Run Rewards/" +
-            "Ability Evolution"
+        fileName = "New Ability Evolution Reward",
+        menuName = "Mini Crawler/Run Rewards/" + "Ability Evolution"
     )]
-    public class AbilityEvolutionRewardDefinition :
-        RunRewardDefinition
+    public class AbilityEvolutionRewardDefinition : RunRewardDefinition
     {
         [Header("Identity")]
         [SerializeField]
@@ -26,35 +22,22 @@ namespace MiniCrawler.Progress
 
         [Header("Rarity")]
         [SerializeField]
-        private RunUpgradeRarity rarity =
-            RunUpgradeRarity.Rare;
+        private RunUpgradeRarity rarity = RunUpgradeRarity.Rare;
 
         [Header("Evolution")]
         [SerializeField]
-        private AbilityEvolutionDefinition
-            evolution;
+        private AbilityEvolutionDefinition evolution;
 
-        public AbilityEvolutionDefinition
-            Evolution =>
-                evolution;
+        public AbilityEvolutionDefinition Evolution => evolution;
 
-        public override string Id =>
-            string.IsNullOrWhiteSpace(id)
-                ? name
-                : id;
+        public override string Id => string.IsNullOrWhiteSpace(id) ? name : id;
 
         public override string DisplayName
         {
             get
             {
-                if (
-                    !string.IsNullOrWhiteSpace(
-                        displayName
-                    )
-                )
-                {
+                if (!string.IsNullOrWhiteSpace(displayName))
                     return displayName;
-                }
 
                 if (evolution == null)
                     return name;
@@ -85,9 +68,8 @@ namespace MiniCrawler.Progress
                             evolution.TargetAbility != null ? evolution.TargetAbility.Icon : null;
 
         public override RunUpgradeRarity Rarity => rarity;
-
+        public override RunRewardVector RewardVector => RunRewardVector.Ability;
         public override bool IsConfigured => evolution != null && evolution.IsConfigured;
-            
         public override bool AllowDuplicatePendingOffers => false;
 
         public override bool CanApply(PartyMemberDefinition member, RunBuild build)

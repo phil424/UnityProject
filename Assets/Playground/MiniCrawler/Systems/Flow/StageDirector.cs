@@ -25,7 +25,7 @@ namespace MiniCrawler.Systems
 
         public event Action<bool> LevelFinished;
         public event Action<int> CurrencyEarned;
-        public event Action RewardChoiceEarned;
+        public event Action<RunRewardVector> RewardChoiceEarned;
         
         public event Action<LevelEncounter> EncounterStarted;
         public event Action<LevelEncounter, LevelEncounterPhase, int> EncounterPhaseStarted;
@@ -237,12 +237,12 @@ namespace MiniCrawler.Systems
             return false;
         }
         
-        public bool TryAwardRewardChoice()
+        public bool TryAwardRewardChoice(RunRewardVector rewardVector = RunRewardVector.Any)
         {
             if (state == LevelState.Idle)
                 return false;
 
-            RewardChoiceEarned?.Invoke();
+            RewardChoiceEarned?.Invoke(rewardVector);
             return true;
         }
         
@@ -663,6 +663,18 @@ namespace MiniCrawler.Systems
         private void HandleEncounterCompleted(LevelEncounter encounter)
         {
             EncounterCompleted?.Invoke(encounter);
+
+            if (encounter == null)
+                return;
+
+            LevelEncounterDefinitionBinding binding = encounter.GetComponent<LevelEncounterDefinitionBinding>();
+            EncounterDefinition definition = binding != null ? binding.Definition : null;
+
+            if (definition == null || definition.RewardChoicesOnCompletion <= 0)
+                return;
+
+            for (int i = 0; i < definition.RewardChoicesOnCompletion; i++)
+                TryAwardRewardChoice(definition.RewardVector);
         }
         
         private void PrepareEncountersForLevel()

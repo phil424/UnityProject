@@ -104,6 +104,39 @@ Encounter
 This allows informed choice while preserving uncertainty inside the actual
 reward generation.
 
+## First Runtime Foundation
+
+**Status: Implemented Foundation**
+
+The first runtime Reward Vector implementation supports:
+
+- Character Growth;
+- Ability.
+
+Encounter Definitions may author:
+- a Reward Vector;
+- a number of reward choices granted on completion.
+
+The quick Encounter HUD exposes the vector before selection.
+
+When the Encounter completes, generated offers are filtered to eligible rewards
+matching that advertised vector.
+
+Current mapping:
+
+Character Growth
+→ `RunUpgradeDefinition`
+
+Ability
+→ Ability acquisition and Ability Evolution rewards
+
+Existing generic reward sources may request `Any`, which preserves the complete
+eligible reward pool.
+
+Future vectors such as Weapon Mods or persistent resources should be introduced
+alongside their real reward implementations rather than predeclared
+speculatively.
+
 # Intention-Changing Rewards
 
 A reward does not always need to make the Character directly stronger.

@@ -280,6 +280,18 @@ namespace MiniCrawler.UI
             
             if (ExpeditionObjectiveMatching.IsEncounterRelevant(encounter))
                 status += "  OBJECTIVE";
+                
+            LevelEncounterDefinitionBinding binding = encounter != null
+                ? encounter.GetComponent<LevelEncounterDefinitionBinding>()
+                : null;
+
+            EncounterDefinition definition = binding != null ? binding.Definition : null;
+
+            if (definition != null && definition.RewardChoicesOnCompletion > 0)
+            {
+                string rewardLabel = RunRewardVectorPresentation.GetDisplayName(definition.RewardVector);
+                status += $"  {rewardLabel}";
+            }
 
             bool selected = direction != null && direction.SelectedEncounter == encounter;
 

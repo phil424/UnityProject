@@ -15,6 +15,8 @@ MonoBehaviour:
   id: DormantHordeDefinition
   displayName: Dormant Horde
   description: A dormant horde of Skeletons
+  rewardVector: 1
+  rewardChoicesOnCompletion: 1
   allowAutomaticPlacement: 1
   requiredRouteTags:
   - {fileID: 11400000, guid: c543c527f52584149977762e1222ff5b, type: 2}

@@ -216,7 +216,7 @@ namespace MiniCrawler.Systems
                 return;
             }
 
-            GenerateRunUpgradeOffers();
+            GenerateRunRewardOffers();
             SetState(RunFlowState.BetweenLevels);
         }
         
@@ -267,7 +267,7 @@ namespace MiniCrawler.Systems
             );
         }
 
-        private void GenerateRunUpgradeOffers()
+        private void GenerateRunRewardOffers(RunRewardVector rewardVector = RunRewardVector.Any)
         {
             RunState runState = RunProgress.CurrentRun;
 
@@ -277,16 +277,13 @@ namespace MiniCrawler.Systems
             IReadOnlyList<RunUpgradeOffer> offers = RunUpgradeOfferGenerator.Generate(
                 runState,
                 availableRunRewards,
-                runUpgradeOfferCount
+                runUpgradeOfferCount,
+                rewardVector
             );
 
             if (offers.Count == 0)
             {
-                Debug.Log(
-                    "Level completed with no eligible run rewards. " +
-                    "The run may continue normally."
-                );
-
+                Debug.Log($"No eligible run rewards were available for reward vector '{rewardVector}'.");
                 return;
             }
 
@@ -314,9 +311,9 @@ namespace MiniCrawler.Systems
                 Debug.LogWarning("The current level could not award a reward choice.");
         }
         
-        private void HandleRewardChoiceEarned()
+        private void HandleRewardChoiceEarned(RunRewardVector rewardVector)
         {
-            GenerateRunUpgradeOffers();
+            GenerateRunRewardOffers(rewardVector);
         }
 
         private void HandleCurrencyEarned(int amount)

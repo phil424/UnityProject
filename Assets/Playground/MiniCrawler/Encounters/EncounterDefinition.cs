@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using MiniCrawler.Core;
 using MiniCrawler.Movement;
+using MiniCrawler.Progress;
 using MiniCrawler.Spawning;
 using UnityEngine;
 
@@ -222,6 +223,10 @@ namespace MiniCrawler.Encounters
         [SerializeField] private string id;
         [SerializeField] private string displayName;
         [SerializeField, TextArea(2, 4)] private string description;
+        
+        [Header("Rewards")]
+        [SerializeField] private RunRewardVector rewardVector = RunRewardVector.Any;
+        [SerializeField, Min(0)] private int rewardChoicesOnCompletion;
 
         [Header("Route Compatibility")]
         [SerializeField] private bool allowAutomaticPlacement;
@@ -250,6 +255,9 @@ namespace MiniCrawler.Encounters
         public IReadOnlyList<PhaseDefinition> Phases => phases;
         public IReadOnlyList<SpawnGroupDefinition> UnphasedGroups => unphasedGroups;
         public IReadOnlyList<EncounterRuleDefinition> Rules => rules;
+        
+        public RunRewardVector RewardVector => rewardVector;
+        public int RewardChoicesOnCompletion => rewardChoicesOnCompletion;
 
         public bool IsPhased => phases.Count > 0;
 
@@ -322,6 +330,8 @@ namespace MiniCrawler.Encounters
             
             foreach(EncounterRuleDefinition rule in rules)
                 rule?.ClampValues();
+            
+            rewardChoicesOnCompletion = Mathf.Max(0, rewardChoicesOnCompletion);
         }
     }
 }

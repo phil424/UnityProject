@@ -6,7 +6,11 @@ namespace MiniCrawler.Progress
 {
     public static class RunUpgradeOfferGenerator
     {
-        public static IReadOnlyList<RunUpgradeOffer> Generate(RunState runState, IReadOnlyList<RunRewardDefinition> rewards, int offerCount)
+        public static IReadOnlyList<RunUpgradeOffer> Generate(
+            RunState runState,
+            IReadOnlyList<RunRewardDefinition> rewards,
+            int offerCount,
+            RunRewardVector rewardVector = RunRewardVector.Any)
         {
             List<RunUpgradeOffer> candidates = new();
 
@@ -22,7 +26,13 @@ namespace MiniCrawler.Progress
 
                 foreach (RunRewardDefinition reward in rewards)
                 {
-                    if (reward == null || !reward.IsConfigured || !reward.CanApply(member, build))
+                    if (reward == null || !reward.IsConfigured)
+                        continue;
+
+                    if (rewardVector != RunRewardVector.Any && reward.RewardVector != rewardVector)
+                        continue;
+
+                    if (!reward.CanApply(member, build))
                         continue;
 
                     if (!reward.AllowDuplicatePendingOffers && runState.HasPendingOffer(member, reward))

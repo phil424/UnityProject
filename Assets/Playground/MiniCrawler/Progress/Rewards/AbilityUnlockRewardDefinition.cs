@@ -32,90 +32,42 @@ namespace MiniCrawler.Progress
         {
             get
             {
-                if (
-                    !string.IsNullOrWhiteSpace(
-                        displayName
-                    )
-                )
-                {
+                if (!string.IsNullOrWhiteSpace(displayName))
                     return displayName;
-                }
 
-                return ability != null
-                    ? $"Learn {ability.DisplayName}"
-                    : name;
+                return ability != null ? $"Learn {ability.DisplayName}" : name;
             }
         }
 
-        public override string Description =>
-            ability != null
-                ? $"Acquire {ability.DisplayName}."
-                : "Acquire a new ability.";
-
-        public override Sprite Icon =>
-            icon != null
-                ? icon
-                : ability != null
-                    ? ability.Icon
-                    : null;
-
+        public override string Description => ability != null ? $"Acquire {ability.DisplayName}." : "Acquire a new ability.";
+        public override Sprite Icon => icon != null ? icon : ability != null ? ability.Icon : null;
         public override RunUpgradeRarity Rarity => rarity;
-
+        public override RunRewardVector RewardVector => RunRewardVector.Ability;
         public override bool IsConfigured => ability != null;
-            
         public override bool AllowDuplicatePendingOffers => false;
 
-        public override bool CanApply(
-            PartyMemberDefinition member,
-            RunBuild build
-        )
+        public override bool CanApply(PartyMemberDefinition member, RunBuild build)
         {
-            return
-                member != null &&
-                build != null &&
-                ability != null &&
-                IsEligibleMember(member) &&
-                !build.HasAbility(ability);
+            return member != null && build != null && ability != null && IsEligibleMember(member) && !build.HasAbility(ability);
         }
 
-        public override bool TryApply(
-            PartyMemberDefinition member,
-            RunBuild build
-        )
+        public override bool TryApply(PartyMemberDefinition member, RunBuild build)
         {
             if (!CanApply(member, build))
                 return false;
 
-            return
-                build.TryAcquireAbility(
-                    ability
-                );
+            return build.TryAcquireAbility(ability);
         }
 
-        private bool IsEligibleMember(
-            PartyMemberDefinition member
-        )
+        private bool IsEligibleMember(PartyMemberDefinition member)
         {
-            if (
-                eligibleMembers == null ||
-                eligibleMembers.Length == 0
-            )
-            {
+            if (eligibleMembers == null || eligibleMembers.Length == 0)
                 return true;
-            }
 
-            foreach (
-                PartyMemberDefinition eligible
-                in eligibleMembers
-            )
+            foreach (PartyMemberDefinition eligible in eligibleMembers)
             {
-                if (
-                    eligible != null &&
-                    eligible.Id == member.Id
-                )
-                {
+                if (eligible != null && eligible.Id == member.Id)
                     return true;
-                }
             }
 
             return false;
