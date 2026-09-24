@@ -213,6 +213,28 @@ The base stat already exists.
 Expedition modification / movement-positioning behaviour requires further N2
 work before Range becomes a normal reward.
 
+### Ability
+
+**Ability Cooldown Recovery**
+
+Reduces effective active-Ability cooldown duration through faster recovery.
+
+It does not increase autonomous Basic Attack Speed.
+
+### Control
+
+**Knockback Power**
+
+Increases outgoing forced-motion distance from compatible attacks / Abilities.
+
+Current implementation scales displacement rather than speed.
+
+This makes stronger Knockback both move targets farther and keep them in forced
+motion for longer.
+
+Knockback Resistance remains a future counterpart once enemies or other systems
+can meaningfully apply forced movement to the playable Character.
+
 ## Working Candidate Stats
 
 The following have concrete future consumers but are not yet confirmed as normal

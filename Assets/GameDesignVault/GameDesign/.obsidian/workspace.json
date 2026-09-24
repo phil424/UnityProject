@@ -27,12 +27,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "00 - Core/00 - Game Design Index.md",
+                "file": "ProjectManagement/Roadmap.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "00 - Game Design Index"
+              "title": "Roadmap"
             }
           }
         ],
@@ -203,13 +203,25 @@
   },
   "active": "445c54ae6273e79a",
   "lastOpenFiles": [
-    "Design/Technical/Character Stats.md.meta",
-    "Design/Technical/Character Stats.md",
     "Design/Combat/Combat.md",
+    "Design/Technical/Character Stats.md",
+    "ProjectManagement/Roadmap.md",
+    "Design/Technical/Untitled.md",
+    "Development Rules/Workflow and Validation.md",
+    "Development Rules.md",
+    "00 - Core/What is the game/Narrative Framework.md",
+    "00 - Core/What is the game/What The Game Actually Is.md.meta",
+    "00 - Core/What is the game.meta",
+    "00 - Core/What is the game/Narrative Framework.md.meta",
+    "00 - Core/What is the game/What A Player Does.md.meta",
+    "00 - Core/What is the game/What The Game Actually Is.md",
+    "00 - Core/What is the game/What A Player Does.md",
+    "00 - Core/What is the game",
+    "00 - Core/00 - Game Design Index.md",
+    "Design/Technical/Character Stats.md.meta",
     "Design/Buildcraft.md",
     "Design/Characters/Characters.md",
     "00 - Core/02 - Core Gameplay Loop.md",
-    "ProjectManagement/Roadmap.md",
     "Design/Technical/Encounters/Level Authoring and Encounters.md",
     "Design/Technical/Encounters/Encounter Definitions.md",
     "Design/Objectives.md",
@@ -225,19 +237,7 @@
     "Design/UI-UX.md",
     "00 - Core/05 - Open Design Questions.md",
     "00 - Core/06 - Design Decision Log.md",
-    "Design/World/Expeditions.md",
-    "00 - Core/00 - Game Design Index.md",
     "ProjectManagement/Active Feature Programme.md.meta",
-    "Development Rules/Workflow and Validation.md",
-    "Development Rules.md",
-    "Active Feature Programme.md",
-    "ProjectManagement/High-Level Feature Priorities.md",
-    "ProjectManagement/High-Level Feature Priorities.md.meta",
-    "Core Instructions - Always Follow.md.meta",
-    "Design/Technical/Expedition/Route Geography.md.meta",
-    "Development Rules/UI Authoring.md.meta",
-    "Archive/Legacy Design Baselines/Core Design File.md.meta",
-    "Archive/Legacy Design Baselines.meta",
-    "Development Rules.meta"
+    "ProjectManagement/High-Level Feature Priorities.md.meta"
   ]
 }

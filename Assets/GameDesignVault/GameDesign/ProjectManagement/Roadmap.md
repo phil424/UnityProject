@@ -867,9 +867,9 @@ Later Objective breadth remains scheduled under 3.0P.
 
 **Status: Active**
 
-### 3.0N2A — Core Character Stats & Max Health Buildcraft
+### 3.0N2A — Core Character Stats & Max Health Buildcraft ✅
 
-**Status: Active**
+**Status: Complete**
 
 Purpose:
 
@@ -887,22 +887,34 @@ This step:
 Additional stats should only be introduced when their gameplay consumers are
 clear.
 
+### 3.0N2B — Tactical Stat Consumers
+
+**Status: Active**
+
 Purpose:
 
-Create the Character stat vocabulary and modifier foundation required by the
-rest of buildcraft.
+Add Character stats that materially change tactical play rather than simply
+adding more numerical reward variants.
 
-Develop/review:
-- survival stats;
-- movement stats;
-- autonomous attack stats;
-- knockback/control stats;
-- Ability-related stats where justified;
-- persistent / prepared / expedition / runtime modifier ownership;
-- temporary stat reward possibilities;
-- player-facing stat readability.
+This step proves:
 
-Avoid introducing general-purpose stats without concrete gameplay consumers.
+- Ability Cooldown Recovery;
+- Knockback Power;
+- actor-generic stat consumption;
+- expedition-owned stat reconstruction across Region transitions;
+- source-aware knockback scaling.
+
+Ability Cooldown Recovery affects active Ability cadence rather than basic attack
+cadence.
+
+Knockback Power modifies outgoing forced-motion distance without changing the
+Character's own Charge travel distance.
+
+Knockback Resistance remains deferred until meaningful incoming forced-motion
+gameplay exists.
+
+Basic Attack Range remains deferred until its relationship with preferred combat
+distance is deliberately designed.
 
 ## 3.0N3 — Rewards & Progression Flow
 

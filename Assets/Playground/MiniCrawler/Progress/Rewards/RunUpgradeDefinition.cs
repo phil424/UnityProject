@@ -9,90 +9,48 @@ namespace MiniCrawler.Progress
         MoveSpeedPercent,
         BasicAttackSpeedPercent,
         FlatArmour,
-        FlatMaxHealth
+        FlatMaxHealth,
+        AbilityCooldownRecoveryPercent,
+        KnockbackPowerPercent
     }
 
-    [CreateAssetMenu(
-        fileName = "New Run Upgrade",
-        menuName = "Mini Crawler/Run Upgrade"
-    )]
-    public class RunUpgradeDefinition :
-        RunRewardDefinition
+    [CreateAssetMenu(fileName = "New Run Upgrade", menuName = "Mini Crawler/Run Upgrade")]
+    public class RunUpgradeDefinition : RunRewardDefinition
     {
         [Header("Identity")]
-        [SerializeField]
-        private string id;
-
-        [SerializeField]
-        private string displayName;
-
-        [SerializeField]
-        private Sprite icon;
+        [SerializeField] private string id;
+        [SerializeField] private string displayName;
+        [SerializeField] private Sprite icon;
 
         [Header("Rarity")]
-        [SerializeField]
-        private RunUpgradeRarity rarity =
-            RunUpgradeRarity.Common;
+        [SerializeField] private RunUpgradeRarity rarity = RunUpgradeRarity.Common;
 
         [Header("Effect")]
-        [SerializeField]
-        private RunUpgradeEffectType effectType;
+        [SerializeField] private RunUpgradeEffectType effectType;
+        [SerializeField] private float amount;
 
-        [SerializeField]
-        private float amount;
+        public override string Id => string.IsNullOrWhiteSpace(id) ? name : id;
+        public override string DisplayName => string.IsNullOrWhiteSpace(displayName) ? name : displayName;
+        public override string Description => RunUpgradeDescriptionFormatter.Format(effectType, amount);
+        public override Sprite Icon => icon;
+        public override RunUpgradeRarity Rarity => rarity;
 
-        public override string Id =>
-            string.IsNullOrWhiteSpace(id)
-                ? name
-                : id;
+        public RunUpgradeEffectType EffectType => effectType;
+        public float Amount => amount;
 
-        public override string DisplayName =>
-            string.IsNullOrWhiteSpace(displayName)
-                ? name
-                : displayName;
+        public override bool IsConfigured => amount > 0f;
 
-        public override string Description =>
-            RunUpgradeDescriptionFormatter.Format(
-                effectType,
-                amount
-            );
-
-        public override Sprite Icon =>
-            icon;
-
-        public override RunUpgradeRarity Rarity =>
-            rarity;
-
-        public RunUpgradeEffectType EffectType =>
-            effectType;
-
-        public float Amount =>
-            amount;
-
-        public override bool IsConfigured =>
-            amount > 0f;
-
-        public override bool CanApply(
-            PartyMemberDefinition member,
-            RunBuild build
-        )
+        public override bool CanApply(PartyMemberDefinition member, RunBuild build)
         {
-            return
-                member != null &&
-                build != null &&
-                amount > 0f;
+            return member != null && build != null && amount > 0f;
         }
 
-        public override bool TryApply(
-            PartyMemberDefinition member,
-            RunBuild build
-        )
+        public override bool TryApply(PartyMemberDefinition member, RunBuild build)
         {
             if (!CanApply(member, build))
                 return false;
 
             build.ApplyRunUpgrade(this);
-
             return true;
         }
 
@@ -101,11 +59,7 @@ namespace MiniCrawler.Progress
             if (string.IsNullOrWhiteSpace(id))
                 id = name;
 
-            amount =
-                Mathf.Max(
-                    0f,
-                    amount
-                );
+            amount = Mathf.Max(0f, amount);
         }
     }
 }

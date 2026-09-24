@@ -86,16 +86,15 @@ namespace MiniCrawler.Movement
                         maxDeflectionDegrees
                     );
 
-            bool applied =
-                KnockbackResolver
-                    .TryApplyDirectional(
-                        sourceMotion.gameObject,
-                        target,
-                        propagatedDirection,
-                        propagatedDistance,
-                        propagatedSpeed,
-                        false
-                    );
+            bool applied = KnockbackResolver.TryApplyDirectional(
+                sourceMotion.gameObject,
+                target,
+                propagatedDirection,
+                propagatedDistance,
+                propagatedSpeed,
+                canPropagate: false,
+                applySourcePower: false
+            );
 
             if (!applied)
                 return false;

@@ -35,7 +35,16 @@ namespace MiniCrawler.Abilities
 
         public Sprite DisplayIcon => AbilityPresentationResolver.GetDisplayIcon(definition, evolutions);
 
-        public float Cooldown => definition != null ? definition.GetCooldown(level) : 0f;
+        public float Cooldown
+        {
+            get
+            {
+                float baseCooldown = definition != null ? definition.GetCooldown(level) : 0f;
+
+                AbilityStats stats = owner != null ? owner.GetComponent<AbilityStats>() : null;
+                return stats != null ? stats.GetModifiedCooldown(baseCooldown) : baseCooldown;
+            }
+        }
 
         public float CooldownRemaining => cooldownRemaining;
 

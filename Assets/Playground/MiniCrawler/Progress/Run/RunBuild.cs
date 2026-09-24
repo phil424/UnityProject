@@ -14,8 +14,7 @@ namespace MiniCrawler.Progress
     [Serializable]
     public sealed class RunBuild
     {
-        private readonly List<RunAbilityState>
-            abilities = new();
+        private readonly List<RunAbilityState> abilities = new();
 
         public int WeaponLevel { get; private set; }
         public int ArmourLevel { get; private set; }
@@ -26,9 +25,10 @@ namespace MiniCrawler.Progress
         public float BasicAttackSpeedPercentBonus { get; private set; }
         public float FlatArmourBonus { get; private set; }
         public float FlatMaxHealthBonus { get; private set; }
+        public float AbilityCooldownRecoveryPercentBonus { get; private set; }
+        public float KnockbackPowerPercentBonus { get; private set; }
 
-        public IReadOnlyList<RunAbilityState> Abilities =>
-            abilities;
+        public IReadOnlyList<RunAbilityState> Abilities => abilities;
 
         public int GetLevel(GearSlot slot)
         {
@@ -40,7 +40,7 @@ namespace MiniCrawler.Progress
                 _ => 0
             };
         }
-        
+
         public void InitializeGearLevels(int weaponLevel, int armourLevel, int focusLevel)
         {
             WeaponLevel = Math.Max(0, weaponLevel);
@@ -71,53 +71,30 @@ namespace MiniCrawler.Progress
             if (startingAbilities == null)
                 return;
 
-            foreach (
-                AbilityLoadoutEntry entry
-                in startingAbilities
-            )
+            foreach (AbilityLoadoutEntry entry in startingAbilities)
             {
-                if (
-                    entry == null ||
-                    entry.Ability == null
-                )
-                {
+                if (entry?.Ability == null)
                     continue;
-                }
 
-                TryAcquireAbility(
-                    entry.Ability,
-                    entry.Level
-                );
+                TryAcquireAbility(entry.Ability, entry.Level);
             }
         }
 
         public bool TryAcquireAbility(AbilityDefinition ability, int startingLevel = 1)
         {
-            if (
-                ability == null ||
-                HasAbility(ability)
-            )
-            {
+            if (ability == null || HasAbility(ability))
                 return false;
-            }
 
-            abilities.Add(
-                new RunAbilityState(
-                    ability,
-                    startingLevel
-                )
-            );
-
+            abilities.Add(new RunAbilityState(ability, startingLevel));
             return true;
         }
-        
+
         public bool TryIncreaseAbilityLevel(AbilityDefinition ability)
         {
             RunAbilityState state = GetAbilityState(ability);
-
             return state != null && state.TryIncreaseLevel();
         }
-        
+
         public bool ConfigureAbilityLevel(AbilityDefinition ability, int level)
         {
             if (ability == null)
@@ -136,123 +113,57 @@ namespace MiniCrawler.Progress
             state.ConfigureLevel(level);
             return true;
         }
-        
-        public bool CanAcquireAbilityEvolution(
-            AbilityEvolutionDefinition evolution
-        )
+
+        public bool CanAcquireAbilityEvolution(AbilityEvolutionDefinition evolution)
         {
-            if (
-                evolution == null ||
-                evolution.TargetAbility == null
-            )
-            {
+            if (evolution?.TargetAbility == null)
                 return false;
-            }
 
-            RunAbilityState state =
-                GetAbilityState(
-                    evolution.TargetAbility
-                );
-
-            return
-                state != null &&
-                state.CanAddEvolution(
-                    evolution
-                );
+            RunAbilityState state = GetAbilityState(evolution.TargetAbility);
+            return state != null && state.CanAddEvolution(evolution);
         }
-        
-        public bool TryAcquireAbilityEvolution(
-            AbilityEvolutionDefinition evolution
-        )
+
+        public bool TryAcquireAbilityEvolution(AbilityEvolutionDefinition evolution)
         {
-            if (
-                evolution == null ||
-                evolution.TargetAbility == null
-            )
-            {
+            if (evolution?.TargetAbility == null)
                 return false;
-            }
 
-            RunAbilityState state =
-                GetAbilityState(
-                    evolution.TargetAbility
-                );
-
-            return
-                state != null &&
-                state.TryAddEvolution(
-                    evolution
-                );
+            RunAbilityState state = GetAbilityState(evolution.TargetAbility);
+            return state != null && state.TryAddEvolution(evolution);
         }
 
-        public bool HasAbilityEvolution(
-            AbilityEvolutionDefinition evolution
-        )
+        public bool HasAbilityEvolution(AbilityEvolutionDefinition evolution)
         {
-            if (
-                evolution == null ||
-                evolution.TargetAbility == null
-            )
-            {
+            if (evolution?.TargetAbility == null)
                 return false;
-            }
 
-            RunAbilityState state =
-                GetAbilityState(
-                    evolution.TargetAbility
-                );
-
-            return
-                state != null &&
-                state.HasEvolution(
-                    evolution
-                );
+            RunAbilityState state = GetAbilityState(evolution.TargetAbility);
+            return state != null && state.HasEvolution(evolution);
         }
 
-        public bool HasAbility(
-            AbilityDefinition ability
-        )
+        public bool HasAbility(AbilityDefinition ability)
         {
-            return
-                GetAbilityState(ability) != null;
+            return GetAbilityState(ability) != null;
         }
 
-        public RunAbilityState GetAbilityState(
-            AbilityDefinition ability
-        )
+        public RunAbilityState GetAbilityState(AbilityDefinition ability)
         {
             if (ability == null)
                 return null;
 
-            foreach (
-                RunAbilityState state
-                in abilities
-            )
+            foreach (RunAbilityState state in abilities)
             {
-                if (
-                    state?.Definition != null &&
-                    state.Definition.Id ==
-                        ability.Id
-                )
-                {
+                if (state?.Definition != null && state.Definition.Id == ability.Id)
                     return state;
-                }
             }
 
             return null;
         }
 
-        public void ApplyRunUpgrade(
-            RunUpgradeDefinition upgrade
-        )
+        public void ApplyRunUpgrade(RunUpgradeDefinition upgrade)
         {
-            if (
-                upgrade == null ||
-                upgrade.Amount <= 0f
-            )
-            {
+            if (upgrade == null || upgrade.Amount <= 0f)
                 return;
-            }
 
             switch (upgrade.EffectType)
             {
@@ -274,6 +185,14 @@ namespace MiniCrawler.Progress
 
                 case RunUpgradeEffectType.FlatMaxHealth:
                     FlatMaxHealthBonus += upgrade.Amount;
+                    break;
+
+                case RunUpgradeEffectType.AbilityCooldownRecoveryPercent:
+                    AbilityCooldownRecoveryPercentBonus += upgrade.Amount;
+                    break;
+
+                case RunUpgradeEffectType.KnockbackPowerPercent:
+                    KnockbackPowerPercentBonus += upgrade.Amount;
                     break;
             }
         }

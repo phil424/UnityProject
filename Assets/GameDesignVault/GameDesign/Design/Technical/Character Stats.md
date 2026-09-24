@@ -65,6 +65,8 @@ Current Expedition stat modifiers include:
 - Basic Attack Speed;
 - Armour;
 - Max Health.
+- Ability Cooldown Recovery;
+- Knockback Power.
 
 These survive Region / level transitions and disappear when the Expedition ends.
 
@@ -130,6 +132,41 @@ Does not imply Ability cooldown recovery.
 Autonomous basic-attack reach.
 
 Base support exists; normal Expedition modification requires further work.
+
+## Ability Cooldown Recovery
+
+Actor-wide modifier for active Ability cooldown duration.
+
+Current formula:
+
+Effective Cooldown
+=
+Base Cooldown / (1 + Cooldown Recovery Percent / 100)
+
+This is deliberately distinct from Basic Attack Speed.
+
+Current consumer:
+`ActorAbility` through actor-owned `AbilityStats`.
+
+Ability cooldown recovery remains actor-generic and does not depend directly on
+player `RunBuild`.
+
+## Knockback Power
+
+Controls outgoing forced-motion distance produced through the generic knockback
+pipeline.
+
+Current behaviour:
+
+- scales outgoing knockback distance;
+- scales compatible pull distance;
+- does not scale forced-motion speed;
+- does not alter Charge's own travel distance;
+- propagated motion inherits the already-modified source motion rather than
+  applying Knockback Power a second time.
+
+Current consumer:
+`KnockbackResolver` through actor-owned `KnockbackStats`.
 
 # Important Invariants
 

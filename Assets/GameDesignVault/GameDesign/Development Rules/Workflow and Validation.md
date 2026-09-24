@@ -253,6 +253,8 @@ Implement explicitly
         ↓
 Focused manual validation
         ↓
+Optional milestone Code Health Pass
+        ↓
 Continue if small
         ↓
 Snapshot when the project has reached a meaningful checkpoint
@@ -314,17 +316,113 @@ foreach (PartyMember member in FindObjectsByType<PartyMember>(FindObjectsSortMod
 navigation.SetDestination(this, targetNode.Position, arrivalDistance, suppressCombatTargeting: false);
 ```
 ``
-# Minimise Formatting Churn
+# Code Health Pass
 
-When changing an existing source file, modify the smallest practical region.
+Legacy code should be improved gradually rather than preserved indefinitely or
+rewritten in one large cleanup effort.
 
-Do not reformat unrelated methods, whitespace or wrapping merely because a file
-is already being edited.
+At the end of each meaningful milestone or coherent lettered development slice,
+consider an optional Code Health Pass.
 
-A gameplay change should produce a diff that primarily describes the gameplay
-change.
+The normal target is:
 
-Broad formatting cleanup belongs in an explicitly scoped housekeeping step.
+> one project-owned legacy source file.
 
-When providing replacement code, preserve the established formatting of the
-surrounding file wherever practical.
+The pass may include:
+
+- formatting the file to the current compact C# conventions;
+- removing obsolete formatting patterns;
+- simplifying unnecessarily awkward local code;
+- improving misleading names where the change is clearly behaviour-preserving;
+- removing obviously dead local code where safe and verified;
+- making small readability improvements;
+- aligning the file with current Development Rules.
+
+The pass is optional.
+
+Skip it when:
+
+- the milestone already involved unusually risky changes;
+- there is no worthwhile low-risk candidate;
+- additional cleanup would obscure an important gameplay diff;
+- current project context is insufficient to verify behaviour safely.
+
+## Selection Priority
+
+Prefer candidates in roughly this order:
+
+1. old project-owned files that have not been modernised since early development;
+2. files with particularly poor or vertically exploded formatting;
+3. files repeatedly encountered during normal development;
+4. small stable files where behaviour-preserving cleanup is easy to verify;
+5. larger architectural files only when their responsibilities are already well
+   understood.
+
+When several candidates are equally suitable, prefer the older file.
+
+Do not modify third-party, package or imported asset code merely to match project
+style.
+
+## Scope
+
+A normal Code Health Pass should remain small.
+
+By default:
+
+- choose one file;
+- preserve runtime behaviour;
+- do not introduce new gameplay;
+- do not redesign architecture without a separately scoped implementation step;
+- do not cascade into neighbouring files merely for stylistic consistency.
+
+If inspection reveals a genuine architectural problem, record it or scope it as
+future work rather than silently expanding the cleanup pass.
+
+## Formatting
+
+Code Health files should be brought to the current compact C# style.
+
+Use normal Visual Studio / Rider-style formatting:
+
+- readable signatures and calls remain horizontal;
+- avoid unnecessary one-argument-per-line wrapping;
+- use compact trivial guards;
+- keep logical blocks visually grouped;
+- preserve braces where lifecycle-critical scope needs to remain explicit;
+- remove obsolete whitespace and formatting artifacts.
+
+The aim is not clever or maximally compressed code.
+
+The aim is ordinary, clean, readable C#.
+
+## Validation
+
+Because a Code Health Pass is intended to preserve behaviour, validation should
+be proportional to the file being changed.
+
+Normally:
+
+- require successful compilation;
+- perform one focused manual check of the behaviour owned by the file.
+
+Do not perform a full-project regression pass for a formatting/readability-only
+cleanup.
+
+## Development Principle
+
+Feature work and code-health work are separate concerns.
+
+Prefer:
+
+Feature Implementation
+↓
+Feature Validation
+↓
+Optional Code Health Pass
+↓
+Behaviour-Preservation Validation
+
+rather than mixing unrelated cleanup throughout the feature diff.
+
+Over time this process should steadily migrate the oldest parts of the project
+toward current standards without requiring a disruptive repository-wide rewrite.

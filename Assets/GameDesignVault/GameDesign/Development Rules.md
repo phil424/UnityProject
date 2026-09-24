@@ -189,7 +189,10 @@ Do not vertically explode code for presentation in chat.
 Around 120–140 characters is an acceptable working range when the result is
 still readable.
 
-Do not reformat unrelated existing code while implementing a feature.
+Do not mix unrelated formatting/refactoring churn into feature implementation.
+
+Legacy code may instead be improved through the recurring milestone Code Health
+Pass defined in [[Workflow and Validation]].
 
 Compact single-line guards are preferred for trivial checks.
 

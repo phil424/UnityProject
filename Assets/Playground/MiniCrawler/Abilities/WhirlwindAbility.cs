@@ -270,66 +270,35 @@ namespace MiniCrawler.Abilities
             return false;
         }
 
-        private bool TryApplyVortexPull(
-            Health target
-        )
+        private bool TryApplyVortexPull(Health target)
         {
-            if (
-                Owner == null ||
-                target == null ||
-                target.IsDead
-            )
-            {
+            if (Owner == null || target == null || target.IsDead)
                 return false;
-            }
 
-            Vector3 towardOwner =
-                Owner.transform.position -
-                target.transform.position;
-
+            Vector3 towardOwner = Owner.transform.position - target.transform.position;
             towardOwner.y = 0f;
 
-            float distanceToOwner =
-                towardOwner.magnitude;
+            float distanceToOwner = towardOwner.magnitude;
 
-            if (
-                distanceToOwner <=
-                MinimumDirectionSquared
-            )
-            {
+            if (distanceToOwner <= MinimumDirectionSquared)
                 return false;
-            }
 
-            float stopDistance =
-                GetVortexStopDistance(
-                    target
-                );
-
-            float availablePullDistance =
-                Mathf.Max(
-                    0f,
-                    distanceToOwner -
-                    stopDistance
-                );
-
-            float pullDistance =
-                Mathf.Min(
-                    KnockbackDistance,
-                    availablePullDistance
-                );
+            float stopDistance = GetVortexStopDistance(target);
+            float availablePullDistance = Mathf.Max(0f, distanceToOwner - stopDistance);
+            float desiredPullDistance = KnockbackResolver.ResolveOutgoingDistance(Owner, KnockbackDistance);
+            float pullDistance = Mathf.Min(desiredPullDistance, availablePullDistance);
 
             if (pullDistance <= 0f)
                 return false;
 
-            return
-                KnockbackResolver
-                    .TryApplyDirectional(
-                        Owner,
-                        target,
-                        towardOwner.normalized,
-                        pullDistance,
-                        KnockbackSpeed
-                    );
+            return KnockbackResolver.TryApplyDirectional(
+                Owner,
+                target,
+                towardOwner.normalized,
+                pullDistance,
+                KnockbackSpeed,
+                applySourcePower: false
+            );
         }
 
         private float GetVortexStopDistance(

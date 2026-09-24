@@ -1,3 +1,4 @@
+using MiniCrawler.Abilities;
 using MiniCrawler.Combat;
 using MiniCrawler.Core;
 using MiniCrawler.Movement;
@@ -17,6 +18,15 @@ namespace MiniCrawler.Progress
             Health health = spawnedActor.GetComponent<Health>();
             SupportStats supportStats = spawnedActor.GetComponent<SupportStats>();
             AutoTargetMover mover = spawnedActor.GetComponent<AutoTargetMover>();
+            AbilityStats abilityStats = spawnedActor.GetComponent<AbilityStats>();
+
+            if (abilityStats == null)
+                abilityStats = spawnedActor.AddComponent<AbilityStats>();
+
+            KnockbackStats knockbackStats = spawnedActor.GetComponent<KnockbackStats>();
+
+            if (knockbackStats == null)
+                knockbackStats = spawnedActor.AddComponent<KnockbackStats>();
 
             float gearDamageBonus = build.WeaponLevel * definition.DamagePerWeaponLevel;
             float gearArmourBonus = build.ArmourLevel * definition.ArmourPerArmourLevel;
@@ -33,6 +43,9 @@ namespace MiniCrawler.Progress
             {
                 mover.ApplyRunMoveSpeedBonus(build.MoveSpeedPercentBonus);
             }
+            
+            abilityStats.ApplyRunCooldownRecoveryBonus(build.AbilityCooldownRecoveryPercentBonus);
+            knockbackStats.ApplyRunPowerBonus(build.KnockbackPowerPercentBonus);
 
             if (health != null)
             {

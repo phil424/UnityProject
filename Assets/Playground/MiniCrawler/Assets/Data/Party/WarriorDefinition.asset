@@ -23,6 +23,8 @@ MonoBehaviour:
     level: 1
   - ability: {fileID: 11400000, guid: 1be37d506ffc32745b4aa495ddd5a29c, type: 2}
     level: 1
+  - ability: {fileID: 11400000, guid: 920b72562bef35a4c9c718dfedd1eef9, type: 2}
+    level: 1
   weaponName: Sword
   armourName: Armour
   focusName: None

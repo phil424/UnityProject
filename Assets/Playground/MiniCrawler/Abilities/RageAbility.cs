@@ -4,97 +4,57 @@ using UnityEngine;
 namespace MiniCrawler.Abilities
 {
     [DisallowMultipleComponent]
-    public class RageAbility :
-        ActorAbility
+    public class RageAbility : ActorAbility
     {
         [Header("Rage")]
         [SerializeField]
         private AbilityLevelValue duration;
 
         [SerializeField]
-        private AbilityLevelValue
-            outgoingDamagePercentBonus;
+        private AbilityLevelValue outgoingDamagePercentBonus;
 
         [SerializeField]
-        private AbilityLevelValue
-            attackSpeedPercentBonus;
+        private AbilityLevelValue attackSpeedPercentBonus;
 
         [SerializeField]
-        private AbilityLevelValue
-            moveSpeedPercentBonus;
+        private AbilityLevelValue moveSpeedPercentBonus;
 
         [SerializeField]
-        private AbilityLevelValue
-            flatArmourBonus;
+        private AbilityLevelValue flatArmourBonus;
 
-        public float Duration =>
-            Mathf.Max(
-                0.1f,
-                Evaluate(
-                    duration
-                )
-            );
+        public float Duration => Mathf.Max(0.1f, Evaluate(duration));
 
-        public float
-            OutgoingDamagePercentBonus =>
-                Evaluate(
-                    outgoingDamagePercentBonus
-                );
+        public float OutgoingDamagePercentBonus => Evaluate(outgoingDamagePercentBonus);
 
-        public float AttackSpeedPercentBonus =>
-            Evaluate(
-                attackSpeedPercentBonus
-            );
+        public float AttackSpeedPercentBonus => Evaluate(attackSpeedPercentBonus);
 
-        public float MoveSpeedPercentBonus =>
-            Evaluate(
-                moveSpeedPercentBonus
-            );
+        public float MoveSpeedPercentBonus => Evaluate(moveSpeedPercentBonus);
 
-        public float FlatArmourBonus =>
-            Evaluate(
-                flatArmourBonus
-            );
+        public float FlatArmourBonus => Evaluate(flatArmourBonus);
 
-        protected override bool
-            CanActivateAbility()
+        protected override bool CanActivateAbility()
         {
             if (Owner == null)
                 return false;
 
-            RuntimeStatModifiers modifiers =
-                Owner.GetComponent<
-                    RuntimeStatModifiers
-                >();
+            RuntimeStatModifiers modifiers = Owner.GetComponent<RuntimeStatModifiers>();
 
-            return
-                modifiers == null ||
-                !modifiers.HasModifier(
-                    ModifierSourceId
-                );
+            return modifiers == null || !modifiers.HasModifier(ModifierSourceId);
         }
 
-        protected override bool
-            ExecuteAbility()
+        protected override bool ExecuteAbility()
         {
             if (Owner == null)
                 return false;
 
-            RuntimeStatModifiers modifiers =
-                Owner.GetComponent<
-                    RuntimeStatModifiers
-                >();
+            RuntimeStatModifiers modifiers = Owner.GetComponent<RuntimeStatModifiers>();
 
             if (modifiers == null)
             {
-                modifiers =
-                    Owner.AddComponent<
-                        RuntimeStatModifiers
-                    >();
+                modifiers = Owner.AddComponent<RuntimeStatModifiers>();
             }
 
-            bool applied =
-                modifiers.ApplyOrRefresh(
+            bool applied = modifiers.ApplyOrRefresh(
                     ModifierSourceId,
                     Duration,
                     OutgoingDamagePercentBonus,
@@ -123,19 +83,11 @@ namespace MiniCrawler.Abilities
             return true;
         }
 
-        private string ModifierSourceId =>
-            Definition != null
-                ? $"Ability:{Definition.Id}"
-                : $"Ability:{GetType().Name}";
+        private string ModifierSourceId => Definition != null ? $"Ability:{Definition.Id}" : $"Ability:{GetType().Name}";
 
-        private float Evaluate(
-            AbilityLevelValue value
-        )
+        private float Evaluate(AbilityLevelValue value)
         {
-            return
-                value != null
-                    ? value.Evaluate(Level)
-                    : 0f;
+            return value != null ? value.Evaluate(Level) : 0f;
         }
     }
 }

@@ -24,6 +24,12 @@ namespace MiniCrawler.Progress
 
                 case RunUpgradeEffectType.FlatMaxHealth:
                     return $"Gain {formattedAmount} maximum health.";
+                
+                case RunUpgradeEffectType.AbilityCooldownRecoveryPercent:
+                    return $"Recover ability cooldowns {formattedAmount}% faster.";
+
+                case RunUpgradeEffectType.KnockbackPowerPercent:
+                    return $"Increase outgoing knockback and pull distance by {formattedAmount}%.";
 
                 default:
                     return "Unknown upgrade effect.";
