@@ -887,35 +887,48 @@ This step:
 Additional stats should only be introduced when their gameplay consumers are
 clear.
 
-### 3.0N2B — Tactical Stat Consumers
+### 3.0N2B — Project Health & Parallel Work Checkpoint ✅
+
+**Status: Complete**
+
+This checkpoint captured parallel project work while the N2 gameplay programme
+remained active.
+
+It includes:
+- recurring milestone Code Health Pass rules;
+- writer-facing concise game / player-loop / narrative briefing documents;
+- initial legacy-code formatting cleanup;
+- parallel Ability experimentation.
+
+This checkpoint did not expand the Character-stat vocabulary.
+
+### 3.0N2C — Tactical Stat Consumers
 
 **Status: Active**
 
 Purpose:
 
-Add Character stats that materially change tactical play rather than simply
-adding more numerical reward variants.
+Add Character stats that materially alter tactical play rather than only
+increasing general numerical power.
 
 This step proves:
-
 - Ability Cooldown Recovery;
 - Knockback Power;
 - actor-generic stat consumption;
-- expedition-owned stat reconstruction across Region transitions;
-- source-aware knockback scaling.
+- Expedition-owned stat reconstruction across Region transitions;
+- source-aware outgoing knockback scaling.
 
-Ability Cooldown Recovery affects active Ability cadence rather than basic attack
-cadence.
+Ability Cooldown Recovery affects active Ability cadence rather than autonomous
+Basic Attack cadence.
 
-Knockback Power modifies outgoing forced-motion distance without changing the
-Character's own Charge travel distance.
+Knockback Power modifies outgoing forced-motion distance without altering the
+Character's own movement distance.
 
 Knockback Resistance remains deferred until meaningful incoming forced-motion
 gameplay exists.
 
-Basic Attack Range remains deferred until its relationship with preferred combat
-distance is deliberately designed.
-
+Basic Attack Range remains deferred until preferred combat-distance behaviour is
+designed alongside it.
 ## 3.0N3 — Rewards & Progression Flow
 
 Purpose:

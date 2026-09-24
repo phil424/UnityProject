@@ -27,12 +27,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "ProjectManagement/Roadmap.md",
+                "file": "Design/Technical/Character Stats.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Roadmap"
+              "title": "Character Stats"
             }
           }
         ],
@@ -203,9 +203,10 @@
   },
   "active": "445c54ae6273e79a",
   "lastOpenFiles": [
+    "Design/Technical/Progression Lifetimes.md",
+    "ProjectManagement/Roadmap.md",
     "Design/Combat/Combat.md",
     "Design/Technical/Character Stats.md",
-    "ProjectManagement/Roadmap.md",
     "Design/Technical/Untitled.md",
     "Development Rules/Workflow and Validation.md",
     "Development Rules.md",
@@ -236,7 +237,6 @@
     "ProjectManagement/Active Feature Programme.md",
     "Design/UI-UX.md",
     "00 - Core/05 - Open Design Questions.md",
-    "00 - Core/06 - Design Decision Log.md",
     "ProjectManagement/Active Feature Programme.md.meta",
     "ProjectManagement/High-Level Feature Priorities.md.meta"
   ]

@@ -20,12 +20,7 @@ namespace MiniCrawler.Spawning
             Instance = this;
         }
 
-        public GameObject Spawn(
-            ActorDefinition definition,
-            Vector3 position,
-            Quaternion rotation,
-            GameObject source = null
-        )
+        public GameObject Spawn(ActorDefinition definition, Vector3 position, Quaternion rotation, GameObject source = null)
         {
             if (definition == null)
             {
@@ -39,12 +34,7 @@ namespace MiniCrawler.Spawning
                 return null;
             }
 
-            GameObject spawned = Instantiate(
-                definition.Prefab,
-                position,
-                rotation,
-                spawnedObjectsParent
-            );
+            GameObject spawned = Instantiate(definition.Prefab, position, rotation, spawnedObjectsParent);
 
             string sourceName = source != null ? source.name : "Unknown";
             Debug.Log($"[Spawner] Spawned {definition.Id} from {sourceName}.");
