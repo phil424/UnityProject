@@ -40,6 +40,11 @@ It should not make expedition buildcraft irrelevant.
 
 **Status: Deprecated Direction**
 
+The Preparation frontend no longer exposes Weapon / Armour / Focus levels as
+the primary persistent progression surface.
+
+Character Mastery now occupies that role.
+
 The previous plan centred persistent progression on separate Weapon and Armour
 trees.
 
@@ -93,10 +98,45 @@ removing the need to build significant temporary power during an expedition.
 
 # Character Mastery
 
-**Status: Working**
+**Status: Implemented Foundation**
 
 Character-focused progression is now the preferred major persistent progression
 surface.
+
+The first runtime Character Mastery implementation is Character-owned and
+data-driven.
+
+Current flow:
+
+Persistent Resources
+↓
+Mastery Node purchase
+↓
+per-Character persistent ownership
+↓
+Prepared stat modifiers
+↓
+Expedition RunBuild snapshot
+↓
+runtime Actor reconstruction
+
+The first Punchy proof contains:
+
+- Heavy Hands;
+- Conditioning;
+- Combo Tempo;
+- Impact Training.
+
+These are prototype gameplay nodes rather than the intended final Punchy tree.
+
+Mastery nodes may depend on other nodes and may require multiple persistent
+resource tiers.
+
+Prepared Mastery bonuses and temporary Expedition bonuses remain separate
+sources even when they modify the same runtime stat.
+
+Future node implementations may unlock non-stat possibilities such as Abilities,
+Weapon Mods, combo changes and Character-specific mechanics.
 
 It may eventually contain:
 
@@ -112,7 +152,38 @@ numerical superiority.
 
 # Generic Resource Tiers
 
-**Status: Working**
+**Status: Implemented Foundation**
+
+The first runtime implementation now supports three placeholder persistent
+resource tiers:
+
+- Level 1 Resource;
+- Level 2 Resource;
+- Level 3 Resource.
+
+These names are explicitly temporary.
+
+Current prototype acquisition demonstrates the intended progression shape:
+
+Normal enemies
+→ primarily Level 1.
+
+Elites
+→ Level 1 + Level 2.
+
+Bosses
+→ Level 1 + Level 2 + Level 3.
+
+Exact quantities are prototype validation values rather than economy balance.
+
+Resources earned during an expedition are staged in Expedition-owned state and
+are banked into persistent progression when the expedition ends through either
+Voluntary Return or Defeat.
+
+Already-earned persistent resources are therefore not lost because the run
+ended in failure.
+
+Tier conversion remains unimplemented until useful ratios and sinks exist.
 
 Persistent progression may use broadly reusable tiered resources.
 

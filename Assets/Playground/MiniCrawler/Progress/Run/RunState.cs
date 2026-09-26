@@ -16,6 +16,9 @@ namespace MiniCrawler.Progress
 
         public int Currency { get; private set; }
         public int TotalCurrencyEarned { get; private set; }
+        public int Level1ResourcesEarned { get; private set; }
+        public int Level2ResourcesEarned { get; private set; }
+        public int Level3ResourcesEarned { get; private set; }
         public WorldClockState WorldClock { get; } = new();
         public WorldEventState WorldEvents { get; } = new();
 
@@ -72,6 +75,7 @@ namespace MiniCrawler.Progress
                 );
 
                 build.InitializeStartingAbilities(member.StartingAbilities);
+                PersistentProgression.ApplyMasteryToBuild(member, build);
             }
         }
 
@@ -82,6 +86,38 @@ namespace MiniCrawler.Progress
 
             Currency += amount;
             TotalCurrencyEarned += amount;
+        }
+        
+        public int GetPersistentResourceEarned(PersistentResourceTier tier)
+        {
+            return tier switch
+            {
+                PersistentResourceTier.Level1 => Level1ResourcesEarned,
+                PersistentResourceTier.Level2 => Level2ResourcesEarned,
+                PersistentResourceTier.Level3 => Level3ResourcesEarned,
+                _ => 0
+            };
+        }
+
+        public void AddPersistentResource(PersistentResourceTier tier, int amount)
+        {
+            if (amount <= 0)
+                return;
+
+            switch (tier)
+            {
+                case PersistentResourceTier.Level1:
+                    Level1ResourcesEarned += amount;
+                    break;
+
+                case PersistentResourceTier.Level2:
+                    Level2ResourcesEarned += amount;
+                    break;
+
+                case PersistentResourceTier.Level3:
+                    Level3ResourcesEarned += amount;
+                    break;
+            }
         }
 
         public bool IsSelected(PartyMemberDefinition definition)

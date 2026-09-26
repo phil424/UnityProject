@@ -15,7 +15,8 @@ MonoBehaviour:
   id: Warrior
   displayName: Punchy
   role: Fighter
-  description: Melee boi
+  description: A close-range brawler built around relentless attack chains, mobility
+    and battlefield control.
   portrait: {fileID: 0}
   actorDefinition: {fileID: 11400000, guid: 8ada63f1fe3585a409f411fbdb0dc2f5, type: 2}
   startingAbilities:
@@ -25,6 +26,11 @@ MonoBehaviour:
     level: 1
   - ability: {fileID: 11400000, guid: 920b72562bef35a4c9c718dfedd1eef9, type: 2}
     level: 1
+  masteryNodes:
+  - {fileID: 11400000, guid: 0dafd337e85c18441a7afd1a1bfcf845, type: 2}
+  - {fileID: 11400000, guid: 44c3f62341ef75042af30f319f7c25e0, type: 2}
+  - {fileID: 11400000, guid: 209e310b04d5afc4bb4444b516729f1e, type: 2}
+  - {fileID: 11400000, guid: ed21f2d92ae470c47a9db38696a7ed3f, type: 2}
   weaponName: Sword
   armourName: Armour
   focusName: None

@@ -137,6 +137,39 @@ Future vectors such as Weapon Mods or persistent resources should be introduced
 alongside their real reward implementations rather than predeclared
 speculatively.
 
+## Quick Encounter Reward Focus
+
+**Status: Implemented Foundation**
+
+Reward Vectors can now influence which currently-selectable opportunities are
+surfaced in the three quick Encounter slots.
+
+Current focuses:
+
+Balanced
+→ normal oldest-selectable ordering.
+
+Character Growth
+→ Character Growth Encounters first.
+
+Ability
+→ Ability Encounters first.
+
+Focus is deliberately a soft preference.
+
+If fewer than three matching Encounters exist, remaining slots use the normal
+general-purpose ordering.
+
+Quick Encounter Focus does not change:
+
+- Encounter generation;
+- Encounter availability;
+- expiry;
+- authored Reward Vector;
+- the reward produced when the Encounter completes.
+
+It only changes the quick-access ranking of opportunities that already exist.
+
 # Reward Provenance
 
 **Status: Implemented Foundation**
@@ -234,3 +267,30 @@ Principles:
 # Pending Rewards
 Document queue, button, travel interaction and deferral.
 
+# Persistent Resource Rewards
+
+**Status: Implemented Foundation**
+
+Persistent resources are distinct from temporary Run Reward choices.
+
+Current enemy proof:
+
+Normal enemy
+→ Level 1.
+
+Elite
+→ Level 1 + Level 2.
+
+Boss
+→ Level 1 + Level 2 + Level 3.
+
+These values are authored per enemy through `EnemyMember`.
+
+Persistent-resource earnings accumulate in the active Expedition and are banked
+when the Expedition ends.
+
+Showcase / Preparation actors do not grant resources because they remain outside
+the normal StageDirector-owned Region actor lifecycle.
+
+Resource Reward Vectors and resource-focused Encounter selection remain future
+work.

@@ -1147,3 +1147,75 @@ the most efficient generic currency.
 - future progression systems should leave hooks for authored discoveries;
 - Hunts/Objectives/Achievements may advance narrative state;
 - narrative remains Exploratory until dedicated writing/design work occurs.
+
+## 2026-09-26 — Expedition Currency and persistent resources are separate
+
+### Decision
+
+Temporary Expedition Currency and long-term persistent resources are separate
+economic concepts.
+
+Persistent resources currently use three placeholder tiers:
+
+- Level 1;
+- Level 2;
+- Level 3.
+
+Earned persistent resources are staged during an Expedition and bank on any
+normal Expedition end, including Defeat.
+
+### Reason
+
+Temporary run spending and permanent progression should not compete for the same
+currency or cause the player to avoid interesting temporary purchases.
+
+The player should also retain persistent progress already earned during a failed
+expedition.
+
+### Implications
+
+- total Expedition Currency no longer automatically becomes persistent wealth;
+- enemies can author explicit persistent-resource rewards;
+- normal / Elite / Boss enemies can occupy different resource tiers;
+- persistent-resource earnings survive Region transitions;
+- Voluntary Return and Defeat both bank earned resources;
+- resource conversion remains separate future economy work;
+- the prototype Weapon / Armour / Focus progression temporarily consumes Level 1
+  Resource until Character Mastery replaces it.
+
+## 2026-09-26 — Character Mastery becomes the primary Character progression surface
+
+### Decision
+
+Character Mastery is the primary player-facing Character-specific persistent
+progression model.
+
+The first implementation uses authored nodes with:
+
+- prerequisites;
+- persistent-resource costs;
+- per-Character permanent ownership;
+- Prepared stat modifiers.
+
+Prepared stat modifiers are copied into the Expedition RunBuild while remaining
+distinct from temporary Expedition stat progression.
+
+### Reason
+
+The previous linear Weapon / Armour / Focus levels provided prototype
+progression but did not represent the intended Character-centric buildcraft
+direction.
+
+Mastery provides a surface that can later hold both frequent incremental
+progress and meaningful unlock milestones.
+
+### Implications
+
+- the Preparation Progression tab presents Character Mastery;
+- generic persistent resources now have a real progression sink;
+- the same stat can receive both Prepared and Expedition modifiers;
+- future Mastery node types may unlock Abilities, Weapon Mods or Character
+  mechanics;
+- final Punchy tree structure and balance remain unresolved;
+- old Weapon / Armour / Focus data may remain temporarily for compatibility and
+  development tooling but is no longer the intended player progression model.

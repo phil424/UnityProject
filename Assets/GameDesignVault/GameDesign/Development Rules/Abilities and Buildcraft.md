@@ -284,7 +284,7 @@ persistent unlock
 other future content
 ```
 
-Do not grow `RunUpgradeEffectType` into a giant list of things such as:
+Do not grow `CharacterStatModifierType` into a giant list of content unlocks such as:
 
 ```
 AcquireCharge

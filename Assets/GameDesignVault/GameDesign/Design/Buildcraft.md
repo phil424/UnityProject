@@ -46,8 +46,14 @@ Potential persistent preparation includes:
 - cross-Character unlocks;
 - persistent progression resources.
 
-The existing Weapon / Armour / Focus progression implementation is prototype
-architecture pending replacement during the Meta Progression programme.
+Character Mastery now provides the first implemented Character-centric
+persistent progression surface.
+
+The older Weapon / Armour / Focus persistent progression is no longer exposed
+as the normal player-facing progression model.
+
+Temporary compatibility/tooling seams may remain until their remaining
+dependencies are cleaned up.
 
 Persistent progression should broaden available possibilities without replacing
 the need for meaningful Expedition buildcraft.

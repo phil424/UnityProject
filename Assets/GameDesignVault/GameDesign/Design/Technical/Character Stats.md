@@ -41,18 +41,28 @@ runtime components already own meaningful authored values.
 
 ## Persistent / Prepared Modifiers
 
-The current implementation still contains prototype:
+Character Mastery is the first implemented prepared-stat source.
 
-- Weapon Level;
-- Armour Level;
-- Focus Level.
+Persistent ownership lives in `PersistentProgression`.
 
-These are applied through `PartyUpgradeApplicator`.
+When an Expedition begins, unlocked Mastery nodes are copied into
+`RunBuild` as Prepared stat modifiers.
 
-This persistent gear model is scheduled for replacement/reassessment during
-Meta Progression work.
+`RunBuild` keeps:
 
-Do not build new long-term architecture around it.
+Prepared modifiers
++
+Expedition modifiers
+
+as separate sources.
+
+Runtime consumers receive their combined effective value.
+
+The shared `CharacterStatModifierType` vocabulary exists because both
+Character Mastery and Expedition stat rewards now modify the same concrete
+runtime stats.
+
+Do not add new stat types without a real gameplay consumer.
 
 ## Expedition Modifiers
 

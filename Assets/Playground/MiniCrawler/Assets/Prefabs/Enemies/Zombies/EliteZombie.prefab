@@ -149,6 +149,11 @@ MonoBehaviour:
   isBoss: 0
   currencyReward: 5
   rewardChoicesOnDeath: 1
+  persistentResourceRewards:
+  - tier: 0
+    amount: 5
+  - tier: 1
+    amount: 1
 --- !u!114 &4272702636052559214
 MonoBehaviour:
   m_ObjectHideFlags: 0

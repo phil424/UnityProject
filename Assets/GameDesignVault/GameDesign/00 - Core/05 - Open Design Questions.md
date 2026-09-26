@@ -546,21 +546,44 @@ Reward / Encounter presentation work.
 
 ## Quick Encounter Focus
 
+**Status: Partially Resolved / Implemented Foundation**
+
 **Question:** Can the player bias the three quick Encounter slots toward the type
 of opportunity they currently care about?
 
-**Current Thinking:**
-Potential focuses include:
+**Implemented Foundation:**
+
+The first runtime implementation supports:
+
 - Balanced;
+- Character Growth;
+- Ability.
+
+Balanced preserves the normal oldest-selectable ordering.
+
+Character Growth and Ability are soft preferences:
+
+matching Encounters are ranked first while remaining slots fall back to the
+normal general-purpose ordering.
+
+The focus does not:
+- generate Encounters;
+- suppress non-matching Encounter Supply;
+- change authored Reward Vectors;
+- alter expiry or commitment.
+
+**Still Open:**
+
+Potential future focuses include:
+
 - Resources;
-- Abilities;
 - Weapon Mods;
 - Objectives;
 - High Value;
 - Boss / Hunt.
 
-If insufficient matching content exists, selection should fall back to the
-normal general-purpose logic.
+These should only be added when the corresponding gameplay systems provide
+useful matching data.
 
 **Need to decide by:**
-Strategic Encounter-selection development.
+Expanded strategic Encounter-selection development.

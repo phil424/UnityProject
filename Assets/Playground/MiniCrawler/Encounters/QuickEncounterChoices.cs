@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using MiniCrawler.Progress;
 using MiniCrawler.Systems;
 using UnityEngine;
 
@@ -13,8 +14,9 @@ namespace MiniCrawler.Encounters
 
         public static QuickEncounterChoices Instance { get; private set; }
 
-        [Header("Prototype")]
+        [Header("Quick Slots")]
         [SerializeField] private bool includeSelectedEncounter = true;
+        [SerializeField] private QuickEncounterFocus focus = QuickEncounterFocus.Balanced;
 
         private readonly LevelEncounter[] choices = new LevelEncounter[SlotCount];
         private readonly List<LevelEncounter> candidates = new();
@@ -23,9 +25,11 @@ namespace MiniCrawler.Encounters
         private EncounterDirectionController directionController;
 
         public event Action ChoicesChanged;
+        public event Action<QuickEncounterFocus> FocusChanged;
 
         public IReadOnlyList<LevelEncounter> Choices => choices;
         public bool IncludeSelectedEncounter => includeSelectedEncounter;
+        public QuickEncounterFocus Focus => focus;
 
         private void Awake()
         {
@@ -80,6 +84,16 @@ namespace MiniCrawler.Encounters
             RefreshChoices();
         }
 
+        public void SetFocus(QuickEncounterFocus value)
+        {
+            if (focus == value)
+                return;
+
+            focus = value;
+            FocusChanged?.Invoke(focus);
+            RefreshChoices();
+        }
+
         public void RefreshChoices()
         {
             candidates.Clear();
@@ -100,7 +114,7 @@ namespace MiniCrawler.Encounters
                     candidates.Add(encounter);
                 }
 
-                candidates.Sort(CompareByAvailability);
+                candidates.Sort(CompareCandidates);
             }
 
             bool changed = false;
@@ -118,6 +132,40 @@ namespace MiniCrawler.Encounters
 
             if (changed)
                 ChoicesChanged?.Invoke();
+        }
+
+        private int CompareCandidates(LevelEncounter a, LevelEncounter b)
+        {
+            bool aMatchesFocus = MatchesFocus(a);
+            bool bMatchesFocus = MatchesFocus(b);
+
+            if (aMatchesFocus != bMatchesFocus)
+                return aMatchesFocus ? -1 : 1;
+
+            return CompareByAvailability(a, b);
+        }
+
+        private bool MatchesFocus(LevelEncounter encounter)
+        {
+            if (focus == QuickEncounterFocus.Balanced || encounter == null)
+                return false;
+
+            LevelEncounterDefinitionBinding binding = encounter.GetComponent<LevelEncounterDefinitionBinding>();
+            EncounterDefinition definition = binding != null ? binding.Definition : null;
+
+            if (definition == null || definition.RewardChoicesOnCompletion <= 0)
+                return false;
+
+            return focus switch
+            {
+                QuickEncounterFocus.CharacterGrowth =>
+                    definition.RewardVector == RunRewardVector.CharacterGrowth,
+
+                QuickEncounterFocus.Ability =>
+                    definition.RewardVector == RunRewardVector.Ability,
+
+                _ => false
+            };
         }
 
         private static int CompareByAvailability(LevelEncounter a, LevelEncounter b)

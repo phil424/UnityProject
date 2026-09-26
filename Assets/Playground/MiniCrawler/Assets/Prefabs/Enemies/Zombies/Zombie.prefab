@@ -148,6 +148,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MiniCrawler.Core.EnemyMember
   isBoss: 0
   currencyReward: 1
+  rewardChoicesOnDeath: 0
+  persistentResourceRewards:
+  - tier: 0
+    amount: 1
 --- !u!114 &4272702636052559214
 MonoBehaviour:
   m_ObjectHideFlags: 0

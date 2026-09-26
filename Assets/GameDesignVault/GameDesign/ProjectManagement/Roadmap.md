@@ -749,9 +749,9 @@ Milestone boundaries are intentionally reviewable.
 A later milestone may be reshaped when earlier implementation provides better
 evidence.
 
-# 3.0N — Core Loop, Buildcraft & Persistent Progression
+# 3.0N — Core Loop, Buildcraft & Persistent Progression ✅
 
-**Status: Active**
+**Status: Complete**
 
 Purpose:
 
@@ -962,9 +962,9 @@ Deferred:
 - speculative RPG statistics without current consumers.
 
 
-## 3.0N3 — Rewards & Progression Flow
+## 3.0N3 — Rewards & Progression Flow ✅
 
-**Status: Active**
+**Status: Complete**
 
 Purpose:
 
@@ -1007,9 +1007,9 @@ Initial implemented vectors:
 
 Future vectors should only be added when their reward systems actually exist.
 
-### 3.0N3B — Reward Provenance & Pending Choice Context
+### 3.0N3B — Reward Provenance & Pending Choice Context ✅
 
-**Status: Active**
+**Status: Complete**
 
 Purpose:
 
@@ -1029,7 +1029,95 @@ This step proves:
 This establishes a reusable provenance seam before additional reward sources are
 introduced.
 
+### 3.0N3B1 — Pending Reward UI Presentation Polish ✅
+
+**Status: Complete**
+
+Purpose:
+
+Improve the readability and visual hierarchy of the combat Pending Rewards
+overlay without changing reward behaviour.
+
+The pass established:
+
+- a proper modal reward window;
+- clear Header / Offer Root / Footer ownership;
+- stronger background dimming;
+- cleaner reward-card presentation;
+- explicit runtime-generated content ownership.
+
+The UI authoring rules were also tightened using the problems discovered during
+this work, particularly around hierarchy migration, existing layout ownership
+and structural validation checkpoints.
+
+### 3.0N3C — Quick Encounter Reward Focus ✅
+
+**Status: Complete**
+
+Purpose:
+
+Allow the player to bias the three quick Encounter opportunities toward the
+kind of reward they currently care about.
+
+Initial focus modes:
+
+- Balanced;
+- Character Growth;
+- Ability.
+
+Focused modes preferentially rank matching currently-selectable Encounters
+before non-matching opportunities.
+
+They do not hard-filter Encounter Supply.
+
+When insufficient matching content exists, remaining slots fall back to the
+normal oldest-selectable ordering.
+
+This system changes quick-access presentation rather than Encounter generation,
+availability or authored reward identity.
+
 ## 3.0N4 — Meta Progression & Resources
+
+**Status: Active**
+
+### 3.0N4A — Live Preparation Simulation Foundation ✅
+
+**Status: Complete**
+
+Completed:
+
+- PreRun presentation remains inside `PlaygroundScene`;
+- the actual gameplay world provides the preparation backdrop;
+- the confirmed playable Character uses the real runtime Actor/combat pipeline;
+- the Character follows authored Ambient Route geography;
+- enemies populate across the Route and wander locally using normal ambient
+  behaviour;
+- proximity naturally transitions ambient actors into real combat;
+- showcase actors do not participate in Expedition reward/Encounter lifecycle;
+- the showcase Character is effectively immortal;
+- normal Expedition systems remain dormant while the frontend simulation runs.
+
+Purpose:
+
+Replace the current administrative pre-expedition screen with the first proper
+Preparation frontend.
+
+This step establishes:
+
+- one active playable Character selection;
+- live in-world Character presentation;
+- Character Overview presentation;
+- a Character carousel;
+- an Overview / Progression tab structure;
+- preservation of the current prototype persistent upgrades;
+- a functional visual shell for the rest of N4 Meta Progression.
+
+The frontend remains inside `PlaygroundScene` for now.
+
+A separate Unity frontend scene is deliberately deferred until scene transition
+and persistent frontend/gameplay handoff requirements are concrete.
+
+Final UI skinning remains later presentation work.
 
 Purpose:
 
@@ -1046,25 +1134,141 @@ Review/develop:
 - replacement of prototype Weapon / Armour / Focus progression;
 - role, if any, of future crafting/material systems.
 
-### 3.0N Review Gate
+### 3.0N4B — Preparation Frontend UI & Flow Closure ✅
 
-Before leaving N, reassess:
+**Status: Complete**
+
+Purpose:
+
+Complete the player-facing Preparation frontend around the live simulation.
+
+This step establishes:
+
+- approximately two-thirds live gameplay-world presentation;
+- approximately one-third Preparation UI;
+- one active playable Character selection;
+- Character Overview;
+- persistent Progression tab;
+- runtime-generated Character selector;
+- persistent Currency presentation;
+- Start Expedition flow;
+- full Preparation → Expedition → Return → Preparation lifecycle.
+
+The current persistent Weapon / Armour / Focus model remains prototype
+progression and will be replaced/reassessed during later N4 work.
+
+### 3.0N4C — Persistent Resource Foundation ✅
+
+**Status: Complete**
+
+Purpose:
+
+Separate temporary Expedition Currency from the first real persistent
+progression economy.
+
+This step establishes:
+
+- Level 1 / Level 2 / Level 3 placeholder persistent resources;
+- explicit persistent-resource rewards on enemies;
+- Expedition-owned earned-resource staging;
+- banking on Voluntary Return and Defeat;
+- separation from temporary Expedition Currency;
+- persistent resource presentation in Preparation;
+- Level 1 as the temporary compatibility cost for legacy persistent upgrades.
+
+Exact names, conversion ratios and final balance remain future work.
+
+### 3.0N4D — Punchy Character Mastery Foundation ✅
+
+**Status: Complete**
+
+Purpose:
+
+Replace the player-facing prototype Weapon / Armour / Focus progression with
+the first real Character-centric persistent progression system.
+
+This step establishes:
+
+- authored Character Mastery nodes;
+- per-Character permanent node ownership;
+- prerequisite relationships;
+- multi-tier persistent-resource costs;
+- Prepared stat modifiers;
+- separation between Prepared and Expedition stat progression;
+- runtime reconstruction when an Expedition begins;
+- live Preparation showcase updates;
+- runtime-generated Mastery presentation.
+
+The first Punchy proof uses four stat-oriented nodes.
+
+These nodes validate the progression architecture rather than define the final
+Punchy tree.
+
+Future Mastery node types may unlock:
+- Abilities;
+- Weapon Mods;
+- combo/basic-attack modifications;
+- Character-specific mechanics;
+- cross-Character progression.
+
+The legacy Weapon / Armour / Focus data remains temporary compatibility/tooling
+infrastructure but is no longer the player-facing persistent progression model.
+
+### 3.0N Review Gate ✅
+
+**Status: Complete**
+
+Review question:
 
 > Do the core loop, Character stats, reward flow and persistent progression form
 > a coherent reason to play and replay expeditions?
 
-If not, revisit the relevant N step before building large amounts of dependent
-content.
+Current conclusion:
+
+The N foundations are coherent enough to support the next programme.
+
+The implemented loop now connects:
+
+Preparation
+↓
+Character / Mastery intent
+↓
+Expedition
+↓
+Objectives and Encounter choice
+↓
+temporary build rewards
+↓
+persistent resource earnings
+↓
+Voluntary Return / Defeat
+↓
+resource banking
+↓
+Character Mastery
+↓
+next Expedition
+
+Remaining shortcomings are primarily content and breadth problems scheduled
+under O/P/Q rather than missing N architecture.
+
+The roadmap should now favour expanding player-facing Character identity,
+buildcraft options and content rather than continuing to add new foundational
+N systems.
 
 ---
 
 # 3.0O — Characters, Weapon Mods & Abilities
+
+**Status: Active**
 
 Purpose:
 
 Build the player's real combat/buildcraft identity on top of the N foundations.
 
 ## 3.0O1 — Characters & Unlocks
+
+**Status: Active**
 
 Develop/review:
 - one active playable Character per expedition;

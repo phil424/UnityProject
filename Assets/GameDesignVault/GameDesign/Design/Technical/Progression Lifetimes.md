@@ -253,25 +253,44 @@ It does NOT yet mean:
 
 This is enough to prove the gameplay loop before building permanent storage.
 
-# Prototype Currency Bridge
+# Expedition Currency and Persistent Resources
 
-The current prototype has one expedition currency source.
+**Status: Implemented Foundation**
 
-For 3.0C, total currency earned during an expedition may also be converted into
-prototype Persistent Currency when the expedition ends.
+Expedition Currency and persistent resources are separate lifetimes.
 
-This deliberately prevents spending temporary Run Currency from encouraging the
-player to avoid experimenting with temporary build upgrades.
+## Expedition Currency
 
-The final relationship between:
-- run currency;
-- materials;
-- persistent currency;
-- crafting resources;
+Owned by `RunState`.
 
-remains unresolved.
+Used for temporary expedition systems.
 
-Do not treat the 3.0C conversion as final economy design.
+It resets when the expedition ends.
+
+## Persistent Resources
+
+Current placeholder tiers:
+
+- Level 1;
+- Level 2;
+- Level 3.
+
+Persistent-resource earnings are first recorded on `RunState`.
+
+They survive Region transitions inside the same expedition.
+
+When the expedition ends through Voluntary Return or Defeat, all earned
+persistent resources are banked into `PersistentProgression`.
+
+The old behaviour where total Expedition Currency automatically became
+Persistent Currency is retired.
+
+This prevents temporary run spending and persistent progression from silently
+sharing the same economic identity.
+
+The current `PersistentProgression.Currency` property remains only as a temporary
+compatibility alias for Level 1 Resource while the old Weapon / Armour / Focus
+prototype progression is being retired during N4.
 
 # Invariants
 

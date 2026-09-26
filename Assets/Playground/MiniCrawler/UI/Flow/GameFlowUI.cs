@@ -10,9 +10,6 @@ namespace MiniCrawler.UI
 {
     public class GameFlowUI : MonoBehaviour
     {
-        [Header("Data")]
-        [SerializeField] private PartyMemberDefinition[] availablePartyMembers;
-
         [Header("References")]
         [SerializeField] private StageDirector stageDirector;
         [SerializeField] private RunDirector runDirector;
@@ -22,11 +19,6 @@ namespace MiniCrawler.UI
         [SerializeField] private GameObject partySelectionPanel;
         [SerializeField] private GameObject upgradePanel;
         [SerializeField] private GameObject combatHudPanel;
-
-        [Header("Party Selection")]
-        [SerializeField] private Transform selectionCardRoot;
-        [SerializeField] private TMP_Text selectedCountText;
-        [SerializeField] private Button startRunButton;
 
         [Header("Upgrade Screen")]
         [SerializeField] private Transform upgradeCardRoot;
@@ -46,7 +38,6 @@ namespace MiniCrawler.UI
         [SerializeField] private TMP_Text combatCurrencyText;
         [SerializeField] private Button returnExpeditionButton;
 
-        private readonly List<PartyCardUI> selectionCards = new();
         private readonly List<PartyCardUI> upgradeCards = new();
         private readonly List<RunUpgradeOfferCardUI> runUpgradeOfferCards = new();
 
@@ -57,8 +48,6 @@ namespace MiniCrawler.UI
 
             if (runDirector == null)
                 runDirector = RunDirector.Instance;
-
-            BuildSelectionCards();
 
             RunProgress.Changed += RefreshAll;
             PersistentProgression.Changed += RefreshAll;
@@ -107,14 +96,6 @@ namespace MiniCrawler.UI
             runDirector?.EndRun();
         }
 
-        public void ClearPartySelection()
-        {
-            if (RunProgress.HasActiveRun)
-                return;
-
-            runDirector?.Setup.Clear();
-        }
-
         private void HandleStageStateChanged(StageDirector.LevelState newState)
         {
             RefreshAll();
@@ -123,24 +104,6 @@ namespace MiniCrawler.UI
         private void HandleRunStateChanged(RunDirector.RunFlowState newState)
         {
             RefreshAll();
-        }
-
-        private void BuildSelectionCards()
-        {
-            if (runDirector == null)
-                return;
-
-            foreach (PartyMemberDefinition member in availablePartyMembers)
-            {
-                if (member == null)
-                    continue;
-
-                PartyCardUI card = Instantiate(partyCardPrefab, selectionCardRoot);
-
-                card.BindSelection(member, runDirector.Setup);
-
-                selectionCards.Add(card);
-            }
         }
 
         private void RebuildUpgradeCards()
@@ -206,25 +169,12 @@ namespace MiniCrawler.UI
 
         private void RefreshAll()
         {
-            foreach (PartyCardUI card in selectionCards)
-            {
-                card.Refresh();
-            }
-
             RebuildUpgradeCards();
             RebuildRunUpgradeOfferCards();
             RefreshRunRewardTitle();
 
-            int setupPartyCount = runDirector != null ? runDirector.Setup.SelectedParty.Count : 0;
-
-            selectedCountText.text =
-                $"Party: {setupPartyCount}/{runDirector.Setup.MaximumPartySize}   " +
-                $"Persistent Currency: {PersistentProgression.Currency}";
-
             upgradeCurrencyText.text = $"Expedition Currency: {RunProgress.Currency}";
             combatCurrencyText.text = $"Expedition Currency: {RunProgress.Currency}";
-
-            startRunButton.interactable = runDirector != null && !RunProgress.HasActiveRun && setupPartyCount > 0;
 
             if (runDirector == null)
             {

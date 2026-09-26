@@ -280,6 +280,45 @@ When compilation fails:
 A wall of compiler errors caused by one missing shared type should be treated as
 one missing dependency, not many independent bugs.
 
+## UI Instruction Checkpoints
+
+For player-facing UI work, do not treat a long Unity hierarchy-edit sequence as
+one uninterrupted instruction block.
+
+When the change modifies existing hierarchy or layout ownership, split the work
+into explicit checkpoints:
+
+### Checkpoint A — Hierarchy
+
+Verify:
+- intended current-to-target migration is complete;
+- obsolete containers have been removed;
+- no duplicate conceptual roots remain.
+
+### Checkpoint B — References
+
+Verify:
+- controller references still point to the intended moved objects;
+- no required field is `None` or `Missing`.
+
+### Checkpoint C — Layout
+
+Verify:
+- each axis has a clear owner;
+- parent and child LayoutGroups are not competing;
+- every LayoutElement-driven Preferred/Flexible axis has parent
+  `Control Child Size` enabled for that axis;
+- manually-sized axes are not simultaneously being controlled by a LayoutGroup;
+- runtime-generated content has the correct root.
+
+### Checkpoint D — Runtime Presentation
+
+Validate with real runtime data rather than placeholders when the View is
+runtime-generated.
+
+Do not proceed to detailed styling when an earlier structural checkpoint is
+still incorrect.
+
 # Diagnose Problems from Evidence
 
 When something fails:

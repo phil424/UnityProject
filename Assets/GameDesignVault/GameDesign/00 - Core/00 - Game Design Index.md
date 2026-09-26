@@ -108,6 +108,18 @@ A previous direction intentionally retained only for historical context.
 
 - [[Rewards and Pending Choices]]
 
+## Preparation Frontend
+
+- [[Preparation Frontend]]
+
+## Persistent Resources
+
+- [[Persistent Resources]]
+
+## Character Mastery
+
+- [[Character Mastery]]
+
 # Development
 
 The canonical development-rule entry point is:

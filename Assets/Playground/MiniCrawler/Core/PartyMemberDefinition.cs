@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using MiniCrawler.Abilities;
 using MiniCrawler.Combat;
+using MiniCrawler.Progress;
 using MiniCrawler.Support;
 using UnityEngine;
 
@@ -24,6 +25,9 @@ namespace MiniCrawler.Core
         
         [Header("Starting Abilities")]
         [SerializeField] private List<AbilityLoadoutEntry> startingAbilities = new();
+        
+        [Header("Character Mastery")]
+        [SerializeField] private List<CharacterMasteryNodeDefinition> masteryNodes = new();
 
         [Header("Starting Gear")]
         [SerializeField] private string weaponName = "Basic Weapon";
@@ -49,6 +53,7 @@ namespace MiniCrawler.Core
         public Sprite Portrait => portrait;
         public ActorDefinition ActorDefinition => actorDefinition;
         public IReadOnlyList<AbilityLoadoutEntry> StartingAbilities => startingAbilities;
+        public IReadOnlyList<CharacterMasteryNodeDefinition> MasteryNodes => masteryNodes;
 
         public string WeaponName => weaponName;
         public string ArmourName => armourName;

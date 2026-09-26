@@ -25,6 +25,7 @@ namespace MiniCrawler.Systems
 
         public event Action<bool> LevelFinished;
         public event Action<int> CurrencyEarned;
+        public event Action<PersistentResourceTier, int> PersistentResourceEarned;
         public event Action<RunRewardContext> RewardChoiceEarned;
         
         public event Action<LevelEncounter> EncounterStarted;
@@ -482,6 +483,14 @@ namespace MiniCrawler.Systems
                 return;
 
             CurrencyEarned?.Invoke(enemy.CurrencyReward);
+
+            foreach (PersistentResourceReward reward in enemy.PersistentResourceRewards)
+            {
+                if (reward == null || !reward.IsConfigured)
+                    continue;
+
+                PersistentResourceEarned?.Invoke(reward.Tier, reward.Amount);
+            }
 
             if (enemy.RewardChoicesOnDeath > 0)
             {

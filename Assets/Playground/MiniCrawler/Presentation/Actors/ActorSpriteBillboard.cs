@@ -30,7 +30,7 @@ namespace MiniCrawler.Presentation
                     break;
             }
         }
-
+        
         private bool TryResolveCamera()
         {
             if (cameraTransform != null)

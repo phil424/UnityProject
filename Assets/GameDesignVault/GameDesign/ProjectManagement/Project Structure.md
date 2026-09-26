@@ -116,6 +116,18 @@ Short-lived reusable visual-effect presentation such as:
 Presentation effects may consume combat events such as Action Impact and Damage
 Resolved, but gameplay code must not depend on presentation implementations.
 
+
+### Presentation/Frontend
+
+Pre-expedition live-world presentation.
+
+Current examples:
+- `PreparationCombatShowcase`;
+- `PreparationRouteWanderer`.
+
+Frontend presentation may reuse real gameplay actors/systems but must remain
+outside normal Expedition reward / Encounter ownership.
+
 ## Progress
 
 `Progress/`
@@ -282,6 +294,16 @@ High-level game-flow presentation/orchestration.
 
 Small shared UI primitives that do not belong to one presentation domain.
 
+### UI/Preparation
+
+Pre-expedition player-facing presentation.
+
+Current examples:
+- `PreparationScreenUI`;
+- `PreparationCharacterOverviewUI`;
+- `PreparationCharacterProgressionUI`;
+- `PreparationCharacterButtonUI`.
+
 # Assets
 
 Primary content root:
@@ -325,6 +347,7 @@ Current organisation:
 - `UI/Combat/`
 - `UI/Encounter/`
 - `UI/Progression/`
+- `UI/Preparation/`
 
 Add a new category only when multiple related assets justify it.
 

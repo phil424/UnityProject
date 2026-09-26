@@ -16,16 +16,7 @@ namespace MiniCrawler.Combat
         public float HealthBefore { get; }
         public float HealthAfter { get; }
 
-        public DamageEvent( 
-            GameObject source, 
-            Health target,
-            string actionName,
-            float incomingDamage,
-            float armour,
-            float finalDamage,
-            float healthBefore,
-            float healthAfter
-        )
+        public DamageEvent(GameObject source, Health target, string actionName, float incomingDamage, float armour, float finalDamage, float healthBefore, float healthAfter)
         {
             Source = source;
             Target = target;

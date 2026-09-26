@@ -76,6 +76,20 @@ namespace MiniCrawler.Progress
 
             Changed?.Invoke();
         }
+        
+        public static int GetPersistentResourceEarned(PersistentResourceTier tier)
+        {
+            return CurrentRun != null ? CurrentRun.GetPersistentResourceEarned(tier) : 0;
+        }
+
+        public static void AddPersistentResource(PersistentResourceTier tier, int amount)
+        {
+            if (CurrentRun == null || amount <= 0)
+                return;
+
+            CurrentRun.AddPersistentResource(tier, amount);
+            Changed?.Invoke();
+        }
 
         public static RunBuild GetBuild(PartyMemberDefinition definition)
         {

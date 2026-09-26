@@ -13,65 +13,36 @@ namespace MiniCrawler.Movement
 
     [DisallowMultipleComponent]
     [RequireComponent(typeof(Actor))]
-    public class AutoTargetMover :
-        MonoBehaviour
+    public class AutoTargetMover : MonoBehaviour
     {
         [Header("Targeting")]
-        [SerializeField]
-        private string targetFactionId =
-            "Undead";
-
-        [SerializeField]
-        private float searchRadius = 100f;
+        [SerializeField] private string targetFactionId = "Undead";
+        [SerializeField] private float searchRadius = 100f;
 
         [Header("Movement")]
-        [SerializeField]
-        private float moveSpeed = 2f;
+        [SerializeField] private float moveSpeed = 2f;
+        [SerializeField] private float combatStoppingDistance = 1.2f;
+        [SerializeField] private float supportStoppingDistance = 2f;
 
-        [SerializeField]
-        private float
-            combatStoppingDistance = 1.2f;
+        private float runMoveSpeedPercentBonus;
 
-        [SerializeField]
-        private float
-            supportStoppingDistance = 2f;
-
-        private float
-            runMoveSpeedPercentBonus;
-
-        public string TargetFactionId =>
-            targetFactionId;
-
-        public float SearchRadius =>
-            searchRadius;
-
+        public string TargetFactionId => targetFactionId;
+        public float SearchRadius => searchRadius;
+        
         public float MoveSpeed
         {
             get
             {
-                float moveSpeedBonus =
-                    runMoveSpeedPercentBonus +
-                    GetRuntimeMoveSpeedBonus();
+                float moveSpeedBonus = runMoveSpeedPercentBonus + GetRuntimeMoveSpeedBonus();
 
-                float multiplier =
-                    Mathf.Max(
-                        0f,
-                        1f +
-                        moveSpeedBonus /
-                        100f
-                    );
+                float multiplier = Mathf.Max(0f, 1f + moveSpeedBonus / 100f);
 
-                return
-                    moveSpeed *
-                    multiplier;
+                return moveSpeed * multiplier;
             }
         }
-
-        public float CombatStoppingDistance =>
-            combatStoppingDistance;
-
-        public float SupportStoppingDistance =>
-            supportStoppingDistance;
+        
+        public float CombatStoppingDistance => combatStoppingDistance;
+        public float SupportStoppingDistance => supportStoppingDistance;
 
         public Health CurrentTarget
         {
@@ -85,102 +56,45 @@ namespace MiniCrawler.Movement
             private set;
         }
 
-        public float CurrentStoppingDistance =>
-            CurrentIntent ==
-            TargetIntent.Support
-                ? supportStoppingDistance
-                : combatStoppingDistance;
+        public float CurrentStoppingDistance => CurrentIntent == TargetIntent.Support ? supportStoppingDistance : combatStoppingDistance;
 
-        public void ApplyRunMoveSpeedBonus(
-            float moveSpeedPercentBonus
-        )
+        public void ApplyRunMoveSpeedBonus(float moveSpeedPercentBonus)
         {
-            runMoveSpeedPercentBonus =
-                Mathf.Max(
-                    0f,
-                    moveSpeedPercentBonus
-                );
+            runMoveSpeedPercentBonus = Mathf.Max(0f, moveSpeedPercentBonus);
         }
 
-        public void SetTarget(
-            Health target,
-            TargetIntent intent
-        )
+        public void SetTarget(Health target, TargetIntent intent)
         {
-            CurrentTarget =
-                target;
-
-            CurrentIntent =
-                target != null
-                    ? intent
-                    : TargetIntent.None;
+            CurrentTarget = target;
+            CurrentIntent = target != null ? intent : TargetIntent.None;
         }
 
         public void ClearTarget()
         {
             CurrentTarget = null;
-
-            CurrentIntent =
-                TargetIntent.None;
+            CurrentIntent = TargetIntent.None;
         }
 
-        private float
-            GetRuntimeMoveSpeedBonus()
+        private float GetRuntimeMoveSpeedBonus()
         {
-            RuntimeStatModifiers modifiers =
-                GetComponent<
-                    RuntimeStatModifiers
-                >();
-
-            return
-                modifiers != null
-                    ? modifiers
-                        .MoveSpeedPercentBonus
-                    : 0f;
+            RuntimeStatModifiers modifiers = GetComponent<RuntimeStatModifiers>();
+            return modifiers != null ? modifiers.MoveSpeedPercentBonus : 0f;
         }
 
         private void OnValidate()
         {
-            searchRadius =
-                Mathf.Max(
-                    0.1f,
-                    searchRadius
-                );
-
-            moveSpeed =
-                Mathf.Max(
-                    0f,
-                    moveSpeed
-                );
-
-            combatStoppingDistance =
-                Mathf.Max(
-                    0.1f,
-                    combatStoppingDistance
-                );
-
-            supportStoppingDistance =
-                Mathf.Max(
-                    0.1f,
-                    supportStoppingDistance
-                );
+            searchRadius = Mathf.Max(0.1f, searchRadius);
+            moveSpeed = Mathf.Max(0f, moveSpeed);
+            combatStoppingDistance = Mathf.Max(0.1f, combatStoppingDistance);
+            supportStoppingDistance = Mathf.Max(0.1f, supportStoppingDistance);
         }
 
         private void OnDrawGizmosSelected()
         {
-            Gizmos.DrawWireSphere(
-                transform.position,
-                searchRadius
-            );
+            Gizmos.DrawWireSphere(transform.position, searchRadius);
 
             if (CurrentTarget != null)
-            {
-                Gizmos.DrawLine(
-                    transform.position,
-                    CurrentTarget
-                        .transform.position
-                );
-            }
+                Gizmos.DrawLine(transform.position, CurrentTarget.transform.position);
         }
     }
 }

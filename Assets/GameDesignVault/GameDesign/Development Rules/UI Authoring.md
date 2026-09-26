@@ -115,6 +115,30 @@ possible.
 If the Group expects three Views and discovers one or two, treat that as an
 authoring error rather than silently continuing.
 
+## Distinguish Scene-Authored and Runtime-Generated Children
+
+Before giving visual validation instructions, determine whether the relevant
+children exist in the scene or are instantiated at runtime.
+
+If content is runtime-generated, instructions must explicitly say so.
+
+Example:
+
+`PendingRewardsUI` instantiates reward cards under `offerRoot`.
+
+Therefore:
+
+- Edit Mode may legitimately show an empty `offerRoot`;
+- manually enabling the overlay does not prove reward-card layout;
+- final validation must occur in Play Mode with a real pending reward.
+
+Do not tell the user to diagnose missing runtime-generated children from a
+scene-only preview.
+
+Likewise, do not manually create placeholder runtime children unless the step
+explicitly requires a temporary authoring template and explains when to remove
+it.
+
 ## Prefer Group-Level Presentation
 
 When repeated UI items share styling, configure that styling on the parent
@@ -179,6 +203,29 @@ presentation such as:
 - world-to-screen indicators;
 - deliberately overlapping presentation.
 
+## Avoid Speculative Wrapper Objects
+
+Do not introduce hierarchy wrappers solely to make the hierarchy look more
+conceptually organised.
+
+A wrapper should exist because it owns something concrete such as:
+
+- layout;
+- clipping/masking;
+- background presentation;
+- animation;
+- scrolling;
+- input blocking;
+- reusable component ownership.
+
+If a proposed wrapper has no distinct responsibility, do not create it.
+
+Every additional UI container increases:
+- hierarchy complexity;
+- layout interactions;
+- serialized-state risk;
+- future authoring cost.
+
 ## Keep Semantic Identity Separate From Visual Symbols
 
 Critical gameplay symbols, controller prompts, quick-slot identity and map  
@@ -229,6 +276,45 @@ RectTransform in the hierarchy.
 
 Automatically discover child components when ownership is unambiguous.
 
+## Inspect Existing UI Ownership Before Adding Containers
+
+Before instructing the creation of a new UI container, inspect the current
+hierarchy and the components that already reference it.
+
+Determine:
+
+- which object is already the runtime content root;
+- which object owns layout for those children;
+- which controller holds the serialized reference;
+- whether children are scene-authored or generated at runtime;
+- whether an existing wrapper already provides the required responsibility.
+
+Do not create a second container merely because a conceptual name such as
+`CardArea`, `Content`, `List`, `Body` or `Root` sounds useful.
+
+If an existing object already owns that responsibility, reuse it.
+
+Example:
+
+If `PendingRewardsUI.offerRoot` already points to `RunUpgradeOfferRoot` and
+runtime reward cards are instantiated underneath it, then
+`RunUpgradeOfferRoot` is the authoritative card container.
+
+Do not create:
+
+RewardWindow
+├── CardArea
+└── RunUpgradeOfferRoot
+
+unless the wrapper has a separate, explicitly required layout responsibility.
+
+Prefer:
+
+RewardWindow
+└── RunUpgradeOfferRoot
+
+when the existing root already owns the card row.
+
 ## UI Work Contract — Mandatory
 
 Every player-facing UI implementation step must declare the UI authoring contract
@@ -251,6 +337,28 @@ It must explicitly state:
 
 **Final Hierarchy**
 - the intended hierarchy after the step is complete.
+
+For UI restructuring work, also provide:
+
+**Current Relevant Hierarchy**
+- the exact portion of the hierarchy before the change.
+
+**Hierarchy Migration**
+- Move;
+- Create;
+- Delete;
+- Keep;
+
+for each affected object.
+
+A final hierarchy alone is insufficient when existing referenced objects are
+being moved.
+
+**Runtime Ownership / Serialized References**
+- which controller owns the UI;
+- which hierarchy objects are already referenced;
+- which objects receive runtime-generated children;
+- which references must remain valid after hierarchy changes.
 
 The user should never have to infer which scene an instruction refers to.
 
@@ -319,6 +427,79 @@ The instructions must also identify which object owns:
 Avoid configurations where a LayoutGroup and manually-authored RectTransform
 values fight over the same responsibility.
 
+### One Layout Owner Per Responsibility
+
+For every important UI axis, identify one authoritative owner.
+
+Examples:
+
+RewardWindow VerticalLayoutGroup
+→ owns vertical ordering of Header / OfferRoot / Footer.
+
+OfferRoot HorizontalLayoutGroup
+→ owns horizontal placement of reward cards.
+
+Reward Card LayoutElement
+→ owns the preferred card footprint.
+
+Do not make multiple parent/child layout systems compete for the same size or
+position unless the interaction is deliberate and explained.
+
+For each container affected by a UI step, instructions should make clear:
+
+- who owns X position;
+- who owns Y position;
+- who owns width;
+- who owns height;
+- whether the value comes from RectTransform, LayoutGroup, LayoutElement or
+  ContentSizeFitter.
+
+If a LayoutGroup controls a child's size, do not also prescribe manual size
+values for that same axis unless `Control Child Size` is disabled.
+
+### LayoutElement / LayoutGroup Axis Contract
+
+When a child uses `LayoutElement` to express Preferred or Flexible size on an
+axis, the parent `LayoutGroup` must have `Control Child Size` enabled for that
+same axis.
+
+Example:
+
+Child:
+`LayoutElement.PreferredHeight = 58`
+
+requires:
+
+Parent VerticalLayoutGroup:
+`Control Child Size → Height = On`
+
+if the LayoutElement is intended to determine that child's layout height.
+
+If `Control Child Size` is disabled for an axis, the child's manually-authored
+RectTransform owns that axis instead.
+
+Do not mix these two models accidentally.
+
+Use one of:
+
+LayoutGroup controls axis
++
+LayoutElement supplies preferred/flexible size
+
+or:
+
+LayoutGroup does not control axis
++
+RectTransform supplies manual size
+
+`Force Expand` does not replace `Control Child Size`.
+
+`Force Expand` determines whether controlled children consume spare space after
+their minimum/preferred sizing has been evaluated.
+
+Before prescribing LayoutElement values, explicitly verify that the parent
+LayoutGroup controls the corresponding axis.
+
 ## Prefab Authoring Protocol
 
 Reusable UI prefabs must have one explicit authoring workflow.
@@ -362,6 +543,52 @@ If replacement is genuinely necessary:
 
 Replacing a referenced hierarchy without repairing its consumers is a broken
 implementation step even if the hierarchy looks visually identical.
+
+## UI Hierarchy Migration Protocol
+
+When restructuring existing UI rather than only adding a new independent child,
+instructions must explicitly describe the migration from the old hierarchy to
+the new hierarchy.
+
+The instructions must state:
+
+1. the current relevant hierarchy;
+2. the intended final hierarchy;
+3. which existing children move;
+4. which existing containers remain;
+5. which existing containers are deleted;
+6. which newly-created containers remain;
+7. which serialized references must still point to which objects afterward.
+
+Do not provide only the final desired hierarchy when the user already has a
+different working hierarchy.
+
+Example:
+
+Current:
+
+RewardWindow
+└── PendingRewardSection
+    ├── RewardTitle
+    └── OfferRoot
+
+Target:
+
+RewardWindow
+├── Header
+│   └── RewardTitle
+├── OfferRoot
+└── Footer
+
+The instructions must explicitly say:
+
+- move `RewardTitle` into `Header`;
+- move `OfferRoot` directly under `RewardWindow`;
+- delete `PendingRewardSection` after it is empty;
+- verify `PendingRewardsUI.offerRoot` still references `OfferRoot`.
+
+Never leave the user to infer whether the old hierarchy and the new hierarchy
+are meant to coexist.
 
 ## Preserve Scene-Specific Active State
 
@@ -425,6 +652,30 @@ For UI reused across scenes:
 
 Do not author the prefab and simultaneously restructure several scenes in one
 unverified sequence.
+
+## Incremental Structural UI Authoring
+
+When a UI change restructures an existing hierarchy, do not provide a long chain
+of structural and styling steps without intermediate verification.
+
+Use this order:
+
+1. establish / migrate hierarchy;
+2. verify serialized references;
+3. configure parent layout ownership;
+4. verify hierarchy in Edit Mode;
+5. configure child layout;
+6. verify again;
+7. apply visual styling;
+8. validate with real runtime content.
+
+For non-trivial hierarchy migrations, include a checkpoint after the hierarchy
+and parent-layout stages before continuing into detailed styling.
+
+If the result is visibly wrong at a structural checkpoint, fix the structure
+before adding more layout components.
+
+Do not compound an uncertain hierarchy with further styling instructions.
 
 ## UI Validation Gate
 

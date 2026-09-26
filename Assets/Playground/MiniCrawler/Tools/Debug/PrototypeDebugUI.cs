@@ -66,15 +66,36 @@ namespace MiniCrawler.Systems
 
             GUILayout.Label("Mini Crawler Prototype");
 
-            GUILayout.Label($"Persistent Currency: {PersistentProgression.Currency}");
+            GUILayout.Label(
+                $"Persistent Resources: " +
+                $"L1 {PersistentProgression.GetResource(PersistentResourceTier.Level1)} | " +
+                $"L2 {PersistentProgression.GetResource(PersistentResourceTier.Level2)} | " +
+                $"L3 {PersistentProgression.GetResource(PersistentResourceTier.Level3)}"
+            );
+
             GUILayout.Label($"Expedition Currency: {RunProgress.Currency}");
+
+            if (RunProgress.HasActiveRun)
+            {
+                GUILayout.Label(
+                    $"Expedition Resources: " +
+                    $"L1 +{RunProgress.GetPersistentResourceEarned(PersistentResourceTier.Level1)} | " +
+                    $"L2 +{RunProgress.GetPersistentResourceEarned(PersistentResourceTier.Level2)} | " +
+                    $"L3 +{RunProgress.GetPersistentResourceEarned(PersistentResourceTier.Level3)}"
+                );
+            }
 
             GUILayout.Label($"Run Active: " + $"{(RunProgress.HasActiveRun ? "Yes" : "No")}");
             
             if (!RunProgress.HasActiveRun && run != null && run.LastExpeditionEndReason != RunDirector.ExpeditionEndReason.None)
             {
                 GUILayout.Label($"Last Expedition: {run.LastExpeditionEndReason}");
-                GUILayout.Label($"Persistent Currency Banked: {run.LastPersistentCurrencyBanked}");
+                GUILayout.Label(
+                    $"Resources Banked: " +
+                    $"L1 {run.LastLevel1ResourcesBanked} | " +
+                    $"L2 {run.LastLevel2ResourcesBanked} | " +
+                    $"L3 {run.LastLevel3ResourcesBanked}"
+                );
             }
 
             if (run != null)

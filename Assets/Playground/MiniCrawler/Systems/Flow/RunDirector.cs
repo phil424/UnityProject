@@ -39,7 +39,7 @@ namespace MiniCrawler.Systems
 
         [Header("Run Rewards")]
         [FormerlySerializedAs("availableRunUpgrades")]
-        [SerializeField]private RunRewardDefinition[]availableRunRewards;
+        [SerializeField] private RunRewardDefinition[] availableRunRewards;
 
         [SerializeField, Min(1)]
         private int runUpgradeOfferCount = 3;
@@ -57,7 +57,9 @@ namespace MiniCrawler.Systems
 
         public bool LastLevelWon { get; private set; }
         public ExpeditionEndReason LastExpeditionEndReason { get; private set; }
-        public int LastPersistentCurrencyBanked { get; private set; }
+        public int LastLevel1ResourcesBanked { get; private set; }
+        public int LastLevel2ResourcesBanked { get; private set; }
+        public int LastLevel3ResourcesBanked { get; private set; }
 
         public bool CanContinueRun =>
             RunProgress.HasActiveRun &&
@@ -89,6 +91,7 @@ namespace MiniCrawler.Systems
             stageDirector.LevelFinished += HandleLevelFinished;
             stageDirector.LevelCleared += HandleLevelCleared;
             stageDirector.CurrencyEarned += HandleCurrencyEarned;
+            stageDirector.PersistentResourceEarned += HandlePersistentResourceEarned;
             stageDirector.RewardChoiceEarned += HandleRewardChoiceEarned;
 
             stageDirector.ClearLevel();
@@ -103,6 +106,7 @@ namespace MiniCrawler.Systems
                 stageDirector.LevelFinished -= HandleLevelFinished;
                 stageDirector.LevelCleared -= HandleLevelCleared;
                 stageDirector.CurrencyEarned -= HandleCurrencyEarned;
+                stageDirector.PersistentResourceEarned -= HandlePersistentResourceEarned;
                 stageDirector.RewardChoiceEarned -= HandleRewardChoiceEarned;
             }
 
@@ -125,7 +129,9 @@ namespace MiniCrawler.Systems
             }
             
             LastExpeditionEndReason = ExpeditionEndReason.None;
-            LastPersistentCurrencyBanked = 0;
+            LastLevel1ResourcesBanked = 0;
+            LastLevel2ResourcesBanked = 0;
+            LastLevel3ResourcesBanked = 0;
             LastLevelWon = false;
 
             RunStartConfiguration configuration = setup.CreateConfiguration();
@@ -236,33 +242,38 @@ namespace MiniCrawler.Systems
             if (runState == null)
                 return;
 
-            int persistentCurrencyEarned = runState.TotalCurrencyEarned;
+            int level1ResourcesEarned = runState.GetPersistentResourceEarned(PersistentResourceTier.Level1);
+            int level2ResourcesEarned = runState.GetPersistentResourceEarned(PersistentResourceTier.Level2);
+            int level3ResourcesEarned = runState.GetPersistentResourceEarned(PersistentResourceTier.Level3);
 
-            if (!waitForLevelCleanup &&
-                stageDirector != null &&
-                stageDirector.State != StageDirector.LevelState.Idle)
-            {
+            if (!waitForLevelCleanup && stageDirector != null && stageDirector.State != StageDirector.LevelState.Idle)
                 stageDirector.ClearLevel();
-            }
 
             RunProgress.EndRun();
 
-            if (persistentCurrencyEarned > 0)
-                PersistentProgression.AddCurrency(persistentCurrencyEarned);
+            if (level1ResourcesEarned > 0)
+                PersistentProgression.AddResource(PersistentResourceTier.Level1, level1ResourcesEarned);
 
-            LastPersistentCurrencyBanked = persistentCurrencyEarned;
+            if (level2ResourcesEarned > 0)
+                PersistentProgression.AddResource(PersistentResourceTier.Level2, level2ResourcesEarned);
+
+            if (level3ResourcesEarned > 0)
+                PersistentProgression.AddResource(PersistentResourceTier.Level3, level3ResourcesEarned);
+
+            LastLevel1ResourcesBanked = level1ResourcesEarned;
+            LastLevel2ResourcesBanked = level2ResourcesEarned;
+            LastLevel3ResourcesBanked = level3ResourcesEarned;
+
             LastExpeditionEndReason = reason;
             LastLevelWon = false;
 
             returnToPreRunWhenLevelCleared = waitForLevelCleanup;
 
-            SetState(waitForLevelCleanup
-                ? RunFlowState.EndingExpedition
-                : RunFlowState.PreRun);
+            SetState(waitForLevelCleanup ? RunFlowState.EndingExpedition : RunFlowState.PreRun);
 
             Debug.Log(
-                $"Expedition ended: {reason}. " +
-                $"Persistent Currency earned: {persistentCurrencyEarned}.",
+                $"Expedition ended: {reason}. Persistent resources banked: " +
+                $"L1 {level1ResourcesEarned}, L2 {level2ResourcesEarned}, L3 {level3ResourcesEarned}.",
                 this
             );
         }
@@ -319,6 +330,11 @@ namespace MiniCrawler.Systems
         private void HandleCurrencyEarned(int amount)
         {
             RunProgress.AddCurrency(amount);
+        }
+        
+        private void HandlePersistentResourceEarned(PersistentResourceTier tier, int amount)
+        {
+            RunProgress.AddPersistentResource(tier, amount);
         }
 
         private void SetState(

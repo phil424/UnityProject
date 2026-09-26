@@ -27,6 +27,21 @@ namespace MiniCrawler.Progress
         {
             return definition != null && selectedParty.Contains(definition);
         }
+        
+        public bool SetSinglePartyMember(PartyMemberDefinition definition)
+        {
+            if (definition == null)
+                return false;
+
+            if (selectedParty.Count == 1 && selectedParty[0] == definition)
+                return true;
+
+            selectedParty.Clear();
+            selectedParty.Add(definition);
+
+            Changed?.Invoke();
+            return true;
+        }
 
         public bool TogglePartyMember(PartyMemberDefinition definition)
         {

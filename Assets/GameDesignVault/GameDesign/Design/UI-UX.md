@@ -29,29 +29,25 @@ the player can:
 - prepare for the next expedition;
 - become excited about beginning another run.
 
-## Working Visual Direction
+## Current Implemented Direction
 
-A current concept uses a live presentation scene behind / alongside the UI.
+The Preparation screen uses the actual gameplay world as its presentation.
 
-Suggested broad composition:
+Broad composition:
 
-```text
-┌────────────────────┬──────────────────────────────────────────┐
-│                    │                                          │
-│   LIVE CHARACTER   │        CHARACTER INFORMATION             │
-│      SCENE         │                                          │
-│                    │  [ Overview ] [ Progression ]            │
-│ selected Character │                                          │
-│ animations /       │  Bio                                     │
-│ combat presentation│  Stats                                   │
-│                    │  Abilities                               │
-│                    │  Playstyle description                   │
-│                    │                                          │
-│                    ├──────────────────────────────────────────┤
-│                    │       CHARACTER CAROUSEL                 │
-└────────────────────┴──────────────────────────────────────────┘
-      ~1/3                         ~2/3
+``` text
+┌──────────────────────────────────────────┬─────────────────────┐
+│                                          │                     │
+│             LIVE GAME WORLD              │   PREPARATION UI    │
+│                                          │                     │
+│ selected Character travels the authored  │ Overview            │
+│ Route, encounters ambient enemies and    │ Progression         │
+│ fights using the normal runtime systems  │ Character select    │
+│                                          │ Start Expedition    │
+│                  ~2/3                    │        ~1/3         │
+└──────────────────────────────────────────┴─────────────────────┘
 ```
+
 
 # HUD Information Priority
 
@@ -477,9 +473,27 @@ Quick encounter symbols must remain consistent between:
 
 The passive HUD exposes exactly three quick encounter options.
 
-Current default ordering:
+The quick-access layer also supports a compact Reward Focus.
+
+Current focus modes:
+
+- Balanced;
+- Growth;
+- Ability.
+
+The focus is a preference rather than a hard filter.
+
+Matching opportunities appear first, but unused slots fall back to the normal
+general-purpose ordering.
+
+Current Balanced ordering:
 
 > The three oldest selectable encounters.
+
+Focused ordering:
+
+> Matching selectable encounters first, ordered oldest-first, followed by
+> non-matching selectable encounters using the same oldest-first ordering.
 
 Reason:
 Older encounters are generally nearer expiry and therefore more strategically
@@ -515,7 +529,9 @@ LevelEncounter availability
         ↓
 QuickEncounterChoices
         ↓
-three oldest selectable encounters
+focus-aware ordering
+        ↓
+three quick Encounter opportunities
         ↓
 HUD / future controller input
         ↓

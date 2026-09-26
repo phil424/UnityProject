@@ -3,17 +3,6 @@ using UnityEngine;
 
 namespace MiniCrawler.Progress
 {
-    public enum RunUpgradeEffectType
-    {
-        FlatBasicAttackDamage,
-        MoveSpeedPercent,
-        BasicAttackSpeedPercent,
-        FlatArmour,
-        FlatMaxHealth,
-        AbilityCooldownRecoveryPercent,
-        KnockbackPowerPercent
-    }
-
     [CreateAssetMenu(fileName = "New Run Upgrade", menuName = "Mini Crawler/Run Upgrade")]
     public class RunUpgradeDefinition : RunRewardDefinition
     {
@@ -26,17 +15,17 @@ namespace MiniCrawler.Progress
         [SerializeField] private RunUpgradeRarity rarity = RunUpgradeRarity.Common;
 
         [Header("Effect")]
-        [SerializeField] private RunUpgradeEffectType effectType;
+        [SerializeField] private CharacterStatModifierType effectType;
         [SerializeField] private float amount;
 
         public override string Id => string.IsNullOrWhiteSpace(id) ? name : id;
         public override string DisplayName => string.IsNullOrWhiteSpace(displayName) ? name : displayName;
-        public override string Description => RunUpgradeDescriptionFormatter.Format(effectType, amount);
+        public override string Description => CharacterStatModifierPresentation.FormatDescription(effectType, amount);
         public override Sprite Icon => icon;
         public override RunUpgradeRarity Rarity => rarity;
         public override RunRewardVector RewardVector => RunRewardVector.CharacterGrowth;
 
-        public RunUpgradeEffectType EffectType => effectType;
+        public CharacterStatModifierType EffectType => effectType;
         public float Amount => amount;
 
         public override bool IsConfigured => amount > 0f;
@@ -51,7 +40,7 @@ namespace MiniCrawler.Progress
             if (!CanApply(member, build))
                 return false;
 
-            build.ApplyRunUpgrade(this);
+            build.ApplyExpeditionStatModifier(effectType, amount);
             return true;
         }
 

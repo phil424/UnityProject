@@ -589,54 +589,65 @@ with overwhelming permanent numerical advantage.
 Preparation should create anticipation for a new run rather than functioning
 only as an upgrade transaction.
 
-# Current Prototype Gaps
+# Current Post-N Gaps
 
-These gaps currently limit our ability to evaluate the intended retention loop.
+The N programme established the first coherent loop connecting Preparation,
+Expedition buildcraft, rewards and persistent progression.
+
+The remaining gaps now primarily belong to the later O/P/Q programmes rather
+than missing N foundations.
 
 ## Moment-to-Moment
 
 - limited enemy combat roles;
-- limited targeting control;
-- limited tactical situations;
-- heavy first-minute information load.
+- no player-controlled combat-targeting priorities;
+- limited tactical situation variety;
+- the passive combat HUD still carries substantial information pressure.
 
-## Buildcraft
+## Character / Buildcraft
 
-- shallow stat reward vocabulary;
-- limited meaningful synergies;
-- unfinished Weapon Mods;
-- Ability acquisition direction unresolved;
-- reward source/context unclear.
+- only one confirmed playable Character exists;
+- Character Mastery currently proves only stat-oriented nodes;
+- Weapon Mods do not yet exist;
+- Ability breadth and Character-specific Ability identity remain limited;
+- cross-Character progression does not yet exist.
 
 ## Expedition Direction
 
-- no meaningful Objective layer;
-- Encounter choices lack strong risk/reward identity;
-- incomplete pacing/escalation;
-- no normal voluntary return decision;
-- incomplete success/endgame structure.
+- the Objective foundation exists but condition/content breadth is still small;
+- Encounter selection now exposes Reward Vectors and Reward Focus but Encounter
+  variety remains limited;
+- expedition pacing and escalation are still incomplete;
+- the final success / deep-expedition ending structure remains unresolved.
 
 ## Rewards
 
-- limited reward variety;
-- weak anticipation;
-- reward presentation appears abruptly;
-- source identity is unclear.
+- Reward Vectors and reward provenance are implemented;
+- temporary Character Growth and Ability rewards exist;
+- persistent resource rewards exist;
+- Objective, World Event and richer content-specific rewards remain limited;
+- reward/build synergy depth remains early.
 
 ## Meta Progression
 
-- placeholder Weapon / Armour / Focus upgrades;
-- permanent numbers can trivialise combat;
-- no real Character Mastery;
-- no Character unlock ecosystem;
-- no cross-character unlocks;
-- no final resource economy.
+- three generic persistent resource tiers are implemented;
+- Punchy Character Mastery is implemented as the first persistent progression
+  sink;
+- Character unlock ownership does not yet exist;
+- there is no cross-Character progression;
+- persistent state remains session-memory rather than final save-file
+  persistence;
+- final resource names, conversion rules and long-term pacing remain unresolved.
 
 ## Content Variety
 
+- one confirmed playable Character;
 - limited enemy roles;
 - limited Encounter identities;
 - limited persistent unlock content.
+
+The next development programme should therefore expand player-facing identity
+and content rather than continue building additional N foundations.
 
 # Working Retention Principles
 

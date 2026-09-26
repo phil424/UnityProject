@@ -10,69 +10,48 @@ namespace MiniCrawler.UI
     public class PartyCardUI : MonoBehaviour
     {
         [Header("Display")]
-        [SerializeField]
-        private Image portraitImage;
+        [SerializeField] private Image portraitImage;
 
-        [SerializeField]
-        private TMP_Text nameText;
+        [SerializeField] private TMP_Text nameText;
 
-        [SerializeField]
-        private TMP_Text roleText;
+        [SerializeField] private TMP_Text roleText;
 
-        [SerializeField]
-        private TMP_Text descriptionText;
+        [SerializeField] private TMP_Text descriptionText;
 
-        [SerializeField]
-        private TMP_Text statsText;
+        [SerializeField] private TMP_Text statsText;
 
-        [SerializeField]
-        private TMP_Text gearText;
+        [SerializeField] private TMP_Text gearText;
 
         [Header("Selection Controls")]
-        [SerializeField]
-        private GameObject selectionControls;
+        [SerializeField] private GameObject selectionControls;
 
-        [SerializeField]
-        private Button selectButton;
+        [SerializeField] private Button selectButton;
 
-        [SerializeField]
-        private TMP_Text selectButtonText;
+        [SerializeField] private TMP_Text selectButtonText;
 
         [Header("Upgrade Controls")]
-        [SerializeField]
-        private GameObject upgradeControls;
+        [SerializeField] private GameObject upgradeControls;
 
-        [SerializeField]
-        private Button weaponButton;
+        [SerializeField] private Button weaponButton;
 
-        [SerializeField]
-        private TMP_Text weaponButtonText;
+        [SerializeField] private TMP_Text weaponButtonText;
 
-        [SerializeField]
-        private Button armourButton;
+        [SerializeField] private Button armourButton;
 
-        [SerializeField]
-        private TMP_Text armourButtonText;
+        [SerializeField] private TMP_Text armourButtonText;
 
-        [SerializeField]
-        private Button focusButton;
+        [SerializeField] private Button focusButton;
 
-        [SerializeField]
-        private TMP_Text focusButtonText;
+        [SerializeField] private TMP_Text focusButtonText;
 
         [Header("Ability Upgrade Controls")]
-        [SerializeField]
-        private GameObject abilityUpgradeSection;
+        [SerializeField] private GameObject abilityUpgradeSection;
 
-        [SerializeField]
-        private Transform abilityUpgradeRoot;
+        [SerializeField] private Transform abilityUpgradeRoot;
 
-        [SerializeField]
-        private AbilityUpgradeEntryUI
-            abilityUpgradeEntryPrefab;
+        [SerializeField] private AbilityUpgradeEntryUI abilityUpgradeEntryPrefab;
 
-        private readonly List<AbilityUpgradeEntryUI>
-            abilityUpgradeEntries = new();
+        private readonly List<AbilityUpgradeEntryUI> abilityUpgradeEntries = new();
 
         private PartyMemberDefinition definition;
         private RunSetup setup;
@@ -103,17 +82,9 @@ namespace MiniCrawler.UI
             armourButton.onClick.RemoveAllListeners();
             focusButton.onClick.RemoveAllListeners();
 
-            weaponButton.onClick.AddListener(
-                () => PersistentProgression.TryBuyUpgrade(definition, GearSlot.Weapon)
-            );
-
-            armourButton.onClick.AddListener(
-                () => PersistentProgression.TryBuyUpgrade(definition, GearSlot.Armour)
-            );
-
-            focusButton.onClick.AddListener(
-                () => PersistentProgression.TryBuyUpgrade(definition, GearSlot.Focus)
-            );
+            weaponButton.onClick.AddListener(() => PersistentProgression.TryBuyUpgrade(definition, GearSlot.Weapon));
+            armourButton.onClick.AddListener(() => PersistentProgression.TryBuyUpgrade(definition, GearSlot.Armour));
+            focusButton.onClick.AddListener(() => PersistentProgression.TryBuyUpgrade(definition, GearSlot.Focus));
 
             Refresh();
         }
@@ -157,8 +128,7 @@ namespace MiniCrawler.UI
                 float armour = definition.BaseArmour + PersistentProgression.GetArmourBonus(definition);
                 float healing = definition.BaseHealing + PersistentProgression.GetHealingBonus(definition);
 
-                statsText.text =
-                    healing > 0f
+                statsText.text = healing > 0f
                         ? $"HP {health:0}   DMG {damage:0.#}   ARM {armour:0.#}   HEAL {healing:0.#}"
                         : $"HP {health:0}   DMG {damage:0.#}   ARM {armour:0.#}";
 
@@ -171,32 +141,15 @@ namespace MiniCrawler.UI
 
                 RefreshSelectionControls();
 
-                RefreshPersistentUpgradeButton(
-                    weaponButton,
-                    weaponButtonText,
-                    "Weapon",
-                    GearSlot.Weapon
-                );
+                RefreshPersistentUpgradeButton(weaponButton, weaponButtonText, "Weapon", GearSlot.Weapon);
 
-                RefreshPersistentUpgradeButton(
-                    armourButton,
-                    armourButtonText,
-                    "Armour",
-                    GearSlot.Armour
-                );
+                RefreshPersistentUpgradeButton(armourButton, armourButtonText, "Armour", GearSlot.Armour);
 
                 bool hasHealing = definition.BaseHealing > 0f;
                 focusButton.gameObject.SetActive(hasHealing);
 
                 if (hasHealing)
-                {
-                    RefreshPersistentUpgradeButton(
-                        focusButton,
-                        focusButtonText,
-                        "Focus",
-                        GearSlot.Focus
-                    );
-                }
+                    RefreshPersistentUpgradeButton(focusButton, focusButtonText, "Focus", GearSlot.Focus);
 
                 return;
             }
@@ -224,116 +177,64 @@ namespace MiniCrawler.UI
 
         private void RebuildAbilityUpgradeEntries()
         {
-            foreach (
-                AbilityUpgradeEntryUI entry
-                    in abilityUpgradeEntries
-            )
+            foreach (AbilityUpgradeEntryUI entry in abilityUpgradeEntries)
             {
                 if (entry != null)
-                {
-                    Destroy(
-                        entry.gameObject
-                    );
-                }
+                    Destroy(entry.gameObject);
             }
 
             abilityUpgradeEntries.Clear();
 
-            if (
-                abilityUpgradeRoot == null ||
-                abilityUpgradeEntryPrefab == null
-            )
+            if (abilityUpgradeRoot == null || abilityUpgradeEntryPrefab == null)
             {
                 if (abilityUpgradeSection != null)
-                {
-                    abilityUpgradeSection.SetActive(
-                        false
-                    );
-                }
+                    abilityUpgradeSection.SetActive(false);
 
                 return;
             }
 
-            RunBuild build =
-                RunProgress.GetBuild(
-                    definition
-                );
+            RunBuild build = RunProgress.GetBuild(definition);
 
-            foreach (
-                RunAbilityState state
-                    in build.Abilities
-            )
+            foreach (RunAbilityState state in build.Abilities)
             {
-                if (
-                    state == null ||
-                    state.Definition == null
-                )
-                {
+                if (state == null || state.Definition == null)
                     continue;
-                }
 
-                AbilityUpgradeEntryUI entry =
-                    Instantiate(
-                        abilityUpgradeEntryPrefab,
-                        abilityUpgradeRoot
-                    );
+                AbilityUpgradeEntryUI entry = Instantiate(abilityUpgradeEntryPrefab, abilityUpgradeRoot);
 
-                entry.Bind(
-                    definition,
-                    state.Definition
-                );
+                entry.Bind(definition, state.Definition);
 
-                abilityUpgradeEntries.Add(
-                    entry
-                );
+                abilityUpgradeEntries.Add(entry);
             }
 
             if (abilityUpgradeSection != null)
-            {
-                abilityUpgradeSection.SetActive(
-                    abilityUpgradeEntries.Count > 0
-                );
-            }
+                abilityUpgradeSection.SetActive(abilityUpgradeEntries.Count > 0);
         }
 
         private void RefreshSelectionControls()
         {
             if (setup == null)
             {
-                selectButton.interactable =
-                    false;
-
+                selectButton.interactable = false;
                 return;
             }
 
-            bool selected =
-                setup.IsSelected(
-                    definition
-                );
+            bool selected = setup.IsSelected(definition);
 
-            selectButtonText.text =
-                selected
-                    ? "Remove"
-                    : "Add to Party";
+            selectButtonText.text = selected ? "Remove" : "Add to Party";
 
-            selectButton.interactable =
-                selected ||
-                setup.SelectedParty.Count <
-                    setup.MaximumPartySize;
+            selectButton.interactable = selected || setup.SelectedParty.Count < setup.MaximumPartySize;
         }
 
-        private void RefreshPersistentUpgradeButton(
-            Button button,
-            TMP_Text label,
-            string slotName,
-            GearSlot slot
-        )
+        private void RefreshPersistentUpgradeButton(Button button, TMP_Text label, string slotName, GearSlot slot)
         {
             int cost = PersistentProgression.GetUpgradeCost(definition, slot);
 
-            label.text = $"Upgrade {slotName} ({cost})";
+            label.text = $"Upgrade {slotName} ({cost} L1)";
 
-            button.interactable = !RunProgress.HasActiveRun && PersistentProgression.Currency >= cost;
+            button.interactable =
+                !RunProgress.HasActiveRun &&
+                PersistentProgression.GetResource(PersistentResourceTier.Level1) >= cost;
         }
     }
 }

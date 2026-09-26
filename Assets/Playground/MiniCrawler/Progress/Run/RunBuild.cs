@@ -15,18 +15,33 @@ namespace MiniCrawler.Progress
     public sealed class RunBuild
     {
         private readonly List<RunAbilityState> abilities = new();
+        private readonly CharacterStatModifierSet preparedStatModifiers = new();
+        private readonly CharacterStatModifierSet expeditionStatModifiers = new();
 
         public int WeaponLevel { get; private set; }
         public int ArmourLevel { get; private set; }
         public int FocusLevel { get; private set; }
 
-        public float FlatBasicAttackDamageBonus { get; private set; }
-        public float MoveSpeedPercentBonus { get; private set; }
-        public float BasicAttackSpeedPercentBonus { get; private set; }
-        public float FlatArmourBonus { get; private set; }
-        public float FlatMaxHealthBonus { get; private set; }
-        public float AbilityCooldownRecoveryPercentBonus { get; private set; }
-        public float KnockbackPowerPercentBonus { get; private set; }
+        public float FlatBasicAttackDamageBonus =>
+            GetEffectiveStatBonus(CharacterStatModifierType.FlatBasicAttackDamage);
+
+        public float MoveSpeedPercentBonus =>
+            GetEffectiveStatBonus(CharacterStatModifierType.MoveSpeedPercent);
+
+        public float BasicAttackSpeedPercentBonus =>
+            GetEffectiveStatBonus(CharacterStatModifierType.BasicAttackSpeedPercent);
+
+        public float FlatArmourBonus =>
+            GetEffectiveStatBonus(CharacterStatModifierType.FlatArmour);
+
+        public float FlatMaxHealthBonus =>
+            GetEffectiveStatBonus(CharacterStatModifierType.FlatMaxHealth);
+
+        public float AbilityCooldownRecoveryPercentBonus =>
+            GetEffectiveStatBonus(CharacterStatModifierType.AbilityCooldownRecoveryPercent);
+
+        public float KnockbackPowerPercentBonus =>
+            GetEffectiveStatBonus(CharacterStatModifierType.KnockbackPowerPercent);
 
         public IReadOnlyList<RunAbilityState> Abilities => abilities;
 
@@ -160,41 +175,19 @@ namespace MiniCrawler.Progress
             return null;
         }
 
-        public void ApplyRunUpgrade(RunUpgradeDefinition upgrade)
+        public void ApplyPreparedStatModifier(CharacterStatModifierType type, float amount)
         {
-            if (upgrade == null || upgrade.Amount <= 0f)
-                return;
+            preparedStatModifiers.Add(type, amount);
+        }
 
-            switch (upgrade.EffectType)
-            {
-                case RunUpgradeEffectType.FlatBasicAttackDamage:
-                    FlatBasicAttackDamageBonus += upgrade.Amount;
-                    break;
+        public void ApplyExpeditionStatModifier(CharacterStatModifierType type, float amount)
+        {
+            expeditionStatModifiers.Add(type, amount);
+        }
 
-                case RunUpgradeEffectType.MoveSpeedPercent:
-                    MoveSpeedPercentBonus += upgrade.Amount;
-                    break;
-
-                case RunUpgradeEffectType.BasicAttackSpeedPercent:
-                    BasicAttackSpeedPercentBonus += upgrade.Amount;
-                    break;
-
-                case RunUpgradeEffectType.FlatArmour:
-                    FlatArmourBonus += upgrade.Amount;
-                    break;
-
-                case RunUpgradeEffectType.FlatMaxHealth:
-                    FlatMaxHealthBonus += upgrade.Amount;
-                    break;
-
-                case RunUpgradeEffectType.AbilityCooldownRecoveryPercent:
-                    AbilityCooldownRecoveryPercentBonus += upgrade.Amount;
-                    break;
-
-                case RunUpgradeEffectType.KnockbackPowerPercent:
-                    KnockbackPowerPercentBonus += upgrade.Amount;
-                    break;
-            }
+        private float GetEffectiveStatBonus(CharacterStatModifierType type)
+        {
+            return preparedStatModifiers.Get(type) + expeditionStatModifiers.Get(type);
         }
     }
 }
