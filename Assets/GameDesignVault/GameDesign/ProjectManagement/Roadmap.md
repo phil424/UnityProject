@@ -1280,6 +1280,121 @@ Develop/review:
 - future Companion flexibility without making active parties the near-term
   design.
 
+### 3.0O1A — Persistent Playable Character Roster & Unlock Ownership ✅
+
+**Status: Complete**
+
+Purpose:
+
+Separate the authored playable Character roster, persistent Character ownership
+and current Expedition selection.
+
+This step establishes:
+
+- `PlayableCharacterRosterDefinition`;
+- explicit starting-Character ownership;
+- persistent unlocked-Character state;
+- locked / hidden roster presentation rules;
+- domain-level Setup validation;
+- Preparation roster generation from the shared roster definition;
+- a generic Character-unlock seam for later gameplay systems.
+
+Current roster:
+
+Punchy
+→ unlocked by default.
+
+No additional playable Character is introduced during O1A.
+
+### 3.0O1B — Second Playable Character
+
+**Status: Active**
+
+Build the first additional playable Character as a genuinely distinct combat
+identity rather than promoting legacy Support content.
+
+Prove:
+
+- distinct visual identity;
+- distinct basic attack / weapon identity;
+- Character stats;
+- authored combat presentation;
+- core Ability identity;
+- Character Mastery;
+- Preparation showcase behaviour;
+- real Expedition play.
+
+#### 3.0O1B1 — Ranger Basic Identity & Projectile Combat ✅
+
+**Status: Complete**
+
+The first additional playable Character now exists as a ranged combat proof.
+
+Working Character identity:
+
+Ranger
+→ lower durability;
+→ long-range bow basic attack;
+→ single-shot cadence;
+→ real travelling projectile delivery.
+
+The implementation also establishes generic projectile-based Combat Actions.
+
+Projectile delivery remains separate from direct melee impact:
+
+Combat Action impact
+→ projectile launch
+
+Projectile arrival
+→ DamageResolver
+
+The same seam is intentionally reusable by future ranged enemies and Abilities.
+
+Ranger currently remains locked in the normal roster and is accessed through the
+development unlock seam until O1C implements a real Character unlock path.
+
+Ranger Abilities and Character Mastery remain O1B2 work.
+
+#### 3.0O1B2 — Ranger Core Abilities & Character Mastery
+
+**Status: Planned**
+
+Give Ranger a complete playable Character identity through:
+
+- Signature Ability;
+- Utility Ability;
+- Sustain Ability;
+- first Ranger Mastery nodes;
+- buildcraft interactions appropriate to ranged play.
+
+#### 3.0O1B3 — Second Character Integration Review
+
+**Status: Planned**
+
+Play Punchy and Ranger through the same Preparation / Expedition loop and verify
+that the two Characters create meaningfully different baseline decisions before
+moving to O1C.
+
+### 3.0O1C — First Character Unlock Path
+
+**Status: Planned**
+
+Use the second playable Character to prove an actual persistent Character unlock.
+
+The first unlock path should connect meaningful gameplay/progression to:
+
+Locked Character
+↓
+unlock progress / requirement
+↓
+persistent ownership
+↓
+Preparation roster update
+↓
+Character selection
+↓
+real Expedition play.
+
 ## 3.0O2 — Weapon Mods
 
 Develop the shared Weapon Mod system.

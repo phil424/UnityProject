@@ -39,14 +39,31 @@ namespace MiniCrawler.UI
             definition = member;
             selected = onSelected;
 
-            if (label != null)
-                label.text = definition != null ? definition.DisplayName : "Character";
+            RefreshLabel(unlocked: true);
         }
 
-        public void SetSelected(bool value)
+        public void SetState(bool isSelected, bool unlocked)
         {
+            RefreshLabel(unlocked);
+
             if (button != null)
-                button.interactable = !value;
+                button.interactable = unlocked && !isSelected;
+        }
+
+        private void RefreshLabel(bool unlocked)
+        {
+            if (label == null)
+                return;
+
+            if (definition == null)
+            {
+                label.text = "Character";
+                return;
+            }
+
+            label.text = unlocked
+                ? definition.DisplayName
+                : $"{definition.DisplayName}  [LOCKED]";
         }
 
         private void HandleClicked()

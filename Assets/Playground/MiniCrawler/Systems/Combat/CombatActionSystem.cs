@@ -74,8 +74,20 @@ namespace MiniCrawler.Systems
             if (distance > attackerStats.AttackRange)
                 return false;
 
-            float healthBefore = target.CurrentHealth;
             float damage = attackerStats.Damage * definition.DamageCoefficient;
+
+            if (definition is ProjectileCombatActionDefinition projectileAction)
+            {
+                return ProjectileRuntime.Spawn(
+                    projectileAction.Projectile,
+                    action.gameObject,
+                    target,
+                    damage,
+                    attackerStats.AttackName
+                ) != null;
+            }
+
+            float healthBefore = target.CurrentHealth;
 
             DamageResolver.ApplyDamage(action.gameObject, target, damage, attackerStats.AttackName);
 

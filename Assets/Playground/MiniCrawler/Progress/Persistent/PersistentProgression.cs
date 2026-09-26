@@ -58,6 +58,8 @@ namespace MiniCrawler.Progress
         public static event Action Changed;
 
         private static readonly Dictionary<string, PersistentMemberProgress> memberProgress = new();
+        private static readonly HashSet<string> knownCharacterIds = new();
+        private static readonly HashSet<string> unlockedCharacterIds = new();
 
         public static int Level1Resources { get; private set; }
         public static int Level2Resources { get; private set; }
@@ -72,7 +74,55 @@ namespace MiniCrawler.Progress
             Level1Resources = 0;
             Level2Resources = 0;
             Level3Resources = 0;
+            
             memberProgress.Clear();
+            knownCharacterIds.Clear();
+            unlockedCharacterIds.Clear();
+        }
+        
+        public static void InitializeCharacterRoster(PlayableCharacterRosterDefinition roster)
+        {
+            if (roster == null)
+                return;
+
+            foreach (PlayableCharacterRosterEntry entry in roster.Characters)
+            {
+                PartyMemberDefinition character = entry?.Character;
+
+                if (character == null || string.IsNullOrWhiteSpace(character.Id))
+                    continue;
+
+                knownCharacterIds.Add(character.Id);
+
+                if (entry.UnlockedByDefault)
+                    unlockedCharacterIds.Add(character.Id);
+            }
+        }
+
+        public static bool IsCharacterKnown(PartyMemberDefinition character)
+        {
+            return character != null &&
+                !string.IsNullOrWhiteSpace(character.Id) &&
+                knownCharacterIds.Contains(character.Id);
+        }
+
+        public static bool IsCharacterUnlocked(PartyMemberDefinition character)
+        {
+            return character != null &&
+                !string.IsNullOrWhiteSpace(character.Id) &&
+                unlockedCharacterIds.Contains(character.Id);
+        }
+
+        public static bool TryUnlockCharacter(PartyMemberDefinition character)
+        {
+            if (!IsCharacterKnown(character) || IsCharacterUnlocked(character))
+                return false;
+
+            if (!unlockedCharacterIds.Add(character.Id))
+                return false;
+
+            Changed?.Invoke();
+            return true;
         }
 
         public static int GetResource(PersistentResourceTier tier)

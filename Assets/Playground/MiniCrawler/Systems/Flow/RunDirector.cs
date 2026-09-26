@@ -32,6 +32,7 @@ namespace MiniCrawler.Systems
         [SerializeField] private StageDirector stageDirector;
 
         [Header("Setup")]
+        [SerializeField] private PlayableCharacterRosterDefinition characterRoster;
         [SerializeField, Min(1)] private int maximumPartySize = 4;
         
         [Header("Prototype Objectives")]
@@ -54,6 +55,7 @@ namespace MiniCrawler.Systems
         public string StateName => state.ToString();
 
         public RunSetup Setup => setup;
+        public PlayableCharacterRosterDefinition CharacterRoster => characterRoster;
 
         public bool LastLevelWon { get; private set; }
         public ExpeditionEndReason LastExpeditionEndReason { get; private set; }
@@ -61,16 +63,18 @@ namespace MiniCrawler.Systems
         public int LastLevel2ResourcesBanked { get; private set; }
         public int LastLevel3ResourcesBanked { get; private set; }
 
-        public bool CanContinueRun =>
-            RunProgress.HasActiveRun &&
-            state == RunFlowState.BetweenLevels &&
-            !RunProgress.HasPendingRewardChoice;
+        public bool CanContinueRun => RunProgress.HasActiveRun && state == RunFlowState.BetweenLevels && !RunProgress.HasPendingRewardChoice;
 
         private void Awake()
         {
             Instance = this;
 
-            setup = new RunSetup(maximumPartySize);
+            if (characterRoster == null)
+                Debug.LogError("RunDirector requires a playable Character roster.", this);
+
+            PersistentProgression.InitializeCharacterRoster(characterRoster);
+
+            setup = new RunSetup(maximumPartySize, characterRoster);
             setup.SetObjectives(defaultExpeditionObjectives);
         }
 
@@ -81,10 +85,7 @@ namespace MiniCrawler.Systems
 
             if (stageDirector == null)
             {
-                Debug.LogError(
-                    "RunDirector requires a StageDirector."
-                );
-
+                Debug.LogError("RunDirector requires a StageDirector.");
                 return;
             }
 
@@ -320,6 +321,19 @@ namespace MiniCrawler.Systems
 
             if (!stageDirector.TryAwardRewardChoice(RunRewardVector.Any, "Debug Reward"))
                 Debug.LogWarning("The current level could not award a reward choice.");
+        }
+        
+        [ContextMenu("Debug/Unlock All Roster Characters")]
+        private void DebugUnlockAllRosterCharacters()
+        {
+            if (!Application.isPlaying || characterRoster == null)
+                return;
+
+            foreach (PlayableCharacterRosterEntry entry in characterRoster.Characters)
+            {
+                if (entry?.Character != null)
+                    PersistentProgression.TryUnlockCharacter(entry.Character);
+            }
         }
         
         private void HandleRewardChoiceEarned(RunRewardContext context)

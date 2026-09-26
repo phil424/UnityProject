@@ -12,25 +12,35 @@ namespace MiniCrawler.Progress
         private readonly List<ExpeditionObjectiveDefinition> selectedObjectives = new();
 
         private readonly int maximumPartySize;
+        private readonly PlayableCharacterRosterDefinition characterRoster;
 
         public IReadOnlyList<PartyMemberDefinition> SelectedParty => selectedParty;
         public IReadOnlyList<ExpeditionObjectiveDefinition> SelectedObjectives => selectedObjectives;
 
         public int MaximumPartySize => maximumPartySize;
 
-        public RunSetup(int maximumPartySize = 4)
+        public RunSetup(int maximumPartySize, PlayableCharacterRosterDefinition characterRoster)
         {
             this.maximumPartySize = Math.Max(1, maximumPartySize);
+            this.characterRoster = characterRoster;
         }
 
         public bool IsSelected(PartyMemberDefinition definition)
         {
             return definition != null && selectedParty.Contains(definition);
         }
-        
+
+        public bool CanSelectPartyMember(PartyMemberDefinition definition)
+        {
+            return definition != null &&
+                   characterRoster != null &&
+                   characterRoster.Contains(definition) &&
+                   PersistentProgression.IsCharacterUnlocked(definition);
+        }
+
         public bool SetSinglePartyMember(PartyMemberDefinition definition)
         {
-            if (definition == null)
+            if (!CanSelectPartyMember(definition))
                 return false;
 
             if (selectedParty.Count == 1 && selectedParty[0] == definition)
@@ -55,16 +65,14 @@ namespace MiniCrawler.Progress
                 return true;
             }
 
-            if (selectedParty.Count >= maximumPartySize)
+            if (!CanSelectPartyMember(definition) || selectedParty.Count >= maximumPartySize)
                 return false;
 
             selectedParty.Add(definition);
-
             Changed?.Invoke();
-
             return true;
         }
-        
+
         public void SetObjectives(IEnumerable<ExpeditionObjectiveDefinition> objectives)
         {
             selectedObjectives.Clear();
@@ -89,7 +97,6 @@ namespace MiniCrawler.Progress
                 return;
 
             selectedParty.Clear();
-
             Changed?.Invoke();
         }
 

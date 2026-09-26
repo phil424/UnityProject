@@ -120,6 +120,10 @@ A previous direction intentionally retained only for historical context.
 
 - [[Character Mastery]]
 
+## Playable Character Roster
+
+- [[Playable Character Roster]]
+
 # Development
 
 The canonical development-rule entry point is:

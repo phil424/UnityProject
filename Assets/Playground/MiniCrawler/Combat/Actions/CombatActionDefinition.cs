@@ -19,7 +19,7 @@ namespace MiniCrawler.Combat
         public float ImpactNormalizedTime => impactNormalizedTime;
         public float DamageCoefficient => damageCoefficient;
 
-        private void OnValidate()
+        protected virtual void OnValidate()
         {
             durationMultiplier = Mathf.Max(0.01f, durationMultiplier);
             impactNormalizedTime = Mathf.Clamp01(impactNormalizedTime);

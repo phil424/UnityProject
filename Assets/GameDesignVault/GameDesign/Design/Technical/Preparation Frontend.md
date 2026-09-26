@@ -82,12 +82,28 @@ owns one runtime-generated Character selector entry.
 
 # Character Selection
 
-The current project exposes one confirmed active playable Character:
+The Preparation frontend presents the authored
+`PlayableCharacterRosterDefinition`.
 
-Punchy.
+Persistent ownership is resolved through `PersistentProgression`.
 
-The UI is structured to support additional playable Characters when they are
-actually implemented.
+Current presentation states:
+
+Unlocked
+→ visible and selectable.
+
+Locked / visible
+→ visible but unavailable.
+
+Locked / hidden
+→ omitted until unlocked.
+
+`RunSetup` independently validates roster membership and persistent ownership, so
+the frontend is not the authority for whether a Character may begin an
+Expedition.
+
+The current implemented roster contains Punchy as the starting unlocked
+Character.
 
 Legacy Support actors are not automatically treated as selectable playable
 Characters.

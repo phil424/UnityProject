@@ -74195,8 +74195,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 18f0f6b1d83d9764fa01b46edde778e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.UI.PreparationScreenUI
-  availableCharacters:
-  - {fileID: 11400000, guid: 94ccbd35cf205c04e9c36e071d00de96, type: 2}
   runDirector: {fileID: 1773141661}
   combatShowcase: {fileID: 303177177}
   overviewUI: {fileID: 1965058227}
@@ -84101,7 +84099,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1519431301
 RectTransform:
   m_ObjectHideFlags: 0
@@ -96254,6 +96252,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Systems.RunDirector
   stageDirector: {fileID: 846909436}
+  characterRoster: {fileID: 11400000, guid: 9bc23a048448ff840a9b12bdce84a1c3, type: 2}
   maximumPartySize: 1
   defaultExpeditionObjectives:
   - {fileID: 11400000, guid: 73a13b63957edc841818480b926d412e, type: 2}
@@ -97806,7 +97805,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1965058225
 RectTransform:
   m_ObjectHideFlags: 0

@@ -23,6 +23,24 @@ Potentially:
 - cosmetics;
 - narrative discoveries.
 
+## Playable Character Ownership
+
+**Status: Implemented Foundation**
+
+Playable Character ownership is now stored in `PersistentProgression`.
+
+The authored `PlayableCharacterRosterDefinition` describes which Character
+Definitions belong to the playable roster and which begin unlocked.
+
+Persistent ownership then records which of those Characters the player currently
+owns.
+
+Character selection for an Expedition may only choose an owned roster Character.
+
+The first implemented roster contains Punchy as the starting Character.
+
+Actual Character unlock conditions are deferred to later O1 work.
+
 # Persistent Development
 
 Long-term progression applied between expeditions.

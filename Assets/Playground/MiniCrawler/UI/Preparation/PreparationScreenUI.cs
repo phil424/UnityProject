@@ -13,9 +13,6 @@ namespace MiniCrawler.UI
     [DisallowMultipleComponent]
     public sealed class PreparationScreenUI : MonoBehaviour
     {
-        [Header("Characters")]
-        [SerializeField] private PartyMemberDefinition[] availableCharacters;
-
         [Header("Runtime")]
         [SerializeField] private RunDirector runDirector;
         [SerializeField] private PreparationCombatShowcase combatShowcase;
@@ -72,7 +69,7 @@ namespace MiniCrawler.UI
             if (runDirector == null)
                 runDirector = RunDirector.Instance;
 
-            BuildCharacterButtons();
+            RebuildCharacterButtons();
 
             if (overviewTabButton != null)
                 overviewTabButton.onClick.AddListener(ShowOverview);
@@ -95,7 +92,7 @@ namespace MiniCrawler.UI
             if (runDirector != null)
                 runDirector.Setup.Changed += HandleSetupChanged;
 
-            PersistentProgression.Changed += Refresh;
+            PersistentProgression.Changed += HandlePersistentProgressionChanged;
 
             subscribed = true;
         }
@@ -108,19 +105,38 @@ namespace MiniCrawler.UI
             if (runDirector != null)
                 runDirector.Setup.Changed -= HandleSetupChanged;
 
-            PersistentProgression.Changed -= Refresh;
+            PersistentProgression.Changed -= HandlePersistentProgressionChanged;
 
             subscribed = false;
         }
 
-        private void BuildCharacterButtons()
+        private void RebuildCharacterButtons()
         {
-            if (characterButtonRoot == null || characterButtonPrefab == null)
-                return;
-
-            foreach (PartyMemberDefinition character in availableCharacters)
+            foreach (PreparationCharacterButtonUI button in characterButtons)
             {
+                if (button != null)
+                    Destroy(button.gameObject);
+            }
+
+            characterButtons.Clear();
+
+            if (runDirector?.CharacterRoster == null ||
+                characterButtonRoot == null ||
+                characterButtonPrefab == null)
+            {
+                return;
+            }
+
+            foreach (PlayableCharacterRosterEntry entry in runDirector.CharacterRoster.Characters)
+            {
+                PartyMemberDefinition character = entry?.Character;
+
                 if (character == null)
+                    continue;
+
+                bool unlocked = PersistentProgression.IsCharacterUnlocked(character);
+
+                if (!unlocked && !entry.VisibleWhenLocked)
                     continue;
 
                 PreparationCharacterButtonUI button = Instantiate(characterButtonPrefab, characterButtonRoot);
@@ -140,20 +156,27 @@ namespace MiniCrawler.UI
                 return;
             }
 
-            PartyMemberDefinition firstCharacter = GetFirstAvailableCharacter();
+            PartyMemberDefinition firstCharacter = GetFirstUnlockedCharacter();
 
-            if (firstCharacter != null)
+            if (firstCharacter != null && runDirector.Setup.SetSinglePartyMember(firstCharacter))
             {
-                runDirector.Setup.SetSinglePartyMember(firstCharacter);
                 selectedCharacter = firstCharacter;
+                return;
             }
+
+            selectedCharacter = null;
         }
 
-        private PartyMemberDefinition GetFirstAvailableCharacter()
+        private PartyMemberDefinition GetFirstUnlockedCharacter()
         {
-            foreach (PartyMemberDefinition character in availableCharacters)
+            if (runDirector?.CharacterRoster == null)
+                return null;
+
+            foreach (PlayableCharacterRosterEntry entry in runDirector.CharacterRoster.Characters)
             {
-                if (character != null)
+                PartyMemberDefinition character = entry?.Character;
+
+                if (character != null && runDirector.Setup.CanSelectPartyMember(character))
                     return character;
             }
 
@@ -165,7 +188,9 @@ namespace MiniCrawler.UI
             if (runDirector == null || character == null)
                 return;
 
-            runDirector.Setup.SetSinglePartyMember(character);
+            if (!runDirector.Setup.SetSinglePartyMember(character))
+                return;
+
             selectedCharacter = character;
             Refresh();
         }
@@ -180,10 +205,19 @@ namespace MiniCrawler.UI
             Refresh();
         }
 
+        private void HandlePersistentProgressionChanged()
+        {
+            RebuildCharacterButtons();
+            EnsureSelection();
+            Refresh();
+        }
+
         private void Refresh()
         {
-            if (runDirector != null && runDirector.Setup.SelectedParty.Count > 0)
-                selectedCharacter = runDirector.Setup.SelectedParty[0];
+            selectedCharacter =
+                runDirector != null && runDirector.Setup.SelectedParty.Count > 0
+                    ? runDirector.Setup.SelectedParty[0]
+                    : null;
 
             if (persistentResourcesText != null)
             {
@@ -199,14 +233,21 @@ namespace MiniCrawler.UI
             combatShowcase?.Show(selectedCharacter);
 
             foreach (PreparationCharacterButtonUI button in characterButtons)
-                button?.SetSelected(button.Definition == selectedCharacter);
+            {
+                if (button == null)
+                    continue;
+
+                bool unlocked = PersistentProgression.IsCharacterUnlocked(button.Definition);
+                button.SetState(button.Definition == selectedCharacter, unlocked);
+            }
 
             if (startExpeditionButton != null)
             {
                 startExpeditionButton.interactable =
                     runDirector != null &&
                     !RunProgress.HasActiveRun &&
-                    selectedCharacter != null;
+                    selectedCharacter != null &&
+                    runDirector.Setup.CanSelectPartyMember(selectedCharacter);
             }
         }
 

@@ -237,6 +237,15 @@ https://xzany.itch.io/ - Characters
 https://papoycore.itch.io/ - Demonic and Effects
 https://kbpixelart.itch.io/ - Aztec and Varied Characters
 
+https://pimen.itch.io/ - Effects
+https://rafaelmatos.itch.io/ - Environments / Partial enemies / Partial characters
+https://otsoga.itch.io/ - Characters
+https://astrobob.itch.io/ - Characters
+https://darkpixel-kronovi.itch.io/ - Characters
+https://oco.itch.io/ - Characters
+
+https://argametina.itch.io/ - Font + Cards?!
+
 ## Characters
 https://itch.io/s/110075/samurai-bundle-2d-pixel-art
 https://penusbmic.itch.io/the-dark-series-the-blood-king

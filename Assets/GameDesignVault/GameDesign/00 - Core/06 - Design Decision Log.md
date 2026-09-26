@@ -1219,3 +1219,45 @@ progress and meaningful unlock milestones.
 - final Punchy tree structure and balance remain unresolved;
 - old Weapon / Armour / Focus data may remain temporarily for compatibility and
   development tooling but is no longer the intended player progression model.
+
+## 2026-09-26 — Playable roster and Character ownership are separate
+
+### Decision
+
+The playable Character roster, persistent Character ownership and current
+Expedition Character selection are separate concepts.
+
+`PlayableCharacterRosterDefinition`
+defines the playable content roster.
+
+`PersistentProgression`
+owns which roster Characters the player has unlocked.
+
+`RunSetup`
+owns the currently selected Character and rejects Characters that are either
+outside the playable roster or not persistently unlocked.
+
+### Reason
+
+Character availability should be persistent progression state rather than a
+serialized UI list.
+
+Separating the three responsibilities also allows:
+
+- visible locked Characters;
+- hidden/secret Characters;
+- future unlock conditions;
+- roster expansion;
+- safe Setup validation;
+- future save-backed Character ownership.
+
+### Implications
+
+- the Preparation frontend reads from the playable roster rather than owning its
+  own Character array;
+- Punchy is explicitly authored as the starting unlocked Character;
+- legacy allied/Support definitions do not automatically enter the playable
+  roster;
+- future unlock systems should call the persistent ownership seam rather than
+  directly manipulating Preparation UI;
+- final unlock requirements/progress remain future O1 work.
