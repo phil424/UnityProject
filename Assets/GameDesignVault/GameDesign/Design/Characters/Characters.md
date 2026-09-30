@@ -52,13 +52,30 @@ Current roster:
 Punchy
 → starting / unlocked Character.
 
+Ranger
+→ implemented second playable Character;
+→ visible while locked;
+→ not unlocked by default;
+→ first gameplay unlock path implemented through persistent Objective-completion
+  progress;
+→ development unlock remains available for testing.
+
 Legacy allied or Support definitions are not automatically considered playable
 Characters.
 
 A roster entry may be visible while locked or hidden until unlocked.
 
-The final gameplay conditions that unlock new Characters remain unresolved until
-the first additional playable Character exists.
+The first Character unlock path is now implemented.
+
+Current prototype requirement:
+
+Ranger
+→ complete the Cull Dormant Hordes Objective on two Expeditions
+→ bank one persistent unlock-progress point from each completed Objective
+→ unlock Ranger when progress reaches 2/2.
+
+This remains a gameplay/progression proof rather than Ranger's intended final
+narrative unlock condition.
 
 # Archetypes
 Document that archetypes can combine.
@@ -87,16 +104,24 @@ Signature mechanic or ability.
 Combat-supporting behaviour.
 
 ### Sustain
-Healing/recovery mechanism.
+Reliable survival / recovery mechanism.
+
+Sustain does not require direct healing.
+
+It may instead create survivability through mitigation, shielding, recovery,
+spacing or another Character-specific defensive behaviour.
 
 # Character Sustain
 Potential sustain identities:
-- direct healing
-- healing by dealing damage
-- regeneration
-- environmental healing
-- between-zone healing
-- shields
+- direct healing;
+- healing by dealing damage;
+- regeneration;
+- environmental healing;
+- between-zone healing;
+- shields;
+- timed damage mitigation / guarding;
+- temporary Armour;
+- spacing / avoidance where sufficiently reliable;
 - resource conversion.
 
 Important principle:
@@ -105,31 +130,104 @@ Important principle:
 
 # Second Playable Character — Ranger
 
-**Status: Working**
+**Status: Implemented Working Character**
 
-The second playable Character is currently a ranged skirmisher using the
-SamuraiArcher visual asset as working production art.
+The second playable Character is a ranged skirmisher using the SamuraiArcher
+visual asset as working production art.
 
-Baseline contrast with Punchy:
+The final Character name and narrative identity remain flexible.
+
+# Baseline Contrast
 
 Punchy
 → close-range;
 → fast combo chain;
 → aggressive movement;
-→ knockback/control.
+→ knockback / control.
 
 Ranger
 → long-range;
 → deliberate single-shot bow cadence;
-→ projectile travel time;
-→ lower durability.
+→ projectile travel;
+→ lower durability;
+→ spacing and defensive timing.
 
-The Ranger identity is not yet complete.
+# Core Ability Identity
 
-O1B2 must still establish:
-- Signature Ability;
-- Utility Ability;
-- Sustain Ability;
-- Character Mastery.
+## Signature — Power Shot
 
-The final Character name and narrative identity remain flexible.
+Power Shot fires one heavy projectile in a straight line.
+
+It can pierce multiple enemies and pushes affected enemies outward in a forward
+fan.
+
+Power Shot is intentionally different from the normal homing basic arrow.
+
+Current Ability-level scaling includes:
+- damage;
+- range;
+- pierce count;
+- knockback;
+- cooldown.
+
+Working future Evolution:
+
+Power Shot
+↓
+three-shot / spread / rapid-volley form.
+
+The multi-shot version is not part of the baseline Ability.
+
+## Utility — Backstep
+
+Backstep is a spacing-restoration tool.
+
+It is intended for situations where an enemy has breached Ranger's preferred
+distance.
+
+Ranger turns away from the threat, rapidly moves toward useful bow spacing and
+then immediately returns to normal autonomous ranged combat.
+
+A dust burst reinforces the movement presentation.
+
+## Sustain — Guard
+
+Guard provides temporary mitigation rather than healing.
+
+Ranger briefly enters a readable blocking state and gains temporary Armour.
+
+A defensive aura remains visible while the protection is active.
+
+This gives Ranger a reliable survival decision without making Sustain synonymous
+with direct healing.
+
+# Ranger Character Mastery
+
+**Status: Implemented Foundation**
+
+Ranger's first Mastery proof reinforces the gameplay established by the
+Character's baseline kit.
+
+Current nodes:
+
+Quick Draw
+→ Basic Attack Speed.
+
+Mobility
+→ Move Speed.
+
+Power Shot Drills
+→ Power Shot begins each Expedition one Ability level higher.
+
+Arrow Impact
+→ outgoing Knockback Power.
+
+The current four-node proof is not the intended final Ranger tree.
+
+Its purpose is to prove that Ranger Mastery can develop:
+- autonomous ranged combat;
+- mobility;
+- Character-native Abilities;
+- battlefield control
+
+without duplicating Ability mechanics inside the Mastery system.

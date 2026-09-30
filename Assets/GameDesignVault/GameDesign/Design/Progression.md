@@ -127,6 +127,39 @@ The first Punchy proof contains:
 - Combo Tempo;
 - Impact Training.
 
+The Ranger proof extends Character Mastery beyond flat stats.
+
+Current Ranger Mastery demonstrates:
+
+Quick Draw
+→ prepared Basic Attack Speed.
+
+Mobility
+→ prepared Move Speed.
+
+Power Shot Drills
+→ persistent starting Ability-level development.
+
+Arrow Impact
+→ prepared Knockback Power.
+
+Persistent Ability development and temporary Expedition Ability development
+remain separate lifetimes.
+
+Example:
+
+Power Shot Drills
+→ Expedition begins at Power Shot Lv.2
+
+temporary run progression
+→ Power Shot reaches Lv.3
+
+Expedition ends
+→ temporary Lv.3 progress is lost
+
+next Expedition
+→ persistent Lv.2 starting state remains.
+
 These are prototype gameplay nodes rather than the intended final Punchy tree.
 
 Mastery nodes may depend on other nodes and may require multiple persistent
@@ -288,14 +321,62 @@ new attempt
 
 without making failure equivalent to losing all progress.
 
-# Unlocks
-Questions:
-- how are characters unlocked?
-- how are weapons unlocked?
-- recipes?
-- areas?
-- abilities?
-- cosmetics?
+# Character Unlocks
+
+**Status: Implemented Foundation**
+
+Playable Character ownership is persistent progression.
+
+The first real Character unlock proof uses Ranger.
+
+Working prototype flow:
+
+Locked Ranger
+↓
+complete the Cull Dormant Hordes Expedition Objective
+↓
+finish the Expedition
+↓
+persistent Ranger unlock progress increases
+↓
+repeat until the authored requirement is satisfied
+↓
+Ranger becomes persistently owned
+↓
+Preparation refreshes
+↓
+Ranger becomes selectable.
+
+For the first implementation proof, Ranger requires two completed Cull Dormant
+Hordes Objectives across separate Expeditions.
+
+This is a prototype progression requirement rather than Ranger's final narrative
+or balance-tuned unlock condition.
+
+Only a completed Objective contributes to the persistent unlock.
+
+Partial in-Expedition Objective progress does not persist between Expeditions.
+
+Completed unlock progress is committed when the Expedition ends through normal
+Voluntary Return, Defeat or Success.
+
+This intentionally follows the existing failure-progression principle:
+
+meaningful permanent progress earned during an Expedition
+→ survives the loss of the temporary Expedition build.
+
+# Other Unlock Questions
+
+Still unresolved:
+
+- final Character unlock conditions;
+- Weapon unlocks;
+- recipes;
+- areas;
+- Ability unlocks;
+- cosmetics;
+- whether some later unlocks use resources, Hunts, bosses, discoveries or other
+  authored requirements.
 
 # Meta Progression
 Put all current unresolved hub ideas here.

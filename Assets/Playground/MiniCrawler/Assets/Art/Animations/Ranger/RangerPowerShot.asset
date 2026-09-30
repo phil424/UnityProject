@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47412143087c100478c2d588671a9a9e, type: 3}
+  m_Name: RangerPowerShot
+  m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Presentation.SpriteFlipbookClip
+  frames:
+  - {fileID: 109912158, guid: 5f2daf01790194340bc4671bc75cc0aa, type: 3}
+  - {fileID: -436355031, guid: 5f2daf01790194340bc4671bc75cc0aa, type: 3}
+  - {fileID: -2030836632, guid: 5f2daf01790194340bc4671bc75cc0aa, type: 3}
+  - {fileID: 448357083, guid: 5f2daf01790194340bc4671bc75cc0aa, type: 3}
+  - {fileID: 1705752687, guid: 5f2daf01790194340bc4671bc75cc0aa, type: 3}
+  - {fileID: 1083208861, guid: 5f2daf01790194340bc4671bc75cc0aa, type: 3}
+  - {fileID: -13628771, guid: 5f2daf01790194340bc4671bc75cc0aa, type: 3}
+  - {fileID: 1880179677, guid: 5f2daf01790194340bc4671bc75cc0aa, type: 3}
+  - {fileID: 1185939025, guid: 5f2daf01790194340bc4671bc75cc0aa, type: 3}
+  - {fileID: 899967340, guid: 5f2daf01790194340bc4671bc75cc0aa, type: 3}
+  - {fileID: -931124963, guid: 5f2daf01790194340bc4671bc75cc0aa, type: 3}
+  - {fileID: 1599112980, guid: 5f2daf01790194340bc4671bc75cc0aa, type: 3}
+  - {fileID: 1417677391, guid: 5f2daf01790194340bc4671bc75cc0aa, type: 3}
+  - {fileID: 1236909289, guid: 5f2daf01790194340bc4671bc75cc0aa, type: 3}
+  - {fileID: 270113091, guid: 5f2daf01790194340bc4671bc75cc0aa, type: 3}
+  - {fileID: 1167645412, guid: 5f2daf01790194340bc4671bc75cc0aa, type: 3}
+  - {fileID: 1193081442, guid: 5f2daf01790194340bc4671bc75cc0aa, type: 3}
+  - {fileID: -232949426, guid: 5f2daf01790194340bc4671bc75cc0aa, type: 3}
+  - {fileID: -512918268, guid: 5f2daf01790194340bc4671bc75cc0aa, type: 3}
+  - {fileID: 566293036, guid: 5f2daf01790194340bc4671bc75cc0aa, type: 3}
+  - {fileID: -563228559, guid: 5f2daf01790194340bc4671bc75cc0aa, type: 3}
+  - {fileID: -28573671, guid: 5f2daf01790194340bc4671bc75cc0aa, type: 3}
+  framesPerSecond: 20
+  loop: 0

@@ -48,6 +48,30 @@ Broad composition:
 └──────────────────────────────────────────┴─────────────────────┘
 ```
 
+## Character Unlock Presentation
+
+**Status: Implemented Functional Foundation**
+
+Visible locked Characters use the Character selector itself as the primary
+functional unlock surface.
+
+A locked Character currently communicates:
+
+Character identity
++
+locked state
++
+authored unlock requirement
++
+persistent progress.
+
+When the requirement is satisfied, the same Character entry becomes selectable
+and displays an `UNLOCKED` acknowledgement.
+
+This is intentionally functional rather than final presentation.
+
+A larger unlock animation, reveal or celebration may be added later if playtests
+show that Character acquisition deserves stronger presentation.
 
 # HUD Information Priority
 

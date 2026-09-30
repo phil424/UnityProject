@@ -29,24 +29,48 @@ unlocked Mastery node IDs
 
 # Current Node Types
 
-The first concrete implementation is:
+Character Mastery currently has two concrete node types.
 
-`CharacterMasteryStatNodeDefinition`
+## CharacterMasteryStatNodeDefinition
 
-It applies a Prepared Character stat modifier.
+Applies a Prepared `CharacterStatModifierType`.
 
-The abstract Mastery-node definition allows future concrete nodes to represent
-other progression without expanding one universal effect enum.
+Current examples include:
 
-Potential future examples:
+- Basic Attack Damage;
+- Attack Speed;
+- Move Speed;
+- Max Health;
+- Knockback Power.
 
-- Ability unlock;
-- Weapon Mod unlock;
-- combo modification;
-- Character mechanic;
-- cross-Character/global milestone.
+## CharacterMasteryAbilityLevelNodeDefinition
 
-These should be introduced only alongside real gameplay consumers.
+Raises the prepared starting level of an Ability that already exists in the
+Character's starting RunBuild.
+
+It does not acquire an Ability.
+
+Runtime order is therefore important:
+
+starting Abilities
+↓
+Character Mastery
+↓
+prepared Ability levels
+
+The first consumer is Ranger Power Shot.
+
+Power Shot Drills
+↓
+Power Shot begins each Expedition one level higher
+↓
+the existing Ability-level curve provides its authored gameplay improvements
+
+This allows Character Mastery to develop an Ability without copying individual
+Ability mechanics into the Mastery system.
+
+Temporary Expedition Ability levels may still increase the Ability further
+during a run.
 
 # Resource Costs
 
@@ -113,7 +137,13 @@ Unlocking a node therefore updates the live showcase immediately.
 
 # Current Limitations
 
-The first proof contains only stat-oriented Punchy nodes.
+Current proofs include:
+
+Punchy
+→ stat-oriented Mastery nodes.
+
+Ranger
+→ stat-oriented nodes plus the first persistent starting Ability-level node.
 
 It does not yet provide:
 

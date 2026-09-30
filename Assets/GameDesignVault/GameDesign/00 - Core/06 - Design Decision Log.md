@@ -1261,3 +1261,50 @@ Separating the three responsibilities also allows:
 - future unlock systems should call the persistent ownership seam rather than
   directly manipulating Preparation UI;
 - final unlock requirements/progress remain future O1 work.
+
+## 2026-09-27 — Ranger core identity centres on range control
+
+### Decision
+
+Ranger's current Character identity is built around controlling and exploiting
+distance.
+
+Core Ability roles:
+
+Power Shot
+→ Signature;
+→ straight piercing ranged pressure;
+→ forward fan knockback.
+
+Backstep
+→ Utility;
+→ restores preferred ranged spacing when enemies get too close.
+
+Guard
+→ Sustain;
+→ temporary mitigation rather than healing.
+
+Power Shot's working future Evolution is a three-shot spread / rapid volley.
+
+### Reason
+
+The three abilities should solve related problems created by Ranger's ranged
+baseline rather than acting as three unrelated cooldown buttons.
+
+The resulting loop is:
+
+maintain distance
+↓
+exploit enemy alignment with Power Shot
+↓
+Backstep when spacing collapses
+↓
+Guard when immediate escape / spacing is insufficient.
+
+### Implications
+
+- Sustain is confirmed as a Character role rather than a synonym for healing;
+- Power Shot remains one projectile at baseline;
+- multi-shot behaviour is reserved for future Ability Evolution;
+- Ranger Mastery should reinforce this proven ranged identity;
+- automatic kiting remains separate from the baseline navigation AI.

@@ -9,6 +9,38 @@ documentation stewardship.
 
 The Design knowledge base is a living part of development, not a one-time planning artifact.
 
+## Two-Pass Documentation Rule
+
+Meaningful development work should normally inspect documentation twice.
+
+### Pass 1 — Before implementation
+
+The purpose is to establish a trustworthy starting point.
+
+Inspect only documentation relevant to the upcoming work.
+
+Correct stale or contradictory information when leaving it unchanged would make
+the implementation plan ambiguous or misleading.
+
+Do not perform unrelated documentation housekeeping merely because a development
+step is beginning.
+
+### Pass 2 — After verification
+
+The purpose is to record what was actually implemented and verified.
+
+Revisit the relevant documentation after runtime validation and:
+
+- replace obsolete future-tense descriptions;
+- remove resolved limitations;
+- update names and terminology;
+- record confirmed ownership/data-flow changes;
+- update affected authoring instructions;
+- preserve unresolved ideas as Working or Exploratory.
+
+The final documentation pass should describe the verified result rather than the
+original implementation plan.
+
 As systems become relevant:
 
 - inspect the related design documents;

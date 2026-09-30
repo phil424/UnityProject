@@ -1357,27 +1357,175 @@ Ranger Abilities and Character Mastery remain O1B2 work.
 
 #### 3.0O1B2 — Ranger Core Abilities & Character Mastery
 
-**Status: Planned**
+**Status: Active**
 
-Give Ranger a complete playable Character identity through:
+Complete Ranger's playable Character identity through:
 
 - Signature Ability;
 - Utility Ability;
 - Sustain Ability;
-- first Ranger Mastery nodes;
+- first Ranger Character Mastery;
 - buildcraft interactions appropriate to ranged play.
 
-#### 3.0O1B3 — Second Character Integration Review
+##### 3.0O1B2A — Ranger Core Ability Identity ✅
 
-**Status: Planned**
+**Status: Complete**
 
-Play Punchy and Ranger through the same Preparation / Expedition loop and verify
-that the two Characters create meaningfully different baseline decisions before
-moving to O1C.
+Ranger's first complete three-part Character core is implemented.
+
+#### Signature — Power Shot
+
+Power Shot is a deliberate directional projectile attack.
+
+Current behaviour:
+
+Ranger
+↓
+SPECIAL ATTACK windup
+↓
+one straight Power Shot projectile
+↓
+pierces multiple enemies
+↓
+each enemy may be hit once
+↓
+offset enemies are knocked outward from the shot line
+↓
+the resulting displacement forms a forward fan / arc
+
+Power Shot does not home after release.
+
+Its authored Ability levels currently improve several aspects of the Ability,
+including:
+
+- damage;
+- range;
+- number of enemies pierced;
+- knockback distance;
+- cooldown.
+
+Working future Evolution direction:
+
+Power Shot
+↓
+three-shot / spread / rapid-volley form.
+
+The multi-shot form is intentionally reserved as an Ability Evolution rather
+than being part of the baseline Ability.
+
+#### Utility — Backstep
+
+Backstep restores Ranger's preferred combat spacing when an enemy gets too
+close.
+
+Current behaviour:
+
+enemy breaches safe spacing
+↓
+Backstep becomes usable
+↓
+Ranger faces away from the threat
+↓
+DASH presentation
+↓
+dust burst at the starting position
+↓
+ForcedMotion carries Ranger away
+↓
+Ranger stops near useful bow range
+↓
+normal autonomous attacks resume
+
+Backstep is therefore a contextual spacing tool rather than a generic movement
+button.
+
+#### Sustain — Guard
+
+Guard is mitigation-based Sustain rather than direct healing.
+
+Current behaviour:
+
+Guard activation
+↓
+short BLOCK commitment
+↓
+temporary Armour increase
+↓
+blue defensive aura remains visible for the buff duration
+↓
+normal autonomous attacks resume while protection remains active
+
+This confirms that a Character's Sustain role does not need to be a heal.
+
+#### Shared Technical Seams
+
+O1B2A also established:
+
+- generic projectile-shot Ability behaviour;
+- directional piercing projectile delivery;
+- reusable Ability sprite presentation;
+- reusable Ability effect presentation;
+- attached timed Sprite Effects;
+- a shared timed-stat-buff Ability implementation used by Ranger Guard and
+  existing buff Abilities.
+
+Ranger Character Mastery remains O1B2B work.
+
+##### 3.0O1B2B — Ranger Character Mastery ✅
+
+**Status: Complete**
+
+Use Ranger's now-playable combat identity to create the first Ranger-specific
+persistent Mastery proof.
+
+The initial Mastery should reinforce:
+
+- normal ranged cadence;
+- spacing / mobility;
+- Power Shot development;
+- ranged battlefield control.
+
+This step should also prove persistent starting Ability-level development rather
+than limiting Character Mastery to stat nodes.
+
+Implemented:
+
+- Ranger-specific persistent Mastery;
+- two small starting stat nodes;
+- prerequisite relationships;
+- persistent starting Ability-level development;
+- Power Shot Mastery using the existing Ability level curve;
+- Knockback Mastery using the existing generic KnockbackStats seam;
+- live runtime Ability progression refresh without resetting cooldowns;
+- prepared Ability levels shown in the Preparation Overview.
+
+The first Ranger tree remains a gameplay proof rather than final progression
+content.
+
+#### 3.0O1B3 — Second Character Integration Review ✅
+
+**Status: Complete**
+
+Verified Punchy and Ranger through the shared Preparation / Expedition loop.
+
+Confirmed:
+
+- Punchy begins unlocked while Ranger begins visible but locked;
+- persistent ownership gates Character selection independently of roster visibility;
+- the existing development unlock refreshes Preparation without a scene reload;
+- both Characters use the same Setup / Expedition architecture;
+- Punchy creates close-range combo-pressure decisions;
+- Ranger creates ranged spacing, projectile-lineup and defensive timing decisions;
+- Ranger's Power Shot, Backstep and Guard remain functional in normal Expedition play;
+- Character ownership survives Expedition end within the current session;
+- session restart correctly returns ownership to authored roster defaults.
+
+O1B is now closed with two mechanically distinct playable Characters using the
+same Character, Ability, Mastery and Expedition foundations.
 
 ### 3.0O1C — First Character Unlock Path
 
-**Status: Planned**
+**Status: Complete**
 
 Use the second playable Character to prove an actual persistent Character unlock.
 
@@ -1395,7 +1543,64 @@ Character selection
 ↓
 real Expedition play.
 
+#### 3.0O1C1 — Persistent Character Unlock Requirement Foundation ✅
+
+**Status: Complete**
+
+Implemented the first real persistent Character unlock path.
+
+Current proof:
+
+- roster entries may reference a data-authored Character unlock requirement;
+- persistent Character unlock progress survives Expedition boundaries;
+- completed Expedition Objectives may contribute to an unlock requirement;
+- Ranger currently requires two completed Cull Dormant Hordes Objectives;
+- unlock progress commits when the Expedition ends;
+- completed progress may survive Defeat;
+- satisfying the requirement grants normal persistent Character ownership;
+- Preparation refreshes through the existing persistent-progression event path.
+
+The Ranger requirement remains prototype progression content rather than a final
+narrative unlock condition.
+
+#### 3.0O1C2 — Character Unlock Presentation ✅
+
+**Status: Complete**
+
+Completed the first functional Character unlock presentation.
+
+Preparation now:
+
+- presents visible locked Characters directly in the Character selector;
+- shows the Character's authored unlock requirement;
+- shows current persistent unlock progress;
+- refreshes that progress when the player returns from an Expedition;
+- visibly transitions a progression-earned Character to `UNLOCKED`;
+- makes the newly-owned Character selectable through the normal roster flow;
+- rebuilds the selector when Preparation becomes active so Characters unlocked
+  while the frontend was disabled can appear correctly.
+
+Ranger now demonstrates the complete first Character acquisition loop:
+
+Locked
+↓
+meaningful Expedition requirement
+↓
+persistent progress
+↓
+ownership
+↓
+visible unlock feedback
+↓
+Character selection
+↓
+real Expedition play.
+
+The current presentation is functional rather than final visual polish.
+
 ## 3.0O2 — Weapon Mods
+
+**Status: Active**
 
 Develop the shared Weapon Mod system.
 

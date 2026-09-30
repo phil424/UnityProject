@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 564a63785b8bb3e499835c5c456b4611, type: 3}
+  m_Name: Ranger_ArrowImpact
+  m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Progress.CharacterMasteryStatNodeDefinition
+  id: ranger_arrow_impact
+  displayName: Arrow Impact
+  description: Increases knockback delivered by arrows
+  icon: {fileID: 0}
+  prerequisites:
+  - {fileID: 11400000, guid: 168beaa2c1b05984f9d084bbb4308a79, type: 2}
+  costs:
+  - tier: 0
+    amount: 10
+  - tier: 1
+    amount: 1
+  modifierType: 6
+  amount: 20

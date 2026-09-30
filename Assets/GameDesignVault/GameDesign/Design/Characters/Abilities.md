@@ -75,43 +75,117 @@ Template:
 ## Open Questions
 ```
 
-# Core Character Actions
+# Core Character Ability Roles
 
-Some abilities/actions may belong to the baseline character control layer rather
-than being normal expedition acquisitions.
+**Status: Confirmed Direction**
 
-Working example:
+Every playable Character begins with a three-part core:
 
-## Heal / Sustain
+Signature
++
+Utility
++
+Sustain
 
-Every playable character should have access to a baseline sustain/healing action.
+These are Character / loadout roles.
 
-The exact behaviour is not yet locked.
+They are not permanent categories stored on `AbilityDefinition`.
 
-Potential purposes:
-- provide the player with a universal recovery decision;
-- make ability timing meaningful even on simple starting builds;
-- provide predictable sustain independent from random reward generation;
-- occupy a consistent place in the combat-control layout.
+The same generic Ability architecture remains usable by other Characters,
+enemies, bosses and reward systems.
 
-The implementation should use the shared ability architecture rather than
-creating bespoke healing logic separately on every character.
+## Signature
 
-Different characters/equipment may eventually alter:
-- heal amount;
-- cooldown;
-- delivery;
-- secondary effects;
-- charges;
-- interactions with armour / weapons / augments.
+Defines a major piece of the Character's active combat identity.
 
-Whether Heal is technically:
-- a universal ability;
-- a character innate;
-- a prepared core slot;
+It should normally provide something the Character's basic autonomous combat
+does not already accomplish.
 
-remains open.
+Current examples:
 
-The player-facing principle is more important:
+Punchy
+→ Whirlwind.
 
-> Every character begins with a reliable sustain action.
+Ranger
+→ Power Shot.
+
+## Utility
+
+Provides tactical intervention such as:
+
+- movement;
+- control;
+- positioning;
+- escape;
+- setup;
+- disruption.
+
+Current Ranger example:
+
+Backstep
+→ restore useful ranged spacing after an enemy closes distance.
+
+## Sustain
+
+Provides a reliable survival decision.
+
+Sustain does not imply direct healing.
+
+Potential Sustain forms include:
+
+- healing;
+- regeneration;
+- shielding;
+- guarding;
+- temporary mitigation;
+- Armour;
+- avoidance;
+- conversion of another resource into survivability.
+
+Current Ranger example:
+
+Guard
+→ short defensive commitment;
+→ temporary Armour;
+→ clear active protection presentation.
+
+The important player-facing principle is:
+
+> Every Character should begin with a reliable way to intervene when survival
+> becomes threatened, but that intervention should reinforce Character identity.
+
+# Ranger Ability Development
+
+## Power Shot
+
+Baseline:
+
+one directional piercing projectile.
+
+Current level scaling may improve:
+- damage;
+- range;
+- pierce count;
+- knockback;
+- cooldown.
+
+Working Evolution direction:
+
+three-shot / spread / rapid volley.
+
+This Evolution should build on the existing directional projectile seam rather
+than creating another projectile system.
+
+## Backstep
+
+A contextual spacing tool.
+
+It should normally become useful when Ranger is closer to a threat than the
+Character's preferred ranged spacing.
+
+## Guard
+
+A mitigation-based Sustain Ability.
+
+The short blocking presentation communicates activation while the longer
+defensive aura communicates the remaining buff duration.

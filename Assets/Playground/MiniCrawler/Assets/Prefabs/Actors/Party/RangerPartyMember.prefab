@@ -78,7 +78,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4023943183482052297, guid: 1db074dee99c6aa478bd3c539ce41968, type: 3}
       propertyPath: combatStoppingDistance
-      value: 11
+      value: 6.5
       objectReference: {fileID: 0}
     - target: {fileID: 4594298099328853642, guid: 1db074dee99c6aa478bd3c539ce41968, type: 3}
       propertyPath: m_Name
@@ -98,11 +98,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6105984150420555060, guid: 1db074dee99c6aa478bd3c539ce41968, type: 3}
       propertyPath: attackRange
-      value: 12
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 6105984150420555060, guid: 1db074dee99c6aa478bd3c539ce41968, type: 3}
       propertyPath: attackCooldown
-      value: 0.1
+      value: 0.9
       objectReference: {fileID: 0}
     - target: {fileID: 6106053220358575232, guid: 1db074dee99c6aa478bd3c539ce41968, type: 3}
       propertyPath: m_LocalPosition.y
@@ -143,5 +143,67 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 5736878203012054910, guid: 1db074dee99c6aa478bd3c539ce41968, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3504774502592239147}
+    - targetCorrespondingSourceObject: {fileID: 5736878203012054910, guid: 1db074dee99c6aa478bd3c539ce41968, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8538055826278749908}
   m_SourcePrefab: {fileID: 100100000, guid: 1db074dee99c6aa478bd3c539ce41968, type: 3}
+--- !u!1 &1504411358967121792 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5736878203012054910, guid: 1db074dee99c6aa478bd3c539ce41968, type: 3}
+  m_PrefabInstance: {fileID: 6592639274174822654}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &3504774502592239147
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1504411358967121792}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31d711aef06fdd14fa14a4b1cbb57ec1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Presentation.ActorAbilitySpritePresenter
+  abilityPresentations:
+  - ability: {fileID: 11400000, guid: 00d7eb2c41cb9b74fa2b0030d76d21f0, type: 2}
+    clip: {fileID: 11400000, guid: c941167a20ef96f4caf28eabdb5b197c, type: 2}
+    presentationDuration: 1.1
+    facingMode: 1
+    endWithAbilityExecution: 1
+  - ability: {fileID: 11400000, guid: e42e19ef7e9317646a5357737269ec8e, type: 2}
+    clip: {fileID: 11400000, guid: 1713654e27be71d4fa73e1f8a38e3e1c, type: 2}
+    presentationDuration: 0.42
+    facingMode: 2
+    endWithAbilityExecution: 1
+  - ability: {fileID: 11400000, guid: 09488582446ecec45807849991e8c9b3, type: 2}
+    clip: {fileID: 11400000, guid: cc58f7fe39163cc4794e62debba9d6cd, type: 2}
+    presentationDuration: 0.6
+    facingMode: 0
+    endWithAbilityExecution: 1
+--- !u!114 &8538055826278749908
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1504411358967121792}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ace5961b7c6de848b660f37cd42edea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Presentation.ActorAbilityEffectPresenter
+  abilityEffects:
+  - ability: {fileID: 11400000, guid: e42e19ef7e9317646a5357737269ec8e, type: 2}
+    activationEffect: {fileID: 11400000, guid: 68bf7eb69f49b7b41823744fdb92fbf4, type: 2}
+    activeEffect: {fileID: 0}
+    useTimedBuffDuration: 0
+    activeEffectDuration: 0
+  - ability: {fileID: 11400000, guid: 09488582446ecec45807849991e8c9b3, type: 2}
+    activationEffect: {fileID: 0}
+    activeEffect: {fileID: 11400000, guid: bab036c4a11bd864ebb88294ba57014c, type: 2}
+    useTimedBuffDuration: 1
+    activeEffectDuration: 0

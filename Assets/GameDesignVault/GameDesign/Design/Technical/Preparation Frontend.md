@@ -89,21 +89,41 @@ Persistent ownership is resolved through `PersistentProgression`.
 
 Current presentation states:
 
-Unlocked
+Starting / unlocked
 → visible and selectable.
 
 Locked / visible
-→ visible but unavailable.
+→ visible but unavailable;
+→ displays `[LOCKED]`;
+→ displays the authored unlock requirement;
+→ displays current persistent requirement progress.
+
+Progression-unlocked
+→ visible and selectable;
+→ displays an `UNLOCKED` acknowledgement.
 
 Locked / hidden
-→ omitted until unlocked.
+→ omitted until ownership is earned.
+
+The selector is rebuilt when Preparation becomes active so ownership changes
+earned during an Expedition are reflected immediately on return.
 
 `RunSetup` independently validates roster membership and persistent ownership, so
 the frontend is not the authority for whether a Character may begin an
 Expedition.
 
-The current implemented roster contains Punchy as the starting unlocked
-Character.
+The current implemented roster contains:
+
+Punchy
+→ starting unlocked Character.
+
+Ranger
+→ visible while locked;
+→ gameplay unlock requirement implemented;
+→ persistent requirement progress currently exists beneath the frontend.
+
+O1C2 adds the first functional presentation of that unlock requirement and its
+current progress directly to the Character selector.
 
 Legacy Support actors are not automatically treated as selectable playable
 Characters.
@@ -154,8 +174,6 @@ Preparation progression model.
 
 Potential later work:
 
-- Character unlock ownership and locked-roster presentation;
-- additional playable Characters;
 - larger roster presentation;
 - richer Character information;
 - final UI skin;

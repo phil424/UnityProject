@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad8520cfad60c354e99a09f358a17562, type: 3}
+  m_Name: Ranger_DormantHordeUnlock
+  m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Progress.ObjectiveCompletionCharacterUnlockRequirementDefinition
+  id: ranger_dormant_horde_unlock
+  displayName: Cull the Dormant Hordes
+  description: Complete the Cull Dormant Hordes objectives.
+  requiredProgress: 2
+  objective: {fileID: 11400000, guid: 73a13b63957edc841818480b926d412e, type: 2}

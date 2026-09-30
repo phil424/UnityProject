@@ -56,24 +56,31 @@ Do not quietly turn exploratory ideas into implementation requirements.
 
 # Development Step Structure
 
-Continue using:
+Every meaningful implementation or housekeeping step follows the same delivery
+sequence.
 
-```
-2.9A
-2.9B
-2.9C
-...
-```
+The sequence exists to prevent implementation and documentation from drifting
+apart.
 
-because the lettering is useful for defining scope.
+## Phase 0 — Documentation Preflight & Cleanup
 
-However:
+Before implementation instructions:
 
-> A lettered step does NOT automatically require a new snapshot or a long validation pause.
+1. inspect the Design, Technical and Guide documents directly relevant to the work;
+2. identify stale, contradictory or misleading information that would affect the
+   implementation;
+3. make only the small documentation corrections needed to establish a trustworthy
+   starting point.
 
-Several related lettered steps may be completed consecutively as one coherent development slice.
+Do not turn this into a general documentation-cleaning exercise.
 
-At the start of each implementation step provide:
+If the relevant documentation is already accurate, state:
+
+`Documentation Preflight: No changes required.`
+
+## Phase 1 — Implementation Contract
+
+State:
 
 - Goal
 - Deliberately NOT included
@@ -81,7 +88,83 @@ At the start of each implementation step provide:
 - Files to MODIFY
 - Files to DELETE
 
-Keep the scope explicit.
+Where relevant also provide:
+
+- Unity Authoring Work Contract;
+- UI Work Contract;
+- prefab workflow;
+- scene ownership;
+- serialized-reference expectations.
+
+## Phase 2 — Implementation
+
+Provide exact instructions in dependency order.
+
+Instructions must be executable from top to bottom.
+
+Prefer:
+
+Shared data/type
+↓
+shared contract
+↓
+concrete implementation
+↓
+call sites
+↓
+presentation
+↓
+Unity authoring
+
+Do not mix unrelated cleanup into the implementation diff.
+
+## Phase 3 — Focused Verification
+
+Validate the behaviour actually changed.
+
+Use:
+
+- compilation gates where appropriate;
+- focused manual runtime validation;
+- broader regression testing only when the risk warrants it.
+
+Do not advance when the relevant acceptance criteria are still failing.
+
+## Phase 4 — Documentation Closure
+
+After successful verification, inspect the relevant documentation again.
+
+Update documentation to describe the verified final state.
+
+Specifically check for:
+
+- stale future-tense wording;
+- obsolete Current Limitations;
+- old names;
+- changed ownership or data flow;
+- changed authoring workflow;
+- decisions that became Confirmed;
+- ideas that remain Working or Exploratory.
+
+Assess separately:
+
+- Design Documentation Impact;
+- Technical Documentation Impact;
+- Authoring Guide Impact;
+- Project Management / Roadmap Impact.
+
+Do not change roadmap status merely because files were edited.
+Only update roadmap state when the corresponding development outcome has actually
+been verified.
+
+## Phase 5 — Checkpoint Decision
+
+After implementation, verification and documentation closure, decide whether the
+current project is a useful new authoritative checkpoint.
+
+A lettered step does not automatically require a new snapshot.
+
+Several related small steps may be completed before creating the next Complete.zip.
 
 # Snapshot cadence
 
@@ -470,7 +553,15 @@ navigation.SetDestination(this, targetNode.Position, arrivalDistance, suppressCo
 # Code Health Pass
 
 Legacy code should be improved gradually rather than preserved indefinitely or
-rewritten in one large cleanup effort.
+rewritten through large cleanup projects.
+
+When worthwhile, scope Code Health as its own small housekeeping development step
+using the normal Development Step Structure.
+
+Do not silently mix unrelated legacy cleanup into a feature implementation diff.
+
+A recently completed feature may reveal a good Code Health candidate, but the
+cleanup should remain separately scoped and separately validated.
 
 At the end of each meaningful milestone or coherent lettered development slice,
 consider an optional Code Health Pass.

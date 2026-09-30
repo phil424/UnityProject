@@ -18,8 +18,18 @@ MonoBehaviour:
   description: Shooty boi
   portrait: {fileID: 0}
   actorDefinition: {fileID: 11400000, guid: 84096ed667795794bbfccefb57ceac40, type: 2}
-  startingAbilities: []
-  masteryNodes: []
+  startingAbilities:
+  - ability: {fileID: 11400000, guid: 00d7eb2c41cb9b74fa2b0030d76d21f0, type: 2}
+    level: 1
+  - ability: {fileID: 11400000, guid: e42e19ef7e9317646a5357737269ec8e, type: 2}
+    level: 1
+  - ability: {fileID: 11400000, guid: 09488582446ecec45807849991e8c9b3, type: 2}
+    level: 1
+  masteryNodes:
+  - {fileID: 11400000, guid: bb9c1c7e94d951a4cbf58713950e2c9c, type: 2}
+  - {fileID: 11400000, guid: 168beaa2c1b05984f9d084bbb4308a79, type: 2}
+  - {fileID: 11400000, guid: c6aeaf4578057e6498d40b340aa17329, type: 2}
+  - {fileID: 11400000, guid: b42c9863906d81b409b8c2d2989578f9, type: 2}
   weaponName: Bow
   armourName: Light Armour
   focusName: None

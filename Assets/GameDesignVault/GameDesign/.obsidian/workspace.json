@@ -13,30 +13,15 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Development Rules.md",
+                "file": "Design/Weapon Mods.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Development Rules"
-            }
-          },
-          {
-            "id": "445c54ae6273e79a",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "ProjectManagement/Project Structure.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "Project Structure"
+              "title": "Weapon Mods"
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -201,43 +186,43 @@
       "bases:Create new base": false
     }
   },
-  "active": "445c54ae6273e79a",
+  "active": "57c7e95b4b97b861",
   "lastOpenFiles": [
-    "Design/Technical/Projectile Combat.md.meta",
-    "Design/Characters/Characters.md",
-    "Design/Technical/Projectile Combat.md",
+    "Design/Weapon Mods.md.meta",
     "ProjectManagement/Roadmap.md",
-    "00 - Core/What is the game/Narrative Framework.md",
-    "Design/Technical/Playable Character Roster.md.meta",
-    "00 - Core/06 - Design Decision Log.md",
-    "00 - Core/00 - Game Design Index.md",
+    "Design/Weapon Mods.md",
+    "Design/UI-UX.md",
     "Design/Technical/Preparation Frontend.md",
-    "00 - Core/03 - Progression Layers.md",
     "Design/Technical/Playable Character Roster.md",
+    "Design/Progression.md",
+    "Design/Characters/Characters.md",
+    "00 - Core/What is the game/Narrative Framework.md",
+    "Development Rules/Workflow and Validation.md",
+    "Development Rules/Documentation.md",
+    "Development Rules.md",
+    "Core Instructions - Always Follow.md",
+    "ProjectManagement/Active Feature Programme.md",
+    "Design/Technical/Character Mastery.md",
+    "00 - Core/06 - Design Decision Log.md",
+    "Design/Technical/Projectile Combat.md",
+    "Design/Characters/Abilities.md",
+    "ProjectManagement/Project Structure.md",
+    "Design/Technical/Projectile Combat.md.meta",
+    "Design/Technical/Playable Character Roster.md.meta",
+    "00 - Core/00 - Game Design Index.md",
+    "00 - Core/03 - Progression Layers.md",
     "00 - Core/02 - Core Gameplay Loop.md",
     "Development Rules/Abilities and Buildcraft.md",
     "Design/Buildcraft.md",
     "Design/Technical/Persistent Resources.md",
     "Design/Technical/Character Stats.md",
     "Design/Technical/Character Mastery.md.meta",
-    "Design/Technical/Character Mastery.md",
-    "Design/Progression.md",
     "Design/Technical/Persistent Resources.md.meta",
-    "Design/Rewards.md",
-    "Design/Technical/Progression Lifetimes.md",
-    "Development Rules/Workflow and Validation.md",
-    "Development Rules/UI Authoring.md",
-    "ProjectManagement/Active Feature Programme.md",
     "Design/Technical/Preparation Frontend.md.meta",
-    "ProjectManagement/Project Structure.md",
-    "Design/UI-UX.md",
-    "00 - Core/05 - Open Design Questions.md",
     "Design/Technical/Rewards and Pending Choices.md.meta",
-    "Design/Technical/Rewards and Pending Choices.md",
     "00 - Core/What is the game/What The Game Actually Is.md.meta",
     "00 - Core/What is the game.meta",
     "00 - Core/What is the game/Narrative Framework.md.meta",
-    "00 - Core/What is the game/What A Player Does.md.meta",
-    "00 - Core/What is the game"
+    "00 - Core/What is the game/What A Player Does.md.meta"
   ]
 }
