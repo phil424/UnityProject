@@ -84,6 +84,18 @@ namespace MiniCrawler.Systems
 
             if (definition is ProjectileCombatActionDefinition projectileAction)
             {
+                if (weaponMods != null &&
+                    weaponMods.TryResolveProjectileBasicAttack(
+                        action,
+                        target,
+                        projectileAction,
+                        damage,
+                        attackerStats.AttackName,
+                        out bool modConnected))
+                {
+                    return modConnected;
+                }
+
                 return ProjectileRuntime.Spawn(
                     projectileAction.Projectile,
                     action.gameObject,

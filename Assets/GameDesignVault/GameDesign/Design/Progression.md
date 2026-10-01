@@ -127,6 +127,25 @@ The first Punchy proof contains:
 - Combo Tempo;
 - Impact Training.
 
+Punchy's Character Mastery now also includes:
+
+Heavy Finisher Stance
+→ prepares the Heavy Finisher Weapon Mod stance in every future Punchy
+  Expedition.
+
+This is the first Mastery node that expands the Character's selectable Basic
+Attack behaviour rather than directly increasing a stat or Ability level.
+
+Weapon Mod stance ownership follows the existing prepared-build lifetime:
+
+persistent Mastery ownership
+↓
+`ApplyMasteryToBuild`
+↓
+new Expedition `RunBuild`
+↓
+available Weapon Mod stance.
+
 The Ranger proof extends Character Mastery beyond flat stats.
 
 Current Ranger Mastery demonstrates:
@@ -142,6 +161,14 @@ Power Shot Drills
 
 Arrow Impact
 → prepared Knockback Power.
+
+Piercing Arrows Stance
+→ prepares Ranger's Piercing Arrows Weapon Mod every Expedition.
+
+Ranger now provides the second Character Mastery → Weapon Mod proof.
+
+Heavy Finisher and Piercing Arrows demonstrate that the same persistent Mastery
+mechanism may prepare Mods with very different runtime behaviour.
 
 Persistent Ability development and temporary Expedition Ability development
 remain separate lifetimes.
@@ -168,8 +195,14 @@ resource tiers.
 Prepared Mastery bonuses and temporary Expedition bonuses remain separate
 sources even when they modify the same runtime stat.
 
-Future node implementations may unlock non-stat possibilities such as Abilities,
-Weapon Mods, combo changes and Character-specific mechanics.
+Mastery now supports:
+
+- prepared stat development;
+- persistent starting Ability levels;
+- persistent Weapon Mod stance unlocks.
+
+Future node implementations may extend this to additional Character-specific
+mechanics as concrete content requires them.
 
 It may eventually contain:
 

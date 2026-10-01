@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Design/Weapon Mods.md",
+                "file": "ProjectManagement/Roadmap.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Weapon Mods"
+              "title": "Roadmap"
             }
           }
         ]
@@ -188,14 +188,18 @@
   },
   "active": "57c7e95b4b97b861",
   "lastOpenFiles": [
-    "Design/Weapon Mods.md.meta",
-    "ProjectManagement/Roadmap.md",
+    "Design/Technical/Weapon Mods.md",
+    "Design/Buildcraft.md",
     "Design/Weapon Mods.md",
+    "ProjectManagement/Roadmap.md",
     "Design/UI-UX.md",
-    "Design/Technical/Preparation Frontend.md",
-    "Design/Technical/Playable Character Roster.md",
+    "Design/Rewards.md",
     "Design/Progression.md",
     "Design/Characters/Characters.md",
+    "Design/Technical/Weapon Mods.md.meta",
+    "Design/Weapon Mods.md.meta",
+    "Design/Technical/Preparation Frontend.md",
+    "Design/Technical/Playable Character Roster.md",
     "00 - Core/What is the game/Narrative Framework.md",
     "Development Rules/Workflow and Validation.md",
     "Development Rules/Documentation.md",
@@ -213,16 +217,11 @@
     "00 - Core/03 - Progression Layers.md",
     "00 - Core/02 - Core Gameplay Loop.md",
     "Development Rules/Abilities and Buildcraft.md",
-    "Design/Buildcraft.md",
-    "Design/Technical/Persistent Resources.md",
-    "Design/Technical/Character Stats.md",
     "Design/Technical/Character Mastery.md.meta",
     "Design/Technical/Persistent Resources.md.meta",
     "Design/Technical/Preparation Frontend.md.meta",
     "Design/Technical/Rewards and Pending Choices.md.meta",
     "00 - Core/What is the game/What The Game Actually Is.md.meta",
-    "00 - Core/What is the game.meta",
-    "00 - Core/What is the game/Narrative Framework.md.meta",
-    "00 - Core/What is the game/What A Player Does.md.meta"
+    "00 - Core/What is the game.meta"
   ]
 }

@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3530e172d68f4ac4e91c068ad255ecd8, type: 3}
+  m_Name: Ranger_PiercingArrowsLevelReward
+  m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Progress.WeaponModLevelRewardDefinition
+  id: reward_ranger_piercing_arrows_level
+  displayName: Piercing Arrows Training
+  icon: {fileID: 0}
+  rarity: 2
+  weaponMod: {fileID: 11400000, guid: 132116f5392285f4cbf34eddd8003063, type: 2}
+  levelIncrease: 1

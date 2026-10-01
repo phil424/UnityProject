@@ -19,7 +19,7 @@ Potential prepared elements include:
 - active Character;
 - Character's fixed basic attack / weapon identity;
 - Character progression/mastery;
-- prepared or native Weapon Mods;
+- Mastery-unlocked Weapon Mod stances prepared for that Character;
 - starting/native Abilities;
 - future configurable shared Abilities where compatible;
 - tracked Progression Target;
@@ -60,14 +60,70 @@ the need for meaningful Expedition buildcraft.
 
 # Expedition Build
 Expedition build can contain:
-- acquired abilities
-- evolutions
-- temporary augments
-- stat levels
-- synergies
+
+- acquired Abilities;
+- Ability Evolutions;
+- active Weapon Mods;
+- temporary augments;
+- stat levels;
+- synergies;
 - temporary effects.
 
+Weapon Mods now have their first implemented RunBuild ownership seam.
+
+Current O2A Mods are acquired during the Expedition and reset when the
+Expedition ends.
+
+Persistent Weapon Mod availability/unlocking remains separate O2 work.
+
 Everything here resets when expedition ends.
+
+Temporary Weapon Mod levels are now implemented.
+
+Current Weapon Mastery lifetime:
+
+Character begins before first Core Mastery
+→ original Basic Attack.
+
+Persistent Mastery unlock
+→ Core Mastery becomes the Character's permanent default Basic Attack identity.
+
+Persistent Mastery development
+→ improves the Core Mastery's prepared baseline.
+
+Expedition RunBuild
+→ snapshots that persistent baseline;
+→ owns temporary additional levels / future augments.
+
+Runtime Actor
+→ uses Core Mastery by default;
+→ may later switch to an unlocked alternate Mastery.
+
+Alternative Mastery deactivation
+→ returns to Core Mastery, never to the obsolete pre-Mastery Basic Attack.
+
+Switching stances does not alter temporary Weapon Mod progression.
+
+Temporary Weapon Mod level resets when the Expedition ends.
+
+Persistent Weapon Mastery progression has two implemented forms:
+
+Stance unlock
+→ permanently introduces a Core/alternate Mastery into the prepared build.
+
+Mastery level development
+→ permanently increases the stance's starting level.
+
+The current Ranger proof is:
+
+Piercing Mastery
+↓
+Deep Penetration
+↓
+Piercing begins future Expeditions one effective level higher.
+
+Temporary Weapon Mod reward levels then stack on top of this persistent
+baseline for the current Expedition only.
 
 # Synergies and Tags
 This could become hugely important later.

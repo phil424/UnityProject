@@ -15,8 +15,9 @@ namespace MiniCrawler.Progress
     [Serializable]
     public sealed class RunBuild
     {
+        public const int MaxWeaponModStances = 4;
         private readonly List<RunAbilityState> abilities = new();
-        private readonly List<WeaponModDefinition> weaponMods = new();
+        private readonly List<RunWeaponModState> weaponMods = new();
         private readonly CharacterStatModifierSet preparedStatModifiers = new();
         private readonly CharacterStatModifierSet expeditionStatModifiers = new();
 
@@ -46,7 +47,7 @@ namespace MiniCrawler.Progress
             GetEffectiveStatBonus(CharacterStatModifierType.KnockbackPowerPercent);
 
         public IReadOnlyList<RunAbilityState> Abilities => abilities;
-        public IReadOnlyList<WeaponModDefinition> WeaponMods => weaponMods;
+        public IReadOnlyList<RunWeaponModState> WeaponMods => weaponMods;
 
         public int GetLevel(GearSlot slot)
         {
@@ -178,27 +179,63 @@ namespace MiniCrawler.Progress
             return null;
         }
         
-        public bool TryAcquireWeaponMod(WeaponModDefinition mod)
-        {
-            if (mod == null || !mod.IsConfigured || HasWeaponMod(mod))
-                return false;
+        public RunWeaponModState CoreWeaponModState => GetWeaponModState(WeaponModStanceSlot.Core);
 
-            weaponMods.Add(mod);
+        public bool TryPrepareWeaponMod(WeaponModDefinition mod, WeaponModStanceSlot stanceSlot, int startingPreparedLevel = 0)
+        {
+            int slotIndex = (int)stanceSlot;
+
+            if (mod == null || !mod.IsConfigured || HasWeaponMod(mod) || slotIndex < 0 || slotIndex >= MaxWeaponModStances || GetWeaponModState(stanceSlot) != null)
+            {
+                return false;
+            }
+
+            weaponMods.Add(new RunWeaponModState(mod, stanceSlot, startingPreparedLevel));
+            weaponMods.Sort((a, b) => ((int)a.StanceSlot).CompareTo((int)b.StanceSlot));
+
             return true;
         }
 
         public bool HasWeaponMod(WeaponModDefinition mod)
         {
-            if (mod == null)
-                return false;
+            return GetWeaponModState(mod) != null;
+        }
 
-            foreach (WeaponModDefinition activeMod in weaponMods)
+        public RunWeaponModState GetWeaponModState(WeaponModDefinition mod)
+        {
+            if (mod == null)
+                return null;
+
+            foreach (RunWeaponModState state in weaponMods)
             {
-                if (activeMod != null && activeMod.Id == mod.Id)
-                    return true;
+                if (state?.Definition != null && state.Definition.Id == mod.Id)
+                    return state;
             }
 
-            return false;
+            return null;
+        }
+
+        public RunWeaponModState GetWeaponModState(WeaponModStanceSlot stanceSlot)
+        {
+            foreach (RunWeaponModState state in weaponMods)
+            {
+                if (state != null && state.StanceSlot == stanceSlot)
+                    return state;
+            }
+
+            return null;
+        }
+
+        public bool TryIncreasePreparedWeaponModLevel(WeaponModDefinition mod, int amount = 1)
+        {
+            RunWeaponModState state = GetWeaponModState(mod);
+            return state != null && state.TryIncreasePreparedLevel(amount);
+        }
+
+        public bool TryIncreaseWeaponModLevel(WeaponModDefinition mod, int amount = 1)
+        {
+            RunWeaponModState state = GetWeaponModState(mod);
+            return state != null && state.TryIncreaseExpeditionLevel(amount);
         }
 
         public void ApplyPreparedStatModifier(CharacterStatModifierType type, float amount)

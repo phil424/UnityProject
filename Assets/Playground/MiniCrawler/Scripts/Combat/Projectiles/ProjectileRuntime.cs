@@ -14,6 +14,7 @@ namespace MiniCrawler.Combat
         private enum TravelMode
         {
             Targeted,
+            TargetedPiercing,
             Directional
         }
 
@@ -84,6 +85,65 @@ namespace MiniCrawler.Combat
                 return null;
 
             runtime.InitializeTargeted(definition, source, target, damage, actionName, direction);
+            return runtime;
+        }
+        
+        public static ProjectileRuntime SpawnTargetedPiercing(
+            ProjectileDefinition definition,
+            GameObject source,
+            Health target,
+            float damage,
+            string actionName,
+            float travelDistance,
+            string targetFactionId,
+            float hitRadius,
+            int maxHits)
+        {
+            if (definition == null ||
+                source == null ||
+                target == null ||
+                target.IsDead ||
+                damage <= 0f ||
+                travelDistance <= 0f ||
+                string.IsNullOrWhiteSpace(targetFactionId) ||
+                maxHits <= 0)
+            {
+                return null;
+            }
+
+            if (definition.Prefab == null)
+            {
+                Debug.LogError($"Projectile definition '{definition.name}' has no prefab assigned.", definition);
+                return null;
+            }
+
+            Vector3 direction = target.transform.position - source.transform.position;
+            direction.y = 0f;
+
+            if (direction.sqrMagnitude <= MinimumDirectionSquared)
+                direction = source.transform.forward;
+
+            direction.Normalize();
+
+            Vector3 spawnPosition = source.transform.position + direction * definition.SourceForwardOffset;
+            ProjectileRuntime runtime = CreateRuntime(definition, spawnPosition);
+
+            if (runtime == null)
+                return null;
+
+            runtime.InitializeTargetedPiercing(
+                definition,
+                source,
+                target,
+                damage,
+                actionName,
+                direction,
+                travelDistance,
+                targetFactionId,
+                hitRadius,
+                maxHits
+            );
+
             return runtime;
         }
 
@@ -182,6 +242,41 @@ namespace MiniCrawler.Combat
 
             TravelDirection = initialDirection.normalized;
         }
+        
+        private void InitializeTargetedPiercing(
+            ProjectileDefinition projectileDefinition,
+            GameObject projectileSource,
+            Health projectileTarget,
+            float projectileDamage,
+            string projectileActionName,
+            Vector3 initialDirection,
+            float travelDistance,
+            string factionId,
+            float hitRadius,
+            int maxHits)
+        {
+            definition = projectileDefinition;
+            travelMode = TravelMode.TargetedPiercing;
+
+            source = projectileSource;
+            target = projectileTarget;
+            damage = projectileDamage;
+            actionName = projectileActionName;
+            remainingLifetime = definition.MaxLifetime;
+
+            TravelDirection = initialDirection.normalized;
+
+            remainingDistance = Mathf.Max(0f, travelDistance);
+            targetFactionId = factionId;
+            directionalHitRadius = Mathf.Max(0.05f, hitRadius);
+            remainingHits = Mathf.Max(1, maxHits);
+
+            knockbackDistance = 0f;
+            knockbackSpeed = 0f;
+            knockbackFanAngle = 0f;
+
+            hitTargets.Clear();
+        }
 
         private void InitializeDirectional(
             ProjectileDefinition projectileDefinition,
@@ -244,6 +339,10 @@ namespace MiniCrawler.Combat
                     TickTargeted();
                     break;
 
+                case TravelMode.TargetedPiercing:
+                    TickTargetedPiercing();
+                    break;
+
                 case TravelMode.Directional:
                     TickDirectional();
                     break;
@@ -283,6 +382,56 @@ namespace MiniCrawler.Combat
 
             transform.position += TravelDirection * travelDistance;
         }
+        
+        private void TickTargetedPiercing()
+        {
+            if (remainingDistance <= 0f || remainingHits <= 0)
+            {
+                Destroy(gameObject);
+                return;
+            }
+
+            if (target == null || target.IsDead)
+            {
+                target = null;
+                travelMode = TravelMode.Directional;
+                return;
+            }
+
+            Vector3 targetPosition = target.transform.position;
+            targetPosition.y = transform.position.y;
+
+            Vector3 toTarget = targetPosition - transform.position;
+            float distance = toTarget.magnitude;
+
+            if (distance <= definition.HitDistance)
+            {
+                ResolveTargetedPiercingHit();
+                return;
+            }
+
+            TravelDirection = toTarget / distance;
+
+            float stepDistance = Mathf.Min(definition.Speed * Time.deltaTime, remainingDistance);
+
+            if (stepDistance <= 0f)
+                return;
+
+            if (stepDistance >= distance - definition.HitDistance)
+            {
+                transform.position = targetPosition;
+                remainingDistance = Mathf.Max(0f, remainingDistance - distance);
+
+                ResolveTargetedPiercingHit();
+                return;
+            }
+
+            transform.position += TravelDirection * stepDistance;
+            remainingDistance = Mathf.Max(0f, remainingDistance - stepDistance);
+
+            if (remainingDistance <= 0f)
+                Destroy(gameObject);
+        }
 
         private void TickDirectional()
         {
@@ -315,6 +464,26 @@ namespace MiniCrawler.Combat
                 DamageResolver.ApplyDamage(source, target, damage, actionName);
 
             Destroy(gameObject);
+        }
+        
+        private void ResolveTargetedPiercingHit()
+        {
+            if (target != null && !target.IsDead && !hitTargets.Contains(target))
+            {
+                hitTargets.Add(target);
+                DamageResolver.ApplyDamage(source, target, damage, actionName);
+                remainingHits--;
+            }
+
+            target = null;
+
+            if (remainingHits <= 0 || remainingDistance <= 0f)
+            {
+                Destroy(gameObject);
+                return;
+            }
+
+            travelMode = TravelMode.Directional;
         }
 
         private bool ResolveDirectionalHits(Vector3 segmentStart, Vector3 segmentEnd)

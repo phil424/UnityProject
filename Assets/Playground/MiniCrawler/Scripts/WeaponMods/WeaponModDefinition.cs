@@ -7,16 +7,18 @@ namespace MiniCrawler.WeaponMods
 {
     public readonly struct BasicAttackWeaponModContext
     {
-        public BasicAttackWeaponModContext(GameObject source, Health target, CombatActionState actionState)
+        public BasicAttackWeaponModContext(GameObject source, Health target, CombatActionState actionState, int modLevel)
         {
             Source = source;
             Target = target;
             ActionState = actionState;
+            ModLevel = Mathf.Max(0, modLevel);
         }
 
         public GameObject Source { get; }
         public Health Target { get; }
         public CombatActionState ActionState { get; }
+        public int ModLevel { get; }
 
         public int ComboStepIndex => ActionState != null ? ActionState.CurrentBasicAttackStep : 0;
 
@@ -73,6 +75,17 @@ namespace MiniCrawler.WeaponMods
         public virtual float ModifyBasicAttackDamage(BasicAttackWeaponModContext context, float currentDamage)
         {
             return currentDamage;
+        }
+
+        public virtual bool TryResolveProjectileBasicAttack(
+            BasicAttackWeaponModContext context,
+            ProjectileCombatActionDefinition projectileAction,
+            float currentDamage,
+            string actionName,
+            out bool connected)
+        {
+            connected = false;
+            return false;
         }
 
         protected virtual void OnValidate()

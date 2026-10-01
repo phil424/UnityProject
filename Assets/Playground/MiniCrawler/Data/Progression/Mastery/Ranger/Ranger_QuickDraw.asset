@@ -10,15 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 564a63785b8bb3e499835c5c456b4611, type: 3}
-  m_Name: Ranger_Mobility
+  m_Name: Ranger_QuickDraw
   m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Progress.CharacterMasteryStatNodeDefinition
-  id: ranger_mobility
-  displayName: Mobility
-  description: Improved mobility and movement speed
+  id: ranger_quick_draw
+  displayName: Quick Draw
+  description: Improved arrow fire rate
   icon: {fileID: 0}
-  prerequisites: []
+  prerequisites:
+  - {fileID: 11400000, guid: 48d0a9420c53c05438a67baaa115b107, type: 2}
   costs:
   - tier: 0
     amount: 5
-  modifierType: 1
+  modifierType: 2
   amount: 10

@@ -26,6 +26,8 @@ MonoBehaviour:
   - ability: {fileID: 11400000, guid: 09488582446ecec45807849991e8c9b3, type: 2}
     level: 1
   masteryNodes:
+  - {fileID: 11400000, guid: 48d0a9420c53c05438a67baaa115b107, type: 2}
+  - {fileID: 11400000, guid: 14883d45637b75e4b9298771d9665989, type: 2}
   - {fileID: 11400000, guid: bb9c1c7e94d951a4cbf58713950e2c9c, type: 2}
   - {fileID: 11400000, guid: 168beaa2c1b05984f9d084bbb4308a79, type: 2}
   - {fileID: 11400000, guid: c6aeaf4578057e6498d40b340aa17329, type: 2}

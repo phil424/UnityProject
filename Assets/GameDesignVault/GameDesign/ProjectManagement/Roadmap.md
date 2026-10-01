@@ -1266,9 +1266,9 @@ Purpose:
 
 Build the player's real combat/buildcraft identity on top of the N foundations.
 
-## 3.0O1 — Characters & Unlocks
+## 3.0O1 — Characters & Unlocks ✅
 
-**Status: Active**
+**Status: Complete**
 
 Develop/review:
 - one active playable Character per expedition;
@@ -1306,7 +1306,7 @@ Punchy
 
 No additional playable Character is introduced during O1A.
 
-### 3.0O1B — Second Playable Character
+### 3.0O1B — Second Playable Character ✅
 
 **Status: Active**
 
@@ -1523,7 +1523,7 @@ Confirmed:
 O1B is now closed with two mechanically distinct playable Characters using the
 same Character, Ability, Mastery and Expedition foundations.
 
-### 3.0O1C — First Character Unlock Path
+### 3.0O1C — First Character Unlock Path ✅
 
 **Status: Complete**
 
@@ -1617,7 +1617,202 @@ Prove:
 - cross-character unlock direction;
 - interaction with the Character stat system.
 
-Do not lock the final capacity/activation model before gameplay evidence exists.
+Current confirmed Mastery stance model:
+
+- four total Weapon Mastery positions;
+- Slot 1 is the Character's Core Mastery;
+- Slots 2–4 are alternative Masteries;
+- the original Basic Attack is a pre-Core-Mastery fallback, not a fifth stance;
+- once Core Mastery is unlocked, it permanently replaces the original Basic
+  Attack as the Character's default;
+- deactivating an alternate Mastery returns to Core Mastery;
+- only one Mastery controls Basic Attacks at a time.
+
+Remaining progression, compatibility and combination details should continue to
+be driven by representative gameplay.
+
+### 3.0O2A — Weapon Mod Runtime & Combat Hook Proof ✅
+
+**Status: Complete / Reframed by O2B**
+
+Implemented the first vertical Weapon Mod combat proof.
+
+O2A established:
+
+- reusable Weapon Mod definitions;
+- explicit Character compatibility;
+- RunBuild Weapon Mod ownership seam;
+- runtime projection through `PartyWeaponModApplicator`;
+- Basic Attack Weapon Mod context;
+- Weapon Mod Reward Vector;
+- Basic Attack modification through Heavy Finisher.
+
+Heavy Finisher demonstrated:
+
+Punchy
+→ final combo step
+→ +100% damage.
+
+O2A initially used direct reward acquisition and simultaneous passive Mod
+application to validate the combat hook.
+
+Those ownership and activation semantics were superseded by O2B.
+
+The combat integration seam remains part of the current implementation.
+
+### 3.0O2B — Weapon Mod Stance Reframe ✅
+
+**Status: Complete**
+
+Converted the O2A combat proof into the intended selectable Weapon Mod stance
+architecture.
+
+Current foundation:
+
+- Character Mastery may prepare a Weapon Mod stance for every Expedition;
+- `RunBuild` owns `RunWeaponModState` rather than a stack of always-active Mod
+  definitions;
+- prepared stances currently begin at temporary Level 0;
+- `WeaponModRuntimeState` exposes available stances separately from the active
+  stance;
+- Default is represented by no active Weapon Mod;
+- exactly one Weapon Mod may affect Basic Attacks at a time;
+- selecting the active Mod again returns to Default;
+- runtime refresh preserves an active stance where possible;
+- new Actor reconstruction currently begins in Default;
+- the O2A direct stance-acquisition Run Reward has been retired;
+- `RunRewardVector.WeaponMod` remains for temporary Mod development rewards.
+
+Punchy's first persistent Mod path is:
+
+Heavy Hands
+↓
+Heavy Finisher Stance
+↓
+Heavy Finisher automatically prepared in future Punchy Expeditions.
+
+Heavy Finisher remains the first combat proof:
+
+Default
+→ normal combo.
+
+Heavy Finisher active
+→ final combo strike deals +100% damage.
+
+### 3.0O2C — Weapon Mod Combat HUD & Run Development ✅
+
+**Status: Complete**
+
+Implemented the first complete player-facing Weapon Mod stance and temporary
+progression loop.
+
+Current foundation:
+
+- Combat HUD exposes four fixed Weapon Mod stance positions;
+- unavailable stance positions remain visible;
+- Default means no Weapon Mod stance is active;
+- available stances show identity and temporary level;
+- the HUD shows READY / ACTIVE state;
+- selecting an inactive stance activates it;
+- selecting the active stance returns to Default;
+- `RunBuild` enforces four prepared Weapon Mod positions;
+- `RunWeaponModState` owns temporary Expedition level;
+- `WeaponModLevelRewardDefinition` develops an already-prepared stance;
+- Weapon Mod rewards cannot grant an unprepared stance;
+- receiving a Mod-level reward does not automatically activate it;
+- switching away from a developed Mod preserves its level;
+- switching back restores the developed behaviour;
+- runtime refresh preserves both current stance and current level;
+- Expedition end resets temporary Mod level while persistent Mastery retains
+  stance availability.
+
+Heavy Finisher remains the current validation stance:
+
+Lv.0
+→ +100% combo-finisher damage.
+
+Lv.1
+→ +150% combo-finisher damage.
+
+These values remain exaggerated validation tuning.
+
+### 3.0O2D — Weapon Mod Behaviour Breadth & Combination Proof
+
+**Status: Active**
+
+Expand beyond Heavy Finisher using representative Weapon Mod behaviours.
+
+#### 3.0O2D1 — Ranger Piercing Arrows ✅
+
+**Status: Complete**
+
+Implemented the first ranged/projectile Weapon Mod stance.
+
+Current proof:
+
+- Ranger Mastery unlocks Piercing Arrows;
+- the existing four-position Weapon Mod HUD presents the stance without
+  Character-specific UI;
+- Default Ranger attacks retain targeted projectile delivery;
+- Piercing Arrows overrides Basic Attack projectile delivery with a directional
+  multi-hit projectile;
+- the stance reuses the existing projectile runtime rather than introducing a
+  parallel projectile system;
+- Piercing Lv.0 may hit two aligned enemies;
+- each temporary level adds one additional target;
+- temporary levels change penetration rather than raw damage;
+- the generic Weapon Mod reward pool correctly separates Punchy and Ranger
+  rewards through compatibility and current RunBuild state.
+
+This proves Weapon Mods can alter attack behaviour shape rather than merely
+modify damage.
+
+#### 3.0O2D2 — Core Mastery Baseline & Persistent Growth ✅
+
+**Status: Complete**
+Correct the Weapon Mod stance model around persistent Character identity.
+
+Prove:
+
+- one of the four stance positions is the permanent Core Mastery;
+- the original Basic Attack exists only before Core Mastery ownership;
+- Core Mastery automatically becomes the default once unlocked;
+- Core Mastery cannot be deactivated back to the original Basic Attack;
+- alternative Masteries return to Core when deactivated;
+- stance positions are explicit rather than implied by list order;
+- permanent Mastery development can improve a Core Mastery's starting state;
+- temporary Expedition rewards stack on top of that persistent baseline.
+
+Current prototype Core Masteries:
+
+Punchy
+→ Heavy Finisher.
+
+Ranger
+→ Piercing Arrows.
+
+#### 3.0O2D3 — Knockback & Multi-Stance Proof
+
+**Status: Active**
+
+Add the first alternative Mastery and prove real Core ↔ Alternate tactical
+switching.
+
+#### 3.0O2D4 — Elemental / Combination Proof
+
+**Status: Planned**
+
+Introduce representative elemental behaviour and the first deliberately
+authored interaction between Core and alternative Masteries.
+
+#### 3.0O2D3 — Elemental / Combination Proof
+
+**Status: Planned**
+
+Introduce representative Fire / Lightning behaviour and the first deliberately
+authored Weapon Mod interaction where useful.
+
+Prove combination architecture without creating a universal effect graph.
 
 ## 3.0O3 — Abilities
 

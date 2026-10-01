@@ -158,6 +158,68 @@ Document:
 - ability state readability
 - pending/cast information.
 
+# Weapon Mod HUD
+
+**Status: Implemented Functional Foundation**
+
+Weapon Mods use a separate tactical control surface from Abilities.
+
+Abilities answer:
+
+> What tactical action should I perform now?
+
+Weapon Mod stances answer:
+
+> How should my autonomous Basic Attacks behave now?
+
+The functional O2C HUD uses four fixed Weapon Mod stance positions.
+
+Each position should communicate:
+
+- whether a stance is available;
+- the Mod identity;
+- its current Expedition level;
+- whether it is currently active.
+
+Before a Character has unlocked their Core Mastery, the HUD represents the
+Character as using their original Basic Attack.
+
+Once the Core Mastery is unlocked, Slot 1 becomes the Character's permanent
+default stance.
+
+The original Basic Attack is no longer selectable.
+
+The four fixed positions then represent:
+
+1. Core Mastery;
+2. Alternate Mastery;
+3. Alternate Mastery;
+4. Alternate Mastery.
+
+Selecting an alternate Mastery activates it.
+
+Selecting the currently-active alternate Mastery again returns to the Core
+Mastery.
+
+Selecting the Core Mastery directly also returns to the Core Mastery.
+
+When the Core Mastery itself is active, it cannot be toggled off into the
+original Basic Attack.
+
+A separate header displays either:
+
+BASIC ATTACK
+→ before Core Mastery ownership;
+
+or:
+
+the currently-active Weapon Mastery and its effective level.
+
+When the Core Mastery is active, it is identified as the Character's default
+Mastery.
+
+This remains functional layout rather than final visual composition.
+
 # Strategic Combat HUD
 
 The passive combat HUD should remain glanceable.

@@ -104,14 +104,63 @@ Encounter
 This allows informed choice while preserving uncertainty inside the actual
 reward generation.
 
+`RunRewardVector.WeaponMod` now has its first correct concrete reward
+implementation.
+
+`WeaponModLevelRewardDefinition`
+
+targets a specific Weapon Mod already present in the Character's current
+`RunBuild`.
+
+Eligibility requires:
+
+- a valid Character;
+- a valid RunBuild;
+- a configured target Weapon Mod;
+- Character compatibility;
+- that Weapon Mod already being prepared in the current RunBuild.
+
+Applying the reward increases that Mod's temporary Expedition level.
+
+It does not:
+
+- unlock the permanent stance;
+- activate the stance;
+- affect other Weapon Mods;
+- persist the level beyond Expedition end.
+
+The first proof reward is:
+
+Heavy Finisher Training
+→ Heavy Finisher +1 temporary level.
+
+Current Weapon Mod level rewards:
+
+Heavy Finisher Training
+→ develops Punchy's Heavy Finisher.
+
+Piercing Arrows Training
+→ develops Ranger's Piercing Arrows.
+
+The shared reward pool may contain rewards for several Characters.
+
+Eligibility is derived from:
+
+Character compatibility
++
+the Weapon Mod states currently present in that Character's RunBuild.
+
+The reward pool therefore does not require a separate Character-specific list.
+
 ## First Runtime Foundation
 
 **Status: Implemented Foundation**
 
-The first runtime Reward Vector implementation supports:
+The runtime Reward Vector implementation currently supports:
 
 - Character Growth;
-- Ability.
+- Ability;
+- Weapon Mod.
 
 Encounter Definitions may author:
 - a Reward Vector;
@@ -130,12 +179,23 @@ Character Growth
 Ability
 → Ability acquisition and Ability Evolution rewards
 
+Weapon Mod
+→ temporary level/development rewards for prepared Weapon Mod states
+
 Existing generic reward sources may request `Any`, which preserves the complete
 eligible reward pool.
 
-Future vectors such as Weapon Mods or persistent resources should be introduced
-alongside their real reward implementations rather than predeclared
-speculatively.
+Future vectors such as persistent resources should be introduced alongside
+their real reward implementations rather than predeclared speculatively.
+
+Weapon Mod reward definitions remain separate from Weapon Mod definitions.
+
+The Weapon Mod defines persistent stance identity, compatibility and combat
+behaviour.
+
+The Run Reward develops an existing Expedition `RunWeaponModState`.
+
+Run Rewards do not normally unlock the underlying permanent stance.
 
 ## Quick Encounter Reward Focus
 

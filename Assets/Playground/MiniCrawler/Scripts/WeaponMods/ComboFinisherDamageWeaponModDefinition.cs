@@ -10,8 +10,10 @@ namespace MiniCrawler.WeaponMods
     {
         [Header("Finisher")]
         [SerializeField, Min(0f)] private float bonusDamagePercent = 100f;
+        [SerializeField, Min(0f)] private float bonusDamagePercentPerLevel = 50f;
 
         public float BonusDamagePercent => bonusDamagePercent;
+        public float BonusDamagePercentPerLevel => bonusDamagePercentPerLevel;
 
         public override bool IsConfigured => base.IsConfigured && bonusDamagePercent > 0f;
 
@@ -20,14 +22,18 @@ namespace MiniCrawler.WeaponMods
             if (!context.IsComboFinisher)
                 return currentDamage;
 
-            float multiplier = 1f + bonusDamagePercent / 100f;
+            float totalBonusPercent = bonusDamagePercent + bonusDamagePercentPerLevel * context.ModLevel;
+            float multiplier = 1f + totalBonusPercent / 100f;
+
             return Mathf.Max(0f, currentDamage * multiplier);
         }
 
         protected override void OnValidate()
         {
             base.OnValidate();
+
             bonusDamagePercent = Mathf.Max(0f, bonusDamagePercent);
+            bonusDamagePercentPerLevel = Mathf.Max(0f, bonusDamagePercentPerLevel);
         }
     }
 }

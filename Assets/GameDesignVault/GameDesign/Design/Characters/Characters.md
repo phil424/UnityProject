@@ -222,12 +222,17 @@ Power Shot Drills
 Arrow Impact
 → outgoing Knockback Power.
 
-The current four-node proof is not the intended final Ranger tree.
+Piercing Arrows Stance
+→ permanently prepares the Piercing Arrows Weapon Mod stance for each Ranger
+  Expedition.
+
+The current five-node proof is not the intended final Ranger tree.
 
 Its purpose is to prove that Ranger Mastery can develop:
 - autonomous ranged combat;
 - mobility;
 - Character-native Abilities;
 - battlefield control
+- selectable Basic Attack behaviour;
 
 without duplicating Ability mechanics inside the Mastery system.
