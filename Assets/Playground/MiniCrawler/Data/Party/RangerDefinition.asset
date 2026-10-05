@@ -30,8 +30,9 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 14883d45637b75e4b9298771d9665989, type: 2}
   - {fileID: 11400000, guid: bb9c1c7e94d951a4cbf58713950e2c9c, type: 2}
   - {fileID: 11400000, guid: 168beaa2c1b05984f9d084bbb4308a79, type: 2}
-  - {fileID: 11400000, guid: c6aeaf4578057e6498d40b340aa17329, type: 2}
+  - {fileID: 11400000, guid: 677af51e492797f48a731b6cf3c4ccf7, type: 2}
   - {fileID: 11400000, guid: b42c9863906d81b409b8c2d2989578f9, type: 2}
+  - {fileID: 11400000, guid: c6aeaf4578057e6498d40b340aa17329, type: 2}
   weaponName: Bow
   armourName: Light Armour
   focusName: None

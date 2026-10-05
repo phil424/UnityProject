@@ -1791,26 +1791,94 @@ Punchy
 Ranger
 → Piercing Arrows.
 
-#### 3.0O2D3 — Knockback & Multi-Stance Proof
+#### 3.0O2D3 — Knockback & Multi-Stance Proof ✅
+
+**Status: Complete**
+
+Implemented Ranger's first alternate Weapon Mastery.
+
+Current configuration:
+
+Core
+→ Piercing Arrows.
+
+Alternate1
+→ Impact Arrows.
+
+Impact Arrows:
+
+- uses targeted single-target projectile delivery;
+- applies shared knockback on impact;
+- trades Piercing's multi-target throughput for battlefield control;
+- receives temporary Expedition-level scaling;
+- interacts with Ranger's existing persistent Knockback Power stat.
+
+Verified:
+
+Core
+→ Alternate
+→ Core
+
+switching without returning to the pre-Mastery Basic Attack.
+
+Ranger's existing Arrow Impact node now develops Impact Arrows through the
+shared Character-stat architecture.
+
+This is the final planned gameplay-node addition before replacing the temporary
+flat Mastery-node list.
+
+#### 3.0O2D4 — Character Mastery Tree Presentation & Authoring
 
 **Status: Active**
 
-Add the first alternative Mastery and prove real Core ↔ Alternate tactical
-switching.
+Replace the current flat Mastery-node list before substantially expanding
+Character progression content.
 
-#### 3.0O2D4 — Elemental / Combination Proof
+Target direction:
+
+- dedicated Character Mastery overlay/screen;
+- bounded freeform 2D canvas;
+- authored node positions;
+- visible prerequisite connections;
+- panning and zooming where useful;
+- clear locked / available / purchased states;
+- spatial presentation of progression branches;
+- Character-specific tree silhouettes and visual identity;
+- designer-friendly authoring of node placement and connections.
+
+The gameplay-authoritative prerequisite relationships should remain owned by the
+existing Mastery node data.
+
+The visual tree should present those relationships rather than introduce a
+second progression graph.
+
+Tree layout should be free enough to form deliberate shapes.
+
+Example direction:
+
+Ranger
+→ nodes and connections may form a bow / arrow-like silhouette.
+
+Other Characters may use completely different visual structures.
+
+Do not require every Character tree to use the same geometric arrangement.
+
+This milestone should occur before significantly increasing the number of
+Mastery nodes beyond the current proof content.
+
+#### 3.0O2D5 — Elemental / Combination Proof
 
 **Status: Planned**
 
 Introduce representative elemental behaviour and the first deliberately
 authored interaction between Core and alternative Masteries.
 
-#### 3.0O2D3 — Elemental / Combination Proof
+Potential proof space:
 
-**Status: Planned**
-
-Introduce representative Fire / Lightning behaviour and the first deliberately
-authored Weapon Mod interaction where useful.
+- Fire;
+- Lightning;
+- elemental Mastery levels;
+- first Core + Alternate interaction.
 
 Prove combination architecture without creating a universal effect graph.
 

@@ -354,3 +354,21 @@ the normal StageDirector-owned Region actor lifecycle.
 
 Resource Reward Vectors and resource-focused Encounter selection remain future
 work.
+
+Current Weapon Mastery level rewards include:
+
+Heavy Finisher Training
+→ Punchy Core Mastery.
+
+Piercing Arrows Training
+→ Ranger Core Mastery.
+
+Impact Arrows Training
+→ Ranger Alternate1 Mastery.
+
+A Character may therefore have several simultaneously eligible Weapon Mastery
+development rewards.
+
+Each reward targets its own `RunWeaponModState`.
+
+Developing one Mastery does not alter the temporary level of another.

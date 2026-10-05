@@ -219,8 +219,13 @@ Mobility
 Power Shot Drills
 → Power Shot begins each Expedition one Ability level higher.
 
+Impact Arrows Mastery
+→ first alternate Weapon Mastery;
+→ trades Piercing's multi-target throughput for single-target battlefield
+  control.
+
 Arrow Impact
-→ outgoing Knockback Power.
+→ persistent Knockback Power development after Impact Mastery.
 
 Piercing Arrows Stance
 → permanently prepares the Piercing Arrows Weapon Mod stance for each Ranger

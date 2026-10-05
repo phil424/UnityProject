@@ -475,3 +475,31 @@ Their preparation may eventually include:
 The exact support progression model is unresolved.
 
 See [[Support Characters]].
+
+Ranger now proves alternate Weapon Mastery progression.
+
+Current relationship:
+
+Piercing Mastery
+→ Core / permanent default.
+
+Impact Arrows Mastery
+→ Alternate1 / tactical option.
+
+Arrow Impact
+→ persistent stat development reinforcing the alternate stance.
+
+Temporary Impact Arrows Training rewards
+→ temporary Expedition development layered on top.
+
+This demonstrates that persistent Mastery progression may both unlock a new
+stance and later reinforce that stance through ordinary Character-stat
+development.
+
+The current flat Mastery-node list is now considered a temporary presentation
+constraint.
+
+The gameplay-authoritative prerequisite model remains valid.
+
+A dedicated spatial Mastery-tree presentation is scheduled before substantial
+additional Mastery-node expansion.

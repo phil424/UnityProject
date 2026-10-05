@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 87a4d8e79cbf02444a995b55f32fa9d1, type: 3}
+  m_Name: Ranger_ImpactArrows
+  m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.WeaponMods.KnockbackProjectileWeaponModDefinition
+  id: ranger_impact_arrows
+  displayName: Impact Arrows
+  description: 'Focus Ranger''s shot into a single target, knocking it away.
+
+    Expedition
+    levels increase knockback distance.'
+  icon: {fileID: 0}
+  compatibleCharacters:
+  - {fileID: 11400000, guid: 4f4f5e0054e2c194c953ba3174a88d11, type: 2}
+  baseKnockbackDistance: 2.5
+  knockbackDistancePerLevel: 0.75
+  knockbackSpeed: 12

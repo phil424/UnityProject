@@ -88,6 +88,60 @@ namespace MiniCrawler.Combat
             return runtime;
         }
         
+        public static ProjectileRuntime SpawnTargetedKnockback(
+            ProjectileDefinition definition,
+            GameObject source,
+            Health target,
+            float damage,
+            string actionName,
+            float outgoingKnockbackDistance,
+            float outgoingKnockbackSpeed)
+        {
+            if (definition == null ||
+                source == null ||
+                target == null ||
+                target.IsDead ||
+                damage <= 0f ||
+                outgoingKnockbackDistance <= 0f ||
+                outgoingKnockbackSpeed <= 0f)
+            {
+                return null;
+            }
+
+            if (definition.Prefab == null)
+            {
+                Debug.LogError($"Projectile definition '{definition.name}' has no prefab assigned.", definition);
+                return null;
+            }
+
+            Vector3 direction = target.transform.position - source.transform.position;
+            direction.y = 0f;
+
+            if (direction.sqrMagnitude <= MinimumDirectionSquared)
+                direction = source.transform.forward;
+
+            direction.Normalize();
+
+            Vector3 spawnPosition = source.transform.position + direction * definition.SourceForwardOffset;
+            ProjectileRuntime runtime = CreateRuntime(definition, spawnPosition);
+
+            if (runtime == null)
+                return null;
+
+            runtime.InitializeTargetedKnockback(
+                definition,
+                source,
+                target,
+                damage,
+                actionName,
+                direction,
+                outgoingKnockbackDistance,
+                outgoingKnockbackSpeed
+            );
+
+            return runtime;
+        }
+        
         public static ProjectileRuntime SpawnTargetedPiercing(
             ProjectileDefinition definition,
             GameObject source,
@@ -241,6 +295,33 @@ namespace MiniCrawler.Combat
             remainingLifetime = definition.MaxLifetime;
 
             TravelDirection = initialDirection.normalized;
+            
+            knockbackDistance = 0f;
+            knockbackSpeed = 0f;
+            knockbackFanAngle = 0f;
+        }
+        
+        private void InitializeTargetedKnockback(
+            ProjectileDefinition projectileDefinition,
+            GameObject projectileSource,
+            Health projectileTarget,
+            float projectileDamage,
+            string projectileActionName,
+            Vector3 initialDirection,
+            float outgoingKnockbackDistance,
+            float outgoingKnockbackSpeed)
+        {
+            InitializeTargeted(
+                projectileDefinition,
+                projectileSource,
+                projectileTarget,
+                projectileDamage,
+                projectileActionName,
+                initialDirection
+            );
+
+            knockbackDistance = Mathf.Max(0f, outgoingKnockbackDistance);
+            knockbackSpeed = Mathf.Max(0f, outgoingKnockbackSpeed);
         }
         
         private void InitializeTargetedPiercing(
@@ -461,7 +542,12 @@ namespace MiniCrawler.Combat
         private void ResolveTargetedHit()
         {
             if (target != null && !target.IsDead)
+            {
                 DamageResolver.ApplyDamage(source, target, damage, actionName);
+
+                if (!target.IsDead && knockbackDistance > 0f && knockbackSpeed > 0f)
+                    KnockbackResolver.TryApply(source, target, knockbackDistance, knockbackSpeed);
+            }
 
             Destroy(gameObject);
         }

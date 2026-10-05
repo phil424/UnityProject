@@ -291,6 +291,48 @@ additional targets per level = 1.
 
 No additional damage scaling is currently applied by the Mod.
 
+## Impact Arrows
+
+`KnockbackProjectileWeaponModDefinition`
+
+is the first targeted-projectile control stance.
+
+It uses:
+
+`ProjectileRuntime.SpawnTargetedKnockback`.
+
+Travel remains normal targeted projectile travel.
+
+On impact:
+
+damage
+↓
+shared `KnockbackResolver`
+↓
+target ForcedMotion.
+
+The stance does not implement separate knockback-stat logic.
+
+`KnockbackResolver`
+
+continues to apply the source Actor's:
+
+`KnockbackStats`
+
+so ordinary persistent/run `KnockbackPowerPercent` modifiers automatically
+interact with Impact Arrows.
+
+Current authored level behaviour:
+
+Lv.0
+→ base knockback distance.
+
+Each temporary level
+→ additional base knockback distance.
+
+Persistent Knockback Power then multiplies that resulting distance through the
+existing shared combat-stat architecture.
+
 # Compatibility
 
 Compatibility remains authored on `WeaponModDefinition`.
@@ -393,3 +435,17 @@ Weapon Mastery uses four explicit positions represented by
 The original Basic Attack is not represented by a stance slot.
 
 It exists only as a fallback when no Core Mastery is currently prepared.
+
+Current Ranger proof:
+
+Core
+→ Piercing Arrows.
+
+Alternate1
+→ Impact Arrows.
+
+Alternate2
+→ empty.
+
+Alternate3
+→ empty.

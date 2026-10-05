@@ -59,20 +59,34 @@ Persistent progression should broaden available possibilities without replacing
 the need for meaningful Expedition buildcraft.
 
 # Expedition Build
+
 Expedition build can contain:
 
 - acquired Abilities;
 - Ability Evolutions;
-- active Weapon Mods;
+- prepared Weapon Mastery states;
+- temporary Weapon Mastery levels;
+- future temporary Mastery augments / combinations;
 - temporary augments;
 - stat levels;
 - synergies;
 - temporary effects.
 
-Weapon Mods now have their first implemented RunBuild ownership seam.
+Weapon Mastery stance ownership comes from persistent Character progression.
 
-Current O2A Mods are acquired during the Expedition and reset when the
-Expedition ends.
+The Expedition does not normally unlock the underlying stance.
+
+Instead:
+
+Persistent Mastery
+→ determines which Weapon Masteries enter the RunBuild.
+
+RunBuild
+→ snapshots persistent prepared levels;
+→ owns temporary Expedition level bonuses.
+
+Runtime Actor
+→ determines which prepared Mastery is currently active.
 
 Persistent Weapon Mod availability/unlocking remains separate O2 work.
 

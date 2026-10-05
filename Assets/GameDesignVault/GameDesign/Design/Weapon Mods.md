@@ -88,6 +88,54 @@ unlock Piercing Mastery
 ↓
 Piercing becomes Ranger's new default Basic Attack identity.
 
+## First Alternate Mastery Proof
+
+Ranger now demonstrates a real Core / Alternate Mastery relationship.
+
+Core:
+
+Piercing Arrows
+→ multi-target penetration;
+→ Ranger's normal post-Mastery combat identity.
+
+Alternate:
+
+Impact Arrows
+→ reliable single-target projectile;
+→ strong knockback / spacing control.
+
+Runtime relationship:
+
+Piercing Core
+↓ activate Impact
+Impact Alternate
+↓ deactivate Impact
+Piercing Core.
+
+The original pre-Mastery Basic Attack is never re-entered.
+
+Impact Arrows currently occupies `Alternate1`.
+
+Slots 2 and 3 remain unused for future Masteries.
+
+## Permanent Alternate-Mastery Development
+
+Ranger's existing Arrow Impact node now follows the Impact Mastery unlock.
+
+Current flow:
+
+Impact Arrows Mastery
+↓
+Arrow Impact
+↓
++20% persistent outgoing Knockback Power.
+
+Because Impact Arrows uses the shared `KnockbackResolver`, this persistent stat
+naturally improves the stance without a stance-specific permanent-stat system.
+
+Temporary Impact levels separately increase the stance's authored base knockback
+distance for the current Expedition.
+
 ## Alternate Masteries
 
 The remaining three positions are alternative Weapon Masteries.
@@ -314,21 +362,32 @@ progression loop.
 
 Current Punchy flow:
 
+Current Punchy flow:
+
 Persistent Mastery
 ↓
-Heavy Finisher stance prepared
+Heavy Finisher Core Mastery
 ↓
-new Expedition begins with Heavy Finisher Lv.0
-↓
-HUD exposes Heavy Finisher as one of four stance positions
-↓
-player selects Heavy Finisher
-↓
-Basic Attacks use Heavy Finisher behaviour
-↓
-player deselects it
-↓
-Default Basic Attacks resume.
+new Expedition automatically begins with Heavy Finisher active.
+
+Before Core Mastery ownership:
+
+Punchy
+→ original Basic Attack combo.
+
+After Core Mastery ownership:
+
+Punchy
+→ Heavy Finisher becomes the permanent default Mastery;
+→ the original pre-Mastery Basic Attack is no longer selectable.
+
+Temporary progression remains layered on top of the persistent Core Mastery:
+
+persistent prepared level
++
+temporary Expedition level bonus
+=`
+effective Mastery level.
 
 Temporary progression proof:
 
@@ -352,43 +411,40 @@ This is validation tuning rather than final balance.
 
 ## Ranged / Projectile Proof
 
-Piercing Arrows is the first ranged Weapon Mod stance.
+Piercing Arrows is Ranger's first Core Weapon Mastery.
 
-Ranger flow:
+Persistent flow:
 
-Quick Draw Mastery
+Piercing Mastery
 ↓
-Piercing Arrows Stance
+Piercing replaces Ranger's original Basic Attack
 ↓
-Piercing Arrows prepared in every future Ranger Expedition.
+future Ranger Expeditions automatically begin in Piercing Mastery.
 
-Default Ranger attack:
+Current Piercing delivery:
 
 targeted arrow
-→ tracks the selected enemy
-→ single-target delivery.
+↓
+tracks and reliably strikes the selected primary target
+↓
+continues forward after impact
+↓
+may penetrate additional aligned enemies.
 
-Piercing Arrows active:
+Current level progression increases maximum targets hit.
 
-straight-line arrow
-→ may hit several aligned enemies
-→ no post-launch homing.
+Piercing therefore evolves Ranger's original attack rather than requiring the
+player to trade back to a less reliable Basic Attack.
 
-Current temporary level progression:
+Ranger also demonstrates persistent Mastery development:
 
-Lv.0
-→ up to 2 targets.
+Piercing Mastery
+↓
+Deep Penetration
+↓
+higher prepared Piercing level in every future Expedition.
 
-Lv.1
-→ up to 3 targets.
-
-Each additional level currently adds one additional potential target.
-
-Piercing levels currently develop penetration rather than raw Basic Attack
-damage.
-
-This demonstrates that Weapon Mod progression may improve behaviour shape rather
-than only numerical damage.
+Temporary Run Reward levels stack on top of that prepared baseline.
 
 ## Core Mastery Proof
 
