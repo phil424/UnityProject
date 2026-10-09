@@ -7,18 +7,27 @@ namespace MiniCrawler.WeaponMods
 {
     public readonly struct BasicAttackWeaponModContext
     {
-        public BasicAttackWeaponModContext(GameObject source, Health target, CombatActionState actionState, int modLevel)
+        public BasicAttackWeaponModContext(GameObject source, Health target, CombatActionState actionState, int modLevel, WeaponModRuntimeState runtimeState)
         {
             Source = source;
             Target = target;
             ActionState = actionState;
             ModLevel = Mathf.Max(0, modLevel);
+            RuntimeState = runtimeState;
         }
 
         public GameObject Source { get; }
         public Health Target { get; }
         public CombatActionState ActionState { get; }
         public int ModLevel { get; }
+        private WeaponModRuntimeState RuntimeState { get; }
+
+        public bool TryGetCombinedWeaponModLevel(WeaponModDefinition mod, out int level)
+        {
+            level = 0;
+
+            return RuntimeState != null && RuntimeState.TryGetCombinedWeaponModLevel(mod, out level);
+        }
 
         public int ComboStepIndex => ActionState != null ? ActionState.CurrentBasicAttackStep : 0;
 

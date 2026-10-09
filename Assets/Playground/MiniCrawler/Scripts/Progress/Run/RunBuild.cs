@@ -237,6 +237,20 @@ namespace MiniCrawler.Progress
             RunWeaponModState state = GetWeaponModState(mod);
             return state != null && state.TryIncreaseExpeditionLevel(amount);
         }
+        
+        public bool TryCombineWeaponMods(WeaponModDefinition activeMod, WeaponModDefinition combinedMod)
+        {
+            if (activeMod == null || combinedMod == null || activeMod.Id == combinedMod.Id)
+                return false;
+
+            RunWeaponModState activeState = GetWeaponModState(activeMod);
+            RunWeaponModState combinedState = GetWeaponModState(combinedMod);
+
+            if (activeState == null || combinedState == null)
+                return false;
+
+            return activeState.TryCombineWith(combinedState.Definition);
+        }
 
         public void ApplyPreparedStatModifier(CharacterStatModifierType type, float amount)
         {

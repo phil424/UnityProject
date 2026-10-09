@@ -9,11 +9,20 @@ namespace MiniCrawler.Abilities
     public sealed class ProjectileShotAbility : ActorAbility
     {
         [Header("Projectile Shot")]
-        [SerializeField] private ProjectileDefinition projectile;
-        [SerializeField] private AbilityLevelValue range;
-        [SerializeField] private AbilityLevelValue windupDuration;
-        [SerializeField] private AbilityLevelValue recoveryDuration;
-        [SerializeField] private AbilityLevelValue damage;
+        [SerializeField]
+        private ProjectileDefinition projectile;
+
+        [SerializeField]
+        private AbilityLevelValue range;
+
+        [SerializeField]
+        private AbilityLevelValue windupDuration;
+
+        [SerializeField]
+        private AbilityLevelValue recoveryDuration;
+
+        [SerializeField]
+        private AbilityLevelValue damage;
 
         private Health target;
         private float elapsed;
@@ -74,13 +83,9 @@ namespace MiniCrawler.Abilities
                     return;
                 }
 
-                ProjectileRuntime runtime = ProjectileRuntime.Spawn(
-                    projectile,
-                    Owner,
-                    target,
-                    Damage,
-                    AbilityName
-                );
+                ProjectileLaunchRequest request = new(projectile, Owner, ProjectileDelivery.Targeted(target), new ProjectileImpactPayload(Damage, AbilityName));
+
+                ProjectileRuntime runtime = ProjectileLauncher.Launch(request);
 
                 if (runtime == null)
                 {

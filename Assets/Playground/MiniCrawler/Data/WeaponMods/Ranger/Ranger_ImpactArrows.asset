@@ -24,3 +24,4 @@ MonoBehaviour:
   baseKnockbackDistance: 2.5
   knockbackDistancePerLevel: 0.75
   knockbackSpeed: 12
+  piercingCombinationSource: {fileID: 11400000, guid: 132116f5392285f4cbf34eddd8003063, type: 2}

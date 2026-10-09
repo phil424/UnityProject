@@ -7,44 +7,72 @@ using UnityEngine;
 
 namespace MiniCrawler.Core
 {
-    [CreateAssetMenu(
-        fileName = "New Party Member Definition",
-        menuName = "Mini Crawler/Party Member Definition"
-    )]
+    [CreateAssetMenu(fileName = "New Party Member Definition", menuName = "Mini Crawler/Party Member Definition")]
     public class PartyMemberDefinition : ScriptableObject
     {
         [Header("Identity")]
-        [SerializeField] private string id;
-        [SerializeField] private string displayName;
-        [SerializeField] private string role;
-        [SerializeField, TextArea] private string description;
-        [SerializeField] private Sprite portrait;
+        [SerializeField]
+        private string id;
+
+        [SerializeField]
+        private string displayName;
+
+        [SerializeField]
+        private string role;
+
+        [SerializeField, TextArea]
+        private string description;
+
+        [SerializeField]
+        private Sprite portrait;
 
         [Header("Spawned Actor")]
-        [SerializeField] private ActorDefinition actorDefinition;
-        
+        [SerializeField]
+        private ActorDefinition actorDefinition;
+
         [Header("Starting Abilities")]
-        [SerializeField] private List<AbilityLoadoutEntry> startingAbilities = new();
-        
+        [SerializeField]
+        private List<AbilityLoadoutEntry> startingAbilities = new();
+
         [Header("Character Mastery")]
-        [SerializeField] private List<CharacterMasteryNodeDefinition> masteryNodes = new();
+        [SerializeField]
+        private CharacterMasteryDefinition masteryDefinition;
 
         [Header("Starting Gear")]
-        [SerializeField] private string weaponName = "Basic Weapon";
-        [SerializeField] private string armourName = "Basic Armour";
-        [SerializeField] private string focusName = "Basic Focus";
+        [SerializeField]
+        private string weaponName = "Basic Weapon";
+
+        [SerializeField]
+        private string armourName = "Basic Armour";
+
+        [SerializeField]
+        private string focusName = "Basic Focus";
 
         [Header("Upgrade Scaling")]
-        [SerializeField] private float damagePerWeaponLevel = 2f;
-        [SerializeField] private float armourPerArmourLevel = 1f;
-        [SerializeField] private float healthPerArmourLevel = 10f;
-        [SerializeField] private float healingPerFocusLevel = 2f;
-        [SerializeField] private int baseUpgradeCost = 5;
-        [SerializeField] private int upgradeCostStep = 5;
-        
+        [SerializeField]
+        private float damagePerWeaponLevel = 2f;
+
+        [SerializeField]
+        private float armourPerArmourLevel = 1f;
+
+        [SerializeField]
+        private float healthPerArmourLevel = 10f;
+
+        [SerializeField]
+        private float healingPerFocusLevel = 2f;
+
+        [SerializeField]
+        private int baseUpgradeCost = 5;
+
+        [SerializeField]
+        private int upgradeCostStep = 5;
+
         [Header("Ability Upgrade Scaling")]
-        [SerializeField] private int baseAbilityUpgradeCost = 10;
-        [SerializeField] private int abilityUpgradeCostStep = 5;
+        [SerializeField]
+        private int baseAbilityUpgradeCost = 10;
+
+        [SerializeField]
+        private int abilityUpgradeCostStep = 5;
 
         public string Id => id;
         public string DisplayName => string.IsNullOrWhiteSpace(displayName) ? name : displayName;
@@ -53,7 +81,7 @@ namespace MiniCrawler.Core
         public Sprite Portrait => portrait;
         public ActorDefinition ActorDefinition => actorDefinition;
         public IReadOnlyList<AbilityLoadoutEntry> StartingAbilities => startingAbilities;
-        public IReadOnlyList<CharacterMasteryNodeDefinition> MasteryNodes => masteryNodes;
+        public CharacterMasteryDefinition MasteryDefinition => masteryDefinition;
 
         public string WeaponName => weaponName;
         public string ArmourName => armourName;
@@ -65,7 +93,7 @@ namespace MiniCrawler.Core
         public float HealingPerFocusLevel => healingPerFocusLevel;
         public int BaseUpgradeCost => baseUpgradeCost;
         public int UpgradeCostStep => upgradeCostStep;
-        
+
         public int BaseAbilityUpgradeCost => baseAbilityUpgradeCost;
         public int AbilityUpgradeCostStep => abilityUpgradeCostStep;
 
@@ -118,7 +146,7 @@ namespace MiniCrawler.Core
             healingPerFocusLevel = Mathf.Max(0f, healingPerFocusLevel);
             baseUpgradeCost = Mathf.Max(0, baseUpgradeCost);
             upgradeCostStep = Mathf.Max(0, upgradeCostStep);
-            
+
             baseAbilityUpgradeCost = Mathf.Max(0, baseAbilityUpgradeCost);
             abilityUpgradeCostStep = Mathf.Max(0, abilityUpgradeCostStep);
         }

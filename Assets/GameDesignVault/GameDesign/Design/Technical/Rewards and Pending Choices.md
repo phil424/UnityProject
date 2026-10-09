@@ -69,19 +69,171 @@ When several rewards are queued, the oldest pending choice is resolved first.
 
 Each queued choice retains its own reward context.
 
-# Reward Definitions
+# Reward Catalogue and Definitions
 
-`RunRewardDefinition` represents something that may be offered.
+`RunDirector` references one:
 
-Current categories:
+`RunRewardCatalogDefinition`.
+
+The Catalogue is composed from reusable:
+
+`RunRewardSetDefinition`
+
+assets.
+
+Current default Catalogue:
+
+Default Run Reward Catalog
+├── Core Character Growth
+├── Core Abilities
+├── Punchy Weapon Mastery
+└── Ranger Weapon Mastery.
+
+Reward Sets reference ordinary `RunRewardDefinition` assets.
+
+The Catalogue resolves those Sets into a unique configured reward pool for Run
+generation.
+
+Duplicate Reward IDs are collapsed by runtime Catalogue resolution.
+
+The Content Workbench therefore validates duplicate IDs explicitly so accidental
+identity collisions are visible during authoring.
+
+Current Reward families include:
 
 Character Growth
-→ `RunUpgradeDefinition`
+→ `RunUpgradeDefinition`.
 
-Ability
-→ Ability acquisition / Evolution rewards
+Ability Unlock
+→ `AbilityUnlockRewardDefinition`.
 
-Reward eligibility remains owned by the concrete reward definition.
+Ability Evolution
+→ `AbilityEvolutionRewardDefinition`.
+
+Weapon Mastery development
+→ `WeaponModLevelRewardDefinition`.
+
+Concrete Reward definitions remain responsible for:
+
+- configuration;
+- Reward Vector;
+- rarity;
+- player-facing description;
+- compatibility / eligibility;
+- applying their effect to `RunBuild`.
+
+The Catalogue defines available content.
+
+It does not replace concrete Reward eligibility.
+
+# Unified Content Workbench — Run Rewards
+
+Normal Run Reward authoring uses:
+
+Tools
+→ MiniCrawler
+→ Content Workbench
+→ Run Rewards.
+
+The workspace exposes:
+
+Catalogue
+↓
+Reward Sets
+↓
+Reward Definitions.
+
+The selected playable Character remains visible as an authoring context.
+
+This allows Reward eligibility to be inspected without changing Reward
+ownership.
+
+The normal workspace supports:
+
+- Catalogue browsing;
+- Reward Set creation;
+- adding existing Reward Sets;
+- Reward Set membership removal;
+- Reward browsing;
+- identity-first Reward creation;
+- automatic registration in the selected Reward Set;
+- type-specific Reward editing;
+- Reward rarity/category presentation;
+- player-facing title/description preview;
+- related-content navigation;
+- selected-Character eligibility preview;
+- adding existing Rewards to Sets;
+- membership removal without asset deletion;
+- explicit Reward asset filename synchronisation;
+- non-destructive Catalogue validation.
+
+# Reward Authoring Preview
+
+The Workbench preview displays the same authored Reward data used by runtime
+presentation:
+
+- Display Name;
+- Description;
+- Icon;
+- Rarity;
+- Reward Vector.
+
+Rarity colour/labels reuse the runtime Reward rarity presentation.
+
+Reward-category colour is an editor-only authoring aid.
+
+# Eligibility Preview
+
+The selected Character in the Workbench sidebar is used as eligibility context.
+
+The editor evaluates two temporary authoring builds:
+
+Starting Build
+→ Character Starting Abilities.
+
+Full Mastery Authoring Build
+→ Starting Abilities plus all configured persistent Mastery content.
+
+This preview does not modify persistent progression.
+
+It also does not simulate every possible sequence of earlier Expedition rewards.
+
+Therefore an otherwise valid Reward may still become eligible during gameplay
+even when the static authoring preview reports it currently ineligible.
+
+The preview is a content-authoring aid rather than a full Run simulator.
+
+# Asset Identity
+
+New Reward Sets and Rewards use identity-first creation.
+
+For Rewards the designer provides:
+
+- Reward type;
+- Display Name;
+- stable ID;
+
+before the ScriptableObject is created.
+
+The asset therefore receives a meaningful filename immediately.
+
+Changing a Reward Display Name does not automatically rewrite its stable ID.
+
+An explicit asset-name synchronisation action may rename the Unity asset while
+preserving GUID-based references.
+
+# Current Catalogue Scope
+
+The current Catalogue does not yet define:
+
+- weighting;
+- Region-specific pools;
+- Boss-specific pools;
+- rarity roll tables;
+- encounter-specific catalogue composition.
+
+These should be introduced only alongside concrete gameplay requirements rather
+than being guessed in advance.
 
 # Important Invariants
 

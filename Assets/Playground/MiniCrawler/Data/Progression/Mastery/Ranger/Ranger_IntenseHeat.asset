@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6031237dcad4d743b153e4be57fe9c3, type: 3}
+  m_Name: Ranger_IntenseHeat
+  m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Progress.CharacterMasteryWeaponModLevelNodeDefinition
+  id: ranger_intense_heat
+  displayName: Intense Heat
+  description: Intensify heat
+  icon: {fileID: 0}
+  treePosition: {x: 550, y: 228}
+  prerequisites:
+  - {fileID: 11400000, guid: 3600726bc01b77446bbefbc512de410c, type: 2}
+  costs:
+  - tier: 0
+    amount: 5
+  weaponMod: {fileID: 11400000, guid: 0397c0991600a5a49aa47980fc9dad78, type: 2}
+  preparedLevelIncrease: 1

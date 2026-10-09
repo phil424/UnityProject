@@ -152,23 +152,43 @@ live showcase begins again
 
 No scene load is currently required.
 
-# Progression Tab
+# Progression / Mastery Tree
 
-The Preparation Progression tab now presents Character Mastery.
+The Preparation Progression tab now opens a dedicated Character Mastery overlay.
 
-Mastery entries are runtime-generated from the selected
-`PartyMemberDefinition`.
+The old flat Mastery-node list has been retired.
 
-The current Punchy implementation shows the first authored Mastery nodes and
-their:
+Current runtime structure:
 
-- effects;
-- prerequisite state;
-- resource costs;
-- unlock state.
+selected Character
+↓
+`PartyMemberDefinition.MasteryNodes`
+↓
+authored node presentation coordinates
+↓
+spatial Mastery canvas.
 
-Legacy Weapon / Armour / Focus progression is no longer the player-facing
-Preparation progression model.
+Gameplay-authoritative graph relationships remain defined exclusively by:
+
+`CharacterMasteryNodeDefinition.Prerequisites`.
+
+The UI generates connection lines directly from those prerequisites.
+
+No second presentation-specific prerequisite graph exists.
+
+Current Mastery overlay provides:
+
+- bounded freeform canvas;
+- horizontal / vertical panning;
+- Character-specific authored tree size;
+- Character-specific node coordinates;
+- prerequisite connection lines;
+- locked / available / unlocked node states;
+- selected-node detail presentation;
+- resource cost presentation;
+- normal Mastery purchasing.
+
+The overlay is Preparation-only and closes before normal Expedition play.
 
 # Future
 

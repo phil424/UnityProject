@@ -4,16 +4,18 @@ using UnityEngine;
 
 namespace MiniCrawler.WeaponMods
 {
-    [CreateAssetMenu(
-        fileName = "New Piercing Projectile Weapon Mod",
-        menuName = "Mini Crawler/Weapon Mods/Piercing Projectile"
-    )]
+    [CreateAssetMenu(fileName = "New Piercing Projectile Weapon Mod", menuName = "Mini Crawler/Weapon Mods/Piercing Projectile")]
     public sealed class PiercingProjectileWeaponModDefinition : WeaponModDefinition
     {
         [Header("Piercing Projectile")]
-        [SerializeField, Min(0.05f)] private float hitRadius = 0.3f;
-        [SerializeField, Min(2)] private int baseMaximumTargetsHit = 2;
-        [SerializeField, Min(0)] private int additionalTargetsPerLevel = 1;
+        [SerializeField, Min(0.05f)]
+        private float hitRadius = 0.3f;
+
+        [SerializeField, Min(2)]
+        private int baseMaximumTargetsHit = 2;
+
+        [SerializeField, Min(0)]
+        private int additionalTargetsPerLevel = 1;
 
         public float HitRadius => hitRadius;
         public int BaseMaximumTargetsHit => baseMaximumTargetsHit;
@@ -31,7 +33,8 @@ namespace MiniCrawler.WeaponMods
             ProjectileCombatActionDefinition projectileAction,
             float currentDamage,
             string actionName,
-            out bool connected)
+            out bool connected
+        )
         {
             connected = false;
 
@@ -51,19 +54,11 @@ namespace MiniCrawler.WeaponMods
                 return true;
             }
 
-            ProjectileRuntime runtime = ProjectileRuntime.SpawnTargetedPiercing(
-                projectileAction.Projectile,
-                context.Source,
-                context.Target,
-                currentDamage,
-                actionName,
-                stats.AttackRange,
-                mover.TargetFactionId,
-                hitRadius,
-                GetMaximumTargetsHit(context.ModLevel)
-            );
+            ProjectileDelivery delivery = ProjectileDelivery.TargetedPiercing(context.Target, stats.AttackRange, mover.TargetFactionId, hitRadius, GetMaximumTargetsHit(context.ModLevel));
 
-            connected = runtime != null;
+            ProjectileLaunchRequest request = new(projectileAction.Projectile, context.Source, delivery, new ProjectileImpactPayload(currentDamage, actionName));
+
+            connected = ProjectileLauncher.Launch(request) != null;
             return true;
         }
 

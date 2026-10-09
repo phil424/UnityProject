@@ -58,6 +58,22 @@ namespace MiniCrawler.WeaponMods
         {
             return FindState(stanceSlot);
         }
+        
+        public bool TryGetCombinedWeaponModLevel(WeaponModDefinition mod, out int level)
+        {
+            level = 0;
+
+            if (activeModState == null || mod == null || !activeModState.IsCombinedWith(mod))
+                return false;
+
+            RunWeaponModState combinedState = FindState(mod);
+
+            if (combinedState == null)
+                return false;
+
+            level = combinedState.Level;
+            return true;
+        }
 
         public bool ToggleWeaponMod(WeaponModDefinition mod)
         {
@@ -145,7 +161,8 @@ namespace MiniCrawler.WeaponMods
                 gameObject,
                 target,
                 actionState,
-                activeModState != null ? activeModState.Level : 0
+                activeModState != null ? activeModState.Level : 0,
+                this
             );
         }
 

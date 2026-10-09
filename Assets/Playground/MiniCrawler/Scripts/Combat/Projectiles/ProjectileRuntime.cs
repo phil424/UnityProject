@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using MiniCrawler.Core;
-using MiniCrawler.Movement;
 using MiniCrawler.Systems;
 using UnityEngine;
 
@@ -9,390 +8,43 @@ namespace MiniCrawler.Combat
     [DisallowMultipleComponent]
     public sealed class ProjectileRuntime : MonoBehaviour
     {
-        private const float MinimumDirectionSquared = 0.0001f;
-
-        private enum TravelMode
-        {
-            Targeted,
-            TargetedPiercing,
-            Directional
-        }
-
-        private readonly struct HitCandidate
-        {
-            public HitCandidate(Health target, float alongDistance, float hitDistance)
-            {
-                Target = target;
-                AlongDistance = alongDistance;
-                HitDistance = hitDistance;
-            }
-
-            public Health Target { get; }
-            public float AlongDistance { get; }
-            public float HitDistance { get; }
-        }
-
         private readonly HashSet<Health> hitTargets = new();
-        private readonly List<HitCandidate> hitCandidates = new();
+        private readonly List<ProjectileHitCandidate> hitCandidates = new();
 
         private ProjectileDefinition definition;
-        private TravelMode travelMode;
+        private ProjectileDelivery delivery;
+        private ProjectileImpactPayload impact;
+        private ProjectileDeliveryMode travelMode;
 
         private GameObject source;
         private Health target;
-        private float damage;
-        private string actionName;
-        private float remainingLifetime;
 
+        private float remainingLifetime;
         private float remainingDistance;
-        private string targetFactionId;
-        private float directionalHitRadius;
         private int remainingHits;
-        private float knockbackDistance;
-        private float knockbackSpeed;
-        private float knockbackFanAngle;
 
         public Vector3 TravelDirection { get; private set; } = Vector3.right;
 
-        public static ProjectileRuntime Spawn(
-            ProjectileDefinition definition,
-            GameObject source,
-            Health target,
-            float damage,
-            string actionName)
+        internal void Initialize(ProjectileLaunchRequest request, Vector3 initialDirection)
         {
-            if (definition == null || source == null || target == null || target.IsDead || damage <= 0f)
-                return null;
+            definition = request.Definition;
+            delivery = request.Delivery;
+            impact = request.Impact;
+            travelMode = delivery.Mode;
 
-            if (definition.Prefab == null)
-            {
-                Debug.LogError($"Projectile definition '{definition.name}' has no prefab assigned.", definition);
-                return null;
-            }
+            source = request.Source;
+            target = delivery.Target;
 
-            Vector3 direction = target.transform.position - source.transform.position;
-            direction.y = 0f;
+            remainingLifetime = definition != null ? definition.MaxLifetime : 0f;
 
-            if (direction.sqrMagnitude <= MinimumDirectionSquared)
-                direction = source.transform.forward;
+            remainingDistance = Mathf.Max(0f, delivery.TravelDistance);
 
-            direction.Normalize();
+            remainingHits = Mathf.Max(1, delivery.MaximumHits);
 
-            Vector3 spawnPosition = source.transform.position + direction * definition.SourceForwardOffset;
-            ProjectileRuntime runtime = CreateRuntime(definition, spawnPosition);
-
-            if (runtime == null)
-                return null;
-
-            runtime.InitializeTargeted(definition, source, target, damage, actionName, direction);
-            return runtime;
-        }
-        
-        public static ProjectileRuntime SpawnTargetedKnockback(
-            ProjectileDefinition definition,
-            GameObject source,
-            Health target,
-            float damage,
-            string actionName,
-            float outgoingKnockbackDistance,
-            float outgoingKnockbackSpeed)
-        {
-            if (definition == null ||
-                source == null ||
-                target == null ||
-                target.IsDead ||
-                damage <= 0f ||
-                outgoingKnockbackDistance <= 0f ||
-                outgoingKnockbackSpeed <= 0f)
-            {
-                return null;
-            }
-
-            if (definition.Prefab == null)
-            {
-                Debug.LogError($"Projectile definition '{definition.name}' has no prefab assigned.", definition);
-                return null;
-            }
-
-            Vector3 direction = target.transform.position - source.transform.position;
-            direction.y = 0f;
-
-            if (direction.sqrMagnitude <= MinimumDirectionSquared)
-                direction = source.transform.forward;
-
-            direction.Normalize();
-
-            Vector3 spawnPosition = source.transform.position + direction * definition.SourceForwardOffset;
-            ProjectileRuntime runtime = CreateRuntime(definition, spawnPosition);
-
-            if (runtime == null)
-                return null;
-
-            runtime.InitializeTargetedKnockback(
-                definition,
-                source,
-                target,
-                damage,
-                actionName,
-                direction,
-                outgoingKnockbackDistance,
-                outgoingKnockbackSpeed
-            );
-
-            return runtime;
-        }
-        
-        public static ProjectileRuntime SpawnTargetedPiercing(
-            ProjectileDefinition definition,
-            GameObject source,
-            Health target,
-            float damage,
-            string actionName,
-            float travelDistance,
-            string targetFactionId,
-            float hitRadius,
-            int maxHits)
-        {
-            if (definition == null ||
-                source == null ||
-                target == null ||
-                target.IsDead ||
-                damage <= 0f ||
-                travelDistance <= 0f ||
-                string.IsNullOrWhiteSpace(targetFactionId) ||
-                maxHits <= 0)
-            {
-                return null;
-            }
-
-            if (definition.Prefab == null)
-            {
-                Debug.LogError($"Projectile definition '{definition.name}' has no prefab assigned.", definition);
-                return null;
-            }
-
-            Vector3 direction = target.transform.position - source.transform.position;
-            direction.y = 0f;
-
-            if (direction.sqrMagnitude <= MinimumDirectionSquared)
-                direction = source.transform.forward;
-
-            direction.Normalize();
-
-            Vector3 spawnPosition = source.transform.position + direction * definition.SourceForwardOffset;
-            ProjectileRuntime runtime = CreateRuntime(definition, spawnPosition);
-
-            if (runtime == null)
-                return null;
-
-            runtime.InitializeTargetedPiercing(
-                definition,
-                source,
-                target,
-                damage,
-                actionName,
-                direction,
-                travelDistance,
-                targetFactionId,
-                hitRadius,
-                maxHits
-            );
-
-            return runtime;
-        }
-
-        public static ProjectileRuntime SpawnDirectional(
-            ProjectileDefinition definition,
-            GameObject source,
-            Vector3 direction,
-            float damage,
-            string actionName,
-            float travelDistance,
-            string targetFactionId,
-            float hitRadius,
-            int maxHits,
-            float knockbackDistance,
-            float knockbackSpeed,
-            float knockbackFanAngle)
-        {
-            direction.y = 0f;
-
-            if (definition == null ||
-                source == null ||
-                direction.sqrMagnitude <= MinimumDirectionSquared ||
-                damage <= 0f ||
-                travelDistance <= 0f ||
-                string.IsNullOrWhiteSpace(targetFactionId) ||
-                maxHits <= 0)
-            {
-                return null;
-            }
-
-            if (definition.Prefab == null)
-            {
-                Debug.LogError($"Projectile definition '{definition.name}' has no prefab assigned.", definition);
-                return null;
-            }
-
-            direction.Normalize();
-
-            Vector3 spawnPosition = source.transform.position + direction * definition.SourceForwardOffset;
-            ProjectileRuntime runtime = CreateRuntime(definition, spawnPosition);
-
-            if (runtime == null)
-                return null;
-
-            runtime.InitializeDirectional(
-                definition,
-                source,
-                direction,
-                damage,
-                actionName,
-                travelDistance,
-                targetFactionId,
-                hitRadius,
-                maxHits,
-                knockbackDistance,
-                knockbackSpeed,
-                knockbackFanAngle
-            );
-
-            return runtime;
-        }
-
-        private static ProjectileRuntime CreateRuntime(ProjectileDefinition definition, Vector3 spawnPosition)
-        {
-            GameObject projectileObject = Instantiate(definition.Prefab, spawnPosition, Quaternion.identity);
-            ProjectileRuntime runtime = projectileObject.GetComponent<ProjectileRuntime>();
-
-            if (runtime != null)
-                return runtime;
-
-            Debug.LogError(
-                $"Projectile prefab '{definition.Prefab.name}' requires {nameof(ProjectileRuntime)}.",
-                projectileObject
-            );
-
-            Destroy(projectileObject);
-            return null;
-        }
-
-        private void InitializeTargeted(
-            ProjectileDefinition projectileDefinition,
-            GameObject projectileSource,
-            Health projectileTarget,
-            float projectileDamage,
-            string projectileActionName,
-            Vector3 initialDirection)
-        {
-            definition = projectileDefinition;
-            travelMode = TravelMode.Targeted;
-
-            source = projectileSource;
-            target = projectileTarget;
-            damage = projectileDamage;
-            actionName = projectileActionName;
-            remainingLifetime = definition.MaxLifetime;
-
-            TravelDirection = initialDirection.normalized;
-            
-            knockbackDistance = 0f;
-            knockbackSpeed = 0f;
-            knockbackFanAngle = 0f;
-        }
-        
-        private void InitializeTargetedKnockback(
-            ProjectileDefinition projectileDefinition,
-            GameObject projectileSource,
-            Health projectileTarget,
-            float projectileDamage,
-            string projectileActionName,
-            Vector3 initialDirection,
-            float outgoingKnockbackDistance,
-            float outgoingKnockbackSpeed)
-        {
-            InitializeTargeted(
-                projectileDefinition,
-                projectileSource,
-                projectileTarget,
-                projectileDamage,
-                projectileActionName,
-                initialDirection
-            );
-
-            knockbackDistance = Mathf.Max(0f, outgoingKnockbackDistance);
-            knockbackSpeed = Mathf.Max(0f, outgoingKnockbackSpeed);
-        }
-        
-        private void InitializeTargetedPiercing(
-            ProjectileDefinition projectileDefinition,
-            GameObject projectileSource,
-            Health projectileTarget,
-            float projectileDamage,
-            string projectileActionName,
-            Vector3 initialDirection,
-            float travelDistance,
-            string factionId,
-            float hitRadius,
-            int maxHits)
-        {
-            definition = projectileDefinition;
-            travelMode = TravelMode.TargetedPiercing;
-
-            source = projectileSource;
-            target = projectileTarget;
-            damage = projectileDamage;
-            actionName = projectileActionName;
-            remainingLifetime = definition.MaxLifetime;
-
-            TravelDirection = initialDirection.normalized;
-
-            remainingDistance = Mathf.Max(0f, travelDistance);
-            targetFactionId = factionId;
-            directionalHitRadius = Mathf.Max(0.05f, hitRadius);
-            remainingHits = Mathf.Max(1, maxHits);
-
-            knockbackDistance = 0f;
-            knockbackSpeed = 0f;
-            knockbackFanAngle = 0f;
+            TravelDirection = initialDirection.sqrMagnitude > 0f ? initialDirection.normalized : Vector3.right;
 
             hitTargets.Clear();
-        }
-
-        private void InitializeDirectional(
-            ProjectileDefinition projectileDefinition,
-            GameObject projectileSource,
-            Vector3 direction,
-            float projectileDamage,
-            string projectileActionName,
-            float travelDistance,
-            string factionId,
-            float hitRadius,
-            int maxHits,
-            float outgoingKnockbackDistance,
-            float outgoingKnockbackSpeed,
-            float fanAngle)
-        {
-            definition = projectileDefinition;
-            travelMode = TravelMode.Directional;
-
-            source = projectileSource;
-            damage = projectileDamage;
-            actionName = projectileActionName;
-            remainingLifetime = definition.MaxLifetime;
-
-            TravelDirection = direction.normalized;
-
-            remainingDistance = Mathf.Max(0f, travelDistance);
-            targetFactionId = factionId;
-            directionalHitRadius = Mathf.Max(0.05f, hitRadius);
-            remainingHits = Mathf.Max(1, maxHits);
-
-            knockbackDistance = Mathf.Max(0f, outgoingKnockbackDistance);
-            knockbackSpeed = Mathf.Max(0f, outgoingKnockbackSpeed);
-            knockbackFanAngle = Mathf.Clamp(fanAngle, 0f, 89f);
-
-            hitTargets.Clear();
+            hitCandidates.Clear();
         }
 
         private void Update()
@@ -416,15 +68,15 @@ namespace MiniCrawler.Combat
 
             switch (travelMode)
             {
-                case TravelMode.Targeted:
+                case ProjectileDeliveryMode.Targeted:
                     TickTargeted();
                     break;
 
-                case TravelMode.TargetedPiercing:
+                case ProjectileDeliveryMode.TargetedPiercing:
                     TickTargetedPiercing();
                     break;
 
-                case TravelMode.Directional:
+                case ProjectileDeliveryMode.Directional:
                     TickDirectional();
                     break;
             }
@@ -439,9 +91,11 @@ namespace MiniCrawler.Combat
             }
 
             Vector3 targetPosition = target.transform.position;
+
             targetPosition.y = transform.position.y;
 
             Vector3 toTarget = targetPosition - transform.position;
+
             float distance = toTarget.magnitude;
 
             if (distance <= definition.HitDistance)
@@ -463,7 +117,7 @@ namespace MiniCrawler.Combat
 
             transform.position += TravelDirection * travelDistance;
         }
-        
+
         private void TickTargetedPiercing()
         {
             if (remainingDistance <= 0f || remainingHits <= 0)
@@ -475,14 +129,16 @@ namespace MiniCrawler.Combat
             if (target == null || target.IsDead)
             {
                 target = null;
-                travelMode = TravelMode.Directional;
+                travelMode = ProjectileDeliveryMode.Directional;
                 return;
             }
 
             Vector3 targetPosition = target.transform.position;
+
             targetPosition.y = transform.position.y;
 
             Vector3 toTarget = targetPosition - transform.position;
+
             float distance = toTarget.magnitude;
 
             if (distance <= definition.HitDistance)
@@ -501,6 +157,7 @@ namespace MiniCrawler.Combat
             if (stepDistance >= distance - definition.HitDistance)
             {
                 transform.position = targetPosition;
+
                 remainingDistance = Mathf.Max(0f, remainingDistance - distance);
 
                 ResolveTargetedPiercingHit();
@@ -508,6 +165,7 @@ namespace MiniCrawler.Combat
             }
 
             transform.position += TravelDirection * stepDistance;
+
             remainingDistance = Mathf.Max(0f, remainingDistance - stepDistance);
 
             if (remainingDistance <= 0f)
@@ -528,11 +186,13 @@ namespace MiniCrawler.Combat
                 return;
 
             Vector3 segmentStart = transform.position;
+
             Vector3 segmentEnd = segmentStart + TravelDirection * stepDistance;
 
             bool exhaustedHits = ResolveDirectionalHits(segmentStart, segmentEnd);
 
             transform.position = segmentEnd;
+
             remainingDistance = Mathf.Max(0f, remainingDistance - stepDistance);
 
             if (exhaustedHits || remainingDistance <= 0f)
@@ -542,22 +202,21 @@ namespace MiniCrawler.Combat
         private void ResolveTargetedHit()
         {
             if (target != null && !target.IsDead)
-            {
-                DamageResolver.ApplyDamage(source, target, damage, actionName);
-
-                if (!target.IsDead && knockbackDistance > 0f && knockbackSpeed > 0f)
-                    KnockbackResolver.TryApply(source, target, knockbackDistance, knockbackSpeed);
-            }
+                ProjectileImpactResolver.Resolve(impact, ProjectileImpactContext.Targeted(source, target));
 
             Destroy(gameObject);
         }
-        
+
         private void ResolveTargetedPiercingHit()
         {
             if (target != null && !target.IsDead && !hitTargets.Contains(target))
             {
-                hitTargets.Add(target);
-                DamageResolver.ApplyDamage(source, target, damage, actionName);
+                Health hitTarget = target;
+
+                hitTargets.Add(hitTarget);
+
+                ProjectileImpactResolver.Resolve(impact, ProjectileImpactContext.Targeted(source, hitTarget));
+
                 remainingHits--;
             }
 
@@ -569,68 +228,31 @@ namespace MiniCrawler.Combat
                 return;
             }
 
-            travelMode = TravelMode.Directional;
+            travelMode = ProjectileDeliveryMode.Directional;
         }
 
         private bool ResolveDirectionalHits(Vector3 segmentStart, Vector3 segmentEnd)
         {
-            hitCandidates.Clear();
+            ProjectileHitQuery.CollectSegmentTargets(source, delivery.TargetFactionId, hitTargets, TravelDirection, segmentStart, segmentEnd, delivery.HitRadius, hitCandidates);
 
-            Health[] possibleTargets = FindObjectsByType<Health>(FindObjectsSortMode.None);
-
-            foreach (Health possibleTarget in possibleTargets)
-            {
-                if (!IsValidDirectionalTarget(possibleTarget))
-                    continue;
-
-                float targetRadius = 0f;
-                EntityAvoidance avoidance = possibleTarget.GetComponent<EntityAvoidance>();
-
-                if (avoidance != null)
-                    targetRadius = avoidance.WorldRadius;
-
-                float hitDistance = directionalHitRadius + targetRadius;
-                Vector3 closestPoint = ClosestPointOnSegment(possibleTarget.transform.position, segmentStart, segmentEnd);
-                Vector3 offset = possibleTarget.transform.position - closestPoint;
-                offset.y = 0f;
-
-                if (offset.sqrMagnitude > hitDistance * hitDistance)
-                    continue;
-
-                float alongDistance = Vector3.Dot(closestPoint - segmentStart, TravelDirection);
-                hitCandidates.Add(new HitCandidate(possibleTarget, alongDistance, hitDistance));
-            }
-
-            hitCandidates.Sort((a, b) => a.AlongDistance.CompareTo(b.AlongDistance));
-
-            foreach (HitCandidate candidate in hitCandidates)
+            foreach (ProjectileHitCandidate candidate in hitCandidates)
             {
                 Health hitTarget = candidate.Target;
 
-                if (!IsValidDirectionalTarget(hitTarget))
+                if (hitTarget == null || hitTarget.IsDead || hitTargets.Contains(hitTarget))
                     continue;
 
                 hitTargets.Add(hitTarget);
 
-                DamageResolver.ApplyDamage(source, hitTarget, damage, actionName);
+                Vector3 knockbackDirection = ProjectileImpactResolver.ResolveDirectionalKnockbackDirection(
+                    hitTarget,
+                    candidate.ClosestPoint,
+                    candidate.HitDistance,
+                    TravelDirection,
+                    impact.Knockback.FanAngle
+                );
 
-                if (!hitTarget.IsDead && knockbackDistance > 0f && knockbackSpeed > 0f)
-                {
-                    Vector3 knockbackDirection = ResolveKnockbackDirection(
-                        hitTarget,
-                        segmentStart,
-                        segmentEnd,
-                        candidate.HitDistance
-                    );
-
-                    KnockbackResolver.TryApplyDirectional(
-                        source,
-                        hitTarget,
-                        knockbackDirection,
-                        knockbackDistance,
-                        knockbackSpeed
-                    );
-                }
+                ProjectileImpactResolver.Resolve(impact, ProjectileImpactContext.Directional(source, hitTarget, knockbackDirection));
 
                 remainingHits--;
 
@@ -639,58 +261,6 @@ namespace MiniCrawler.Combat
             }
 
             return false;
-        }
-
-        private bool IsValidDirectionalTarget(Health possibleTarget)
-        {
-            if (possibleTarget == null ||
-                possibleTarget.IsDead ||
-                possibleTarget.gameObject == source ||
-                hitTargets.Contains(possibleTarget))
-            {
-                return false;
-            }
-
-            FactionMember faction = possibleTarget.GetComponent<FactionMember>();
-
-            return faction != null && faction.IsFaction(targetFactionId);
-        }
-
-        private Vector3 ResolveKnockbackDirection(
-            Health hitTarget,
-            Vector3 segmentStart,
-            Vector3 segmentEnd,
-            float hitDistance)
-        {
-            Vector3 closestPoint = ClosestPointOnSegment(hitTarget.transform.position, segmentStart, segmentEnd);
-            Vector3 lateralDirection = hitTarget.transform.position - closestPoint;
-            lateralDirection.y = 0f;
-
-            float lateralDistance = lateralDirection.magnitude;
-
-            if (lateralDistance <= MinimumDirectionSquared || knockbackFanAngle <= 0f)
-                return TravelDirection;
-
-            float spreadAmount = Mathf.Clamp01(lateralDistance / Mathf.Max(MinimumDirectionSquared, hitDistance));
-            float deflection = knockbackFanAngle * spreadAmount;
-
-            return KnockbackResolver.ResolveDeflectedDirection(TravelDirection, lateralDirection, deflection);
-        }
-
-        private static Vector3 ClosestPointOnSegment(Vector3 point, Vector3 start, Vector3 end)
-        {
-            point.y = 0f;
-            start.y = 0f;
-            end.y = 0f;
-
-            Vector3 segment = end - start;
-            float lengthSquared = segment.sqrMagnitude;
-
-            if (lengthSquared <= MinimumDirectionSquared)
-                return start;
-
-            float t = Vector3.Dot(point - start, segment) / lengthSquared;
-            return start + segment * Mathf.Clamp01(t);
         }
     }
 }

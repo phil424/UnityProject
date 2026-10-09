@@ -16,6 +16,7 @@ MonoBehaviour:
   displayName: Arrow Impact
   description: Increases knockback delivered by arrows
   icon: {fileID: 0}
+  treePosition: {x: 261, y: -467}
   prerequisites:
   - {fileID: 11400000, guid: 677af51e492797f48a731b6cf3c4ccf7, type: 2}
   costs:

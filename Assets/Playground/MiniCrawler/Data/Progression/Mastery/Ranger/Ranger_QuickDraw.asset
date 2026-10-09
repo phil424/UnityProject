@@ -16,6 +16,7 @@ MonoBehaviour:
   displayName: Quick Draw
   description: Improved arrow fire rate
   icon: {fileID: 0}
+  treePosition: {x: -225, y: 224}
   prerequisites:
   - {fileID: 11400000, guid: 48d0a9420c53c05438a67baaa115b107, type: 2}
   costs:

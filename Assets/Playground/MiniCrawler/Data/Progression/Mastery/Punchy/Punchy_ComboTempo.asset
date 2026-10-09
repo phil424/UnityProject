@@ -16,6 +16,7 @@ MonoBehaviour:
   displayName: Combo Tempo
   description: Improves time between attacks
   icon: {fileID: 0}
+  treePosition: {x: 0, y: 286}
   prerequisites:
   - {fileID: 11400000, guid: 0dafd337e85c18441a7afd1a1bfcf845, type: 2}
   costs:

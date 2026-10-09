@@ -7,11 +7,13 @@ namespace MiniCrawler.Progress
     public sealed class RunWeaponModState
     {
         private WeaponModDefinition definition;
+        private WeaponModDefinition combinedMastery;
         private WeaponModStanceSlot stanceSlot;
         private int preparedLevel;
         private int expeditionLevelBonus;
 
         public WeaponModDefinition Definition => definition;
+        public WeaponModDefinition CombinedMastery => combinedMastery;
         public WeaponModStanceSlot StanceSlot => stanceSlot;
         public int PreparedLevel => preparedLevel;
         public int ExpeditionLevelBonus => expeditionLevelBonus;
@@ -26,6 +28,13 @@ namespace MiniCrawler.Progress
             stanceSlot = slot;
             preparedLevel = Math.Max(0, startingPreparedLevel);
             expeditionLevelBonus = 0;
+        }
+
+        public bool IsCombinedWith(WeaponModDefinition mod)
+        {
+            return mod != null &&
+                   combinedMastery != null &&
+                   combinedMastery.Id == mod.Id;
         }
 
         internal bool TryIncreasePreparedLevel(int amount = 1)
@@ -43,6 +52,20 @@ namespace MiniCrawler.Progress
                 return false;
 
             expeditionLevelBonus += amount;
+            return true;
+        }
+
+        internal bool TryCombineWith(WeaponModDefinition mod)
+        {
+            if (mod == null ||
+                definition == null ||
+                combinedMastery != null ||
+                mod.Id == definition.Id)
+            {
+                return false;
+            }
+
+            combinedMastery = mod;
             return true;
         }
     }

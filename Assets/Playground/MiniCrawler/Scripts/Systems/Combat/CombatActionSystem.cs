@@ -59,8 +59,7 @@ namespace MiniCrawler.Systems
             if (attackerHealth != null && attackerHealth.IsDead)
                 return false;
 
-            if (!CombatEngagementState.AllowsCombat(action.gameObject) ||
-                !CombatEngagementState.AllowsCombat(target.gameObject))
+            if (!CombatEngagementState.AllowsCombat(action.gameObject) || !CombatEngagementState.AllowsCombat(target.gameObject))
             {
                 return false;
             }
@@ -84,25 +83,17 @@ namespace MiniCrawler.Systems
 
             if (definition is ProjectileCombatActionDefinition projectileAction)
             {
-                if (weaponMods != null &&
-                    weaponMods.TryResolveProjectileBasicAttack(
-                        action,
-                        target,
-                        projectileAction,
-                        damage,
-                        attackerStats.AttackName,
-                        out bool modConnected))
-                {
+                if (weaponMods != null && weaponMods.TryResolveProjectileBasicAttack(action, target, projectileAction, damage, attackerStats.AttackName, out bool modConnected))
                     return modConnected;
-                }
 
-                return ProjectileRuntime.Spawn(
+                ProjectileLaunchRequest request = new(
                     projectileAction.Projectile,
                     action.gameObject,
-                    target,
-                    damage,
-                    attackerStats.AttackName
-                ) != null;
+                    ProjectileDelivery.Targeted(target),
+                    new ProjectileImpactPayload(damage, attackerStats.AttackName)
+                );
+
+                return ProjectileLauncher.Launch(request) != null;
             }
 
             float healthBefore = target.CurrentHealth;

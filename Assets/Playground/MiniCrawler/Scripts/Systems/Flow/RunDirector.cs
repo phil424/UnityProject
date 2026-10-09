@@ -14,36 +14,44 @@ namespace MiniCrawler.Systems
             PreRun,
             InLevel,
             EndingExpedition,
-            BetweenLevels
+            BetweenLevels,
         }
-        
+
         public enum ExpeditionEndReason
         {
             None,
             Defeat,
             VoluntaryReturn,
-            Success
+            Success,
         }
 
         public static RunDirector Instance { get; private set; }
 
         public event Action<RunFlowState> StateChanged;
 
-        [SerializeField] private StageDirector stageDirector;
+        [SerializeField]
+        private StageDirector stageDirector;
 
         [Header("Setup")]
-        [SerializeField] private PlayableCharacterRosterDefinition characterRoster;
-        [SerializeField, Min(1)] private int maximumPartySize = 4;
-        
-        [Header("Prototype Objectives")]
-        [SerializeField] private ExpeditionObjectiveDefinition[] defaultExpeditionObjectives;
-
-        [Header("Run Rewards")]
-        [FormerlySerializedAs("availableRunUpgrades")]
-        [SerializeField] private RunRewardDefinition[] availableRunRewards;
+        [SerializeField]
+        private PlayableCharacterRosterDefinition characterRoster;
 
         [SerializeField, Min(1)]
-        private int runUpgradeOfferCount = 3;
+        private int maximumPartySize = 4;
+
+        [Header("Prototype Objectives")]
+        [SerializeField]
+        private ExpeditionObjectiveDefinition[] defaultExpeditionObjectives;
+
+        [Header("Run Rewards")]
+        [SerializeField]
+        private RunRewardCatalogDefinition runRewardCatalog;
+
+        [FormerlySerializedAs("runUpgradeOfferCount")]
+        [SerializeField, Min(1)]
+        private int runRewardOfferCount = 3;
+
+        private readonly List<RunRewardDefinition> availableRunRewards = new();
 
         private RunSetup setup;
 
@@ -71,6 +79,15 @@ namespace MiniCrawler.Systems
 
             if (characterRoster == null)
                 Debug.LogError("RunDirector requires a playable Character roster.", this);
+
+            if (runRewardCatalog == null)
+            {
+                Debug.LogError("RunDirector requires a Run Reward catalogue.", this);
+            }
+            else if (runRewardCatalog.CollectRewards(availableRunRewards) == 0)
+            {
+                Debug.LogWarning("RunDirector's Run Reward catalogue contains no configured rewards.", this);
+            }
 
             PersistentProgression.InitializeCharacterRoster(characterRoster);
 
@@ -122,13 +139,13 @@ namespace MiniCrawler.Systems
                 Debug.LogWarning("Cannot begin a new expedition until the current flow has returned to preparation.");
                 return false;
             }
-            
+
             if (RunProgress.HasActiveRun)
             {
                 Debug.LogWarning("Cannot begin a new run while another run is active.");
                 return false;
             }
-            
+
             LastExpeditionEndReason = ExpeditionEndReason.None;
             LastLevel1ResourcesBanked = 0;
             LastLevel2ResourcesBanked = 0;
@@ -163,7 +180,7 @@ namespace MiniCrawler.Systems
 
             return StartCurrentLevel(RunFlowState.BetweenLevels);
         }
-        
+
         public bool TryChoosePendingReward(RunUpgradeOffer offer)
         {
             if (!RunProgress.TryChoosePendingReward(offer))
@@ -195,8 +212,7 @@ namespace MiniCrawler.Systems
 
         private bool StartCurrentLevel(RunFlowState failureState)
         {
-            if (RunProgress.CurrentRun == null ||
-                stageDirector == null)
+            if (RunProgress.CurrentRun == null || stageDirector == null)
             {
                 return false;
             }
@@ -226,7 +242,7 @@ namespace MiniCrawler.Systems
             GenerateRunRewardOffers(new RunRewardContext(RunRewardVector.Any, "Area Clear"));
             SetState(RunFlowState.BetweenLevels);
         }
-        
+
         private void HandleLevelCleared()
         {
             if (!returnToPreRunWhenLevelCleared)
@@ -235,7 +251,7 @@ namespace MiniCrawler.Systems
             returnToPreRunWhenLevelCleared = false;
             SetState(RunFlowState.PreRun);
         }
-        
+
         private void FinishExpedition(ExpeditionEndReason reason, bool waitForLevelCleanup = false)
         {
             RunState runState = RunProgress.CurrentRun;
@@ -274,13 +290,9 @@ namespace MiniCrawler.Systems
 
             SetState(waitForLevelCleanup ? RunFlowState.EndingExpedition : RunFlowState.PreRun);
 
-            Debug.Log(
-                $"Expedition ended: {reason}. Persistent resources banked: " +
-                $"L1 {level1ResourcesEarned}, L2 {level2ResourcesEarned}, L3 {level3ResourcesEarned}.",
-                this
-            );
+            Debug.Log($"Expedition ended: {reason}. Persistent resources banked: " + $"L1 {level1ResourcesEarned}, L2 {level2ResourcesEarned}, L3 {level3ResourcesEarned}.", this);
         }
-        
+
         private void ApplyCharacterUnlockProgress(RunState runState)
         {
             if (runState == null || characterRoster == null)
@@ -291,26 +303,20 @@ namespace MiniCrawler.Systems
                 PartyMemberDefinition character = entry?.Character;
                 CharacterUnlockRequirementDefinition requirement = entry?.UnlockRequirement;
 
-                if (character == null ||
-                    requirement == null ||
-                    !requirement.IsConfigured ||
-                    PersistentProgression.IsCharacterUnlocked(character))
+                if (character == null || requirement == null || !requirement.IsConfigured || PersistentProgression.IsCharacterUnlocked(character))
                 {
                     continue;
                 }
 
                 int contribution = requirement.GetProgressContribution(runState);
 
-                if (contribution <= 0 ||
-                    !PersistentProgression.TryAddCharacterUnlockProgress(character, requirement, contribution))
+                if (contribution <= 0 || !PersistentProgression.TryAddCharacterUnlockProgress(character, requirement, contribution))
                 {
                     continue;
                 }
 
                 int progress = PersistentProgression.GetCharacterUnlockProgress(character);
-                string status = PersistentProgression.IsCharacterUnlocked(character)
-                    ? "UNLOCKED"
-                    : $"{progress}/{requirement.RequiredProgress}";
+                string status = PersistentProgression.IsCharacterUnlocked(character) ? "UNLOCKED" : $"{progress}/{requirement.RequiredProgress}";
 
                 Debug.Log($"Character unlock progress: {character.DisplayName} - {status}.", this);
             }
@@ -323,19 +329,11 @@ namespace MiniCrawler.Systems
             if (runState == null)
                 return;
 
-            IReadOnlyList<RunUpgradeOffer> offers = RunUpgradeOfferGenerator.Generate(
-                runState,
-                availableRunRewards,
-                runUpgradeOfferCount,
-                context.RewardVector
-            );
+            IReadOnlyList<RunUpgradeOffer> offers = RunUpgradeOfferGenerator.Generate(runState, availableRunRewards, runRewardOfferCount, context.RewardVector);
 
             if (offers.Count == 0)
             {
-                Debug.Log(
-                    $"No eligible run rewards were available for reward vector '{context.RewardVector}' " +
-                    $"from source '{context.SourceLabel}'."
-                );
+                Debug.Log($"No eligible run rewards were available for reward vector '{context.RewardVector}' " + $"from source '{context.SourceLabel}'.");
 
                 return;
             }
@@ -343,14 +341,11 @@ namespace MiniCrawler.Systems
             if (!RunProgress.EnqueueRewardChoice(offers, context))
                 Debug.LogWarning("Eligible run rewards were generated but could not be queued.");
         }
-        
+
         [ContextMenu("Debug/Queue Reward Choice")]
         private void DebugQueueRewardChoice()
         {
-            if (!Application.isPlaying ||
-                state != RunFlowState.InLevel ||
-                !RunProgress.HasActiveRun ||
-                stageDirector == null)
+            if (!Application.isPlaying || state != RunFlowState.InLevel || !RunProgress.HasActiveRun || stageDirector == null)
             {
                 Debug.LogWarning("A reward choice can only be queued during an active level.");
                 return;
@@ -359,14 +354,11 @@ namespace MiniCrawler.Systems
             if (!stageDirector.TryAwardRewardChoice(RunRewardVector.Any, "Debug Reward"))
                 Debug.LogWarning("The current level could not award a reward choice.");
         }
-        
+
         [ContextMenu("Debug/Queue Weapon Mod Reward")]
         private void DebugQueueWeaponModReward()
         {
-            if (!Application.isPlaying ||
-                state != RunFlowState.InLevel ||
-                !RunProgress.HasActiveRun ||
-                stageDirector == null)
+            if (!Application.isPlaying || state != RunFlowState.InLevel || !RunProgress.HasActiveRun || stageDirector == null)
             {
                 Debug.LogWarning("A Weapon Mod reward can only be queued during an active level.");
                 return;
@@ -375,7 +367,7 @@ namespace MiniCrawler.Systems
             if (!stageDirector.TryAwardRewardChoice(RunRewardVector.WeaponMod, "Debug Weapon Mod Reward"))
                 Debug.LogWarning("The current level could not award a Weapon Mod reward choice.");
         }
-        
+
         [ContextMenu("Debug/Unlock All Roster Characters")]
         private void DebugUnlockAllRosterCharacters()
         {
@@ -388,7 +380,7 @@ namespace MiniCrawler.Systems
                     PersistentProgression.TryUnlockCharacter(entry.Character);
             }
         }
-        
+
         private void HandleRewardChoiceEarned(RunRewardContext context)
         {
             GenerateRunRewardOffers(context);
@@ -398,15 +390,13 @@ namespace MiniCrawler.Systems
         {
             RunProgress.AddCurrency(amount);
         }
-        
+
         private void HandlePersistentResourceEarned(PersistentResourceTier tier, int amount)
         {
             RunProgress.AddPersistentResource(tier, amount);
         }
 
-        private void SetState(
-            RunFlowState newState
-        )
+        private void SetState(RunFlowState newState)
         {
             if (state == newState)
                 return;

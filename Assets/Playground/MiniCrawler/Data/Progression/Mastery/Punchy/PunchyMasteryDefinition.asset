@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a3dbbe839bf1a44458b3812d4921726e, type: 3}
+  m_Name: PunchyMasteryDefinition
+  m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Progress.CharacterMasteryDefinition
+  treeSize: {x: 1600, y: 900}
+  nodes:
+  - {fileID: 11400000, guid: d1785586fc5eee44ea523d308feb1b71, type: 2}
+  - {fileID: 11400000, guid: 0dafd337e85c18441a7afd1a1bfcf845, type: 2}
+  - {fileID: 11400000, guid: 44c3f62341ef75042af30f319f7c25e0, type: 2}
+  - {fileID: 11400000, guid: 209e310b04d5afc4bb4444b516729f1e, type: 2}
+  - {fileID: 11400000, guid: ed21f2d92ae470c47a9db38696a7ed3f, type: 2}

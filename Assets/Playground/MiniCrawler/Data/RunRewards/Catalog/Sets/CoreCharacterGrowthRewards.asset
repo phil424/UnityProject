@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ad0b38ab6226794eaa081ca92f1aca1, type: 3}
+  m_Name: CoreCharacterGrowthRewards
+  m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Progress.RunRewardSetDefinition
+  rewards:
+  - {fileID: 11400000, guid: 309b8389bb587ba40be86ca876c4a398, type: 2}
+  - {fileID: 11400000, guid: 0a8f4aa459b0ed646894d14534dd9d91, type: 2}
+  - {fileID: 11400000, guid: ea581ebcfddc48446b055abb1627e700, type: 2}
+  - {fileID: 11400000, guid: 2dad84b3f13def344a71890e5e727a7b, type: 2}
+  - {fileID: 11400000, guid: 4a3d2ccc145bae84ba5a831c074ae501, type: 2}
+  - {fileID: 11400000, guid: 971e914b5566b2d4eb1152183e78ba09, type: 2}
+  - {fileID: 11400000, guid: db0cbf4f5b5419240843a3570d355a24, type: 2}

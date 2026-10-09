@@ -62,101 +62,105 @@ Give explicit file paths and literal Unity Editor instructions where applicable.
 
 Every meaningful implementation or housekeeping step follows this sequence:
 
-Documentation Preflight & Cleanup  
-↓  
-Implementation Contract  
-↓  
-Implementation  
-↓  
-Focused Verification  
-↓  
-Documentation Closure  
-↓  
+Roadmap Check
+↓
+Progress Context & Implementation Contract
+↓
+Implementation
+↓
+Focused Verification
+↓
+Documentation Closure
+↓
 Checkpoint Decision
 
-## Documentation Preflight & Cleanup
+## Roadmap Check
 
-Before implementation:
+Begin by inspecting the relevant current roadmap section.
 
-- inspect documentation directly relevant to the work;
-    
-- correct stale or contradictory information that would make the implementation instructions misleading;
-    
-- do not perform unrelated documentation cleanup.
-    
+If the roadmap already describes the correct completed and active state,
+explicitly state:
 
-If no pre-implementation documentation change is required, explicitly state:
+`Roadmap Check: Already current.`
 
-`Documentation Preflight: No changes required.`
+If it is stale, update only the relevant roadmap section before implementation.
 
-## Implementation Contract
+Do not begin normal development steps with broad Design, Technical or Guide
+documentation cleanup.
 
-Before implementation instructions, state:
+## Progress Context & Implementation Contract
+
+Briefly explain where the project currently stands relative to the immediate
+target.
+
+Then state:
 
 - Goal
-    
 - Deliberately NOT included
-    
 - Files CREATE
-    
 - Files MODIFY
-    
 - Files DELETE
-    
 
-Where relevant, also provide the required Unity, prefab, scene, UI or authoring work contract from the focused Development Rules.
+Where relevant, also provide the required Unity, prefab, scene, UI or authoring
+work contract from the focused Development Rules.
 
 ## Implementation
 
 Instructions must:
 
 - be executable from top to bottom;
-    
 - identify exact files;
-    
 - identify exact classes, methods, properties, headings or Unity objects;
-    
 - introduce dependencies before their consumers;
-    
 - include all predictable affected call sites;
-    
 - avoid unrelated cleanup or formatting churn.
-    
 
 ## Focused Verification
 
-After implementation, provide proportionate validation for the work just performed.
+After implementation, provide proportionate validation for the work just
+performed.
 
 Manual validation is the default.
 
-Automated/EditMode tests are not routinely added unless explicitly requested or genuinely justified.
+Automated/EditMode tests are not routinely added unless explicitly requested or
+genuinely justified.
 
-Broader regression testing is reserved for changes that affect central shared systems, important lifetime boundaries or other high-risk behaviour.
+Do not advance while the relevant acceptance criteria are failing.
 
 ## Documentation Closure
 
-After successful verification:
+After successful verification, assess documentation impact.
 
-- reconcile affected Design documentation;
-    
-- reconcile affected Technical documentation;
-    
-- reconcile affected Authoring Guides where applicable;
-    
-- remove stale future-tense or limitation wording made obsolete by the implementation;
-    
-- preserve unresolved ideas as Working or Exploratory rather than silently confirming them.
-    
+Update only documentation genuinely affected by the verified work.
 
-If no documentation needs changing, explicitly state that no final documentation update is required.
+Prefer replacing a complete coherent section over making many small edits in
+obscure locations.
 
-Documentation should describe the verified implementation, not the implementation we hoped to create before testing.
+When a document has become broadly stale or internally inconsistent, prefer a
+deliberate whole-document replacement over piecemeal reconciliation.
+
+Documentation should describe the verified implementation, not the intended
+implementation plan.
+
+Remove:
+
+- stale future-tense descriptions;
+- resolved limitations;
+- obsolete names;
+- superseded ownership or data-flow descriptions.
+
+Preserve unresolved ideas as Working or Exploratory.
+
+If no documentation needs changing, explicitly state that no documentation
+update is required.
 
 ## Checkpoint Decision
 
-Take a new `Complete.zip` when the project has reached a meaningful, useful checkpoint or when refreshed project context would materially improve future verification.
+Take a new `Complete.zip` when the project has reached a meaningful, useful
+checkpoint or when refreshed project context would materially improve future
+verification.
 
-Do not create snapshots merely because one small step was completed.
+Do not create snapshots merely because one small edit was completed.
 
 # 4. Development Rules
 
@@ -181,15 +185,31 @@ Read only the focused rulebooks relevant to the task in addition to the universa
 
 # 5. Code Style
 
-Use compact, conventional Visual Studio / Rider-style C#.
+Use compact, conventional C#.
 
-Prefer horizontal readability where reasonable.
+Csharpier is the preferred formatter when it is available in the user's
+development workflow.
+
+For touched project-owned C# files:
+
+implementation
+↓
+run Csharpier
+↓
+accept the formatter's result.
+
+Do not manually fight Csharpier output merely to reproduce formatting shown in
+development instructions.
+
+Code examples and replacement files should still begin from ordinary compact
+source rather than intentionally vertically-exploded formatting.
 
 Avoid unrelated formatting churn during feature work.
 
 Use explicit braces where lifecycle-critical scope must remain unmistakable.
 
-Detailed formatting rules live in `Development Rules/Workflow and Validation.md`.
+Detailed formatting and Code Health guidance lives in
+`Development Rules/Workflow and Validation.md`.
 
 # 6. Documentation Stewardship
 

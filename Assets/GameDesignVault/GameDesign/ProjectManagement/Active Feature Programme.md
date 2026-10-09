@@ -228,67 +228,57 @@ future autonomous Companions may reuse it.
 
 ## 6. Weapon Mods
 
-Develop the shared Character customisation system previously discussed as
-Stances.
+**Current development frontier**
 
-Characters contribute native Weapon Mods appropriate to their combat identity.
+**Foundation implemented — further content expansion deferred**
 
-Progression may unlock additional native Mods and eventually expose selected Mods
-for use by other compatible Characters.
+Weapon Mods have evolved into the Character Weapon Mastery system.
 
-Initial conceptual families include:
+The established foundation includes:
 
-### Physical / Melee
+- four total stance positions;
+- one Core Mastery;
+- three possible Alternate Masteries;
+- Core replacing the pre-Mastery Basic Attack as the Character's permanent
+  default identity;
+- one active stance at a time;
+- Alternate deactivation returning to Core;
+- persistent stance unlock/development;
+- temporary Expedition stance development;
+- independent stance levels;
+- pairwise persistent Mastery synthesis;
+- representative Piercing, Knockback and Fire behaviours;
+- spatial persistent Mastery progression;
+- dedicated Character Mastery definitions;
+- designer-facing Character Mastery Workbench;
+- scalable Reward Catalogue integration;
+- composable projectile delivery/impact architecture.
 
-- Slashing;
-- Knockback;
-- Stun;
-- Bleed;
-- heavy impact;
-- armour-breaking concepts.
+Representative Ranger gameplay currently proves:
 
-### Magical / Elemental
+Piercing Core;
 
-- Fire;
-- Lightning;
-- Poison;
-- Blood Magic;
-- future elemental identities.
+Impact Alternate;
 
-### Ranged / Projectile
+Fire Alternate;
 
-- Piercing;
-- Projectile Speed;
-- Spread;
-- multi-shot;
-- ricochet;
-- range-related behaviour.
+Impact ← Piercing synthesis;
 
-Weapon Mods may influence:
+Fire ← Piercing synthesis.
 
-- damage identity;
-- attack behaviour;
-- stats;
-- special effects;
-- statuses;
-- knockback;
-- projectile behaviour;
-- Ability interactions.
+The system has enough gameplay and architecture evidence to pause further
+Weapon Mastery expansion while Abilities are reassessed.
 
-Still unresolved:
+Remaining Weapon Mastery work is primarily:
 
-- capacity;
-- activation model;
-- simultaneous Mods;
-- compatibility;
-- cross-character unlocking;
-- relationship with expedition rewards.
+- additional content;
+- final balance;
+- final VFX/presentation;
+- future combination breadth where gameplay demonstrates value.
 
-**Depends on:** Characters, Stats and Meta Progression.
+Avoid reopening core Weapon Mastery architecture without new gameplay evidence.
 
-**Feeds:** Buildcraft, Rewards and combat interaction design.
-
----
+**Feeds:** Buildcraft, Rewards, Abilities and combat interaction design.
 
 ## 7. Abilities
 

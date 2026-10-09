@@ -16,6 +16,7 @@ MonoBehaviour:
   displayName: Impact Training
   description: Develop a better knockback swing during attacks
   icon: {fileID: 0}
+  treePosition: {x: 0, y: -323}
   prerequisites:
   - {fileID: 11400000, guid: 44c3f62341ef75042af30f319f7c25e0, type: 2}
   costs:

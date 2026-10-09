@@ -496,10 +496,25 @@ This demonstrates that persistent Mastery progression may both unlock a new
 stance and later reinforce that stance through ordinary Character-stat
 development.
 
-The current flat Mastery-node list is now considered a temporary presentation
-constraint.
+Character Mastery now uses a spatial player-facing presentation.
 
-The gameplay-authoritative prerequisite model remains valid.
+The gameplay-authoritative graph remains:
 
-A dedicated spatial Mastery-tree presentation is scheduled before substantial
-additional Mastery-node expansion.
+Mastery Nodes
++
+Prerequisites.
+
+Presentation adds:
+
+- Character-specific bounded canvas dimensions;
+- authored 2D node positions;
+- runtime-generated prerequisite connection lines;
+- compact graph nodes;
+- a selected-node detail panel.
+
+Node position does not determine progression validity.
+
+`CharacterMasteryNodeDefinition.Prerequisites` remains gameplay-authoritative.
+
+3.0O2D4B now improves the authoring and navigation workflow around this spatial
+presentation without introducing a second progression graph.

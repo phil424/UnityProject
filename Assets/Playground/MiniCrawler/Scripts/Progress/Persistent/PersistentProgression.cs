@@ -20,7 +20,7 @@ namespace MiniCrawler.Progress
                 GearSlot.Weapon => WeaponLevel,
                 GearSlot.Armour => ArmourLevel,
                 GearSlot.Focus => FocusLevel,
-                _ => 0
+                _ => 0,
             };
         }
 
@@ -75,13 +75,13 @@ namespace MiniCrawler.Progress
             Level1Resources = 0;
             Level2Resources = 0;
             Level3Resources = 0;
-            
+
             memberProgress.Clear();
             characterUnlockProgress.Clear();
             knownCharacterIds.Clear();
             unlockedCharacterIds.Clear();
         }
-        
+
         public static void InitializeCharacterRoster(PlayableCharacterRosterDefinition roster)
         {
             if (roster == null)
@@ -103,16 +103,12 @@ namespace MiniCrawler.Progress
 
         public static bool IsCharacterKnown(PartyMemberDefinition character)
         {
-            return character != null &&
-                !string.IsNullOrWhiteSpace(character.Id) &&
-                knownCharacterIds.Contains(character.Id);
+            return character != null && !string.IsNullOrWhiteSpace(character.Id) && knownCharacterIds.Contains(character.Id);
         }
 
         public static bool IsCharacterUnlocked(PartyMemberDefinition character)
         {
-            return character != null &&
-                !string.IsNullOrWhiteSpace(character.Id) &&
-                unlockedCharacterIds.Contains(character.Id);
+            return character != null && !string.IsNullOrWhiteSpace(character.Id) && unlockedCharacterIds.Contains(character.Id);
         }
 
         public static bool TryUnlockCharacter(PartyMemberDefinition character)
@@ -126,7 +122,7 @@ namespace MiniCrawler.Progress
             Changed?.Invoke();
             return true;
         }
-        
+
         public static int GetCharacterUnlockProgress(PartyMemberDefinition character)
         {
             if (character == null || string.IsNullOrWhiteSpace(character.Id))
@@ -135,16 +131,9 @@ namespace MiniCrawler.Progress
             return characterUnlockProgress.TryGetValue(character.Id, out int progress) ? progress : 0;
         }
 
-        public static bool TryAddCharacterUnlockProgress(
-            PartyMemberDefinition character,
-            CharacterUnlockRequirementDefinition requirement,
-            int amount)
+        public static bool TryAddCharacterUnlockProgress(PartyMemberDefinition character, CharacterUnlockRequirementDefinition requirement, int amount)
         {
-            if (!IsCharacterKnown(character) ||
-                requirement == null ||
-                !requirement.IsConfigured ||
-                amount <= 0 ||
-                IsCharacterUnlocked(character))
+            if (!IsCharacterKnown(character) || requirement == null || !requirement.IsConfigured || amount <= 0 || IsCharacterUnlocked(character))
             {
                 return false;
             }
@@ -171,7 +160,7 @@ namespace MiniCrawler.Progress
                 PersistentResourceTier.Level1 => Level1Resources,
                 PersistentResourceTier.Level2 => Level2Resources,
                 PersistentResourceTier.Level3 => Level3Resources,
-                _ => 0
+                _ => 0,
             };
         }
 
@@ -208,18 +197,12 @@ namespace MiniCrawler.Progress
             return progress;
         }
 
-        public static bool IsMasteryNodeUnlocked(
-            PartyMemberDefinition definition,
-            CharacterMasteryNodeDefinition node)
+        public static bool IsMasteryNodeUnlocked(PartyMemberDefinition definition, CharacterMasteryNodeDefinition node)
         {
-            return definition != null &&
-                   node != null &&
-                   GetMemberProgress(definition).HasMasteryNode(node);
+            return definition != null && node != null && GetMemberProgress(definition).HasMasteryNode(node);
         }
 
-        public static bool AreMasteryPrerequisitesMet(
-            PartyMemberDefinition definition,
-            CharacterMasteryNodeDefinition node)
+        public static bool AreMasteryPrerequisitesMet(PartyMemberDefinition definition, CharacterMasteryNodeDefinition node)
         {
             if (definition == null || node == null)
                 return false;
@@ -240,26 +223,17 @@ namespace MiniCrawler.Progress
             return node != null && CanAffordCosts(node.Costs);
         }
 
-        public static bool CanUnlockMasteryNode(
-            PartyMemberDefinition definition,
-            CharacterMasteryNodeDefinition node)
+        public static bool CanUnlockMasteryNode(PartyMemberDefinition definition, CharacterMasteryNodeDefinition node)
         {
-            if (definition == null ||
-                node == null ||
-                !node.IsConfigured ||
-                !ContainsMasteryNode(definition, node) ||
-                IsMasteryNodeUnlocked(definition, node))
+            if (definition == null || node == null || !node.IsConfigured || !ContainsMasteryNode(definition, node) || IsMasteryNodeUnlocked(definition, node))
             {
                 return false;
             }
 
-            return AreMasteryPrerequisitesMet(definition, node) &&
-                   CanAffordMasteryNode(node);
+            return AreMasteryPrerequisitesMet(definition, node) && CanAffordMasteryNode(node);
         }
 
-        public static bool TryUnlockMasteryNode(
-            PartyMemberDefinition definition,
-            CharacterMasteryNodeDefinition node)
+        public static bool TryUnlockMasteryNode(PartyMemberDefinition definition, CharacterMasteryNodeDefinition node)
         {
             if (!CanUnlockMasteryNode(definition, node))
                 return false;
@@ -277,12 +251,14 @@ namespace MiniCrawler.Progress
 
         public static void ApplyMasteryToBuild(PartyMemberDefinition definition, RunBuild build)
         {
-            if (definition == null || build == null)
+            CharacterMasteryDefinition mastery = definition != null ? definition.MasteryDefinition : null;
+
+            if (mastery == null || build == null)
                 return;
 
             PersistentMemberProgress progress = GetMemberProgress(definition);
 
-            foreach (CharacterMasteryNodeDefinition node in definition.MasteryNodes)
+            foreach (CharacterMasteryNodeDefinition node in mastery.Nodes)
             {
                 if (node == null || !node.IsConfigured || !progress.HasMasteryNode(node))
                     continue;
@@ -291,21 +267,19 @@ namespace MiniCrawler.Progress
             }
         }
 
-        public static float GetMasteryStatBonus(
-            PartyMemberDefinition definition,
-            CharacterStatModifierType type)
+        public static float GetMasteryStatBonus(PartyMemberDefinition definition, CharacterStatModifierType type)
         {
-            if (definition == null)
+            CharacterMasteryDefinition mastery = definition != null ? definition.MasteryDefinition : null;
+
+            if (mastery == null)
                 return 0f;
 
             PersistentMemberProgress progress = GetMemberProgress(definition);
             float total = 0f;
 
-            foreach (CharacterMasteryNodeDefinition node in definition.MasteryNodes)
+            foreach (CharacterMasteryNodeDefinition node in mastery.Nodes)
             {
-                if (node is not CharacterMasteryStatNodeDefinition statNode ||
-                    !progress.HasMasteryNode(node) ||
-                    statNode.ModifierType != type)
+                if (node is not CharacterMasteryStatNodeDefinition statNode || !progress.HasMasteryNode(node) || statNode.ModifierType != type)
                 {
                     continue;
                 }
@@ -350,15 +324,9 @@ namespace MiniCrawler.Progress
             if (definition == null)
                 return 0f;
 
-            float legacyGearBonus =
-                GetMemberProgress(definition).WeaponLevel *
-                definition.DamagePerWeaponLevel;
+            float legacyGearBonus = GetMemberProgress(definition).WeaponLevel * definition.DamagePerWeaponLevel;
 
-            return legacyGearBonus +
-                   GetMasteryStatBonus(
-                       definition,
-                       CharacterStatModifierType.FlatBasicAttackDamage
-                   );
+            return legacyGearBonus + GetMasteryStatBonus(definition, CharacterStatModifierType.FlatBasicAttackDamage);
         }
 
         public static float GetArmourBonus(PartyMemberDefinition definition)
@@ -366,15 +334,9 @@ namespace MiniCrawler.Progress
             if (definition == null)
                 return 0f;
 
-            float legacyGearBonus =
-                GetMemberProgress(definition).ArmourLevel *
-                definition.ArmourPerArmourLevel;
+            float legacyGearBonus = GetMemberProgress(definition).ArmourLevel * definition.ArmourPerArmourLevel;
 
-            return legacyGearBonus +
-                   GetMasteryStatBonus(
-                       definition,
-                       CharacterStatModifierType.FlatArmour
-                   );
+            return legacyGearBonus + GetMasteryStatBonus(definition, CharacterStatModifierType.FlatArmour);
         }
 
         public static float GetHealthBonus(PartyMemberDefinition definition)
@@ -382,15 +344,9 @@ namespace MiniCrawler.Progress
             if (definition == null)
                 return 0f;
 
-            float legacyGearBonus =
-                GetMemberProgress(definition).ArmourLevel *
-                definition.HealthPerArmourLevel;
+            float legacyGearBonus = GetMemberProgress(definition).ArmourLevel * definition.HealthPerArmourLevel;
 
-            return legacyGearBonus +
-                   GetMasteryStatBonus(
-                       definition,
-                       CharacterStatModifierType.FlatMaxHealth
-                   );
+            return legacyGearBonus + GetMasteryStatBonus(definition, CharacterStatModifierType.FlatMaxHealth);
         }
 
         public static float GetHealingBonus(PartyMemberDefinition definition)
@@ -398,39 +354,22 @@ namespace MiniCrawler.Progress
             if (definition == null)
                 return 0f;
 
-            return GetMemberProgress(definition).FocusLevel *
-                   definition.HealingPerFocusLevel;
+            return GetMemberProgress(definition).FocusLevel * definition.HealingPerFocusLevel;
         }
 
-        private static bool ContainsMasteryNode(
-            PartyMemberDefinition definition,
-            CharacterMasteryNodeDefinition node)
+        private static bool ContainsMasteryNode(PartyMemberDefinition definition, CharacterMasteryNodeDefinition node)
         {
-            foreach (CharacterMasteryNodeDefinition candidate in definition.MasteryNodes)
-            {
-                if (candidate == node)
-                    return true;
-            }
-
-            return false;
+            return definition != null && definition.MasteryDefinition != null && definition.MasteryDefinition.Contains(node);
         }
 
         private static bool CanAffordCosts(IReadOnlyList<PersistentResourceCost> costs)
         {
-            return
-                GetResource(PersistentResourceTier.Level1) >=
-                GetTotalCost(costs, PersistentResourceTier.Level1) &&
-
-                GetResource(PersistentResourceTier.Level2) >=
-                GetTotalCost(costs, PersistentResourceTier.Level2) &&
-
-                GetResource(PersistentResourceTier.Level3) >=
-                GetTotalCost(costs, PersistentResourceTier.Level3);
+            return GetResource(PersistentResourceTier.Level1) >= GetTotalCost(costs, PersistentResourceTier.Level1)
+                && GetResource(PersistentResourceTier.Level2) >= GetTotalCost(costs, PersistentResourceTier.Level2)
+                && GetResource(PersistentResourceTier.Level3) >= GetTotalCost(costs, PersistentResourceTier.Level3);
         }
 
-        private static int GetTotalCost(
-            IReadOnlyList<PersistentResourceCost> costs,
-            PersistentResourceTier tier)
+        private static int GetTotalCost(IReadOnlyList<PersistentResourceCost> costs, PersistentResourceTier tier)
         {
             if (costs == null)
                 return 0;
@@ -448,20 +387,11 @@ namespace MiniCrawler.Progress
 
         private static void SpendCosts(IReadOnlyList<PersistentResourceCost> costs)
         {
-            SetResource(
-                PersistentResourceTier.Level1,
-                Level1Resources - GetTotalCost(costs, PersistentResourceTier.Level1)
-            );
+            SetResource(PersistentResourceTier.Level1, Level1Resources - GetTotalCost(costs, PersistentResourceTier.Level1));
 
-            SetResource(
-                PersistentResourceTier.Level2,
-                Level2Resources - GetTotalCost(costs, PersistentResourceTier.Level2)
-            );
+            SetResource(PersistentResourceTier.Level2, Level2Resources - GetTotalCost(costs, PersistentResourceTier.Level2));
 
-            SetResource(
-                PersistentResourceTier.Level3,
-                Level3Resources - GetTotalCost(costs, PersistentResourceTier.Level3)
-            );
+            SetResource(PersistentResourceTier.Level3, Level3Resources - GetTotalCost(costs, PersistentResourceTier.Level3));
         }
 
         private static void SetResource(PersistentResourceTier tier, int amount)

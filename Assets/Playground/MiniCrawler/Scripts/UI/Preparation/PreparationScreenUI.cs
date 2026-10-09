@@ -19,7 +19,7 @@ namespace MiniCrawler.UI
 
         [Header("Views")]
         [SerializeField] private PreparationCharacterOverviewUI overviewUI;
-        [SerializeField] private PreparationCharacterProgressionUI progressionUI;
+        [SerializeField] private CharacterMasteryTreeUI masteryTreeUI;
 
         [Header("Carousel")]
         [SerializeField] private Transform characterButtonRoot;
@@ -27,9 +27,10 @@ namespace MiniCrawler.UI
 
         [Header("Tabs")]
         [SerializeField] private GameObject overviewPanel;
-        [SerializeField] private GameObject progressionPanel;
+        [SerializeField] private GameObject masteryTreeOverlay;
         [SerializeField] private Button overviewTabButton;
         [SerializeField] private Button progressionTabButton;
+        [SerializeField] private Button masteryTreeCloseButton;
 
         [Header("Header / Footer")]
         [FormerlySerializedAs("persistentCurrencyText")]
@@ -45,15 +46,21 @@ namespace MiniCrawler.UI
         private void OnEnable()
         {
             EnsureInitialized();
-            Subscribe();
-            RebuildCharacterButtons();
-            EnsureSelection();
-            Refresh();
+            TryActivate();
+        }
+        
+        private void Start()
+        {
+            TryActivate();
         }
 
         private void OnDisable()
         {
             Unsubscribe();
+
+            if (masteryTreeOverlay != null)
+                masteryTreeOverlay.SetActive(false);
+
             combatShowcase?.Stop();
         }
 
@@ -61,20 +68,34 @@ namespace MiniCrawler.UI
         {
             Unsubscribe();
         }
+        
+        private void TryActivate()
+        {
+            if (runDirector == null)
+                runDirector = RunDirector.Instance;
+
+            if (runDirector?.Setup == null)
+                return;
+
+            Subscribe();
+            RebuildCharacterButtons();
+            EnsureSelection();
+            Refresh();
+        }
 
         private void EnsureInitialized()
         {
             if (initialized)
                 return;
 
-            if (runDirector == null)
-                runDirector = RunDirector.Instance;
-
             if (overviewTabButton != null)
                 overviewTabButton.onClick.AddListener(ShowOverview);
 
             if (progressionTabButton != null)
                 progressionTabButton.onClick.AddListener(ShowProgression);
+            
+            if (masteryTreeCloseButton != null)
+                masteryTreeCloseButton.onClick.AddListener(ShowOverview);
 
             if (startExpeditionButton != null)
                 startExpeditionButton.onClick.AddListener(HandleStartExpedition);
@@ -85,12 +106,10 @@ namespace MiniCrawler.UI
 
         private void Subscribe()
         {
-            if (subscribed)
+            if (subscribed || runDirector?.Setup == null)
                 return;
 
-            if (runDirector != null)
-                runDirector.Setup.Changed += HandleSetupChanged;
-
+            runDirector.Setup.Changed += HandleSetupChanged;
             PersistentProgression.Changed += HandlePersistentProgressionChanged;
 
             subscribed = true;
@@ -101,7 +120,7 @@ namespace MiniCrawler.UI
             if (!subscribed)
                 return;
 
-            if (runDirector != null)
+            if (runDirector?.Setup != null)
                 runDirector.Setup.Changed -= HandleSetupChanged;
 
             PersistentProgression.Changed -= HandlePersistentProgressionChanged;
@@ -146,18 +165,23 @@ namespace MiniCrawler.UI
 
         private void EnsureSelection()
         {
-            if (runDirector == null)
-                return;
+            RunSetup setup = runDirector?.Setup;
 
-            if (runDirector.Setup.SelectedParty.Count > 0)
+            if (setup == null)
             {
-                selectedCharacter = runDirector.Setup.SelectedParty[0];
+                selectedCharacter = null;
+                return;
+            }
+
+            if (setup.SelectedParty.Count > 0)
+            {
+                selectedCharacter = setup.SelectedParty[0];
                 return;
             }
 
             PartyMemberDefinition firstCharacter = GetFirstUnlockedCharacter();
 
-            if (firstCharacter != null && runDirector.Setup.SetSinglePartyMember(firstCharacter))
+            if (firstCharacter != null && setup.SetSinglePartyMember(firstCharacter))
             {
                 selectedCharacter = firstCharacter;
                 return;
@@ -168,14 +192,16 @@ namespace MiniCrawler.UI
 
         private PartyMemberDefinition GetFirstUnlockedCharacter()
         {
-            if (runDirector?.CharacterRoster == null)
+            RunSetup setup = runDirector?.Setup;
+
+            if (runDirector?.CharacterRoster == null || setup == null)
                 return null;
 
             foreach (PlayableCharacterRosterEntry entry in runDirector.CharacterRoster.Characters)
             {
                 PartyMemberDefinition character = entry?.Character;
 
-                if (character != null && runDirector.Setup.CanSelectPartyMember(character))
+                if (character != null && setup.CanSelectPartyMember(character))
                     return character;
             }
 
@@ -184,10 +210,12 @@ namespace MiniCrawler.UI
 
         private void SelectCharacter(PartyMemberDefinition character)
         {
-            if (runDirector == null || character == null)
+            RunSetup setup = runDirector?.Setup;
+
+            if (setup == null || character == null)
                 return;
 
-            if (!runDirector.Setup.SetSinglePartyMember(character))
+            if (!setup.SetSinglePartyMember(character))
                 return;
 
             selectedCharacter = character;
@@ -196,10 +224,9 @@ namespace MiniCrawler.UI
 
         private void HandleSetupChanged()
         {
-            selectedCharacter =
-                runDirector != null && runDirector.Setup.SelectedParty.Count > 0
-                    ? runDirector.Setup.SelectedParty[0]
-                    : null;
+            RunSetup setup = runDirector?.Setup;
+
+            selectedCharacter = setup != null && setup.SelectedParty.Count > 0 ? setup.SelectedParty[0] : null;
 
             Refresh();
         }
@@ -213,10 +240,9 @@ namespace MiniCrawler.UI
 
         private void Refresh()
         {
-            selectedCharacter =
-                runDirector != null && runDirector.Setup.SelectedParty.Count > 0
-                    ? runDirector.Setup.SelectedParty[0]
-                    : null;
+            RunSetup setup = runDirector?.Setup;
+
+            selectedCharacter = setup != null && setup.SelectedParty.Count > 0 ? setup.SelectedParty[0] : null;
 
             if (persistentResourcesText != null)
             {
@@ -228,7 +254,7 @@ namespace MiniCrawler.UI
             }
 
             overviewUI?.Bind(selectedCharacter);
-            progressionUI?.Bind(selectedCharacter);
+            masteryTreeUI?.Bind(selectedCharacter);
             combatShowcase?.Show(selectedCharacter);
 
             foreach (PreparationCharacterButtonUI button in characterButtons)
@@ -242,10 +268,10 @@ namespace MiniCrawler.UI
             if (startExpeditionButton != null)
             {
                 startExpeditionButton.interactable =
-                    runDirector != null &&
+                    setup != null &&
                     !RunProgress.HasActiveRun &&
                     selectedCharacter != null &&
-                    runDirector.Setup.CanSelectPartyMember(selectedCharacter);
+                    setup.CanSelectPartyMember(selectedCharacter);
             }
         }
 
@@ -254,8 +280,8 @@ namespace MiniCrawler.UI
             if (overviewPanel != null)
                 overviewPanel.SetActive(true);
 
-            if (progressionPanel != null)
-                progressionPanel.SetActive(false);
+            if (masteryTreeOverlay != null)
+                masteryTreeOverlay.SetActive(false);
 
             if (overviewTabButton != null)
                 overviewTabButton.interactable = false;
@@ -267,10 +293,10 @@ namespace MiniCrawler.UI
         private void ShowProgression()
         {
             if (overviewPanel != null)
-                overviewPanel.SetActive(false);
+                overviewPanel.SetActive(true);
 
-            if (progressionPanel != null)
-                progressionPanel.SetActive(true);
+            if (masteryTreeOverlay != null)
+                masteryTreeOverlay.SetActive(true);
 
             if (overviewTabButton != null)
                 overviewTabButton.interactable = true;

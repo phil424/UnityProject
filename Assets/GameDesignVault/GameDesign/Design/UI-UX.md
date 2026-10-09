@@ -912,3 +912,81 @@ Encounter Display Name.
 
 Presentation animation uses unscaled UI time so simulation Slow / Fast does not
 distort the readability window.
+
+# Character Mastery Tree
+
+**Status: Implemented Spatial Foundation**
+
+Character Mastery uses a dedicated expanded Preparation overlay rather than a
+flat list inside the narrow Character panel.
+
+The gameplay-authoritative graph remains:
+
+Mastery Nodes
++
+Prerequisites.
+
+Presentation adds:
+
+- a bounded Character-specific freeform canvas;
+- authored node positions;
+- generated prerequisite connections;
+- compact selectable graph nodes;
+- locked / available / unlocked presentation;
+- a selected-node detail / purchase panel.
+
+Locked nodes remain inspectable.
+
+## Navigation
+
+The player-facing Mastery tree follows familiar freeform-canvas conventions.
+
+Left-drag
+→ pan the bounded canvas.
+
+Mouse wheel
+→ zoom around the pointer.
+
+Middle-mouse drag
+→ optional alternate desktop pan.
+
+Click node
+→ inspect that Mastery.
+
+The tree deliberately does not expose permanent zoom / focus / reset controls
+for ordinary navigation.
+
+Ranger and Punchy may use different canvas sizes and completely different tree
+silhouettes.
+
+Current visual direction:
+
+Ranger
+→ bow / arrow-inspired progression shape.
+
+Punchy
+→ compact branching melee progression.
+
+Tree geometry is presentation only.
+
+`CharacterMasteryNodeDefinition.Prerequisites`
+
+remains gameplay-authoritative.
+
+## Authoring
+
+Normal spatial authoring uses:
+
+Tools
+→ MiniCrawler
+→ Mastery Tree Authoring.
+
+The tool previews the Character's real bounded tree, displays prerequisite
+connections and allows nodes to be repositioned directly.
+
+Layout validation remains non-destructive.
+
+Direct ScriptableObject Inspector editing remains available as an advanced
+escape hatch.
+
+The current UI is a functional foundation rather than final visual art.

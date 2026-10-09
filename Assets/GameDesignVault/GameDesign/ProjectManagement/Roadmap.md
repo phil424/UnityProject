@@ -1736,7 +1736,7 @@ Lv.1
 
 These values remain exaggerated validation tuning.
 
-### 3.0O2D — Weapon Mod Behaviour Breadth & Combination Proof
+### 3.0O2D — Weapon Mod Behaviour Breadth & Combination Proof ✅
 
 **Status: Active**
 
@@ -1827,64 +1827,358 @@ shared Character-stat architecture.
 This is the final planned gameplay-node addition before replacing the temporary
 flat Mastery-node list.
 
-#### 3.0O2D4 — Character Mastery Tree Presentation & Authoring
+#### 3.0O2D4 — Character Mastery Tree Presentation & Authoring ✅
+
+**Status: Complete**
+
+Replaced the temporary flat Mastery list with a spatial Character-specific
+progression graph and established the first approved authoring workflow.
+
+Current foundation:
+
+- dedicated Preparation Mastery overlay;
+- bounded Character-specific canvas;
+- authored node positions;
+- prerequisite-derived connection lines;
+- compact selectable graph nodes;
+- selected-node detail / purchase presentation;
+- locked / available / unlocked states;
+- conventional drag-to-pan navigation;
+- mouse-wheel pointer-focused zoom;
+- optional middle-mouse pan;
+- Character-specific tree silhouettes;
+- visual drag-to-position authoring tool;
+- non-destructive graph/layout validation;
+- Inspector editing retained as an escape hatch.
+
+No second progression graph was introduced.
+
+`CharacterMasteryNodeDefinition.Prerequisites`
+
+remains authoritative for gameplay progression.
+
+#### 3.0O2D5 — Combination & Elemental Proof ✅
+
+**Status: Complete**
+
+Completed representative Weapon Mastery combination and elemental proofs.
+
+Current Ranger Masteries demonstrate:
+
+Piercing Core
+→ multi-target projectile identity.
+
+Impact Alternate
+→ single-target knockback/control.
+
+Fire Alternate
+→ targeted Burning pressure.
+
+Persistent pairwise synthesis now supports:
+
+Impact
+← Piercing
+
+and:
+
+Fire
+← Piercing.
+
+Pairwise combination ownership is explicitly limited to one inherited Mastery
+per active stance.
+
+This allows several separately-owned pairings without creating an unintended
+three-way active combination.
+
+Weapon Mastery now has sufficient gameplay evidence to pause further content
+expansion and address architectural scaling pressure before Abilities expand.
+
+### 3.0O2E — Buildcraft Architecture Readiness
 
 **Status: Active**
 
-Replace the current flat Mastery-node list before substantially expanding
-Character progression content.
+Before expanding 3.0O3 Abilities, consolidate several systems that have reached
+their prototype scaling limit.
 
-Target direction:
+This is a focused readiness pass rather than a broad refactor.
 
-- dedicated Character Mastery overlay/screen;
-- bounded freeform 2D canvas;
-- authored node positions;
-- visible prerequisite connections;
-- panning and zooming where useful;
-- clear locked / available / purchased states;
-- spatial presentation of progression branches;
-- Character-specific tree silhouettes and visual identity;
-- designer-friendly authoring of node placement and connections.
+#### 3.0O2E1 — Reward Catalogue & Modular Reward Sets ✅
 
-The gameplay-authoritative prerequisite relationships should remain owned by the
-existing Mastery node data.
+**Status: Complete**
 
-The visual tree should present those relationships rather than introduce a
-second progression graph.
+Remove the expanding scene-owned Run Reward list from `RunDirector`.
 
-Tree layout should be free enough to form deliberate shapes.
+Introduce data-authored reward catalogue/set definitions so reward content may
+grow in modular groups without repeatedly editing the scene.
 
-Example direction:
+Preserve:
 
-Ranger
-→ nodes and connections may form a bow / arrow-like silhouette.
+- existing Reward Vector filtering;
+- concrete reward eligibility;
+- pending reward behaviour;
+- current random offer generation.
 
-Other Characters may use completely different visual structures.
+The catalogue defines available reward content.
 
-Do not require every Character tree to use the same geometric arrangement.
+Individual reward definitions remain responsible for eligibility/application.
 
-This milestone should occur before significantly increasing the number of
-Mastery nodes beyond the current proof content.
+#### 3.0O2E2 — Projectile Delivery & Impact Decomposition ✅
 
-#### 3.0O2D5 — Elemental / Combination Proof
+**Status: Complete**
 
-**Status: Planned**
+Reduce `ProjectileRuntime` from a growing all-responsibilities implementation
+into focused reusable projectile seams.
 
-Introduce representative elemental behaviour and the first deliberately
-authored interaction between Core and alternative Masteries.
+Current pressure includes:
 
-Potential proof space:
+- targeted travel;
+- targeted piercing travel;
+- directional travel;
+- damage;
+- knockback;
+- Burning;
+- several specialised spawn methods.
 
-- Fire;
-- Lightning;
-- elemental Mastery levels;
-- first Core + Alternate interaction.
+The goal is not merely fewer lines.
 
-Prove combination architecture without creating a universal effect graph.
+Separate:
+
+- launch/configuration;
+- travel/hit detection;
+- impact payload/effects;
+- runtime lifecycle.
+
+New projectile behaviours should normally compose existing seams rather than
+require another specialised `ProjectileRuntime.Spawn...` method.
+
+Do not create a universal gameplay-effect graph.
+
+Implemented a composable projectile launch architecture.
+
+Current separation:
+
+`ProjectileLaunchRequest`
+→ describes one launch.
+
+`ProjectileDelivery`
+→ describes travel shape.
+
+`ProjectileImpactPayload`
+→ describes Damage / optional Knockback / optional Burn.
+
+`ProjectileLauncher`
+→ validates and instantiates.
+
+`ProjectileRuntime`
+→ owns live lifecycle and movement.
+
+`ProjectileHitQuery`
+→ owns directional segment target discovery.
+
+`ProjectileImpactResolver`
+→ owns impact application.
+
+Retired the expanding specialised `ProjectileRuntime.Spawn...` API family.
+
+Existing targeted, targeted-piercing, directional, Burning and knockback
+behaviours now compose through the shared launch request.
+
+Verified existing Ranger Basic Attack, Power Shot and Weapon Mastery projectile
+behaviour without changing their intended gameplay.
+
+#### 3.0O2E3 — Character Mastery Definition & Authoring Workbench
+
+**Status: Complete**
+
+Move Character Mastery content ownership out of `PartyMemberDefinition` and
+establish one coherent authoring surface for the complete Character progression
+graph.
+
+##### 3.0O2E3A — Character Mastery Definition & Data Ownership ✅
+
+**Status: Complete**
+
+Introduce a focused `CharacterMasteryDefinition`.
+
+Move:
+
+- Mastery-node membership;
+- Mastery-tree canvas size;
+
+out of `PartyMemberDefinition`.
+
+Preserve:
+
+- persistent progression behaviour;
+- prepared-build application;
+- spatial runtime tree;
+- current Mastery-tree authoring tool;
+- all current Punchy and Ranger progression.
+
+This establishes a clean content source before expanding the authoring tool.
+
+##### 3.0O2E3B — Character Mastery Workbench ✅
+
+**Status: Complete**
+
+Evolve the current spatial layout tool into the primary Character Mastery
+Workbench.
+
+Target workflow:
+
+select Character
+↓
+inspect the complete Mastery definition
+↓
+create a node from the Workbench
+↓
+configure its relevant gameplay data
+↓
+author prerequisites
+↓
+inspect/open related Ability / Weapon Mastery assets
+↓
+position the node spatially
+↓
+validate
+↓
+save.
+
+Target Workbench capabilities:
+
+- one-click node creation by supported node type;
+- automatic asset creation in the Character's Mastery content folder;
+- automatic addition to the Character Mastery Definition;
+- central spatial graph;
+- selected-node editing panel;
+- prerequisite editing;
+- relevant related-definition fields;
+- direct navigation to related assets;
+- Character-specific canvas editing;
+- non-destructive graph/layout validation;
+- Undo;
+- normal Inspector editing retained as an advanced escape hatch.
+
+Use progressive disclosure.
+
+Do not expose every possible field for every node type simultaneously.
+
+Do not create a second progression graph.
+
+### 3.0O2 Exit Gate
+
+After O2E:
+
+- Weapon Mastery gameplay foundation is considered sufficient;
+- reward content has a scalable source;
+- projectile behaviour has a reusable extension seam;
+- Character Mastery has a coherent content-authoring surface.
+
+Then close 3.0O2 and activate 3.0O3 — Abilities.
 
 ## 3.0O3 — Abilities
 
+**Status: Active**
+
+Before substantially expanding Ability content, establish the unified content
+authoring surface that future Character / Mastery / Reward / Ability content
+will use.
+
+### 3.0O3A — Unified Content Workbench ✅
+
+**Status: Complete**
+
+Evolve the successful Character Mastery Workbench into the primary authoring
+front door for Character/buildcraft content.
+
+The Workbench must edit the real ScriptableObject assets.
+
+It must not create a parallel editor-only content database.
+
+Target direction:
+
+Character
+↓
+Character identity / runtime setup / starting loadout
+↓
+Character Mastery
+↓
+related Run Rewards
+↓
+Abilities
+↓
+related content and validation.
+
+Normal authoring should remain task-focused through contextual workspaces rather
+than exposing every possible data type at once.
+
+#### 3.0O3A1 — Workbench Foundation, Character Creation & Asset Identity ✅
+
+**Status: Complete**
+
+Create the unified Content Workbench shell.
+
+Implement:
+
+- roster-driven Character browser;
+- `New Character` workflow;
+- identity-first asset creation;
+- automatic creation of Character, Actor and Mastery Definition assets;
+- automatic playable-roster registration;
+- three starting Ability slots prepared for authoring;
+- Character readiness / missing-data feedback;
+- inline Character / Actor / roster editing;
+- explicit asset-name synchronisation;
+- Mastery node creation that asks for identity before creating the asset;
+- explicit Mastery-node asset-name synchronisation.
+
+Existing Character Mastery authoring remains available during this transitional
+slice.
+
+#### 3.0O3A2 — Embedded Mastery Workspace ✅
+
+**Status: Complete**
+
+Bring the existing Character Mastery graph directly into the unified Content
+Workbench.
+
+Retire the separate Character Mastery Workbench window.
+
+Normal Character authoring should move between Character and Mastery contexts
+without opening another tool or reselecting assets.
+
+#### 3.0O3A3 — Run Reward Authoring & Preview ✅
+
+**Status: Complete**
+
+Add a Run Reward workspace around the existing:
+
+Reward Catalogue
+→ Reward Sets
+→ Reward Definitions.
+
+Target workflow:
+
+browse catalogue
+↓
+select / create Reward Set
+↓
+create or edit Reward Definition
+↓
+manage set membership
+↓
+preview player-facing reward presentation
+↓
+inspect compatibility / eligibility context.
+
+Avoid returning to an ever-growing central list.
+
+### 3.0O3B — Ability System Reassessment & Expansion
+
+**Status: Active**
+
 Reassess and expand:
+
 - three Character core Ability roles;
 - Character-native Abilities;
 - generic Ability pool;
@@ -1893,6 +2187,9 @@ Reassess and expand:
 - levels;
 - Evolutions;
 - runtime/presentation integration.
+
+Ability authoring should then join the unified Content Workbench as its data
+model becomes sufficiently confirmed.
 
 Use gameplay testing to decide how much Ability identity comes from preparation
 versus expedition buildcraft.

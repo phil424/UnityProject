@@ -10,6 +10,9 @@ namespace MiniCrawler.Progress
         [SerializeField] private string displayName;
         [SerializeField, TextArea(2, 4)] private string description;
         [SerializeField] private Sprite icon;
+        
+        [Header("Tree Presentation")]
+        [SerializeField] private Vector2 treePosition;
 
         [Header("Requirements")]
         [SerializeField] private List<CharacterMasteryNodeDefinition> prerequisites = new();
@@ -19,6 +22,7 @@ namespace MiniCrawler.Progress
         public string DisplayName => string.IsNullOrWhiteSpace(displayName) ? name : displayName;
         public string Description => description;
         public Sprite Icon => icon;
+        public Vector2 TreePosition => treePosition;
 
         public IReadOnlyList<CharacterMasteryNodeDefinition> Prerequisites => prerequisites;
         public IReadOnlyList<PersistentResourceCost> Costs => costs;

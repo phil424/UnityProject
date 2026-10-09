@@ -16,6 +16,7 @@ MonoBehaviour:
   displayName: Mobility
   description: Improved mobility and movement speed
   icon: {fileID: 0}
+  treePosition: {x: -257, y: -215}
   prerequisites:
   - {fileID: 11400000, guid: 48d0a9420c53c05438a67baaa115b107, type: 2}
   costs:

@@ -509,47 +509,41 @@ A working zip does not automatically become an authoritative checkpoint and does
 
 # C# Formatting Style
 
-Code examples, replacement methods and complete files must use compact,
-conventional C# formatting consistent with Visual Studio / Rider-style Unity
-code.
+Project-owned C# should use ordinary compact, readable formatting.
 
-The default is horizontal readability.
+Csharpier is the preferred formatter when it is available in the user's
+development workflow.
 
-Do not format code vertically merely because the answer is being presented in
-chat.
+The normal touched-file workflow is:
 
-## Default Style
+write / edit code
+↓
+run Csharpier
+↓
+compile / validate.
 
-Prefer:
+Do not spend development time manually reformatting valid Csharpier output to
+match line wrapping shown in implementation instructions.
 
-- method signatures on one line when they remain readable;
-- constructor calls on one line;
-- ordinary method calls on one line;
-- simple property access and member chains on one line;
-- simple boolean conditions on one line;
-- concise early returns without unnecessary braces;
-- short lambdas on one line;
-- short collection/index expressions on one line;
-- normal assignments on one line;
-- one blank line between logical blocks rather than between individual
-  statements.
+Assistant-provided examples should still avoid needless vertical fragmentation
+before formatting.
 
-Examples:
+When Csharpier is unavailable, prefer conventional compact Visual Studio /
+Rider-style C#:
 
-```csharp
-AmbientRouteNode start = routeGraph.FindNearestNode(leader.transform.position);
+- readable signatures and calls remain horizontal where practical;
+- use compact trivial guards;
+- keep ordinary assignments on one line;
+- group logical blocks clearly;
+- preserve braces where lifecycle-critical scope needs to remain explicit;
+- avoid one-argument-per-line formatting unless the formatter or readability
+  genuinely requires it.
 
-if (graph == null || start == null || !graph.ContainsNode(start))
-    return false;
+Do not reformat unrelated files during feature work.
 
-foreach (PartyMember member in FindObjectsByType<PartyMember>(FindObjectsSortMode.None))
-{
-    ...
-}
+Formatting should make the code easier to work with, not become a parallel
+development task.
 
-navigation.SetDestination(this, targetNode.Position, arrivalDistance, suppressCombatTargeting: false);
-```
-``
 # Code Health Pass
 
 Legacy code should be improved gradually rather than preserved indefinitely or

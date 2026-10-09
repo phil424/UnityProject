@@ -9,16 +9,35 @@ namespace MiniCrawler.Abilities
     public sealed class PiercingProjectileShotAbility : ActorAbility
     {
         [Header("Piercing Projectile Shot")]
-        [SerializeField] private ProjectileDefinition projectile;
-        [SerializeField] private AbilityLevelValue range;
-        [SerializeField] private AbilityLevelValue windupDuration;
-        [SerializeField] private AbilityLevelValue recoveryDuration;
-        [SerializeField] private AbilityLevelValue damage;
-        [SerializeField] private AbilityLevelValue hitRadius;
-        [SerializeField] private AbilityLevelValue maximumTargetsHit;
-        [SerializeField] private AbilityLevelValue knockbackDistance;
-        [SerializeField] private AbilityLevelValue knockbackSpeed;
-        [SerializeField, Range(0f, 89f)] private float knockbackFanAngle = 35f;
+        [SerializeField]
+        private ProjectileDefinition projectile;
+
+        [SerializeField]
+        private AbilityLevelValue range;
+
+        [SerializeField]
+        private AbilityLevelValue windupDuration;
+
+        [SerializeField]
+        private AbilityLevelValue recoveryDuration;
+
+        [SerializeField]
+        private AbilityLevelValue damage;
+
+        [SerializeField]
+        private AbilityLevelValue hitRadius;
+
+        [SerializeField]
+        private AbilityLevelValue maximumTargetsHit;
+
+        [SerializeField]
+        private AbilityLevelValue knockbackDistance;
+
+        [SerializeField]
+        private AbilityLevelValue knockbackSpeed;
+
+        [SerializeField, Range(0f, 89f)]
+        private float knockbackFanAngle = 35f;
 
         private Health target;
         private float elapsed;
@@ -113,22 +132,13 @@ namespace MiniCrawler.Abilities
             if (direction.sqrMagnitude <= 0.0001f)
                 return false;
 
-            ProjectileRuntime runtime = ProjectileRuntime.SpawnDirectional(
-                projectile,
-                Owner,
-                direction,
-                Damage,
-                AbilityName,
-                Range,
-                mover.TargetFactionId,
-                HitRadius,
-                MaximumTargetsHit,
-                KnockbackDistance,
-                KnockbackSpeed,
-                knockbackFanAngle
-            );
+            ProjectileDelivery delivery = ProjectileDelivery.Directional(direction, Range, mover.TargetFactionId, HitRadius, MaximumTargetsHit);
 
-            return runtime != null;
+            ProjectileImpactPayload impact = new ProjectileImpactPayload(Damage, AbilityName).WithKnockback(KnockbackDistance, KnockbackSpeed, knockbackFanAngle);
+
+            ProjectileLaunchRequest request = new(projectile, Owner, delivery, impact);
+
+            return ProjectileLauncher.Launch(request) != null;
         }
 
         private void EndShot()

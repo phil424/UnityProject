@@ -287,38 +287,102 @@ Potential reward behaviour includes:
 
 Example:
 
-Fire stance permanently unlocked
-+
-Fire Lv.1 Run Reward
-=
-Fire stance becomes more powerful for the current Expedition.
+Fire stance permanently unlocked + Fire Lv.1 Run Reward =  Fire stance becomes more powerful for the current Expedition.
 
 The player may still switch to Lightning while retaining Fire's current Run
 progression.
 
-# Combination Direction
+# Mastery Combinations
 
-Weapon Mod combinations are an intended future buildcraft direction.
+**Status: Implemented Pairwise Foundation**
 
-Examples may include:
+Weapon Mastery combinations are persistent progression unlocks that allow one
+active Mastery to inherit specifically-designed behaviour from one other
+prepared Mastery.
+
+The current combination model is pairwise.
+
+One active Mastery
++
+zero or one inherited Mastery.
+
+Three-way simultaneous synthesis is not part of the current model.
+
+Combination relationships are directional.
+
+Current Ranger proofs:
+
+Impact
+← Piercing
+
+and:
 
 Fire
-+
-Piercing
-→ burning penetrating attacks.
+← Piercing.
 
-Fire
-+
-Lightning
-→ a designed elemental interaction.
+Both synthesis unlocks may be persistently owned at the same time.
 
-These should be authored as meaningful gameplay interactions.
+Because only one Weapon Mastery stance is active during combat:
 
-Do not turn Weapon Mods into a universal generic effect graph merely to support
-hypothetical combinations.
+Piercing active
+→ Piercing behaviour.
 
-Build concrete combination infrastructure when representative content requires
-it.
+Impact active
+→ Impact + inherited Piercing behaviour.
+
+Fire active
+→ Fire + inherited Piercing behaviour.
+
+Impact and Fire are never simultaneously active, so those two pairwise
+relationships do not become a three-way combination.
+
+The generic progression layer records which pairwise relationship is available.
+
+Concrete active Masteries decide what inheriting the other Mastery actually
+means.
+
+This keeps combination ownership reusable while avoiding a universal gameplay
+effect graph.
+
+## Independent Progression
+
+Combined Masteries retain independent prepared and Expedition development.
+
+Current examples:
+
+Impact level
+→ knockback distance.
+
+Fire level
+→ Burn damage.
+
+Piercing level
+→ inherited penetration capacity.
+
+A combined attack may therefore consume both participants' current effective
+levels without merging their progression state.
+
+## Elemental Proof
+
+Fire Arrows is the first elemental Weapon Mastery.
+
+Standalone Fire:
+
+targeted arrow
+→ direct Basic Attack damage
+→ refreshed non-stacking Burn.
+
+Fire + Piercing:
+
+targeted primary hit
+→ Piercing continuation
+→ Burn applied to every pierced target.
+
+Fire currently proves elemental identity through a focused Burn runtime rather
+than a generic elemental/status framework.
+
+Additional generic elemental infrastructure should only be introduced when more
+concrete elemental content demonstrates a recurring need.
 
 # Compatibility
 
