@@ -81,6 +81,21 @@ namespace MiniCrawler.Core
         public Sprite Portrait => portrait;
         public ActorDefinition ActorDefinition => actorDefinition;
         public IReadOnlyList<AbilityLoadoutEntry> StartingAbilities => startingAbilities;
+
+        public AbilityLoadoutEntry GetStartingAbility(CharacterAbilityRole role)
+        {
+            if (role == CharacterAbilityRole.Unassigned)
+                return null;
+
+            foreach (AbilityLoadoutEntry entry in startingAbilities)
+            {
+                if (entry != null && entry.Role == role)
+                    return entry;
+            }
+
+            return null;
+        }
+
         public CharacterMasteryDefinition MasteryDefinition => masteryDefinition;
 
         public string WeaponName => weaponName;

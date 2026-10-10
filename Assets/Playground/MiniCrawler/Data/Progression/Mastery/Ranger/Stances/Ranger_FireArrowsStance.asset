@@ -16,7 +16,7 @@ MonoBehaviour:
   displayName: Fire Arrows Mastery
   description: Shoot the fire bois
   icon: {fileID: 0}
-  treePosition: {x: 167, y: 279}
+  treePosition: {x: 206, y: 234}
   prerequisites:
   - {fileID: 11400000, guid: bb9c1c7e94d951a4cbf58713950e2c9c, type: 2}
   costs:

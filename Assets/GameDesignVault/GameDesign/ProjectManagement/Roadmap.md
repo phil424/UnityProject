@@ -2177,22 +2177,237 @@ Avoid returning to an ever-growing central list.
 
 **Status: Active**
 
-Reassess and expand:
+Reassess the existing Ability architecture against the current Character,
+Mastery, Reward and Expedition design before expanding content.
 
-- three Character core Ability roles;
-- Character-native Abilities;
-- generic Ability pool;
-- compatibility;
-- preparation versus expedition acquisition;
-- levels;
-- Evolutions;
-- runtime/presentation integration.
+The existing generic Ability foundation remains valuable:
 
-Ability authoring should then join the unified Content Workbench as its data
-model becomes sufficiently confirmed.
+Ability Definition
+↓
+Run Ability State
+↓
+Runtime Ability State.
 
-Use gameplay testing to decide how much Ability identity comes from preparation
-versus expedition buildcraft.
+Avoid replacing working generic systems merely because the surrounding game has
+evolved.
+
+#### 3.0O3B1 — Core Ability Kit & Progression Contract ✅
+
+**Status: Complete**
+
+Make the confirmed playable-Character core explicit:
+
+Signature
++
+Utility
++
+Sustain.
+
+These are Character-loadout roles.
+
+They are not categories stored on `AbilityDefinition`.
+
+Preserve:
+
+- reusable generic Ability definitions;
+- three prepared Character core Abilities;
+- extra Expedition-acquired Abilities beyond that core;
+- persistent Mastery improvements to prepared Ability levels;
+- temporary Expedition Ability levels;
+- Ability Evolutions;
+- generic Actor runtime execution.
+
+Update the unified Content Workbench so the three core roles are clearly
+authored rather than represented as anonymous list positions.
+
+#### 3.0O3B2 — Ability Authoring Workspace ✅
+
+**Status: Complete**
+
+Add an Ability workspace to the unified Content Workbench once the core loadout
+contract is explicit.
+
+Target workflow:
+
+browse Ability content
+↓
+select / create Ability
+↓
+edit identity and runtime definition
+↓
+inspect Character usage
+↓
+inspect Reward acquisition sources
+↓
+inspect Evolutions
+↓
+author / navigate related content
+↓
+validate.
+
+Ability authoring should continue editing real ScriptableObject assets.
+
+Do not create a parallel Ability database merely for the editor.
+
+#### 3.0O3B3 — Representative Ability Buildcraft Proof ✅
+
+**Status: Complete**
+
+Use representative gameplay to challenge the confirmed Ability model.
+
+Prove at least one meaningful Ability development path across:
+
+- prepared Character ownership;
+- persistent starting-level development;
+- Expedition level development;
+- Evolution / transformation;
+- Reward eligibility;
+- runtime presentation.
+
+Ranger Power Shot is a strong current candidate because its projectile
+architecture already supports meaningful directional / multi-target expansion,
+but the final content choice should follow the Ability authoring audit.
+
+#### 3.0O3B4 — Core Ability Content Review
+
+**Status: Active**
+
+The playable Character core-kit direction is now locked at the behavioural level.
+
+Punchy:
+
+Signature
+→ Blink.
+
+Utility
+→ Whirlwind.
+
+Sustain
+→ reactive healing + Armour, increasingly effective at low Health.
+
+Ranger:
+
+Signature
+→ Power Shot.
+
+Utility
+→ Backstep.
+
+Sustain
+→ Guard.
+
+Current prototype content may be retired, repurposed or parked where it no
+longer serves the confirmed Character role.
+
+Charge remains valid reusable Ability content but is no longer planned as one of
+Punchy's three core roles.
+
+Vortex remains useful Evolution proof content but is no longer part of the
+active Whirlwind direction and may later move to another Ability / Character.
+
+Fan Volley remains part of the Power Shot direction.
+
+##### 3.0O3B4A — Control Vocabulary & Utility Pass ✅
+
+**Status: Complete**
+
+Establish reusable Stun control.
+
+Apply the first shared control language to:
+
+Punchy Whirlwind
+→ lower base damage emphasis;
+→ stronger radial Knockback;
+→ Stun;
+→ primary purpose is creating breathing room.
+
+Ranger Backstep
+→ apply Knockback + Stun around the departure position;
+→ then move Ranger away;
+→ primary purpose is immediately restoring ranged spacing.
+
+Forced movement must continue while a target is Stunned.
+
+Stun should prevent normal movement, basic attacks, support actions and new
+Ability activations.
+
+Park Vortex from normal Reward generation while preserving the existing proof
+assets for later reassessment.
+
+##### 3.0O3B4B — Sustain Vocabulary & Core Sustain Pass ✅
+
+**Status: Complete**
+
+Establish the approved Sustain language.
+
+Punchy Sustain:
+
+- direct healing;
+- stronger recovery at lower Health;
+- temporary Armour;
+- Armour/recovery strength may scale with missing Health;
+- reactive brawler survival identity.
+
+Ranger Guard:
+
+- hit-based Shields rather than Armour;
+- Shields have no time duration;
+- Shields may stack;
+- each Shield requires an authored number of hits to break;
+- incoming hits are absorbed until the active Shields are exhausted;
+- healing-over-time operates alongside the Shield;
+- long-form defensive survival identity.
+
+Introduce reusable hit-Shield and healing-over-time primitives only as required
+by these abilities.
+
+##### 3.0O3B4C — Signature Ability Pass ✅
+
+**Status: Complete**
+
+Rebuild the Character Signature abilities around the confirmed identities.
+
+Punchy Blink:
+
+- teleport / traverse between multiple valid enemies;
+- traversal should visibly move around the combat space rather than behaving as
+  a single-target stat buff;
+- more valid enemies should create more useful traversal opportunities;
+- each visited enemy may receive Knockback + Stun;
+- Punchy is invulnerable during the active Blink sequence;
+- timing the Ability into a populated battlefield should increase its value;
+- exact bounce cap / timing is tuning rather than locked balance.
+
+The existing extreme-value Blink stat-buff prototype should be retired from
+Punchy's gameplay and preserved only through a generic developer acceleration
+tool if that testing workflow remains useful.
+
+Ranger Power Shot:
+
+- fire three sequential shots matching the authored three-shot animation;
+- begin with equivalent shots for the simplest readable implementation;
+- each shot may Pierce;
+- Knockback + Stun are part of the initial control language;
+- Fan Volley remains the current Evolution and should be adapted around the
+  three-shot burst rather than discarded.
+
+##### 3.0O3B4D — Comparative Core-Kit Playtest
+
+**Status: Active**
+
+Play Punchy and Ranger as complete Character packages.
+
+Review:
+
+- whether each button solves a distinct combat problem;
+- whether Signature / Utility / Sustain are readable in actual combat;
+- whether shared combat primitives still produce distinct Character identities;
+- whether damage versus control versus survival buildcraft has meaningful room
+  to grow;
+- whether any prototype content should be retired before O4.
+
+Close O3B only after both Character kits are coherent enough for broader
+buildcraft integration testing.
 
 ## 3.0O4 — Character Buildcraft Integration Review
 

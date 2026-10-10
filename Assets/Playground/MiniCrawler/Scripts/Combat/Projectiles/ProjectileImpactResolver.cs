@@ -42,9 +42,7 @@ namespace MiniCrawler.Combat
                 return;
 
             if (payload.Damage > 0f)
-            {
                 DamageResolver.ApplyDamage(context.Source, target, payload.Damage, payload.ActionName);
-            }
 
             if (target.IsDead)
                 return;
@@ -54,17 +52,25 @@ namespace MiniCrawler.Combat
                 BurningDamageRuntime.Apply(context.Source, target, payload.Burn.DamagePerTick, payload.Burn.TickInterval, payload.Burn.Duration, payload.Burn.ActionName);
             }
 
-            if (target.IsDead || !payload.Knockback.IsConfigured)
+            if (target.IsDead)
                 return;
 
-            if (context.HasExplicitKnockbackDirection && context.KnockbackDirection.sqrMagnitude > MinimumDirectionSquared)
+            if (payload.Knockback.IsConfigured)
             {
-                KnockbackResolver.TryApplyDirectional(context.Source, target, context.KnockbackDirection, payload.Knockback.Distance, payload.Knockback.Speed);
-
-                return;
+                if (context.HasExplicitKnockbackDirection && context.KnockbackDirection.sqrMagnitude > MinimumDirectionSquared)
+                {
+                    KnockbackResolver.TryApplyDirectional(context.Source, target, context.KnockbackDirection, payload.Knockback.Distance, payload.Knockback.Speed);
+                }
+                else
+                {
+                    KnockbackResolver.TryApply(context.Source, target, payload.Knockback.Distance, payload.Knockback.Speed);
+                }
             }
 
-            KnockbackResolver.TryApply(context.Source, target, payload.Knockback.Distance, payload.Knockback.Speed);
+            if (target.IsDead || !payload.Stun.IsConfigured)
+                return;
+
+            StunRuntime.Apply(context.Source, target, payload.Stun.Duration, payload.Stun.ActionName);
         }
 
         public static Vector3 ResolveDirectionalKnockbackDirection(Health target, Vector3 closestPoint, float hitDistance, Vector3 travelDirection, float fanAngle)
@@ -80,7 +86,6 @@ namespace MiniCrawler.Combat
                 return travelDirection;
 
             Vector3 lateralDirection = target.transform.position - closestPoint;
-
             lateralDirection.y = 0f;
 
             float lateralDistance = lateralDirection.magnitude;
@@ -89,7 +94,9 @@ namespace MiniCrawler.Combat
                 return travelDirection;
 
             float spreadAmount = Mathf.Clamp01(lateralDistance / Mathf.Max(MinimumDirectionSquared, hitDistance));
+
             float deflection = Mathf.Clamp(fanAngle, 0f, 89f) * spreadAmount;
+
             return KnockbackResolver.ResolveDeflectedDirection(travelDirection, lateralDirection, deflection);
         }
     }

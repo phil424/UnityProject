@@ -243,6 +243,7 @@ https://otsoga.itch.io/ - Characters
 https://astrobob.itch.io/ - Characters
 https://darkpixel-kronovi.itch.io/ - Characters
 https://oco.itch.io/ - Characters
+https://chierit.itch.io/ - Characters
 
 https://argametina.itch.io/ - Font + Cards?!
 
@@ -259,6 +260,7 @@ https://luizmelo.itch.io/fantasy-warrior
 https://luizmelo.itch.io/wizard-pack
 https://xzany.itch.io/samurai-2d-pixel-art
 https://aamatniekss.itch.io/fantasy-knight-free-pixelart-animated-character
+https://chierit.itch.io/elementals-leaf-ranger
 ### Enemy
 https://creativekind.itch.io/necromancer-free
 https://gandalfhardcore.itch.io/pixel-art-archer-character

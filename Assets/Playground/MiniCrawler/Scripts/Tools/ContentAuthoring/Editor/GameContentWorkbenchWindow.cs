@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using MiniCrawler.Abilities;
 using MiniCrawler.Core;
 using MiniCrawler.Progress;
 using UnityEditor;
@@ -13,6 +14,7 @@ namespace MiniCrawler.Tools.ContentAuthoring
             Character,
             Mastery,
             RunRewards,
+            Abilities,
         }
 
         private const float SidebarWidth = 220f;
@@ -37,6 +39,7 @@ namespace MiniCrawler.Tools.ContentAuthoring
         private PlayableCharacterRosterDefinition roster;
         private GameContentMasteryWorkspace masteryWorkspace;
         private GameContentRunRewardsWorkspace runRewardsWorkspace;
+        private GameContentAbilitiesWorkspace abilitiesWorkspace;
 
         [MenuItem("Tools/MiniCrawler/Content Workbench")]
         public static void Open()
@@ -46,6 +49,7 @@ namespace MiniCrawler.Tools.ContentAuthoring
             window.ResolveRoster();
             window.EnsureMasteryWorkspace();
             window.EnsureRunRewardsWorkspace();
+            window.EnsureAbilitiesWorkspace();
 
             window.AdoptSelection();
             window.EnsureCharacterSelection();
@@ -60,6 +64,7 @@ namespace MiniCrawler.Tools.ContentAuthoring
 
             EnsureMasteryWorkspace();
             EnsureRunRewardsWorkspace();
+            EnsureAbilitiesWorkspace();
 
             AdoptSelection();
             EnsureCharacterSelection();
@@ -78,6 +83,7 @@ namespace MiniCrawler.Tools.ContentAuthoring
         {
             EnsureMasteryWorkspace();
             EnsureRunRewardsWorkspace();
+            EnsureAbilitiesWorkspace();
 
             if (Selection.activeObject is PartyMemberDefinition selectedCharacter)
             {
@@ -101,6 +107,34 @@ namespace MiniCrawler.Tools.ContentAuthoring
             {
                 SetCharacter(masteryOwner);
                 workspace = Workspace.Mastery;
+
+                Repaint();
+                return;
+            }
+
+            if (Selection.activeObject is AbilityEvolutionDefinition evolution)
+            {
+                workspace = Workspace.Abilities;
+
+                abilitiesWorkspace.SelectEvolution(evolution);
+
+                Repaint();
+                return;
+            }
+
+            if (Selection.activeObject is AbilityDefinition ability)
+            {
+                workspace = Workspace.Abilities;
+
+                abilitiesWorkspace.SelectAbility(ability);
+
+                Repaint();
+                return;
+            }
+
+            if (Selection.activeObject is GameObject selectedObject && abilitiesWorkspace.TrySelectRuntimePrefab(selectedObject))
+            {
+                workspace = Workspace.Abilities;
 
                 Repaint();
                 return;
@@ -151,6 +185,7 @@ namespace MiniCrawler.Tools.ContentAuthoring
 
             masteryWorkspace.HandleProjectChange();
             runRewardsWorkspace.HandleProjectChange();
+            abilitiesWorkspace.HandleProjectChange();
 
             Repaint();
         }
@@ -197,6 +232,7 @@ namespace MiniCrawler.Tools.ContentAuthoring
 
                     masteryWorkspace.HandleProjectChange();
                     runRewardsWorkspace.HandleProjectChange();
+                    abilitiesWorkspace.HandleProjectChange();
 
                     Repaint();
                 }
@@ -216,6 +252,10 @@ namespace MiniCrawler.Tools.ContentAuthoring
                 string rewardLabel = runRewardsWorkspace?.Catalog != null ? $"Run Rewards ({runRewardsWorkspace.UniqueRewardCount})" : "Run Rewards";
 
                 DrawWorkspaceTab(Workspace.RunRewards, rewardLabel, 135f);
+
+                string abilityLabel = abilitiesWorkspace != null ? $"Abilities ({abilitiesWorkspace.AbilityCount})" : "Abilities";
+
+                DrawWorkspaceTab(Workspace.Abilities, abilityLabel, 115f);
 
                 GUILayout.FlexibleSpace();
 
@@ -242,6 +282,9 @@ namespace MiniCrawler.Tools.ContentAuthoring
 
             if (workspace == Workspace.RunRewards)
                 runRewardsWorkspace.ResolveCatalog();
+
+            if (workspace == Workspace.Abilities)
+                abilitiesWorkspace.ResolveContent();
         }
 
         private void DrawSidebar()
@@ -284,6 +327,10 @@ namespace MiniCrawler.Tools.ContentAuthoring
                 {
                     EditorGUILayout.HelpBox("The selected Character is used as the Reward eligibility preview context.", MessageType.None);
                 }
+                else if (workspace == Workspace.Abilities)
+                {
+                    EditorGUILayout.HelpBox("The selected Character is used as Ability ownership / core-role context.", MessageType.None);
+                }
                 else
                 {
                     EditorGUILayout.HelpBox("A number beside a Character indicates required authoring items are still missing.", MessageType.None);
@@ -319,6 +366,10 @@ namespace MiniCrawler.Tools.ContentAuthoring
 
                     case Workspace.RunRewards:
                         runRewardsWorkspace.Draw();
+                        break;
+
+                    case Workspace.Abilities:
+                        abilitiesWorkspace.Draw();
                         break;
                 }
             }
@@ -448,6 +499,28 @@ namespace MiniCrawler.Tools.ContentAuthoring
                 return;
             }
 
+            EnsureAbilitiesWorkspace();
+
+            if (Selection.activeObject is AbilityEvolutionDefinition evolution)
+            {
+                workspace = Workspace.Abilities;
+                abilitiesWorkspace.SelectEvolution(evolution);
+                return;
+            }
+
+            if (Selection.activeObject is AbilityDefinition ability)
+            {
+                workspace = Workspace.Abilities;
+                abilitiesWorkspace.SelectAbility(ability);
+                return;
+            }
+
+            if (Selection.activeObject is GameObject selectedObject && abilitiesWorkspace.TrySelectRuntimePrefab(selectedObject))
+            {
+                workspace = Workspace.Abilities;
+                return;
+            }
+
             EnsureRunRewardsWorkspace();
 
             if (Selection.activeObject is RunRewardCatalogDefinition catalog)
@@ -498,19 +571,31 @@ namespace MiniCrawler.Tools.ContentAuthoring
             runRewardsWorkspace.ResolveCatalog();
         }
 
+        private void EnsureAbilitiesWorkspace()
+        {
+            abilitiesWorkspace ??= new GameContentAbilitiesWorkspace();
+
+            abilitiesWorkspace.SetContext(character, roster);
+
+            abilitiesWorkspace.ResolveContent();
+        }
+
         private void SyncCharacterContext()
         {
             EnsureMasteryWorkspace();
             EnsureRunRewardsWorkspace();
+            EnsureAbilitiesWorkspace();
 
             masteryWorkspace.SetCharacter(character);
             runRewardsWorkspace.SetCharacter(character);
+            abilitiesWorkspace.SetContext(character, roster);
         }
 
         private void HandleUndoRedo()
         {
             masteryWorkspace?.HandleUndoRedo();
             runRewardsWorkspace?.HandleUndoRedo();
+            abilitiesWorkspace?.HandleUndoRedo();
 
             Repaint();
         }

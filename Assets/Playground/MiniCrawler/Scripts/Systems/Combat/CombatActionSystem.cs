@@ -34,6 +34,14 @@ namespace MiniCrawler.Systems
                 return;
             }
 
+            StunRuntime stun = action.GetComponent<StunRuntime>();
+
+            if (stun != null && stun.IsStunned)
+            {
+                action.Cancel();
+                return;
+            }
+
             action.Advance(Time.deltaTime);
 
             if (action.ShouldApplyImpact)

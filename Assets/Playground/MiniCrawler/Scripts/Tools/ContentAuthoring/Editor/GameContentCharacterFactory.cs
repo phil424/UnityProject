@@ -1,3 +1,4 @@
+using MiniCrawler.Abilities;
 using MiniCrawler.Core;
 using MiniCrawler.Progress;
 using UnityEditor;
@@ -170,12 +171,14 @@ namespace MiniCrawler.Tools.ContentAuthoring
 
             abilities.arraySize = 3;
 
+            CharacterAbilityRole[] roles = { CharacterAbilityRole.Signature, CharacterAbilityRole.Utility, CharacterAbilityRole.Sustain };
+
             for (int i = 0; i < abilities.arraySize; i++)
             {
                 SerializedProperty entry = abilities.GetArrayElementAtIndex(i);
 
+                entry.FindPropertyRelative("role").enumValueIndex = (int)roles[i];
                 entry.FindPropertyRelative("ability").objectReferenceValue = null;
-
                 entry.FindPropertyRelative("level").intValue = 1;
             }
 

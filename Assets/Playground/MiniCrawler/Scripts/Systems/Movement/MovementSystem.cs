@@ -30,6 +30,11 @@ namespace MiniCrawler.Systems
                     continue;
                 }
 
+                StunRuntime stun = actor.GetComponent<StunRuntime>();
+
+                if (stun != null && stun.IsStunned)
+                    continue;
+
                 AbilityExecutionState abilityExecutionState = actor.GetComponent<AbilityExecutionState>();
 
                 if (abilityExecutionState != null && abilityExecutionState.BlocksAutonomousActions)
@@ -47,12 +52,7 @@ namespace MiniCrawler.Systems
                 {
                     if (mover != null && mover.isActiveAndEnabled)
                     {
-                        MoveTowardsDestination(
-                            actor.transform,
-                            navigation.Destination,
-                            navigation.StoppingDistance,
-                            mover.MoveSpeed
-                        );
+                        MoveTowardsDestination(actor.transform, navigation.Destination, navigation.StoppingDistance, mover.MoveSpeed);
                     }
 
                     continue;
@@ -76,10 +76,7 @@ namespace MiniCrawler.Systems
 
         private bool CanMoveAutonomously(AutoTargetMover mover)
         {
-            return mover != null &&
-                   mover.isActiveAndEnabled &&
-                   mover.CurrentTarget != null &&
-                   !mover.CurrentTarget.IsDead;
+            return mover != null && mover.isActiveAndEnabled && mover.CurrentTarget != null && !mover.CurrentTarget.IsDead;
         }
 
         private void ApplyForcedMotion(Transform actorTransform, ForcedMotion forcedMotion)
@@ -89,12 +86,7 @@ namespace MiniCrawler.Systems
 
         private void MoveTowardsTarget(AutoTargetMover mover, Health target)
         {
-            MoveTowardsDestination(
-                mover.transform,
-                target.transform.position,
-                GetStoppingDistance(mover),
-                mover.MoveSpeed
-            );
+            MoveTowardsDestination(mover.transform, target.transform.position, GetStoppingDistance(mover), mover.MoveSpeed);
         }
 
         private void MoveTowardsDestination(Transform moverTransform, Vector3 destination, float stoppingDistance, float moveSpeed)

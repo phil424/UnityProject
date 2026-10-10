@@ -53,3 +53,15 @@ MonoBehaviour:
   speed:
     baseValue: 12
     perLevel: 0
+  controlRadius:
+    baseValue: 2.5
+    perLevel: 0.25
+  knockbackDistance:
+    baseValue: 2.5
+    perLevel: 0.25
+  knockbackSpeed:
+    baseValue: 10
+    perLevel: 0
+  stunDuration:
+    baseValue: 0.65
+    perLevel: 0.2

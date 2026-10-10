@@ -282,15 +282,166 @@ They remain available if later mechanics establish a clear need.
 - Status power?
 
 # Status Effects
-- Bleed
-- Burning
-- Poison
-- Knockback
-- Stun / control
 
-For each future status use:
-```
-## Bleed
+## Stun
+
+**Status: Implemented Foundation**
+
+Stun is temporary runtime Actor control.
+
+While Stunned, the current implementation prevents:
+
+- normal autonomous navigation;
+- autonomous basic attacks;
+- autonomous support healing;
+- new active Ability activation.
+
+An executing basic attack is cancelled when Stun is applied.
+
+Forced Motion remains valid while Stunned.
+
+This is intentional so effects such as:
+
+Knockback
++
+Stun
+
+can move the target away and then leave it unable to immediately re-engage.
+
+Reapplication is non-additive.
+
+A new Stun may refresh the remaining control window, but repeated hits do not
+sum their full durations together.
+
+Current first consumers:
+
+Punchy Whirlwind
+→ radial Knockback + Stun.
+
+Ranger Backstep
+→ departure Knockback + Stun.
+
+The foundation does not yet forcibly interrupt every already-running
+`ActorAbility` execution.
+
+Extend that behaviour only when concrete enemy/player Ability interactions make
+it necessary.
+
+## Hit-Based Shields
+
+**Status: Implemented Foundation**
+
+Hit-based Shields are temporary Runtime Actor defence.
+
+A Shield is a discrete layer with an authored number of hits required to break
+it.
+
+Example:
+
+1 Shield
+with
+2 Hits Per Shield
+
+absorbs two incoming damage applications before the Shield layer breaks.
+
+While at least one Shield layer exists:
+
+incoming hit
+→ consumes one Shield hit
+→ does not reach Armour
+→ does not damage Health.
+
+Shields have no time duration.
+
+Additional Shields may be added as separate layers.
+
+Existing partially-damaged Shield layers retain their remaining hit count when
+new layers are added.
+
+Current first consumer:
+
+Ranger Guard.
+
+Guard may add additional Shield layers on later activations.
+
+Shield stacks remain Runtime Actor state and are not stored in persistent or
+Expedition build progression.
+
+Every current positive damage application through `DamageResolver` counts as one
+Shield hit.
+
+Do not introduce damage-type exceptions until concrete gameplay demonstrates a
+need.
+
+Dedicated Shield player-facing presentation is not implemented yet.
+
+`HitShieldRuntime.Changed` provides the runtime seam for future presentation.
+
+## Healing Over Time
+
+**Status: Implemented Foundation**
+
+Healing-over-time is temporary Runtime Actor state.
+
+Each effect is identified by a source ID.
+
+Reapplying the same source:
+
+refreshes that healing effect
+
+rather than:
+
+creating another independent copy.
+
+Different healing sources may coexist.
+
+Healing ticks use the normal central `Health.Heal(...)` seam and therefore clamp
+to Max Health.
+
+Current first consumer:
+
+Ranger Guard.
+
+Guard's healing duration is independent from its Shield duration because Guard
+Shields do not expire with time.
+
+## Invulnerability
+
+**Status: Implemented Foundation**
+
+Invulnerability is temporary Runtime Actor state.
+
+While at least one invulnerability source is active:
+
+incoming damage
+→ stops before Shield consumption;
+→ stops before Armour;
+→ does not damage Health.
+
+Invulnerability may have more than one source.
+
+Removing one source does not remove invulnerability supplied by another source.
+
+Current first consumer:
+
+Punchy Blink.
+
+Blink applies invulnerability for the active traversal execution and removes it
+when the traversal finishes.
+
+Invulnerability is runtime-only and is not stored in persistent or Expedition
+progression.
+
+## Working / Future Status Vocabulary
+
+- Bleed;
+- Burning;
+- Poison;
+- Knockback;
+- other control effects where concrete gameplay requires them.
+
+For future statuses use:
+## Status Name
 
 ### Purpose
 
@@ -305,7 +456,6 @@ For each future status use:
 ### Resistant Enemies
 
 ### Related Augments
-```
 
 # Combat Resources
 Questions:

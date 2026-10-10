@@ -1,5 +1,6 @@
 using System.IO;
 using System.Text;
+using MiniCrawler.Abilities;
 using MiniCrawler.Core;
 using MiniCrawler.Progress;
 using UnityEditor;
@@ -17,6 +18,9 @@ namespace MiniCrawler.Tools.ContentAuthoring
         public const string RunRewardSetFolder = RunRewardRoot + "/Catalog/Sets";
         public const string AbilityRewardFolder = RunRewardRoot + "/Abilities";
         public const string WeaponMasteryRewardFolder = RunRewardRoot + "/WeaponMods";
+        public const string AbilityRoot = "Assets/Playground/MiniCrawler/Data/Abilities";
+        public const string AbilityEvolutionRoot = AbilityRoot + "/Evolutions";
+        public const string AbilityRuntimeRoot = "Assets/Playground/MiniCrawler/Assets/Prefabs/Abilities";
 
         public static string ToFileToken(string value)
         {
@@ -120,7 +124,8 @@ namespace MiniCrawler.Tools.ContentAuthoring
             if (string.IsNullOrWhiteSpace(folder))
                 return false;
 
-            string desiredPath = $"{folder}/{desiredName}.asset";
+            string extension = Path.GetExtension(currentPath);
+            string desiredPath = $"{folder}/{desiredName}{extension}";
             Object existing = AssetDatabase.LoadMainAssetAtPath(desiredPath);
 
             if (existing != null && existing != asset)
@@ -179,6 +184,248 @@ namespace MiniCrawler.Tools.ContentAuthoring
 
             if (!string.IsNullOrWhiteSpace(desiredName))
                 TryRenameAsset(reward, desiredName);
+        }
+
+        public static string GetAbilityDataFolder(PartyMemberDefinition character)
+        {
+            return character == null ? AbilityRoot : $"{AbilityRoot}/{ToFileToken(character.DisplayName)}";
+        }
+
+        public static string GetAbilityRuntimeFolder(PartyMemberDefinition character)
+        {
+            return character == null ? AbilityRuntimeRoot : $"{AbilityRuntimeRoot}/{ToFileToken(character.DisplayName)}";
+        }
+
+        public static string GetAbilityAssetName(PartyMemberDefinition character, string displayName)
+        {
+            string ability = ToFileToken(displayName);
+
+            if (string.IsNullOrWhiteSpace(ability))
+                return string.Empty;
+
+            if (character == null)
+                return ability;
+
+            return $"{ToFileToken(character.DisplayName)}{ability}";
+        }
+
+        public static string GetAbilityRuntimePrefabName(PartyMemberDefinition character, string displayName)
+        {
+            string abilityName = GetAbilityAssetName(character, displayName);
+
+            return string.IsNullOrWhiteSpace(abilityName) ? string.Empty : $"{abilityName}AbilityRuntime";
+        }
+
+        public static string GetAbilityEvolutionFolder(AbilityDefinition ability)
+        {
+            if (ability == null)
+                return AbilityEvolutionRoot;
+
+            return $"{AbilityEvolutionRoot}/{ToFileToken(ability.DisplayName)}";
+        }
+
+        public static string GetAbilityEvolutionAssetName(string displayName)
+        {
+            return ToFileToken(displayName);
+        }
+
+        public static GameContentAbilityScope GetAbilityScope(AbilityDefinition ability)
+        {
+            if (ability == null)
+                return GameContentAbilityScope.Shared;
+
+            string path = AssetDatabase.GetAssetPath(ability);
+            string folder = Path.GetDirectoryName(path)?.Replace('\\', '/');
+
+            return folder == AbilityRoot ? GameContentAbilityScope.Shared : GameContentAbilityScope.SelectedCharacter;
+        }
+
+        public static string GetAbilityScopeLabel(AbilityDefinition ability)
+        {
+            if (ability == null)
+                return "Unknown";
+
+            string path = AssetDatabase.GetAssetPath(ability);
+            string folder = Path.GetDirectoryName(path)?.Replace('\\', '/');
+
+            if (string.IsNullOrWhiteSpace(folder))
+                return "Unknown";
+
+            if (folder == AbilityRoot)
+                return "Shared";
+
+            if (folder.StartsWith($"{AbilityRoot}/"))
+                return Path.GetFileName(folder);
+
+            return "External";
+        }
+
+        public static bool SyncAbilityAssetsToScope(AbilityDefinition ability, PartyMemberDefinition character, GameContentAbilityScope scope, out string error)
+        {
+            error = null;
+
+            if (ability == null)
+            {
+                error = "Ability is required.";
+                return false;
+            }
+
+            if (scope == GameContentAbilityScope.SelectedCharacter && character == null)
+            {
+                error = "A Character is required for Character-scoped Ability content.";
+                return false;
+            }
+
+            PartyMemberDefinition scopeCharacter = scope == GameContentAbilityScope.SelectedCharacter ? character : null;
+
+            string dataFolder = GetAbilityDataFolder(scopeCharacter);
+            string runtimeFolder = GetAbilityRuntimeFolder(scopeCharacter);
+
+            EnsureFolder(dataFolder);
+            EnsureFolder(runtimeFolder);
+
+            string abilityName = GetAbilityAssetName(scopeCharacter, ability.DisplayName);
+
+            string abilityPath = $"{dataFolder}/{abilityName}.asset";
+
+            string runtimePath = null;
+
+            if (ability.RuntimePrefab != null)
+            {
+                string runtimeName = GetAbilityRuntimePrefabName(scopeCharacter, ability.DisplayName);
+
+                runtimePath = $"{runtimeFolder}/{runtimeName}.prefab";
+            }
+
+            if (!CanPlaceAssetAtPath(ability, abilityPath, out error))
+            {
+                return false;
+            }
+
+            if (ability.RuntimePrefab != null && !CanPlaceAssetAtPath(ability.RuntimePrefab, runtimePath, out error))
+            {
+                return false;
+            }
+
+            string originalAbilityPath = AssetDatabase.GetAssetPath(ability);
+
+            string originalRuntimePath = ability.RuntimePrefab != null ? AssetDatabase.GetAssetPath(ability.RuntimePrefab) : null;
+
+            if (!TryMoveAssetToPath(ability, abilityPath, out error))
+            {
+                return false;
+            }
+
+            if (ability.RuntimePrefab != null && !TryMoveAssetToPath(ability.RuntimePrefab, runtimePath, out error))
+            {
+                if (originalAbilityPath != abilityPath)
+                {
+                    AssetDatabase.MoveAsset(abilityPath, originalAbilityPath);
+                }
+
+                return false;
+            }
+
+            EditorUtility.SetDirty(ability);
+            AssetDatabase.SaveAssets();
+
+            return true;
+        }
+
+        public static void SyncAbilityAssetNames(AbilityDefinition ability)
+        {
+            if (ability == null)
+                return;
+
+            string abilityName = GetScopedAbilityName(ability, ability.DisplayName, AbilityRoot);
+
+            if (!string.IsNullOrWhiteSpace(abilityName))
+                TryRenameAsset(ability, abilityName);
+
+            if (ability.RuntimePrefab == null)
+                return;
+
+            string runtimeName = GetScopedAbilityName(ability.RuntimePrefab, ability.DisplayName, AbilityRuntimeRoot);
+
+            if (!string.IsNullOrWhiteSpace(runtimeName))
+                TryRenameAsset(ability.RuntimePrefab, $"{runtimeName}AbilityRuntime");
+        }
+
+        public static void SyncAbilityEvolutionAssetName(AbilityEvolutionDefinition evolution)
+        {
+            if (evolution == null)
+                return;
+
+            string desiredName = GetAbilityEvolutionAssetName(evolution.DisplayName);
+
+            if (!string.IsNullOrWhiteSpace(desiredName))
+                TryRenameAsset(evolution, desiredName);
+        }
+
+        private static string GetScopedAbilityName(Object asset, string displayName, string root)
+        {
+            string token = ToFileToken(displayName);
+
+            if (asset == null || string.IsNullOrWhiteSpace(token))
+                return string.Empty;
+
+            string path = AssetDatabase.GetAssetPath(asset);
+            string folder = Path.GetDirectoryName(path)?.Replace('\\', '/');
+
+            if (string.IsNullOrWhiteSpace(folder) || folder == root)
+                return token;
+
+            string scope = Path.GetFileName(folder);
+
+            return token.StartsWith(scope, System.StringComparison.OrdinalIgnoreCase) ? token : $"{scope}{token}";
+        }
+
+        private static bool CanPlaceAssetAtPath(Object asset, string desiredPath, out string error)
+        {
+            error = null;
+
+            if (asset == null || string.IsNullOrWhiteSpace(desiredPath))
+            {
+                error = "Asset and destination path are required.";
+                return false;
+            }
+
+            Object existing = AssetDatabase.LoadMainAssetAtPath(desiredPath);
+
+            if (existing != null && existing != asset)
+            {
+                error = $"Cannot move '{asset.name}' because " + $"'{desiredPath}' already exists.";
+
+                return false;
+            }
+
+            return true;
+        }
+
+        private static bool TryMoveAssetToPath(Object asset, string desiredPath, out string error)
+        {
+            error = null;
+
+            if (!CanPlaceAssetAtPath(asset, desiredPath, out error))
+            {
+                return false;
+            }
+
+            string currentPath = AssetDatabase.GetAssetPath(asset);
+
+            if (currentPath == desiredPath)
+                return true;
+
+            string result = AssetDatabase.MoveAsset(currentPath, desiredPath);
+
+            if (!string.IsNullOrWhiteSpace(result))
+            {
+                error = $"Could not move '{asset.name}' to " + $"'{desiredPath}': {result}";
+
+                return false;
+            }
+
+            return true;
         }
 
         public static void EnsureFolder(string folderPath)

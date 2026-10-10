@@ -48,14 +48,15 @@ MonoBehaviour:
     baseValue: 2
     perLevel: 0.25
   damage:
-    baseValue: 10
-    perLevel: 5
+    baseValue: 6
+    perLevel: 2
   knockbackDistance:
-    baseValue: 3
-    perLevel: 0.5
+    baseValue: 4
+    perLevel: 1
   knockbackSpeed:
-    baseValue: 8
-    perLevel: 0.5
-  evolutionBehaviours:
-  - evolution: {fileID: 11400000, guid: 331ef608ca8f74340a9c5c92e40b95cd, type: 2}
-    behaviour: 0
+    baseValue: 10
+    perLevel: 2
+  stunDuration:
+    baseValue: 0.8
+    perLevel: 0.2
+  evolutionBehaviours: []

@@ -21,7 +21,3 @@ MonoBehaviour:
     unlockedByDefault: 1
     visibleWhenLocked: 1
     unlockRequirement: {fileID: 11400000, guid: 2dae3a6ccc06b6b4fa0ea532869538f9, type: 2}
-  - character: {fileID: 11400000, guid: fa8dcb0d65cd97d4ab98b0dfebebba4e, type: 2}
-    unlockedByDefault: 1
-    visibleWhenLocked: 1
-    unlockRequirement: {fileID: 0}

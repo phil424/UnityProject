@@ -16,7 +16,7 @@ MonoBehaviour:
   displayName: Heavy Hands
   description: Increase striking power
   icon: {fileID: 0}
-  treePosition: {x: 1, y: 153}
+  treePosition: {x: -44, y: 155}
   prerequisites:
   - {fileID: 11400000, guid: d1785586fc5eee44ea523d308feb1b71, type: 2}
   costs:

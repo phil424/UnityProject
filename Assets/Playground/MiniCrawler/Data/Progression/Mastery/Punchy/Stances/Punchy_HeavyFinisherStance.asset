@@ -17,6 +17,7 @@ MonoBehaviour:
   description: Replace Punchy's original Basic Attack baseline with Heavy Finisher
     as his Core Mastery.
   icon: {fileID: 0}
+  treePosition: {x: -311, y: 4}
   prerequisites: []
   costs:
   - tier: 0

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using MiniCrawler.Abilities;
 using MiniCrawler.Core;
 using MiniCrawler.Progress;
 using UnityEditor;
@@ -105,23 +106,14 @@ namespace MiniCrawler.Tools.ContentAuthoring
 
             EditorGUILayout.Space(8);
 
-            bool abilitiesReady = character.StartingAbilities.Count == 3;
+            bool abilitiesReady =
+                character.GetStartingAbility(CharacterAbilityRole.Signature)?.Ability != null
+                && character.GetStartingAbility(CharacterAbilityRole.Utility)?.Ability != null
+                && character.GetStartingAbility(CharacterAbilityRole.Sustain)?.Ability != null;
 
-            if (abilitiesReady)
-            {
-                foreach (var entry in character.StartingAbilities)
-                {
-                    if (entry?.Ability == null)
-                    {
-                        abilitiesReady = false;
-                        break;
-                    }
-                }
-            }
+            DrawSection("Core Ability Kit", abilitiesReady);
 
-            DrawSection("Starting Abilities", abilitiesReady);
-
-            DrawProperty(serialized, "startingAbilities", true);
+            DrawCoreAbilityKit(serialized);
 
             EditorGUILayout.Space(8);
 
@@ -159,6 +151,118 @@ namespace MiniCrawler.Tools.ContentAuthoring
 
             if (changed || applied)
                 EditorUtility.SetDirty(character);
+        }
+
+        private static void DrawCoreAbilityKit(SerializedObject serialized)
+        {
+            SerializedProperty abilities = serialized.FindProperty("startingAbilities");
+
+            if (abilities == null)
+                return;
+
+            if (!HasExplicitCoreRoles(abilities))
+            {
+                EditorGUILayout.HelpBox(
+                    "This Character uses the older anonymous three-slot Ability data. " + "Assign the current order as Signature / Utility / Sustain before continuing.",
+                    MessageType.Warning
+                );
+
+                using (new EditorGUI.DisabledScope(abilities.arraySize != 3))
+                {
+                    if (GUILayout.Button("Assign Core Roles From Current Order"))
+                        AssignCoreRolesFromCurrentOrder(abilities);
+                }
+
+                EditorGUILayout.PropertyField(abilities, true);
+                return;
+            }
+
+            DrawCoreAbilityEntry(abilities, CharacterAbilityRole.Signature);
+            DrawCoreAbilityEntry(abilities, CharacterAbilityRole.Utility);
+            DrawCoreAbilityEntry(abilities, CharacterAbilityRole.Sustain);
+        }
+
+        private static bool HasExplicitCoreRoles(SerializedProperty abilities)
+        {
+            if (abilities.arraySize != 3)
+                return false;
+
+            HashSet<CharacterAbilityRole> found = new();
+
+            for (int i = 0; i < abilities.arraySize; i++)
+            {
+                SerializedProperty entry = abilities.GetArrayElementAtIndex(i);
+                SerializedProperty roleProperty = entry.FindPropertyRelative("role");
+
+                if (roleProperty == null)
+                    return false;
+
+                CharacterAbilityRole role = (CharacterAbilityRole)roleProperty.enumValueIndex;
+
+                if (role == CharacterAbilityRole.Unassigned || !found.Add(role))
+                    return false;
+            }
+
+            return found.Contains(CharacterAbilityRole.Signature) && found.Contains(CharacterAbilityRole.Utility) && found.Contains(CharacterAbilityRole.Sustain);
+        }
+
+        private static void AssignCoreRolesFromCurrentOrder(SerializedProperty abilities)
+        {
+            if (abilities.arraySize != 3)
+                return;
+
+            CharacterAbilityRole[] roles = { CharacterAbilityRole.Signature, CharacterAbilityRole.Utility, CharacterAbilityRole.Sustain };
+
+            for (int i = 0; i < abilities.arraySize; i++)
+            {
+                SerializedProperty entry = abilities.GetArrayElementAtIndex(i);
+                SerializedProperty roleProperty = entry.FindPropertyRelative("role");
+
+                if (roleProperty != null)
+                    roleProperty.enumValueIndex = (int)roles[i];
+            }
+        }
+
+        private static void DrawCoreAbilityEntry(SerializedProperty abilities, CharacterAbilityRole role)
+        {
+            int index = FindCoreAbilityIndex(abilities, role);
+
+            if (index < 0)
+            {
+                EditorGUILayout.HelpBox($"{role} Ability entry is missing.", MessageType.Error);
+                return;
+            }
+
+            SerializedProperty entry = abilities.GetArrayElementAtIndex(index);
+            SerializedProperty ability = entry.FindPropertyRelative("ability");
+            SerializedProperty level = entry.FindPropertyRelative("level");
+
+            using (new EditorGUILayout.VerticalScope(EditorStyles.helpBox))
+            {
+                EditorGUILayout.LabelField(role.ToString(), EditorStyles.boldLabel);
+
+                if (ability != null)
+                    EditorGUILayout.PropertyField(ability, new GUIContent("Ability"));
+
+                if (level != null)
+                    EditorGUILayout.PropertyField(level, new GUIContent("Starting Level"));
+            }
+        }
+
+        private static int FindCoreAbilityIndex(SerializedProperty abilities, CharacterAbilityRole role)
+        {
+            for (int i = 0; i < abilities.arraySize; i++)
+            {
+                SerializedProperty entry = abilities.GetArrayElementAtIndex(i);
+                SerializedProperty roleProperty = entry.FindPropertyRelative("role");
+
+                if (roleProperty != null && (CharacterAbilityRole)roleProperty.enumValueIndex == role)
+                {
+                    return i;
+                }
+            }
+
+            return -1;
         }
 
         private static void DrawActorFields(ActorDefinition actor, bool showAdvanced)

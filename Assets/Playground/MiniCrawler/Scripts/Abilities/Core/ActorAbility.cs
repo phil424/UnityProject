@@ -26,11 +26,11 @@ namespace MiniCrawler.Abilities
         public AbilityDefinition Definition => definition;
 
         public int Level => level;
-        
+
         public IReadOnlyList<AbilityEvolutionDefinition> Evolutions => evolutions;
 
         public string AbilityName => definition != null ? definition.DisplayName : GetType().Name;
-                
+
         public string DisplayName => AbilityPresentationResolver.GetDisplayName(definition, evolutions);
 
         public Sprite DisplayIcon => AbilityPresentationResolver.GetDisplayIcon(definition, evolutions);
@@ -50,21 +50,13 @@ namespace MiniCrawler.Abilities
 
         public bool IsReady => cooldownRemaining <= 0f;
 
-        public bool IsExecuting
-        {
-            get;
-            private set;
-        }
+        public bool IsExecuting { get; private set; }
 
-        public bool BlocksAutonomousActions
-        {
-            get;
-            private set;
-        }
+        public bool BlocksAutonomousActions { get; private set; }
 
         public bool IsInitialized => owner != null && definition != null;
 
-        public bool CanActivateNow => IsInitialized && isActiveAndEnabled && !SimulationPause.IsPaused && IsOwnerAlive() && IsReady && !IsExecuting && CanActivateAbility();
+        public bool CanActivateNow => IsInitialized && isActiveAndEnabled && !SimulationPause.IsPaused && IsOwnerAlive() && !IsOwnerStunned() && IsReady && !IsExecuting && CanActivateAbility();
 
         public event Action<ActorAbility> Activated;
 
@@ -80,7 +72,7 @@ namespace MiniCrawler.Abilities
 
             cooldownRemaining = 0f;
         }
-        
+
         public void ApplyProgressionState(int abilityLevel, IReadOnlyList<AbilityEvolutionDefinition> abilityEvolutions = null)
         {
             if (definition == null)
@@ -134,7 +126,7 @@ namespace MiniCrawler.Abilities
         {
             cooldownRemaining = 0f;
         }
-        
+
         public bool HasEvolution(AbilityEvolutionDefinition evolution)
         {
             if (evolution == null)
@@ -187,8 +179,7 @@ namespace MiniCrawler.Abilities
 
         protected abstract bool ExecuteAbility();
 
-        protected virtual void TickExecution(float deltaTime)
-        { }
+        protected virtual void TickExecution(float deltaTime) { }
 
         private void EnsureExecutionState()
         {
@@ -211,6 +202,16 @@ namespace MiniCrawler.Abilities
             return health == null || !health.IsDead;
         }
 
+        private bool IsOwnerStunned()
+        {
+            if (owner == null)
+                return false;
+
+            StunRuntime stun = owner.GetComponent<StunRuntime>();
+
+            return stun != null && stun.IsStunned;
+        }
+
         [ContextMenu("Debug/Try Activate")]
         private void DebugTryActivate()
         {
@@ -230,7 +231,6 @@ namespace MiniCrawler.Abilities
             EndExecution();
         }
 
-        protected virtual void OnValidate()
-        { }
+        protected virtual void OnValidate() { }
     }
 }

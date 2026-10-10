@@ -47,19 +47,21 @@ MonoBehaviour:
   projectile: {fileID: 11400000, guid: f9bd154df54e361439fec88ce0248312, type: 2}
   range:
     baseValue: 8
-    perLevel: 0.25
+    perLevel: 1
   windupDuration:
-    baseValue: 0.6
+    baseValue: 0.65
     perLevel: 0
+  burstShotInterval: 0.15
+  burstShotCount: 3
   recoveryDuration:
-    baseValue: 0.5
+    baseValue: 0.15
     perLevel: 0
   damage:
-    baseValue: 30
+    baseValue: 8
     perLevel: 5
   hitRadius:
     baseValue: 0.35
-    perLevel: 0
+    perLevel: 0.1
   maximumTargetsHit:
     baseValue: 3
     perLevel: 1
@@ -67,6 +69,14 @@ MonoBehaviour:
     baseValue: 1.5
     perLevel: 0.25
   knockbackSpeed:
-    baseValue: 8
+    baseValue: 10
     perLevel: 0
+  stunDuration:
+    baseValue: 0.45
+    perLevel: 0.2
   knockbackFanAngle: 35
+  evolutionBehaviours:
+  - evolution: {fileID: 11400000, guid: 6a92b5e0b11d0c644a54065f524eb708, type: 2}
+    behaviour: 0
+  fanVolleySideAngle: 15
+  fanVolleySideDamageMultiplier: 0.65

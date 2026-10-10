@@ -6,120 +6,70 @@ namespace MiniCrawler.Combat
 {
     public static class DamageResolver
     {
-        public static event Action<DamageEvent>
-            DamageResolved;
+        public static event Action<DamageEvent> DamageResolved;
 
-        public static void ApplyDamage(
-            GameObject source,
-            Health target,
-            float incomingDamage,
-            string actionName
-        )
+        public static void ApplyDamage(GameObject source, Health target, float incomingDamage, string actionName)
         {
-            if (
-                target == null ||
-                target.IsDead ||
-                incomingDamage <= 0f
-            )
+            if (target == null || target.IsDead || incomingDamage <= 0f)
+                return;
+
+            InvulnerabilityRuntime invulnerability = target.GetComponent<InvulnerabilityRuntime>();
+
+            if (invulnerability != null && invulnerability.IsInvulnerable)
+                return;
+
+            float modifiedIncomingDamage = ApplyOutgoingDamageModifiers(source, incomingDamage);
+
+            HitShieldRuntime shields = target.GetComponent<HitShieldRuntime>();
+
+            if (shields != null && shields.TryAbsorbHit(source, actionName))
             {
                 return;
             }
 
-            float modifiedIncomingDamage =
-                ApplyOutgoingDamageModifiers(
-                    source,
-                    incomingDamage
-                );
+            CombatStats targetStats = target.GetComponent<CombatStats>();
 
-            CombatStats targetStats =
-                target.GetComponent<CombatStats>();
+            float armour = targetStats != null ? targetStats.FlatArmour : 0f;
 
-            float armour =
-                targetStats != null
-                    ? targetStats.FlatArmour
-                    : 0f;
+            float finalDamage = targetStats != null ? targetStats.CalculateDamageTaken(modifiedIncomingDamage) : modifiedIncomingDamage;
 
-            float finalDamage =
-                targetStats != null
-                    ? targetStats
-                        .CalculateDamageTaken(
-                            modifiedIncomingDamage
-                        )
-                    : modifiedIncomingDamage;
+            float healthBefore = target.CurrentHealth;
 
-            float healthBefore =
-                target.CurrentHealth;
+            target.Damage(finalDamage, source);
 
-            target.Damage(
-                finalDamage,
-                source
-            );
+            float healthAfter = target.CurrentHealth;
 
-            float healthAfter =
-                target.CurrentHealth;
+            DamageEvent damageEvent = new DamageEvent(source, target, actionName, modifiedIncomingDamage, armour, finalDamage, healthBefore, healthAfter);
 
-            DamageEvent damageEvent =
-                new DamageEvent(
-                    source,
-                    target,
-                    actionName,
-                    modifiedIncomingDamage,
-                    armour,
-                    finalDamage,
-                    healthBefore,
-                    healthAfter
-                );
+            DamageResolved?.Invoke(damageEvent);
 
-            DamageResolved?.Invoke(
-                damageEvent
-            );
-
-            string sourceName =
-                source != null
-                    ? source.name
-                    : "Unknown";
+            string sourceName = source != null ? source.name : "Unknown";
 
             Debug.Log(
-                $"{sourceName} -> " +
-                $"{target.name} " +
-                $"[{actionName}] | " +
-                $"{modifiedIncomingDamage:0.##} " +
-                $"- {armour:0.##} armour = " +
-                $"{finalDamage:0.##} | " +
-                $"HP {healthBefore:0.##} -> " +
-                $"{healthAfter:0.##}"
+                $"{sourceName} -> "
+                    + $"{target.name} "
+                    + $"[{actionName}] | "
+                    + $"{modifiedIncomingDamage:0.##} "
+                    + $"- {armour:0.##} armour = "
+                    + $"{finalDamage:0.##} | "
+                    + $"HP {healthBefore:0.##} -> "
+                    + $"{healthAfter:0.##}"
             );
         }
 
-        private static float
-            ApplyOutgoingDamageModifiers(
-                GameObject source,
-                float damage
-            )
+        private static float ApplyOutgoingDamageModifiers(GameObject source, float damage)
         {
             if (source == null)
                 return damage;
 
-            RuntimeStatModifiers modifiers =
-                source.GetComponent<
-                    RuntimeStatModifiers
-                >();
+            RuntimeStatModifiers modifiers = source.GetComponent<RuntimeStatModifiers>();
 
             if (modifiers == null)
                 return damage;
 
-            float multiplier =
-                Mathf.Max(
-                    0f,
-                    1f +
-                    modifiers
-                        .OutgoingDamagePercentBonus /
-                    100f
-                );
+            float multiplier = Mathf.Max(0f, 1f + modifiers.OutgoingDamagePercentBonus / 100f);
 
-            return
-                damage *
-                multiplier;
+            return damage * multiplier;
         }
     }
 }

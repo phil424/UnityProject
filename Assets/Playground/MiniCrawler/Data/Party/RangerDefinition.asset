@@ -19,11 +19,14 @@ MonoBehaviour:
   portrait: {fileID: 0}
   actorDefinition: {fileID: 11400000, guid: 84096ed667795794bbfccefb57ceac40, type: 2}
   startingAbilities:
-  - ability: {fileID: 11400000, guid: 00d7eb2c41cb9b74fa2b0030d76d21f0, type: 2}
+  - role: 1
+    ability: {fileID: 11400000, guid: 00d7eb2c41cb9b74fa2b0030d76d21f0, type: 2}
     level: 1
-  - ability: {fileID: 11400000, guid: e42e19ef7e9317646a5357737269ec8e, type: 2}
+  - role: 2
+    ability: {fileID: 11400000, guid: e42e19ef7e9317646a5357737269ec8e, type: 2}
     level: 1
-  - ability: {fileID: 11400000, guid: 09488582446ecec45807849991e8c9b3, type: 2}
+  - role: 3
+    ability: {fileID: 11400000, guid: 09488582446ecec45807849991e8c9b3, type: 2}
     level: 1
   masteryDefinition: {fileID: 11400000, guid: 192688a47a6259d4ea98316e78ddcd5b, type: 2}
   weaponName: Bow

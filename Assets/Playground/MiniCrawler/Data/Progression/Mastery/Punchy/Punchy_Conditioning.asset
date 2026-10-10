@@ -16,7 +16,7 @@ MonoBehaviour:
   displayName: Conditioning
   description: Increase durability
   icon: {fileID: 0}
-  treePosition: {x: 0, y: -180}
+  treePosition: {x: -123, y: -177}
   prerequisites:
   - {fileID: 11400000, guid: d1785586fc5eee44ea523d308feb1b71, type: 2}
   costs:

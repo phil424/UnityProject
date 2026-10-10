@@ -1,4 +1,5 @@
 using MiniCrawler.Abilities;
+using MiniCrawler.Combat;
 using MiniCrawler.Core;
 using MiniCrawler.Movement;
 using MiniCrawler.Support;
@@ -13,9 +14,8 @@ namespace MiniCrawler.Systems
         {
             if (SimulationPause.IsPaused)
                 return;
-                
-            SupportStats[] supporters =
-                FindObjectsByType<SupportStats>(FindObjectsSortMode.None);
+
+            SupportStats[] supporters = FindObjectsByType<SupportStats>(FindObjectsSortMode.None);
 
             foreach (SupportStats supporter in supporters)
             {
@@ -33,21 +33,16 @@ namespace MiniCrawler.Systems
             if (selfHealth != null && selfHealth.IsDead)
                 return;
 
-            supporter.HealTimer =
-                Mathf.Max(
-                    0f,
-                    supporter.HealTimer -
-                    Time.deltaTime
-                );
+            StunRuntime stun = supporter.GetComponent<StunRuntime>();
 
-            AbilityExecutionState
-                abilityExecutionState =
-                    supporter.GetComponent<AbilityExecutionState>();
+            if (stun != null && stun.IsStunned)
+                return;
 
-            if (
-                abilityExecutionState != null &&
-                abilityExecutionState.BlocksAutonomousActions
-            )
+            supporter.HealTimer = Mathf.Max(0f, supporter.HealTimer - Time.deltaTime);
+
+            AbilityExecutionState abilityExecutionState = supporter.GetComponent<AbilityExecutionState>();
+
+            if (abilityExecutionState != null && abilityExecutionState.BlocksAutonomousActions)
             {
                 return;
             }
@@ -68,10 +63,7 @@ namespace MiniCrawler.Systems
             if (supporter.HealTimer > 0f)
                 return;
 
-            float distance = Vector3.Distance(
-                supporter.transform.position,
-                target.transform.position
-            );
+            float distance = Vector3.Distance(supporter.transform.position, target.transform.position);
 
             if (distance > supporter.HealRange)
                 return;
@@ -83,10 +75,7 @@ namespace MiniCrawler.Systems
             if (amountHealed <= 0f)
                 return;
 
-            Debug.Log(
-                $"{supporter.name} used {supporter.HealName} on " +
-                $"{target.name} for {amountHealed:0.##} health."
-            );
+            Debug.Log($"{supporter.name} used {supporter.HealName} on " + $"{target.name} for {amountHealed:0.##} health.");
 
             supporter.HealTimer = supporter.HealCooldown;
         }

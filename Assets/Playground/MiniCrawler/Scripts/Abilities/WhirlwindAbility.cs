@@ -8,263 +8,135 @@ using UnityEngine;
 namespace MiniCrawler.Abilities
 {
     [DisallowMultipleComponent]
-    public class WhirlwindAbility :
-        ActorAbility
+    public class WhirlwindAbility : ActorAbility
     {
-        private const float
-            MinimumDirectionSquared =
-                0.0001f;
+        private const float MinimumDirectionSquared = 0.0001f;
 
-        private enum
-            WhirlwindEvolutionBehaviour
+        private enum WhirlwindEvolutionBehaviour
         {
-            Vortex
+            Vortex,
         }
 
         [Serializable]
-        private sealed class
-            EvolutionBehaviourBinding
+        private sealed class EvolutionBehaviourBinding
         {
             [SerializeField]
-            private AbilityEvolutionDefinition
-                evolution;
+            private AbilityEvolutionDefinition evolution;
 
             [SerializeField]
-            private WhirlwindEvolutionBehaviour
-                behaviour;
+            private WhirlwindEvolutionBehaviour behaviour;
 
-            public AbilityEvolutionDefinition
-                Evolution =>
-                    evolution;
-
-            public WhirlwindEvolutionBehaviour
-                Behaviour =>
-                    behaviour;
+            public AbilityEvolutionDefinition Evolution => evolution;
+            public WhirlwindEvolutionBehaviour Behaviour => behaviour;
         }
 
         [Header("Whirlwind")]
         [SerializeField]
-        private AbilityLevelValue
-            activationRadius;
+        private AbilityLevelValue activationRadius;
 
         [SerializeField]
-        private AbilityLevelValue
-            damage;
+        private AbilityLevelValue damage;
 
         [SerializeField]
-        private AbilityLevelValue
-            knockbackDistance;
+        private AbilityLevelValue knockbackDistance;
 
         [SerializeField]
-        private AbilityLevelValue
-            knockbackSpeed;
+        private AbilityLevelValue knockbackSpeed;
+
+        [SerializeField]
+        private AbilityLevelValue stunDuration = new();
 
         [Header("Evolution Behaviours")]
         [SerializeField]
-        private List<
-            EvolutionBehaviourBinding
-        > evolutionBehaviours = new();
+        private List<EvolutionBehaviourBinding> evolutionBehaviours = new();
 
-        public float ActivationRadius =>
-            Mathf.Max(
-                0.1f,
-                activationRadius != null
-                    ? activationRadius
-                        .Evaluate(Level)
-                    : 0.1f
-            );
+        public float ActivationRadius => Mathf.Max(0.1f, Evaluate(activationRadius));
+        public float Damage => Mathf.Max(0f, Evaluate(damage));
+        public float KnockbackDistance => Mathf.Max(0f, Evaluate(knockbackDistance));
+        public float KnockbackSpeed => Mathf.Max(0f, Evaluate(knockbackSpeed));
+        public float StunDuration => Mathf.Max(0f, Evaluate(stunDuration));
+        public bool UsesVortex => HasEvolutionBehaviour(WhirlwindEvolutionBehaviour.Vortex);
 
-        public float Damage =>
-            Mathf.Max(
-                0f,
-                damage != null
-                    ? damage.Evaluate(Level)
-                    : 0f
-            );
-
-        public float KnockbackDistance =>
-            Mathf.Max(
-                0f,
-                knockbackDistance != null
-                    ? knockbackDistance
-                        .Evaluate(Level)
-                    : 0f
-            );
-
-        public float KnockbackSpeed =>
-            Mathf.Max(
-                0f,
-                knockbackSpeed != null
-                    ? knockbackSpeed
-                        .Evaluate(Level)
-                    : 0f
-            );
-
-        public bool UsesVortex =>
-            HasEvolutionBehaviour(
-                WhirlwindEvolutionBehaviour
-                    .Vortex
-            );
-
-        protected override bool
-            CanActivateAbility()
+        protected override bool CanActivateAbility()
         {
             if (Owner == null)
                 return false;
 
-            AutoTargetMover mover =
-                Owner.GetComponent<
-                    AutoTargetMover
-                >();
+            AutoTargetMover mover = Owner.GetComponent<AutoTargetMover>();
 
-            if (
-                mover == null ||
-                !mover.isActiveAndEnabled
-            )
-            {
+            if (mover == null || !mover.isActiveAndEnabled)
                 return false;
-            }
 
-            Health[] possibleTargets =
-                FindObjectsByType<Health>(
-                    FindObjectsSortMode.None
-                );
+            Health[] possibleTargets = FindObjectsByType<Health>(FindObjectsSortMode.None);
 
-            foreach (
-                Health target
-                    in possibleTargets
-            )
+            foreach (Health target in possibleTargets)
             {
-                if (
-                    IsValidWhirlwindTarget(
-                        mover,
-                        target
-                    )
-                )
-                {
+                if (IsValidWhirlwindTarget(mover, target))
                     return true;
-                }
             }
 
             return false;
         }
 
-        protected override bool
-            ExecuteAbility()
+        protected override bool ExecuteAbility()
         {
             if (Owner == null)
                 return false;
 
-            AutoTargetMover mover =
-                Owner.GetComponent<
-                    AutoTargetMover
-                >();
+            AutoTargetMover mover = Owner.GetComponent<AutoTargetMover>();
 
             if (mover == null)
                 return false;
 
-            Health[] possibleTargets =
-                FindObjectsByType<Health>(
-                    FindObjectsSortMode.None
-                );
+            Health[] possibleTargets = FindObjectsByType<Health>(FindObjectsSortMode.None);
 
-            bool useVortex =
-                UsesVortex;
+            bool useVortex = UsesVortex;
 
             int hitCount = 0;
-
             int forcedMotionCount = 0;
+            int stunnedCount = 0;
 
-            foreach (
-                Health target
-                    in possibleTargets
-            )
+            foreach (Health target in possibleTargets)
             {
-                if (
-                    !IsValidWhirlwindTarget(
-                        mover,
-                        target
-                    )
-                )
-                {
+                if (!IsValidWhirlwindTarget(mover, target))
                     continue;
-                }
 
-                DamageResolver.ApplyDamage(
-                    Owner,
-                    target,
-                    Damage,
-                    AbilityName
-                );
+                DamageResolver.ApplyDamage(Owner, target, Damage, AbilityName);
 
                 hitCount++;
 
                 if (target.IsDead)
                     continue;
 
-                bool moved =
-                    useVortex
-                        ? TryApplyVortexPull(
-                            target
-                        )
-                        : KnockbackResolver
-                            .TryApply(
-                                Owner,
-                                target,
-                                KnockbackDistance,
-                                KnockbackSpeed
-                            );
+                bool moved = useVortex ? TryApplyVortexPull(target) : KnockbackResolver.TryApply(Owner, target, KnockbackDistance, KnockbackSpeed);
 
                 if (moved)
-                {
                     forcedMotionCount++;
+
+                if (StunRuntime.Apply(Owner, target, StunDuration, AbilityName))
+                {
+                    stunnedCount++;
                 }
             }
 
-            string movementDescription =
-                useVortex
-                    ? "pulled"
-                    : "knocked back";
+            string movementDescription = useVortex ? "pulled" : "knocked back";
 
-            Debug.Log(
-                $"[Ability] {Owner.name} " +
-                $"activated {AbilityName}, hit " +
-                $"{hitCount} target(s) and " +
-                $"{movementDescription} " +
-                $"{forcedMotionCount} target(s)."
-            );
+            Debug.Log($"[Ability] {Owner.name} activated {AbilityName}, hit {hitCount} target(s), " + $"{movementDescription} {forcedMotionCount} and stunned {stunnedCount}.");
 
             return hitCount > 0;
         }
 
-        private bool HasEvolutionBehaviour(
-            WhirlwindEvolutionBehaviour
-                behaviour
-        )
+        private bool HasEvolutionBehaviour(WhirlwindEvolutionBehaviour behaviour)
         {
-            foreach (
-                EvolutionBehaviourBinding binding
-                    in evolutionBehaviours
-            )
+            foreach (EvolutionBehaviourBinding binding in evolutionBehaviours)
             {
-                if (
-                    binding == null ||
-                    binding.Evolution == null ||
-                    binding.Behaviour !=
-                        behaviour
-                )
+                if (binding == null || binding.Evolution == null || binding.Behaviour != behaviour)
                 {
                     continue;
                 }
 
-                if (
-                    HasEvolution(
-                        binding.Evolution
-                    )
-                )
-                {
+                if (HasEvolution(binding.Evolution))
                     return true;
-                }
             }
 
             return false;
@@ -276,6 +148,7 @@ namespace MiniCrawler.Abilities
                 return false;
 
             Vector3 towardOwner = Owner.transform.position - target.transform.position;
+
             towardOwner.y = 0f;
 
             float distanceToOwner = towardOwner.magnitude;
@@ -284,118 +157,67 @@ namespace MiniCrawler.Abilities
                 return false;
 
             float stopDistance = GetVortexStopDistance(target);
+
             float availablePullDistance = Mathf.Max(0f, distanceToOwner - stopDistance);
+
             float desiredPullDistance = KnockbackResolver.ResolveOutgoingDistance(Owner, KnockbackDistance);
+
             float pullDistance = Mathf.Min(desiredPullDistance, availablePullDistance);
 
             if (pullDistance <= 0f)
                 return false;
 
-            return KnockbackResolver.TryApplyDirectional(
-                Owner,
-                target,
-                towardOwner.normalized,
-                pullDistance,
-                KnockbackSpeed,
-                applySourcePower: false
-            );
+            return KnockbackResolver.TryApplyDirectional(Owner, target, towardOwner.normalized, pullDistance, KnockbackSpeed, applySourcePower: false);
         }
 
-        private float GetVortexStopDistance(
-            Health target
-        )
+        private float GetVortexStopDistance(Health target)
         {
             float stopDistance = 0.1f;
 
-            EntityAvoidance ownerAvoidance =
-                Owner != null
-                    ? Owner.GetComponent<
-                        EntityAvoidance
-                    >()
-                    : null;
+            EntityAvoidance ownerAvoidance = Owner != null ? Owner.GetComponent<EntityAvoidance>() : null;
 
             if (ownerAvoidance != null)
-            {
-                stopDistance +=
-                    ownerAvoidance.WorldRadius;
-            }
+                stopDistance += ownerAvoidance.WorldRadius;
 
-            EntityAvoidance targetAvoidance =
-                target != null
-                    ? target.GetComponent<
-                        EntityAvoidance
-                    >()
-                    : null;
+            EntityAvoidance targetAvoidance = target != null ? target.GetComponent<EntityAvoidance>() : null;
 
             if (targetAvoidance != null)
-            {
-                stopDistance +=
-                    targetAvoidance.WorldRadius;
-            }
+                stopDistance += targetAvoidance.WorldRadius;
 
             return stopDistance;
         }
 
-        private bool IsValidWhirlwindTarget(
-            AutoTargetMover mover,
-            Health target
-        )
+        private bool IsValidWhirlwindTarget(AutoTargetMover mover, Health target)
         {
-            if (
-                Owner == null ||
-                target == null ||
-                target.IsDead ||
-                target.gameObject == Owner
-            )
+            if (Owner == null || target == null || target.IsDead || target.gameObject == Owner)
             {
                 return false;
             }
 
-            FactionMember faction =
-                target.GetComponent<
-                    FactionMember
-                >();
+            FactionMember faction = target.GetComponent<FactionMember>();
 
-            if (
-                faction == null ||
-                !faction.IsFaction(
-                    mover.TargetFactionId
-                )
-            )
+            if (faction == null || !faction.IsFaction(mover.TargetFactionId))
             {
                 return false;
             }
 
-            Vector3 offset =
-                target.transform.position -
-                Owner.transform.position;
+            Vector3 offset = target.transform.position - Owner.transform.position;
 
             offset.y = 0f;
 
-            return
-                offset.sqrMagnitude <=
-                ActivationRadius *
-                ActivationRadius;
+            return offset.sqrMagnitude <= ActivationRadius * ActivationRadius;
         }
 
-        protected override void
-            OnValidate()
+        private float Evaluate(AbilityLevelValue value)
         {
-            base.OnValidate();
+            return value != null ? value.Evaluate(Level) : 0f;
         }
 
-        private void
-            OnDrawGizmosSelected()
+        private void OnDrawGizmosSelected()
         {
-            Vector3 centre =
-                Owner != null
-                    ? Owner.transform.position
-                    : transform.position;
+            Vector3 centre = Owner != null ? Owner.transform.position : transform.position;
 
-            Gizmos.DrawWireSphere(
-                centre,
-                ActivationRadius
-            );
+            Gizmos.DrawWireSphere(centre, ActivationRadius);
         }
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using MiniCrawler.Combat;
 using MiniCrawler.Core;
 using MiniCrawler.Progress;
 using UnityEngine;
@@ -26,6 +27,7 @@ namespace MiniCrawler.Systems
         }
 
         public static RunDirector Instance { get; private set; }
+        private const string PartyOverdriveSourceId = "Debug:PartyOverdrive";
 
         public event Action<RunFlowState> StateChanged;
 
@@ -366,6 +368,92 @@ namespace MiniCrawler.Systems
 
             if (!stageDirector.TryAwardRewardChoice(RunRewardVector.WeaponMod, "Debug Weapon Mod Reward"))
                 Debug.LogWarning("The current level could not award a Weapon Mod reward choice.");
+        }
+
+        [ContextMenu("Debug/Queue Ability Reward")]
+        private void DebugQueueAbilityReward()
+        {
+            if (!Application.isPlaying || state != RunFlowState.InLevel || !RunProgress.HasActiveRun || stageDirector == null)
+            {
+                Debug.LogWarning("An Ability reward can only be queued during an active level.");
+                return;
+            }
+
+            if (!stageDirector.TryAwardRewardChoice(RunRewardVector.Ability, "Debug Ability Reward"))
+            {
+                Debug.LogWarning("The current level could not award an Ability reward choice.");
+            }
+        }
+
+        [ContextMenu("Debug/Apply Party Overdrive")]
+        private void DebugApplyPartyOverdrive()
+        {
+            if (!Application.isPlaying || state != RunFlowState.InLevel || stageDirector == null)
+            {
+                Debug.LogWarning("Party Overdrive can only be applied during an active level.");
+
+                return;
+            }
+
+            PartyMember[] partyMembers = FindObjectsByType<PartyMember>(FindObjectsSortMode.None);
+
+            int appliedCount = 0;
+
+            foreach (PartyMember partyMember in partyMembers)
+            {
+                if (partyMember == null || !stageDirector.IsCurrentPartyMember(partyMember))
+                {
+                    continue;
+                }
+
+                RuntimeStatModifiers modifiers = partyMember.GetComponent<RuntimeStatModifiers>();
+
+                if (modifiers == null)
+                {
+                    modifiers = partyMember.gameObject.AddComponent<RuntimeStatModifiers>();
+                }
+
+                modifiers.ApplyOrRefresh(PartyOverdriveSourceId, 3600f, 1000f, 500f, 10000f, 0f);
+
+                appliedCount++;
+            }
+
+            Debug.Log($"[Debug] Party Overdrive applied to " + $"{appliedCount} active party member(s).");
+        }
+
+        [ContextMenu("Debug/Disable Party Overdrive")]
+        private void DebugDisablePartyOverdrive()
+        {
+            if (!Application.isPlaying || state != RunFlowState.InLevel || stageDirector == null)
+            {
+                Debug.LogWarning("Party Overdrive can only be disabled during an active level.");
+
+                return;
+            }
+
+            PartyMember[] partyMembers = FindObjectsByType<PartyMember>(FindObjectsSortMode.None);
+
+            int removedCount = 0;
+
+            foreach (PartyMember partyMember in partyMembers)
+            {
+                if (partyMember == null || !stageDirector.IsCurrentPartyMember(partyMember))
+                {
+                    continue;
+                }
+
+                RuntimeStatModifiers modifiers = partyMember.GetComponent<RuntimeStatModifiers>();
+
+                if (modifiers == null)
+                    continue;
+
+                if (modifiers.RemoveModifier(PartyOverdriveSourceId))
+                {
+                    removedCount++;
+                }
+            }
+
+            Debug.Log($"[Debug] Party Overdrive disabled for " + $"{removedCount} active party member(s).");
         }
 
         [ContextMenu("Debug/Unlock All Roster Characters")]

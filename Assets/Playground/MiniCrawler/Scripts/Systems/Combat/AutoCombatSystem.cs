@@ -32,6 +32,15 @@ namespace MiniCrawler.Systems
 
             CombatActionState actionState = mover.GetComponent<CombatActionState>();
 
+            StunRuntime stun = mover.GetComponent<StunRuntime>();
+
+            if (stun != null && stun.IsStunned)
+            {
+                actionState?.Cancel();
+                ResetPendingCombo(actionState);
+                return;
+            }
+
             if (!CombatEngagementState.AllowsCombat(mover.gameObject))
             {
                 ResetPendingCombo(actionState);
@@ -70,18 +79,13 @@ namespace MiniCrawler.Systems
 
             Health target = mover.CurrentTarget;
 
-            if (target == null ||
-                target.IsDead ||
-                !CombatEngagementState.AllowsCombat(target.gameObject) ||
-                (!usesActionTimeline && attackerStats.AttackTimer > 0f))
+            if (target == null || target.IsDead || !CombatEngagementState.AllowsCombat(target.gameObject) || (!usesActionTimeline && attackerStats.AttackTimer > 0f))
             {
                 ResetPendingCombo(actionState);
                 return;
             }
 
-            if (actionState != null &&
-                actionState.HasPendingBasicAttackContinuation &&
-                target != actionState.BasicAttackChainTarget)
+            if (actionState != null && actionState.HasPendingBasicAttackContinuation && target != actionState.BasicAttackChainTarget)
             {
                 actionState.ResetBasicAttackSequence();
             }

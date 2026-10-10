@@ -196,7 +196,8 @@ Current payload capabilities:
 
 - direct Damage;
 - optional Knockback;
-- optional Burn.
+- optional Burn;
+- optional Stun.
 
 Knockback and Burn use focused typed payloads rather than a universal effect
 enum/list.
@@ -241,10 +242,17 @@ Power Shot
 +
 Damage
 +
-Knockback.
+Knockback
++
+Stun.
 
 This allows existing behaviours to be recombined without adding another
 specialised `ProjectileRuntime.Spawn...` method.
+
+Stun uses the same focused typed-payload pattern as Knockback and Burn.
+
+Projectile impact therefore remains composable without introducing a universal
+effect enum or specialised Power-Shot projectile runtime.
 
 # Impact Resolver
 

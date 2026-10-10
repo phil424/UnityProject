@@ -1,3 +1,4 @@
+using MiniCrawler.Abilities;
 using MiniCrawler.Progress;
 using UnityEngine;
 
@@ -8,6 +9,9 @@ namespace MiniCrawler.Tools.ContentAuthoring
         public static readonly Color WeaponMastery = new(0.2f, 0.75f, 0.9f, 1f);
         public static readonly Color MasteryLevel = new(0.3f, 0.5f, 0.95f, 1f);
         public static readonly Color Ability = new(0.7f, 0.4f, 0.9f, 1f);
+        public static readonly Color AbilitySignature = new(0.9f, 0.4f, 0.8f, 1f);
+        public static readonly Color AbilityUtility = new(0.25f, 0.65f, 0.95f, 1f);
+        public static readonly Color AbilitySustain = new(0.3f, 0.8f, 0.55f, 1f);
         public static readonly Color CharacterGrowth = new(0.35f, 0.75f, 0.4f, 1f);
         public static readonly Color Combination = new(0.95f, 0.55f, 0.2f, 1f);
         public static readonly Color General = new(0.6f, 0.6f, 0.6f, 1f);
@@ -33,6 +37,17 @@ namespace MiniCrawler.Tools.ContentAuthoring
                 RunRewardVector.Ability => Ability,
                 RunRewardVector.WeaponMod => WeaponMastery,
                 _ => General,
+            };
+        }
+
+        public static Color GetAbilityRoleColor(CharacterAbilityRole role)
+        {
+            return role switch
+            {
+                CharacterAbilityRole.Signature => AbilitySignature,
+                CharacterAbilityRole.Utility => AbilityUtility,
+                CharacterAbilityRole.Sustain => AbilitySustain,
+                _ => Ability,
             };
         }
     }

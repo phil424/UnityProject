@@ -44,18 +44,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d323f2f3e4ac9de438622800dbdbe322, type: 3}
   m_Name: 
   m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Abilities.BlinkAbility
-  duration:
+  searchRadius:
+    baseValue: 8
+    perLevel: 1
+  maximumBounces:
+    baseValue: 6
+    perLevel: 2
+  bounceInterval:
+    baseValue: 0.14
+    perLevel: -0.005
+  arrivalOffset: 0.35
+  finishDelay: 0.1
+  damage:
     baseValue: 5
+    perLevel: 2
+  knockbackDistance:
+    baseValue: 1.25
+    perLevel: 0.25
+  knockbackSpeed:
+    baseValue: 10
     perLevel: 0
-  outgoingDamagePercentBonus:
-    baseValue: 1000
-    perLevel: 0
-  attackSpeedPercentBonus:
-    baseValue: 500
-    perLevel: 0
-  moveSpeedPercentBonus:
-    baseValue: 10000
-    perLevel: 0
-  flatArmourBonus:
-    baseValue: 0
-    perLevel: 0
+  stunDuration:
+    baseValue: 0.6
+    perLevel: 0.2

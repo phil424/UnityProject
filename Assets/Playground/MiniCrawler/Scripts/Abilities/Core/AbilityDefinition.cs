@@ -3,10 +3,7 @@ using UnityEngine;
 
 namespace MiniCrawler.Abilities
 {
-    [CreateAssetMenu(
-        fileName = "New Ability",
-        menuName = "Mini Crawler/Ability Definition"
-    )]
+    [CreateAssetMenu(fileName = "New Ability", menuName = "Mini Crawler/Ability Definition")]
     public class AbilityDefinition : ScriptableObject
     {
         [Header("Identity")]
@@ -26,110 +23,63 @@ namespace MiniCrawler.Abilities
 
         [Header("Runtime")]
         [SerializeField]
-        private AbilityLevelValue cooldown;
+        private AbilityLevelValue cooldown = new();
 
         [SerializeField]
         private GameObject runtimePrefab;
 
-        public string Id =>
-            string.IsNullOrWhiteSpace(id)
-                ? name
-                : id;
+        public string Id => string.IsNullOrWhiteSpace(id) ? name : id;
 
-        public string DisplayName =>
-            string.IsNullOrWhiteSpace(displayName)
-                ? name
-                : displayName;
+        public string DisplayName => string.IsNullOrWhiteSpace(displayName) ? name : displayName;
 
-        public Sprite Icon =>
-            icon;
+        public Sprite Icon => icon;
 
-        public int MaxLevel =>
-            maxLevel;
+        public int MaxLevel => maxLevel;
 
-        public GameObject RuntimePrefab =>
-            runtimePrefab;
+        public GameObject RuntimePrefab => runtimePrefab;
 
-        public int ClampLevel(
-            int level
-        )
+        public int ClampLevel(int level)
         {
-            return Mathf.Clamp(
-                level,
-                1,
-                maxLevel
-            );
+            return Mathf.Clamp(level, 1, maxLevel);
         }
 
-        public float GetCooldown(
-            int level
-        )
+        public float GetCooldown(int level)
         {
             if (cooldown == null)
                 return 0.1f;
 
-            return Mathf.Max(
-                0.1f,
-                cooldown.Evaluate(
-                    ClampLevel(level)
-                )
-            );
+            return Mathf.Max(0.1f, cooldown.Evaluate(ClampLevel(level)));
         }
 
-        public ActorAbility CreateRuntime(
-            GameObject owner,
-            int level,
-            IReadOnlyList<AbilityEvolutionDefinition> evolutions = null
-        )
+        public ActorAbility CreateRuntime(GameObject owner, int level, IReadOnlyList<AbilityEvolutionDefinition> evolutions = null)
         {
-            if (
-                owner == null ||
-                runtimePrefab == null
-            )
+            if (owner == null || runtimePrefab == null)
             {
                 return null;
             }
 
-            GameObject instance =
-                Instantiate(
-                    runtimePrefab,
-                    owner.transform
-                );
+            GameObject instance = Instantiate(runtimePrefab, owner.transform);
 
-            instance.name =
-                $"{DisplayName} Ability Runtime";
+            instance.name = $"{DisplayName} Ability Runtime";
 
-            instance.transform.localPosition =
-                Vector3.zero;
+            instance.transform.localPosition = Vector3.zero;
 
-            instance.transform.localRotation =
-                Quaternion.identity;
+            instance.transform.localRotation = Quaternion.identity;
 
-            instance.transform.localScale =
-                Vector3.one;
+            instance.transform.localScale = Vector3.one;
 
-            ActorAbility ability =
-                instance.GetComponent<ActorAbility>();
+            ActorAbility ability = instance.GetComponent<ActorAbility>();
 
             if (ability == null)
             {
-                Debug.LogError(
-                    $"Ability runtime prefab " +
-                    $"'{runtimePrefab.name}' does not " +
-                    $"contain an ActorAbility."
-                );
+                Debug.LogError($"Ability runtime prefab " + $"'{runtimePrefab.name}' does not " + $"contain an ActorAbility.");
 
                 Destroy(instance);
 
                 return null;
             }
 
-            ability.Initialize(
-                owner,
-                this,
-                ClampLevel(level),
-                evolutions
-            );
+            ability.Initialize(owner, this, ClampLevel(level), evolutions);
 
             return ability;
         }
@@ -139,11 +89,7 @@ namespace MiniCrawler.Abilities
             if (string.IsNullOrWhiteSpace(id))
                 id = name;
 
-            maxLevel =
-                Mathf.Max(
-                    1,
-                    maxLevel
-                );
+            maxLevel = Mathf.Max(1, maxLevel);
         }
     }
 }

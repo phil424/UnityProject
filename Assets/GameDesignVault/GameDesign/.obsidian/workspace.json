@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "ProjectManagement/Roadmap.md",
+                "file": "00 - Core/What is the game/Narrative Framework.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Roadmap"
+              "title": "Narrative Framework"
             }
           }
         ]
@@ -188,17 +188,24 @@
   },
   "active": "57c7e95b4b97b861",
   "lastOpenFiles": [
+    "ProjectManagement/Roadmap.md",
+    "Design/Technical/Projectile Combat.md",
+    "Design/Combat/Combat.md",
+    "Design/Characters/Abilities.md",
+    "Guides/How-To/Author Abilities.md",
+    "Guides/How-To/Author Abilities.md.meta",
+    "00 - Core/What is the game/Narrative Framework.md",
+    "00 - Core/What is the game/What The Game Actually Is.md",
+    "Design/Characters/Characters.md",
     "Guides/How-To/Author Run Rewards.md.meta",
     "Guides/How-To/Author Run Rewards.md",
     "Design/Technical/Rewards and Pending Choices.md",
-    "ProjectManagement/Roadmap.md",
     "Guides/How-To/Author Character Mastery Trees.md",
     "Design/Technical/Character Mastery.md",
     "ProjectManagement/Active Feature Programme.md",
     "Development Rules/Workflow and Validation.md",
     "Core Instructions - Always Follow.md",
     "Design/Technical/Character Stats.md",
-    "Design/Technical/Projectile Combat.md",
     "Design/Weapon Mods.md",
     "Guides/How-To.meta",
     "Guides.meta",
@@ -210,19 +217,12 @@
     "Design/Technical/Preparation Frontend.md",
     "Design/Technical/Weapon Mods.md",
     "Design/Rewards.md",
-    "Design/Characters/Characters.md",
     "Design/Buildcraft.md",
     "Design/Technical/Weapon Mods.md.meta",
     "Design/Weapon Mods.md.meta",
     "Design/Technical/Playable Character Roster.md",
-    "00 - Core/What is the game/Narrative Framework.md",
     "Development Rules/Documentation.md",
     "Development Rules.md",
-    "00 - Core/06 - Design Decision Log.md",
-    "Design/Characters/Abilities.md",
-    "ProjectManagement/Project Structure.md",
-    "Design/Technical/Projectile Combat.md.meta",
-    "Design/Technical/Playable Character Roster.md.meta",
-    "Design/Technical/Character Mastery.md.meta"
+    "Design/Technical/Projectile Combat.md.meta"
   ]
 }

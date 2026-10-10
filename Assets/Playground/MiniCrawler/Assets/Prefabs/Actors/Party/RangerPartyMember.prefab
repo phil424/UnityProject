@@ -204,6 +204,6 @@ MonoBehaviour:
     activeEffectDuration: 0
   - ability: {fileID: 11400000, guid: 09488582446ecec45807849991e8c9b3, type: 2}
     activationEffect: {fileID: 0}
-    activeEffect: {fileID: 11400000, guid: bab036c4a11bd864ebb88294ba57014c, type: 2}
-    useTimedBuffDuration: 1
+    activeEffect: {fileID: 0}
+    useTimedBuffDuration: 0
     activeEffectDuration: 0

@@ -8,8 +8,7 @@ namespace MiniCrawler.Combat
     [DisallowMultipleComponent]
     [RequireComponent(typeof(Actor))]
     [DefaultExecutionOrder(-250)]
-    public class RuntimeStatModifiers :
-        MonoBehaviour
+    public class RuntimeStatModifiers : MonoBehaviour
     {
         private sealed class ActiveModifier
         {
@@ -26,49 +25,24 @@ namespace MiniCrawler.Combat
             public float FlatArmourBonus;
         }
 
-        private readonly List<ActiveModifier>
-            activeModifiers = new();
+        private readonly List<ActiveModifier> activeModifiers = new();
 
-        public float OutgoingDamagePercentBonus
-        {
-            get;
-            private set;
-        }
+        public float OutgoingDamagePercentBonus { get; private set; }
 
-        public float AttackSpeedPercentBonus
-        {
-            get;
-            private set;
-        }
+        public float AttackSpeedPercentBonus { get; private set; }
 
-        public float MoveSpeedPercentBonus
-        {
-            get;
-            private set;
-        }
+        public float MoveSpeedPercentBonus { get; private set; }
 
-        public float FlatArmourBonus
-        {
-            get;
-            private set;
-        }
+        public float FlatArmourBonus { get; private set; }
 
-        public bool HasModifier(
-            string sourceId
-        )
+        public bool HasModifier(string sourceId)
         {
             if (string.IsNullOrWhiteSpace(sourceId))
                 return false;
 
-            foreach (
-                ActiveModifier modifier
-                    in activeModifiers
-            )
+            foreach (ActiveModifier modifier in activeModifiers)
             {
-                if (
-                    modifier.SourceId ==
-                    sourceId
-                )
+                if (modifier.SourceId == sourceId)
                 {
                     return true;
                 }
@@ -77,73 +51,58 @@ namespace MiniCrawler.Combat
             return false;
         }
 
-        public bool ApplyOrRefresh(
-            string sourceId,
-            float duration,
-            float outgoingDamagePercentBonus,
-            float attackSpeedPercentBonus,
-            float moveSpeedPercentBonus,
-            float flatArmourBonus
-        )
+        public bool RemoveModifier(string sourceId)
         {
-            if (
-                string.IsNullOrWhiteSpace(sourceId) ||
-                duration <= 0f
-            )
+            if (string.IsNullOrWhiteSpace(sourceId))
+                return false;
+
+            ActiveModifier modifier = FindModifier(sourceId);
+
+            if (modifier == null)
+                return false;
+
+            activeModifiers.Remove(modifier);
+            RecalculateTotals();
+
+            return true;
+        }
+
+        public bool ApplyOrRefresh(string sourceId, float duration, float outgoingDamagePercentBonus, float attackSpeedPercentBonus, float moveSpeedPercentBonus, float flatArmourBonus)
+        {
+            if (string.IsNullOrWhiteSpace(sourceId) || duration <= 0f)
             {
                 return false;
             }
 
-            ActiveModifier modifier =
-                FindModifier(sourceId);
+            ActiveModifier modifier = FindModifier(sourceId);
 
             if (modifier == null)
             {
-                modifier =
-                    new ActiveModifier
-                    {
-                        SourceId =
-                            sourceId
-                    };
+                modifier = new ActiveModifier { SourceId = sourceId };
 
-                activeModifiers.Add(
-                    modifier
-                );
+                activeModifiers.Add(modifier);
             }
 
-            modifier.RemainingDuration =
-                duration;
+            modifier.RemainingDuration = duration;
 
-            modifier.OutgoingDamagePercentBonus =
-                outgoingDamagePercentBonus;
+            modifier.OutgoingDamagePercentBonus = outgoingDamagePercentBonus;
 
-            modifier.AttackSpeedPercentBonus =
-                attackSpeedPercentBonus;
+            modifier.AttackSpeedPercentBonus = attackSpeedPercentBonus;
 
-            modifier.MoveSpeedPercentBonus =
-                moveSpeedPercentBonus;
+            modifier.MoveSpeedPercentBonus = moveSpeedPercentBonus;
 
-            modifier.FlatArmourBonus =
-                flatArmourBonus;
+            modifier.FlatArmourBonus = flatArmourBonus;
 
             RecalculateTotals();
 
             return true;
         }
 
-        private ActiveModifier FindModifier(
-            string sourceId
-        )
+        private ActiveModifier FindModifier(string sourceId)
         {
-            foreach (
-                ActiveModifier modifier
-                    in activeModifiers
-            )
+            foreach (ActiveModifier modifier in activeModifiers)
             {
-                if (
-                    modifier.SourceId ==
-                    sourceId
-                )
+                if (modifier.SourceId == sourceId)
                 {
                     return modifier;
                 }
@@ -154,40 +113,25 @@ namespace MiniCrawler.Combat
 
         private void Update()
         {
-            if (
-                SimulationPause.IsPaused ||
-                activeModifiers.Count == 0
-            )
+            if (SimulationPause.IsPaused || activeModifiers.Count == 0)
             {
                 return;
             }
 
             bool changed = false;
 
-            for (
-                int index =
-                    activeModifiers.Count - 1;
-                index >= 0;
-                index--
-            )
+            for (int index = activeModifiers.Count - 1; index >= 0; index--)
             {
-                ActiveModifier modifier =
-                    activeModifiers[index];
+                ActiveModifier modifier = activeModifiers[index];
 
-                modifier.RemainingDuration -=
-                    Time.deltaTime;
+                modifier.RemainingDuration -= Time.deltaTime;
 
-                if (
-                    modifier.RemainingDuration >
-                    0f
-                )
+                if (modifier.RemainingDuration > 0f)
                 {
                     continue;
                 }
 
-                activeModifiers.RemoveAt(
-                    index
-                );
+                activeModifiers.RemoveAt(index);
 
                 changed = true;
             }
@@ -198,38 +142,23 @@ namespace MiniCrawler.Combat
 
         private void RecalculateTotals()
         {
-            OutgoingDamagePercentBonus =
-                0f;
+            OutgoingDamagePercentBonus = 0f;
 
-            AttackSpeedPercentBonus =
-                0f;
+            AttackSpeedPercentBonus = 0f;
 
-            MoveSpeedPercentBonus =
-                0f;
+            MoveSpeedPercentBonus = 0f;
 
-            FlatArmourBonus =
-                0f;
+            FlatArmourBonus = 0f;
 
-            foreach (
-                ActiveModifier modifier
-                    in activeModifiers
-            )
+            foreach (ActiveModifier modifier in activeModifiers)
             {
-                OutgoingDamagePercentBonus +=
-                    modifier
-                        .OutgoingDamagePercentBonus;
+                OutgoingDamagePercentBonus += modifier.OutgoingDamagePercentBonus;
 
-                AttackSpeedPercentBonus +=
-                    modifier
-                        .AttackSpeedPercentBonus;
+                AttackSpeedPercentBonus += modifier.AttackSpeedPercentBonus;
 
-                MoveSpeedPercentBonus +=
-                    modifier
-                        .MoveSpeedPercentBonus;
+                MoveSpeedPercentBonus += modifier.MoveSpeedPercentBonus;
 
-                FlatArmourBonus +=
-                    modifier
-                        .FlatArmourBonus;
+                FlatArmourBonus += modifier.FlatArmourBonus;
             }
         }
 
