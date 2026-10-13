@@ -144,6 +144,9 @@ PrefabInstance:
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4594298099328853642, guid: 1db074dee99c6aa478bd3c539ce41968, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4296677831764607983}
     - targetCorrespondingSourceObject: {fileID: 5736878203012054910, guid: 1db074dee99c6aa478bd3c539ce41968, type: 3}
       insertIndex: -1
       addedObject: {fileID: 3504774502592239147}
@@ -207,3 +210,21 @@ MonoBehaviour:
     activeEffect: {fileID: 0}
     useTimedBuffDuration: 0
     activeEffectDuration: 0
+--- !u!1 &7259797900891594356 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4594298099328853642, guid: 1db074dee99c6aa478bd3c539ce41968, type: 3}
+  m_PrefabInstance: {fileID: 6592639274174822654}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &4296677831764607983
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7259797900891594356}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1a37eab98b10a84398b94045a8f795d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Combat.ShieldCapacityStats
+  baseCapacity: 3

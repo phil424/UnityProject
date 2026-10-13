@@ -80,6 +80,13 @@ namespace MiniCrawler.Abilities
                 return false;
             }
 
+            ShieldCapacityStats shieldCapacity = Owner.GetComponent<ShieldCapacityStats>();
+
+            if (shieldCapacity == null)
+            {
+                shieldCapacity = Owner.AddComponent<ShieldCapacityStats>();
+            }
+
             HitShieldRuntime shields = Owner.GetComponent<HitShieldRuntime>();
 
             if (shields == null)

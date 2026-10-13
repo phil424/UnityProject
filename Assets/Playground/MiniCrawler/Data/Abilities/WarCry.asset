@@ -17,6 +17,6 @@ MonoBehaviour:
   icon: {fileID: 0}
   maxLevel: 5
   cooldown:
-    baseValue: 14
-    perLevel: -1.5
+    baseValue: 8
+    perLevel: -0.75
   runtimePrefab: {fileID: 362497390134067917, guid: c33013ee43bdabb4997b886697b1155d, type: 3}

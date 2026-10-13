@@ -11,32 +11,69 @@ namespace MiniCrawler.UI
     public class GameFlowUI : MonoBehaviour
     {
         [Header("References")]
-        [SerializeField] private StageDirector stageDirector;
-        [SerializeField] private RunDirector runDirector;
-        [SerializeField] private PartyCardUI partyCardPrefab;
+        [SerializeField]
+        private StageDirector stageDirector;
+
+        [SerializeField]
+        private RunDirector runDirector;
+
+        [SerializeField]
+        private PartyCardUI partyCardPrefab;
 
         [Header("Panels")]
-        [SerializeField] private GameObject partySelectionPanel;
-        [SerializeField] private GameObject upgradePanel;
-        [SerializeField] private GameObject combatHudPanel;
+        [SerializeField]
+        private GameObject partySelectionPanel;
+
+        [SerializeField]
+        private GameObject upgradePanel;
+
+        [SerializeField]
+        private GameObject combatHudPanel;
 
         [Header("Upgrade Screen")]
-        [SerializeField] private Transform upgradeCardRoot;
-        [SerializeField] private TMP_Text resultText;
-        [SerializeField] private TMP_Text upgradeCurrencyText;
-        [SerializeField] private Button continueButton;
-        [SerializeField] private Button endRunButton;
-        [SerializeField] private GameObject gearUpgradeSection;
+        [SerializeField]
+        private Transform upgradeCardRoot;
+
+        [SerializeField]
+        private TMP_Text resultText;
+
+        [SerializeField]
+        private TMP_Text upgradeCurrencyText;
+
+        [SerializeField]
+        private Button continueButton;
+
+        [SerializeField]
+        private Button endRunButton;
+
+        [SerializeField]
+        private GameObject gearUpgradeSection;
 
         [Header("Run Upgrade Rewards")]
-        [SerializeField] private GameObject runUpgradeRewardSection;
-        [SerializeField] private Transform runUpgradeOfferRoot;
-        [SerializeField] private RunUpgradeOfferCardUI runUpgradeOfferCardPrefab;
-        [SerializeField] private TMP_Text runUpgradeRewardTitleText;
+        [SerializeField]
+        private GameObject runUpgradeRewardSection;
+
+        [SerializeField]
+        private Transform runUpgradeOfferRoot;
+
+        [SerializeField]
+        private RunUpgradeOfferCardUI runUpgradeOfferCardPrefab;
+
+        [SerializeField]
+        private TMP_Text runUpgradeRewardTitleText;
+
+        [SerializeField]
+        private Button runUpgradeRerollButton;
+
+        [SerializeField]
+        private TMP_Text runUpgradeRerollButtonText;
 
         [Header("Combat HUD")]
-        [SerializeField] private TMP_Text combatCurrencyText;
-        [SerializeField] private Button returnExpeditionButton;
+        [SerializeField]
+        private TMP_Text combatCurrencyText;
+
+        [SerializeField]
+        private Button returnExpeditionButton;
 
         private readonly List<PartyCardUI> upgradeCards = new();
         private readonly List<RunUpgradeOfferCardUI> runUpgradeOfferCards = new();
@@ -63,6 +100,29 @@ namespace MiniCrawler.UI
             }
 
             RefreshAll();
+        }
+
+        public void RerollPendingReward()
+        {
+            if (runDirector == null || !runDirector.TryRerollPendingReward())
+            {
+                Debug.LogWarning("Could not reroll pending reward.");
+            }
+        }
+
+        private void RefreshRunRewardReroll()
+        {
+            int remaining = runDirector != null ? runDirector.RewardRerollsRemaining : 0;
+
+            if (runUpgradeRerollButtonText != null)
+            {
+                runUpgradeRerollButtonText.text = $"REROLL ({remaining})";
+            }
+
+            if (runUpgradeRerollButton != null)
+            {
+                runUpgradeRerollButton.interactable = runDirector != null && runDirector.CanRerollPendingReward;
+            }
         }
 
         private void OnDestroy()
@@ -156,7 +216,7 @@ namespace MiniCrawler.UI
             if (runDirector == null || !runDirector.TryChoosePendingReward(offer))
                 Debug.LogWarning("Could not resolve pending reward.");
         }
-        
+
         private void RefreshRunRewardTitle()
         {
             if (runUpgradeRewardTitleText == null)
@@ -172,6 +232,7 @@ namespace MiniCrawler.UI
             RebuildUpgradeCards();
             RebuildRunUpgradeOfferCards();
             RefreshRunRewardTitle();
+            RefreshRunRewardReroll();
 
             upgradeCurrencyText.text = $"Expedition Currency: {RunProgress.Currency}";
             combatCurrencyText.text = $"Expedition Currency: {RunProgress.Currency}";
@@ -185,13 +246,10 @@ namespace MiniCrawler.UI
             RunDirector.RunFlowState runState = runDirector.State;
 
             bool betweenLevels = runState == RunDirector.RunFlowState.BetweenLevels;
-            
+
             if (returnExpeditionButton != null)
             {
-                bool canReturn =
-                    runState == RunDirector.RunFlowState.InLevel &&
-                    RunProgress.HasActiveRun &&
-                    !RunProgress.HasPendingRewardChoice;
+                bool canReturn = runState == RunDirector.RunFlowState.InLevel && RunProgress.HasActiveRun && !RunProgress.HasPendingRewardChoice;
 
                 returnExpeditionButton.gameObject.SetActive(runState == RunDirector.RunFlowState.InLevel);
                 returnExpeditionButton.interactable = canReturn;
@@ -205,7 +263,7 @@ namespace MiniCrawler.UI
                 endRunButton.gameObject.SetActive(betweenLevels);
                 endRunButton.interactable = !RunProgress.HasPendingRewardChoice;
             }
-            
+
             if (runUpgradeRewardSection != null)
             {
                 runUpgradeRewardSection.SetActive(RunProgress.HasPendingRewardChoice);
@@ -220,9 +278,7 @@ namespace MiniCrawler.UI
 
             upgradePanel.SetActive(runState == RunDirector.RunFlowState.BetweenLevels);
 
-            bool showCombatView =
-                runState == RunDirector.RunFlowState.InLevel ||
-                runState == RunDirector.RunFlowState.EndingExpedition;
+            bool showCombatView = runState == RunDirector.RunFlowState.InLevel || runState == RunDirector.RunFlowState.EndingExpedition;
 
             combatHudPanel.SetActive(showCombatView);
 

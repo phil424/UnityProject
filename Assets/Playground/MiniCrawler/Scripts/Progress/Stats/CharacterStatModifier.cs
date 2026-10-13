@@ -11,7 +11,8 @@ namespace MiniCrawler.Progress
         FlatArmour,
         FlatMaxHealth,
         AbilityCooldownRecoveryPercent,
-        KnockbackPowerPercent
+        KnockbackPowerPercent,
+        ShieldCapacity,
     }
 
     internal sealed class CharacterStatModifierSet
@@ -47,7 +48,8 @@ namespace MiniCrawler.Progress
                 CharacterStatModifierType.FlatMaxHealth => $"Gain {formattedAmount} maximum health.",
                 CharacterStatModifierType.AbilityCooldownRecoveryPercent => $"Recover ability cooldowns {formattedAmount}% faster.",
                 CharacterStatModifierType.KnockbackPowerPercent => $"Increase outgoing knockback and pull distance by {formattedAmount}%.",
-                _ => "Unknown stat modifier."
+                CharacterStatModifierType.ShieldCapacity => $"Increase maximum Shields by {formattedAmount}.",
+                _ => "Unknown stat modifier.",
             };
         }
     }

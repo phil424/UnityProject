@@ -13,7 +13,13 @@ namespace MiniCrawler.Tools.ContentAuthoring
             if (catalog == null)
                 return;
 
+            if (!catalog.HasPositiveRarityWeight)
+            {
+                output.Add("Reward Catalogue rarity profile has no positive weights.");
+            }
+
             HashSet<RunRewardSetDefinition> sets = new();
+
             Dictionary<string, RunRewardDefinition> rewardIds = new(StringComparer.Ordinal);
 
             foreach (RunRewardSetDefinition rewardSet in catalog.RewardSets)
@@ -21,6 +27,7 @@ namespace MiniCrawler.Tools.ContentAuthoring
                 if (rewardSet == null)
                 {
                     output.Add("Reward Catalogue contains a missing Reward Set reference.");
+
                     continue;
                 }
 
@@ -59,7 +66,7 @@ namespace MiniCrawler.Tools.ContentAuthoring
 
                     if (rewardIds.TryGetValue(reward.Id, out RunRewardDefinition existing) && existing != reward)
                     {
-                        output.Add($"Rewards '{existing.DisplayName}' and '{reward.DisplayName}' share ID '{reward.Id}'.");
+                        output.Add($"Rewards '{existing.DisplayName}' and " + $"'{reward.DisplayName}' share ID '{reward.Id}'.");
                     }
                     else
                     {

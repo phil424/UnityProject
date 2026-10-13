@@ -282,6 +282,256 @@ These rewards create future intention.
 They may help organically extend a short expedition into a longer one because
 the player discovers a new opportunity worth pursuing.
 
+# Reward Rarity
+
+**Status: Implemented Foundation / Balance Working**
+
+Reward rarity now affects normal Run Reward generation.
+
+Current rarity vocabulary:
+
+- Common;
+- Uncommon;
+- Rare;
+- Epic;
+- Legendary.
+
+The default Reward Catalogue authors a rarity-weight profile.
+
+Current working baseline:
+
+| Rarity | Weight |
+| --- | ---: |
+| Common | 60 |
+| Uncommon | 25 |
+| Rare | 10 |
+| Epic | 4 |
+| Legendary | 1 |
+
+These are Working balance values rather than permanent constants.
+
+## Selection Order
+
+Normal Reward generation currently follows:
+
+Reward Source
+→ Reward Vector filter
+→ Character / build eligibility
+→ candidate pool
+→ represented rarity tiers
+→ weighted rarity roll
+→ Reward selection inside that rarity.
+
+Rarity is therefore rolled only from tiers that have eligible candidates.
+
+Example:
+
+if the current eligible candidate pool contains only Common and Rare Rewards,
+the Common / Rare weights are normalised against each other.
+
+Unavailable Uncommon / Epic / Legendary tiers do not consume failed rolls.
+
+Each selected offer is removed before the next card is generated.
+
+## Content Count Does Not Define Rarity Chance
+
+Adding several new Rewards to one rarity tier does not automatically make that
+rarity tier more common.
+
+The Catalogue rolls the rarity first.
+
+It then chooses among the eligible Rewards in the selected tier.
+
+This allows content breadth to expand independently from the baseline rarity
+economy.
+
+## Rarity and Reward Power
+
+Rarity currently controls generation frequency.
+
+It does not automatically scale a Reward's gameplay effect.
+
+Reward Definitions still author their own actual effects.
+
+O4C's Character Growth balance pass is responsible for aligning Reward values
+with their intended rarity.
+
+Rarity also remains separate from broader Reward-role concepts such as:
+
+Frequent
+Significant
+Major.
+
+Those concepts describe the role / magnitude of a Reward rather than its
+selection probability.
+
+# Character Growth Rewards
+
+**Status: Implemented First Production Pass / Balance Working**
+
+Character Growth is temporary Expedition stat development.
+
+The active first production pool contains:
+
+23 Character Growth Rewards.
+
+Current rarity distribution:
+
+| Rarity | Rewards |
+| --- | ---: |
+| Common | 7 |
+| Uncommon | 7 |
+| Rare | 6 |
+| Epic | 3 |
+| Legendary | 0 |
+
+There is deliberately no Legendary Character Growth reward in the current pass.
+
+Legendary presentation should be reserved until content exists that merits that
+level of excitement rather than merely supplying a larger generic stat number.
+
+## Reward Roles
+
+Character Growth should support several kinds of decision.
+
+Safe value
+→ useful even when it does not define the build.
+
+Examples:
+
+- Max Health;
+- Armour;
+- modest Basic Attack Damage;
+- modest Movement Speed.
+
+Directional development
+→ becomes increasingly valuable when repeatedly invested into.
+
+Examples:
+
+- Ability Cooldown Recovery;
+- Basic Attack Speed;
+- Knockback Power.
+
+Character-specific development may also use the shared Character Growth system
+when the stat is not meaningful for every Character.
+
+Current example:
+
+Expanded Guard
+→ Ranger only
+→ +1 Shield Capacity.
+
+## Current Working Value Ladders
+
+Basic Attack Damage:
+
+Common
+→ +1.
+
+Uncommon
+→ +2.
+
+Rare
+→ +3.
+
+Epic
+→ +4.
+
+Basic Attack Speed:
+
+Common
+→ +10%.
+
+Uncommon
+→ +20%.
+
+Rare
+→ +30%.
+
+Max Health:
+
+Common
+→ +6.
+
+Uncommon
+→ +10.
+
+Rare
+→ +16.
+
+Movement Speed:
+
+Common
+→ +10%.
+
+Uncommon
+→ +15%.
+
+Epic
+→ +30%.
+
+Ability Cooldown Recovery:
+
+Common
+→ +10%.
+
+Uncommon
+→ +20%.
+
+Rare
+→ +30%.
+
+Armour:
+
+Common
+→ +0.5.
+
+Uncommon
+→ +1.
+
+Epic
+→ +2.
+
+Knockback Power:
+
+Common
+→ +15%.
+
+Uncommon
+→ +30%.
+
+Rare
+→ +50%.
+
+Shield Capacity:
+
+Rare
+→ +1.
+→ currently Ranger-only.
+
+These are Working balance values.
+
+Their purpose is to provide a coherent first playable economy for further
+playtesting rather than define permanent final balance.
+
+## Stacking
+
+Character Growth modifiers accumulate for the active Expedition.
+
+Different Rewards affecting the same Character stat also stack.
+
+Example:
+
+Heavy Impact
++
+Crushing Impact
+
+develop the same Knockback-oriented build direction at different rarity/value
+levels.
+
+Character Growth resets with the Expedition.
+
 # Tiers
 Don't confuse this immediately with rarity.
 

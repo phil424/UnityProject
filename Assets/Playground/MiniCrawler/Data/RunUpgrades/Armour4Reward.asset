@@ -10,11 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5fc99cc2ad4c0294b9f5ab3362ba4ebf, type: 3}
-  m_Name: QuickRecovery
+  m_Name: Armour4Reward
   m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Progress.RunUpgradeDefinition
-  id: quick_recovery
-  displayName: Quick Recovery
+  id: reward_armour_4
+  displayName: Armour 4
   icon: {fileID: 0}
-  rarity: 0
-  effectType: 5
-  amount: 50
+  rarity: 3
+  effectType: 3
+  amount: 2
+  eligibleMembers: []

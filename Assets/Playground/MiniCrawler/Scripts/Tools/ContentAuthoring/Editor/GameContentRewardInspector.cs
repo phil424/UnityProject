@@ -104,6 +104,11 @@ namespace MiniCrawler.Tools.ContentAuthoring
                     DrawSection("Character Growth");
                     DrawProperty(serialized, "effectType");
                     DrawProperty(serialized, "amount");
+
+                    EditorGUILayout.Space(8);
+
+                    DrawSection("Eligibility");
+                    DrawProperty(serialized, "eligibleMembers", true);
                     break;
 
                 case AbilityUnlockRewardDefinition:

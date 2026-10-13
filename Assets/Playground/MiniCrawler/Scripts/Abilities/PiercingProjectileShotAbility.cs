@@ -1,33 +1,14 @@
-using System;
-using System.Collections.Generic;
 using MiniCrawler.Combat;
 using MiniCrawler.Core;
 using MiniCrawler.Movement;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace MiniCrawler.Abilities
 {
     [DisallowMultipleComponent]
     public sealed class PiercingProjectileShotAbility : ActorAbility
     {
-        private enum PiercingProjectileEvolutionBehaviour
-        {
-            FanVolley,
-        }
-
-        [Serializable]
-        private sealed class EvolutionBehaviourBinding
-        {
-            [SerializeField]
-            private AbilityEvolutionDefinition evolution;
-
-            [SerializeField]
-            private PiercingProjectileEvolutionBehaviour behaviour;
-
-            public AbilityEvolutionDefinition Evolution => evolution;
-            public PiercingProjectileEvolutionBehaviour Behaviour => behaviour;
-        }
-
         [Header("Piercing Projectile Burst")]
         [SerializeField]
         private ProjectileDefinition projectile;
@@ -68,16 +49,14 @@ namespace MiniCrawler.Abilities
         [SerializeField, Range(0f, 89f)]
         private float knockbackFanAngle = 35f;
 
-        [Header("Evolution Behaviours")]
-        [SerializeField]
-        private List<EvolutionBehaviourBinding> evolutionBehaviours = new();
-
-        [Header("Fan Volley")]
+        [Header("Burst Spread")]
+        [FormerlySerializedAs("fanVolleySideAngle")]
         [SerializeField, Range(0f, 45f)]
-        private float fanVolleySideAngle = 15f;
+        private float burstSpreadAngle = 15f;
 
+        [FormerlySerializedAs("fanVolleySideDamageMultiplier")]
         [SerializeField, Range(0.1f, 1f)]
-        private float fanVolleySideDamageMultiplier = 0.65f;
+        private float sideShotDamageMultiplier = 0.65f;
 
         private Vector3 burstDirection;
         private string burstTargetFactionId;
@@ -95,7 +74,6 @@ namespace MiniCrawler.Abilities
         public float KnockbackDistance => Mathf.Max(0f, Evaluate(knockbackDistance));
         public float KnockbackSpeed => Mathf.Max(0f, Evaluate(knockbackSpeed));
         public float StunDuration => Mathf.Max(0f, Evaluate(stunDuration));
-        public bool UsesFanVolley => HasEvolutionBehaviour(PiercingProjectileEvolutionBehaviour.FanVolley);
 
         protected override bool CanActivateAbility()
         {
@@ -105,12 +83,16 @@ namespace MiniCrawler.Abilities
             AutoTargetMover mover = Owner.GetComponent<AutoTargetMover>();
 
             if (mover == null || mover.CurrentIntent != TargetIntent.Combat)
+            {
                 return false;
+            }
 
             Health currentTarget = mover.CurrentTarget;
 
             if (currentTarget == null || currentTarget.IsDead)
+            {
                 return false;
+            }
 
             Vector3 offset = currentTarget.transform.position - Owner.transform.position;
 
@@ -135,13 +117,17 @@ namespace MiniCrawler.Abilities
             direction.y = 0f;
 
             if (direction.sqrMagnitude <= 0.0001f)
+            {
                 return false;
+            }
 
             if (!BeginExecution())
                 return false;
 
             burstDirection = direction.normalized;
+
             burstTargetFactionId = mover.TargetFactionId;
+
             elapsed = 0f;
             shotsLaunched = 0;
 
@@ -164,7 +150,9 @@ namespace MiniCrawler.Abilities
             float finalShotTime = GetShotTime(BurstShotCount - 1);
 
             if (elapsed >= finalShotTime + RecoveryDuration)
+            {
                 EndShot();
+            }
         }
 
         protected override void OnDisable()
@@ -184,11 +172,11 @@ namespace MiniCrawler.Abilities
 
         private void LaunchBurstShot(int shotIndex)
         {
-            float angle = ResolveFanVolleyAngle(shotIndex);
+            float angle = ResolveBurstAngle(shotIndex);
 
             Vector3 direction = Quaternion.AngleAxis(angle, Vector3.up) * burstDirection;
 
-            float damageMultiplier = ResolveFanVolleyDamageMultiplier(angle);
+            float damageMultiplier = ResolveShotDamageMultiplier(angle);
 
             ProjectileDelivery delivery = ProjectileDelivery.Directional(direction, Range, burstTargetFactionId, HitRadius, MaximumTargetsHit);
 
@@ -201,42 +189,22 @@ namespace MiniCrawler.Abilities
             ProjectileLauncher.Launch(request);
         }
 
-        private float ResolveFanVolleyAngle(int shotIndex)
+        private float ResolveBurstAngle(int shotIndex)
         {
-            if (!UsesFanVolley || BurstShotCount <= 1)
-            {
+            if (BurstShotCount <= 1)
                 return 0f;
-            }
 
             float normalizedIndex = shotIndex / (float)(BurstShotCount - 1);
 
-            return Mathf.Lerp(-fanVolleySideAngle, fanVolleySideAngle, normalizedIndex);
+            return Mathf.Lerp(-burstSpreadAngle, burstSpreadAngle, normalizedIndex);
         }
 
-        private float ResolveFanVolleyDamageMultiplier(float angle)
+        private float ResolveShotDamageMultiplier(float angle)
         {
-            if (!UsesFanVolley || Mathf.Abs(angle) <= 0.01f)
-            {
+            if (Mathf.Abs(angle) <= 0.01f)
                 return 1f;
-            }
 
-            return Mathf.Clamp(fanVolleySideDamageMultiplier, 0.1f, 1f);
-        }
-
-        private bool HasEvolutionBehaviour(PiercingProjectileEvolutionBehaviour behaviour)
-        {
-            foreach (EvolutionBehaviourBinding binding in evolutionBehaviours)
-            {
-                if (binding == null || binding.Evolution == null || binding.Behaviour != behaviour)
-                {
-                    continue;
-                }
-
-                if (HasEvolution(binding.Evolution))
-                    return true;
-            }
-
-            return false;
+            return Mathf.Clamp(sideShotDamageMultiplier, 0.1f, 1f);
         }
 
         private void EndShot()

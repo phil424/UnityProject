@@ -126,12 +126,24 @@ Punchy
 → Whirlwind.
 
 Ranger
-→ Backstep.
+→ Smoke Step.
 
-Whirlwind creates breathing room through radial Knockback + Stun.
+Whirlwind creates breathing room through violent radial Knockback + Stun.
 
-Backstep creates immediate departure control through Knockback + Stun before
-Ranger retreats to restore ranged spacing.
+Smoke Step creates tactical ranged space through a short Ranger hop and
+directional Fear.
+
+Enemies caught near the departure point are guided broadly opposite Ranger's
+hop direction while a weaker lateral steering force funnels them toward that
+direction's centre corridor.
+
+The intended result is:
+
+disengagement
++
+enemy formation setup
+
+rather than long-distance Ranger repositioning.
 
 Charge remains valid reusable Ability content but is no longer one of Punchy's
 planned three core roles.
@@ -246,44 +258,55 @@ buildcraft to expand during the Expedition.
 
 Blink is Punchy's Signature Ability.
 
-The current implementation traverses a route through valid enemies in the
-surrounding combat space.
+Activation records Punchy's exact world position as the cast's Sigil Centre.
 
-The first traversal point prefers Punchy's current combat target.
+The Ability begins with a local control pulse around that centre:
 
-Later traversal points deliberately favour distant unvisited enemies from the
-previous point, causing Blink to cross back and forth through the enemy group.
+radial Knockback
++
+strong Stun.
 
-This gives the Ability a sigil-like traversal shape without requiring a
-separate authored path.
+This creates a deliberate breathing space before traversal begins.
 
-More valid enemies create more useful traversal opportunities up to the
-Ability's current authored bounce cap.
+After a short opening beat, Punchy becomes an invulnerable traversal threat and
+moves through a route of valid enemies.
 
-Each visited enemy may receive:
+The route:
 
-- low base damage;
-- Knockback;
-- Stun.
+- prefers Punchy's current combat target first where valid;
+- does not deliberately revisit an enemy during the same cast;
+- favours distant unvisited targets from the previous traversal point;
+- gains more value when more valid enemies are present;
+- remains bounded by the authored search radius and maximum-bounce values.
 
-Base damage is deliberately secondary.
+Traversal impacts currently deal damage.
 
-Future buildcraft may allow players to lean further into damage or control.
+The opening phase owns the Ability's Knockback + strong Stun rather than
+reapplying those control effects at every traversal point.
 
-Punchy is invulnerable for the active Blink traversal.
+When traversal finishes, Punchy returns to the exact Sigil Centre recorded at
+activation.
 
-Invulnerability ends when the Ability execution finishes.
+Invulnerability lasts through:
 
-The current gameplay route does not yet have dedicated sigil / trail
-presentation.
+opening control
++
+traversal
++
+return.
 
-That can be layered onto the existing traversal points later without changing
-Ability ownership or target selection.
+The intended Signature rhythm is:
 
-The old extreme-stat Blink prototype is retired.
+create space
+→ disappear through the enemy group
+→ return to the controlled centre.
 
-Its development/testing purpose is now served by a Character-agnostic debug
-Party Overdrive action instead.
+Dedicated sigil / traversal-line VFX remain future presentation work.
+
+The old extreme-stat Blink prototype remains retired.
+
+Its development/testing purpose is handled by the Character-agnostic Party
+Overdrive debug action.
 
 ## Whirlwind — Utility
 
@@ -311,17 +334,37 @@ space-creation role.
 
 War Cry is currently Punchy's Sustain Ability.
 
-War Cry is shared Ability content rather than Punchy-owned behaviour.
+War Cry remains shared Ability content rather than Punchy-owned behaviour.
 
-Punchy currently uses it to provide reactive:
+Punchy uses it for reactive:
 
-- direct healing;
-- temporary Armour.
+direct healing
++
+temporary Armour.
 
 Both become more valuable as Punchy loses Health.
 
-This allows the Ability behaviour to remain reusable by other Characters or
-content sources while Punchy's Character loadout owns the current Sustain role.
+War Cry now uses a substantially shorter baseline cooldown so that Sustain
+participates more consistently in Punchy's drawn-out combat rhythm.
+
+Current working cooldown:
+
+Lv.1
+→ 8 seconds.
+
+Lv.5
+→ 6 seconds before Character-wide Ability Cooldown Recovery.
+
+The exact healing / Armour balance remains Working.
+
+Current flat-Armour combat semantics prevent Armour alone from reducing a
+positive damaging hit below 1 damage.
+
+This preserves War Cry's strong low-Health protection without allowing weak
+enemies to become completely incapable of damaging Punchy.
+
+That minimum-damage rule is a working combat rule and should be reassessed once
+the enemy roster contains broader damage profiles.
 
 # Ranger Ability Development
 
@@ -382,12 +425,14 @@ Current proof:
 Expedition currency may then develop the same Ability level temporarily during
 the active Expedition.
 
-### Fan Volley
+### Previous Evolution Proof — Fan Volley
 
-Fan Volley remains the current Power Shot Evolution.
+**Status: Parked**
 
-Instead of adding additional simultaneous projectiles, Fan Volley transforms the
-existing three-shot burst into an authored spread:
+Comparative playtesting demonstrated that the three-shot spread is more
+satisfying as baseline Power Shot behaviour rather than an acquired Evolution.
+
+Baseline Power Shot now fires:
 
 Shot 1
 → angled left.
@@ -398,24 +443,77 @@ Shot 2
 Shot 3
 → angled right.
 
-The side shots currently use reduced damage relative to the central shot.
+All three remain piercing projectile shots with Knockback + Stun.
 
-Fan Volley therefore trades concentrated directional pressure for wider
-battlefield coverage while preserving the same three-shot animation and burst
-structure.
+The Fan Volley Evolution / Reward assets remain preserved as proof content but
+are removed from normal Reward generation.
 
-Exact timing, spread, damage and control values remain working balance.
+A future Power Shot Evolution should meaningfully transform the already-useful
+baseline rather than merely restore behaviour the Ability needs from the start.
 
-## Backstep
+## Smoke Step — Utility
 
-A contextual spacing tool.
+**Status: Implemented Foundation / Balance Working**
 
-It should normally become useful when Ranger is closer to a threat than the
-Character's preferred ranged spacing.
+Smoke Step replaces the previous long-distance Backstep design.
 
-## Guard
+Ranger performs only a short hop away from the immediate threat.
 
-A mitigation-based Sustain Ability.
+The Ability records Ranger's departure position and hop direction.
 
-The short blocking presentation communicates activation while the longer
-defensive aura communicates the remaining buff duration.
+Enemies inside the Smoke radius become Feared.
+
+Fear gives those enemies:
+
+- a primary movement direction opposite Ranger's hop;
+- a weaker lateral steering influence toward that movement axis;
+- temporary prevention of basic attacks;
+- temporary prevention of support actions;
+- temporary prevention of new Ability activations.
+
+Enemies remain mobile and move using their ordinary authored Move Speed.
+
+The lateral steering creates a loose retreating corridor rather than pulling
+every target to one point.
+
+This gives Smoke Step two purposes:
+
+immediate ranged disengagement
++
+formation setup for follow-up attacks such as Power Shot.
+
+The previous route-constrained and safe-destination Backstep experiments were
+removed because tactical Ability movement should not require a parallel
+navigation system.
+
+Dedicated smoke presentation remains future presentation work.
+
+## Guard — Sustain
+
+**Status: Implemented Foundation / Balance Working**
+
+Guard establishes longer-term defence rather than immediate disengagement.
+
+Each activation may provide:
+
+hit-based Shield layers
++
+healing over time.
+
+Ranger currently begins with a maximum Shield Capacity of 3.
+
+Shield layers have no duration and remain until their authored hit capacity is
+consumed.
+
+Repeated Guard activations may add layers until the current Shield Capacity is
+reached.
+
+The healing-over-time effect has its own duration and refresh semantics.
+
+This keeps Guard distinct from Smoke Step:
+
+Smoke Step
+→ escape immediate close-range pressure and reshape enemy formation.
+
+Guard
+→ prepare to remain under pressure.

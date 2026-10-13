@@ -4,6 +4,27 @@
 
 These rules protect the generic ability, reward and buildcraft architecture.
 
+
+# Player-Facing Design Approval
+
+The user retains final authority over player-facing ability identity, character playstyle and major gameplay design decisions.
+
+The assistant may:
+- analyse existing mechanics;
+- identify conflicts;
+- propose alternatives;
+- explain trade-offs;
+- recommend a direction.
+
+When a player-facing design choice is still unresolved, do not silently select an option and implement it.
+
+Record decisions explicitly as Confirmed, Working or Exploratory.
+
+Only treat a proposed ability or playstyle design as locked once the user has approved it.
+
+After approval, implement the agreed design without quietly changing its intended role.
+
+
 # Ability architecture rules
 
 Abilities are an important generic gameplay primitive.

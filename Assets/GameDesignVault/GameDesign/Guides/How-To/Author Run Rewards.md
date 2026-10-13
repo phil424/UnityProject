@@ -30,6 +30,46 @@ Reward Sets organise content.
 
 Reward Definitions remain responsible for actual eligibility and application.
 
+# Rarity Profile
+
+The active Reward Catalogue owns the baseline Reward rarity weights.
+
+Open:
+
+Tools
+→ MiniCrawler
+→ Content Workbench
+→ Run Rewards.
+
+Expand:
+
+`Rarity Profile`.
+
+Current working baseline:
+
+- Common: `60`;
+- Uncommon: `25`;
+- Rare: `10`;
+- Epic: `4`;
+- Legendary: `1`.
+
+The Workbench shows the normalised baseline chance when all five tiers are
+represented.
+
+Weights are relative.
+
+They do not need to total 100.
+
+A value of `0` disables that rarity from selection.
+
+Runtime generation only includes rarity tiers that actually have eligible
+Rewards for the current Reward Vector / Character / build.
+
+Therefore a Rare-only eligible pool still produces Rare Rewards even though
+Rare has a lower normal baseline weight than Common.
+
+Individual Reward rarity remains authored on the Reward Definition itself.
+
 # Quick Start
 
 1. Open the Content Workbench.
@@ -62,7 +102,34 @@ Use:
 
 to reuse an existing Set.
 
-Removing a Set from the Catalogue does not delete the Set asset or its Rewards.
+## Remove Set From Catalogue
+
+`Remove Set From Catalogue`
+
+removes only the membership between the selected Set and the active Catalogue.
+
+The Reward Set asset remains.
+
+Its Reward assets remain.
+
+This operation is suitable when content may be reused or reactivated later and
+is Undo-compatible.
+
+## Delete Reward Set Asset
+
+`Delete Reward Set Asset...`
+
+is an explicitly destructive operation.
+
+Before deletion the Workbench removes the Set from every
+`RunRewardCatalogDefinition` found in the project.
+
+The Reward Set ScriptableObject is then permanently deleted.
+
+Rewards referenced by the Set are NOT deleted.
+
+Permanent Set-asset deletion requires confirmation and is not treated as an
+Undo operation.
 
 # Creating Rewards
 
@@ -99,6 +166,36 @@ Configure:
 
 The player-facing description is generated from the existing stat-presentation
 logic.
+
+## Character Growth Eligibility
+
+Character Growth Rewards may optionally restrict which Characters can receive
+them.
+
+In the Reward inspector:
+
+`Eligibility`
+→ `Eligible Members`.
+
+Leave the collection empty when the Reward is generic.
+
+Example:
+
+Combat Training
+→ Eligible Members empty
+→ any Character.
+
+Expanded Guard
+→ Eligible Members contains Ranger
+→ Ranger only.
+
+Use Character eligibility when a shared Character stat is not meaningful for
+every current Character.
+
+Do not create a separate Character-specific Reward type solely for this purpose.
+
+Eligibility participates in the normal Reward candidate filtering before rarity
+selection.
 
 # Ability Unlock Rewards
 
@@ -165,7 +262,32 @@ The Catalogue deduplicates resolved Rewards.
 
 The Workbench displays all current Set memberships for the selected Reward.
 
-Removing a Reward from a Set does not delete the Reward asset.
+## Remove Selected From Set
+
+This removes only the selected Reward / Set membership.
+
+The Reward asset remains available for reuse.
+
+The operation is Undo-compatible.
+
+## Delete Reward Asset
+
+`Delete Selected Reward Asset...`
+
+is explicitly destructive.
+
+Before deleting the Reward asset, the Workbench searches all project
+`RunRewardSetDefinition` assets and removes every membership referencing that
+Reward.
+
+The Reward ScriptableObject is then permanently deleted.
+
+The confirmation dialog reports how many Set memberships will be removed.
+
+Permanent Reward-asset deletion is not treated as an Undo operation.
+
+Use membership removal rather than asset deletion when content may be reused or
+redesigned later.
 
 # Asset Naming
 
@@ -195,14 +317,32 @@ Current checks include:
 - missing stable IDs;
 - duplicate Reward IDs.
 
-Validation is non-destructive.
+Validation itself is non-destructive.
+
+If the active Catalogue contains broken/null Set or Reward memberships, the
+Workbench exposes:
+
+`Clean Missing Reference(s)`.
+
+This is an explicit repair action.
+
+Only broken/null memberships are removed.
+
+Valid Set and Reward assets are preserved.
 
 # Manual Escape Hatch
 
 All Catalogue, Set and Reward assets remain ordinary Unity ScriptableObjects.
 
-Use the normal Project window / Inspector for unusual repair work or manual asset
-deletion.
+Normal creation, membership management, missing-reference repair, Reward
+deletion and Reward Set deletion should use the Content Workbench.
+
+Use the Project window / Inspector for:
+
+- diagnosis;
+- unusual repairs;
+- advanced content inspection;
+- workflows not represented by the normal Workbench.
 
 # Runtime Validation
 

@@ -53,7 +53,8 @@ namespace MiniCrawler.Systems
         [SerializeField, Min(1)]
         private int runRewardOfferCount = 3;
 
-        private readonly List<RunRewardDefinition> availableRunRewards = new();
+        [SerializeField, Min(0)]
+        private int startingRewardRerolls = 1;
 
         private RunSetup setup;
 
@@ -74,6 +75,29 @@ namespace MiniCrawler.Systems
         public int LastLevel3ResourcesBanked { get; private set; }
 
         public bool CanContinueRun => RunProgress.HasActiveRun && state == RunFlowState.BetweenLevels && !RunProgress.HasPendingRewardChoice;
+        public int RewardRerollsRemaining => RunProgress.RewardRerollsRemaining;
+
+        public bool CanRerollPendingReward
+        {
+            get
+            {
+                if (runRewardCatalog == null || RunProgress.CurrentRun == null || RunProgress.RewardRerollsRemaining <= 0)
+                {
+                    return false;
+                }
+
+                PendingRewardChoice choice = RunProgress.CurrentPendingRewardChoice;
+
+                if (choice == null || choice.OfferCount <= 0)
+                {
+                    return false;
+                }
+
+                int alternatives = RunUpgradeOfferGenerator.CountEligibleOfferGroups(RunProgress.CurrentRun, runRewardCatalog, choice.Context.RewardVector, choice.Offers);
+
+                return alternatives >= choice.OfferCount;
+            }
+        }
 
         private void Awake()
         {
@@ -86,9 +110,19 @@ namespace MiniCrawler.Systems
             {
                 Debug.LogError("RunDirector requires a Run Reward catalogue.", this);
             }
-            else if (runRewardCatalog.CollectRewards(availableRunRewards) == 0)
+            else
             {
-                Debug.LogWarning("RunDirector's Run Reward catalogue contains no configured rewards.", this);
+                List<RunRewardDefinition> configuredRewards = new();
+
+                if (runRewardCatalog.CollectRewards(configuredRewards) == 0)
+                {
+                    Debug.LogWarning("RunDirector's Run Reward catalogue contains no configured rewards.", this);
+                }
+
+                if (!runRewardCatalog.HasPositiveRarityWeight)
+                {
+                    Debug.LogWarning("RunDirector's Run Reward catalogue has no positive rarity weights.", this);
+                }
             }
 
             PersistentProgression.InitializeCharacterRoster(characterRoster);
@@ -154,7 +188,7 @@ namespace MiniCrawler.Systems
             LastLevel3ResourcesBanked = 0;
             LastLevelWon = false;
 
-            RunStartConfiguration configuration = setup.CreateConfiguration();
+            RunStartConfiguration configuration = setup.CreateConfiguration(startingRewardRerolls);
 
             if (!RunProgress.BeginRun(configuration))
             {
@@ -189,6 +223,50 @@ namespace MiniCrawler.Systems
                 return false;
 
             RefreshLivePartyMember(offer.Member);
+            return true;
+        }
+
+        public bool TryRerollPendingReward()
+        {
+            if (!CanRerollPendingReward || RunProgress.CurrentRun == null)
+            {
+                return false;
+            }
+
+            PendingRewardChoice choice = RunProgress.CurrentPendingRewardChoice;
+
+            int requiredOfferCount = choice.OfferCount;
+            int nonRepeatingGroups = RunUpgradeOfferGenerator.CountEligibleOfferGroups(
+                RunProgress.CurrentRun,
+                runRewardCatalog,
+                choice.Context.RewardVector,
+                choice.Offers,
+                excludeDiversityGroups: true
+            );
+
+            bool canAvoidImmediateGroups = nonRepeatingGroups >= requiredOfferCount;
+
+            IReadOnlyList<RunUpgradeOffer> offers = RunUpgradeOfferGenerator.Generate(
+                RunProgress.CurrentRun,
+                runRewardCatalog,
+                requiredOfferCount,
+                choice.Context.RewardVector,
+                choice.Offers,
+                excludeDiversityGroups: canAvoidImmediateGroups
+            );
+
+            if (offers.Count != requiredOfferCount)
+            {
+                return false;
+            }
+
+            if (!RunProgress.TryRerollPendingReward(offers))
+            {
+                return false;
+            }
+
+            Debug.Log($"Rerolled pending reward choice. " + $"{RunProgress.RewardRerollsRemaining} " + "reroll(s) remaining.");
+
             return true;
         }
 
@@ -331,7 +409,7 @@ namespace MiniCrawler.Systems
             if (runState == null)
                 return;
 
-            IReadOnlyList<RunUpgradeOffer> offers = RunUpgradeOfferGenerator.Generate(runState, availableRunRewards, runRewardOfferCount, context.RewardVector);
+            IReadOnlyList<RunUpgradeOffer> offers = RunUpgradeOfferGenerator.Generate(runState, runRewardCatalog, runRewardOfferCount, context.RewardVector);
 
             if (offers.Count == 0)
             {
@@ -355,6 +433,22 @@ namespace MiniCrawler.Systems
 
             if (!stageDirector.TryAwardRewardChoice(RunRewardVector.Any, "Debug Reward"))
                 Debug.LogWarning("The current level could not award a reward choice.");
+        }
+
+        [ContextMenu("Debug/Queue Character Growth Reward")]
+        private void DebugQueueCharacterGrowthReward()
+        {
+            if (!Application.isPlaying || state != RunFlowState.InLevel || !RunProgress.HasActiveRun || stageDirector == null)
+            {
+                Debug.LogWarning("A Character Growth reward can only be queued during an active level.");
+
+                return;
+            }
+
+            if (!stageDirector.TryAwardRewardChoice(RunRewardVector.CharacterGrowth, "Debug Character Growth Reward"))
+            {
+                Debug.LogWarning("The current level could not award a Character Growth reward choice.");
+            }
         }
 
         [ContextMenu("Debug/Queue Weapon Mod Reward")]

@@ -14,4 +14,3 @@ MonoBehaviour:
   m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Progress.RunRewardSetDefinition
   rewards:
   - {fileID: 11400000, guid: 2904d326533f9104fbae33755a5c83cc, type: 2}
-  - {fileID: 11400000, guid: 513538b491572bc4fbc7bfdd62c16039, type: 2}

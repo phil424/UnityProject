@@ -10,11 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5fc99cc2ad4c0294b9f5ab3362ba4ebf, type: 3}
-  m_Name: SharpenedBlade
+  m_Name: HealthIncrease3Reward
   m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Progress.RunUpgradeDefinition
-  id: sharpened_blade
-  displayName: Sharpened Blade
+  id: reward_health_increase_3
+  displayName: Health Increase 3
   icon: {fileID: 0}
-  rarity: 1
-  effectType: 0
-  amount: 5
+  rarity: 2
+  effectType: 4
+  amount: 16
+  eligibleMembers: []

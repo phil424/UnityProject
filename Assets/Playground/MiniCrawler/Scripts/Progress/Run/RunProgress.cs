@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
-using UnityEngine;
-using MiniCrawler.Core;
 using MiniCrawler.Abilities;
+using MiniCrawler.Core;
 using MiniCrawler.Expedition;
+using UnityEngine;
 
 namespace MiniCrawler.Progress
 {
@@ -12,7 +12,7 @@ namespace MiniCrawler.Progress
         public static event Action Changed;
 
         public static RunState CurrentRun { get; private set; }
-        
+
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         private static void ResetSession()
         {
@@ -27,17 +27,18 @@ namespace MiniCrawler.Progress
         public static WorldEventState WorldEvents => CurrentRun?.WorldEvents;
 
         public static IReadOnlyList<PartyMemberDefinition> SelectedParty => CurrentRun != null ? CurrentRun.SelectedParty : Array.Empty<PartyMemberDefinition>();
-        
+
         public static IReadOnlyList<PendingRewardChoice> PendingRewardChoices => CurrentRun != null ? CurrentRun.PendingRewardChoices : Array.Empty<PendingRewardChoice>();
 
         public static int PendingRewardChoiceCount => CurrentRun != null ? CurrentRun.PendingRewardChoiceCount : 0;
+        public static int RewardRerollsRemaining => CurrentRun != null ? CurrentRun.RewardRerollsRemaining : 0;
 
         public static PendingRewardChoice CurrentPendingRewardChoice => CurrentRun?.CurrentPendingRewardChoice;
 
         public static IReadOnlyList<RunUpgradeOffer> CurrentPendingRewardOffers => CurrentRun != null ? CurrentRun.CurrentPendingRewardOffers : Array.Empty<RunUpgradeOffer>();
 
         public static bool HasPendingRewardChoice => CurrentRun != null && CurrentRun.HasPendingRewardChoice;
-        
+
         public static IReadOnlyList<ExpeditionObjectiveState> Objectives => CurrentRun != null ? CurrentRun.Objectives : Array.Empty<ExpeditionObjectiveState>();
 
         public static bool BeginRun(RunStartConfiguration configuration)
@@ -76,7 +77,7 @@ namespace MiniCrawler.Progress
 
             Changed?.Invoke();
         }
-        
+
         public static int GetPersistentResourceEarned(PersistentResourceTier tier)
         {
             return CurrentRun != null ? CurrentRun.GetPersistentResourceEarned(tier) : 0;
@@ -98,7 +99,7 @@ namespace MiniCrawler.Progress
 
             return CurrentRun.GetBuild(definition);
         }
-        
+
         public static bool TryAcquireAbility(PartyMemberDefinition definition, AbilityDefinition ability)
         {
             if (CurrentRun == null)
@@ -111,7 +112,7 @@ namespace MiniCrawler.Progress
 
             return acquired;
         }
-        
+
         public static bool TryAddObjectiveProgress(ExpeditionObjectiveDefinition definition, int amount)
         {
             if (CurrentRun == null)
@@ -151,6 +152,19 @@ namespace MiniCrawler.Progress
             return chosen;
         }
 
+        public static bool TryRerollPendingReward(IEnumerable<RunUpgradeOffer> offers)
+        {
+            if (CurrentRun == null)
+                return false;
+
+            bool rerolled = CurrentRun.TryRerollCurrentPendingReward(offers);
+
+            if (rerolled)
+                Changed?.Invoke();
+
+            return rerolled;
+        }
+
         public static int GetAbilityUpgradeCost(PartyMemberDefinition definition, AbilityDefinition ability)
         {
             if (CurrentRun == null)
@@ -172,40 +186,24 @@ namespace MiniCrawler.Progress
             return purchased;
         }
 
-        public static float GetDamageBonus(
-            PartyMemberDefinition definition
-        )
+        public static float GetDamageBonus(PartyMemberDefinition definition)
         {
-            return CurrentRun != null
-                ? CurrentRun.GetDamageBonus(definition)
-                : 0f;
+            return CurrentRun != null ? CurrentRun.GetDamageBonus(definition) : 0f;
         }
 
-        public static float GetArmourBonus(
-            PartyMemberDefinition definition
-        )
+        public static float GetArmourBonus(PartyMemberDefinition definition)
         {
-            return CurrentRun != null
-                ? CurrentRun.GetArmourBonus(definition)
-                : 0f;
+            return CurrentRun != null ? CurrentRun.GetArmourBonus(definition) : 0f;
         }
 
-        public static float GetHealthBonus(
-            PartyMemberDefinition definition
-        )
+        public static float GetHealthBonus(PartyMemberDefinition definition)
         {
-            return CurrentRun != null
-                ? CurrentRun.GetHealthBonus(definition)
-                : 0f;
+            return CurrentRun != null ? CurrentRun.GetHealthBonus(definition) : 0f;
         }
 
-        public static float GetHealingBonus(
-            PartyMemberDefinition definition
-        )
+        public static float GetHealingBonus(PartyMemberDefinition definition)
         {
-            return CurrentRun != null
-                ? CurrentRun.GetHealingBonus(definition)
-                : 0f;
+            return CurrentRun != null ? CurrentRun.GetHealingBonus(definition) : 0f;
         }
     }
 }

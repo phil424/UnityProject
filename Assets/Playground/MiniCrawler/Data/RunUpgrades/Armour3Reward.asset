@@ -10,11 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5fc99cc2ad4c0294b9f5ab3362ba4ebf, type: 3}
-  m_Name: FleetFooted
+  m_Name: Armour3Reward
   m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Progress.RunUpgradeDefinition
-  id: fleet_footed
-  displayName: Fleet Footed
+  id: reward_armour_3
+  displayName: Armour 3
   icon: {fileID: 0}
-  rarity: 3
-  effectType: 1
-  amount: 75
+  rarity: 2
+  effectType: 3
+  amount: 1.5
+  eligibleMembers: []

@@ -126,6 +126,50 @@ The Catalogue defines available content.
 
 It does not replace concrete Reward eligibility.
 
+# Rarity Selection
+
+`RunRewardCatalogDefinition` owns the baseline rarity-weight profile.
+
+Current working profile:
+
+Common
+→ 60.
+
+Uncommon
+→ 25.
+
+Rare
+→ 10.
+
+Epic
+→ 4.
+
+Legendary
+→ 1.
+
+`RunUpgradeOfferGenerator` does not weight individual Reward assets directly by
+their count.
+
+For each offer slot it:
+
+1. builds the eligible Reward candidate pool;
+2. identifies rarity tiers represented by those candidates;
+3. sums the Catalogue weights for those represented tiers;
+4. performs a weighted rarity roll;
+5. selects one eligible offer from the chosen rarity;
+6. removes that offer;
+7. repeats for the next slot.
+
+A rarity with no eligible candidates contributes no weight to that roll.
+
+A rarity with weight `0` is disabled for selection while that profile remains
+authored.
+
+If no represented rarity has positive weight, no offer can be selected.
+
+Reward Vector and concrete Reward eligibility remain earlier filters and are
+not bypassed by rarity.
+
 # Unified Content Workbench — Run Rewards
 
 Normal Run Reward authoring uses:
@@ -226,10 +270,8 @@ preserving GUID-based references.
 
 The current Catalogue does not yet define:
 
-- weighting;
 - Region-specific pools;
 - Boss-specific pools;
-- rarity roll tables;
 - encounter-specific catalogue composition.
 
 These should be introduced only alongside concrete gameplay requirements rather

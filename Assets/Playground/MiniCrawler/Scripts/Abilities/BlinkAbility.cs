@@ -3,6 +3,7 @@ using MiniCrawler.Combat;
 using MiniCrawler.Core;
 using MiniCrawler.Movement;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace MiniCrawler.Abilities
 {
@@ -25,41 +26,57 @@ namespace MiniCrawler.Abilities
         private float arrivalOffset = 0.35f;
 
         [SerializeField, Min(0f)]
+        private float openingDelay = 0.15f;
+
+        [SerializeField, Min(0f)]
         private float finishDelay = 0.1f;
 
-        [Header("Impact")]
+        [Header("Opening Control")]
+        [SerializeField]
+        private AbilityLevelValue openingControlRadius = new();
+
+        [FormerlySerializedAs("knockbackDistance")]
+        [SerializeField]
+        private AbilityLevelValue openingKnockbackDistance = new();
+
+        [FormerlySerializedAs("knockbackSpeed")]
+        [SerializeField]
+        private AbilityLevelValue openingKnockbackSpeed = new();
+
+        [FormerlySerializedAs("stunDuration")]
+        [SerializeField]
+        private AbilityLevelValue openingStunDuration = new();
+
+        [Header("Traversal Impact")]
         [SerializeField]
         private AbilityLevelValue damage = new();
 
-        [SerializeField]
-        private AbilityLevelValue knockbackDistance = new();
-
-        [SerializeField]
-        private AbilityLevelValue knockbackSpeed = new();
-
-        [SerializeField]
-        private AbilityLevelValue stunDuration = new();
-
         private readonly List<Health> traversalRoute = new();
 
+        private Vector3 sigilCentre;
+
         private int nextRouteIndex;
+        private float openingRemaining;
         private float bounceRemaining;
         private float finishRemaining;
+
+        private bool traversalStarted;
+        private bool returnedToSigil;
         private bool invulnerabilityActive;
 
         public float SearchRadius => Mathf.Max(0.1f, Evaluate(searchRadius));
-
         public int MaximumBounces => Mathf.Max(1, Mathf.RoundToInt(Evaluate(maximumBounces)));
-
         public float BounceInterval => Mathf.Max(0.05f, Evaluate(bounceInterval));
 
+        public float OpeningControlRadius => Mathf.Max(0.1f, Evaluate(openingControlRadius));
+
+        public float OpeningKnockbackDistance => Mathf.Max(0f, Evaluate(openingKnockbackDistance));
+
+        public float OpeningKnockbackSpeed => Mathf.Max(0f, Evaluate(openingKnockbackSpeed));
+
+        public float OpeningStunDuration => Mathf.Max(0f, Evaluate(openingStunDuration));
+
         public float Damage => Mathf.Max(0f, Evaluate(damage));
-
-        public float KnockbackDistance => Mathf.Max(0f, Evaluate(knockbackDistance));
-
-        public float KnockbackSpeed => Mathf.Max(0f, Evaluate(knockbackSpeed));
-
-        public float StunDuration => Mathf.Max(0f, Evaluate(stunDuration));
 
         protected override bool CanActivateAbility()
         {
@@ -78,7 +95,12 @@ namespace MiniCrawler.Abilities
         {
             AutoTargetMover mover = Owner != null ? Owner.GetComponent<AutoTargetMover>() : null;
 
-            if (mover == null || !BuildTraversalRoute(mover))
+            if (mover == null)
+                return false;
+
+            sigilCentre = Owner.transform.position;
+
+            if (!BuildTraversalRoute(mover, sigilCentre))
                 return false;
 
             if (!BeginExecution())
@@ -86,66 +108,119 @@ namespace MiniCrawler.Abilities
 
             if (!InvulnerabilityRuntime.Begin(Owner, InvulnerabilitySourceId))
             {
-                traversalRoute.Clear();
+                ResetRuntimeState();
                 EndExecution();
                 return false;
             }
 
             invulnerabilityActive = true;
+
+            ForcedMotion forcedMotion = Owner.GetComponent<ForcedMotion>();
+
+            forcedMotion?.Clear();
+
             nextRouteIndex = 0;
+            openingRemaining = openingDelay;
             bounceRemaining = 0f;
             finishRemaining = finishDelay;
+            traversalStarted = false;
+            returnedToSigil = false;
 
-            if (!TryPerformNextBounce())
-            {
-                EndBlink();
-                return false;
-            }
+            int controlledTargets = ApplyOpeningControl(mover, sigilCentre);
 
-            bounceRemaining = BounceInterval;
+            Debug.Log(
+                $"[Ability] {Owner.name} activated {AbilityName} from its Sigil Centre, " + $"controlled {controlledTargets} target(s) and planned " + $"{traversalRoute.Count} traversal point(s)."
+            );
 
-            Debug.Log($"[Ability] {Owner.name} activated {AbilityName} with " + $"{traversalRoute.Count} planned traversal point(s).");
+            if (openingRemaining <= 0f)
+                BeginTraversal();
 
             return true;
         }
 
         protected override void TickExecution(float deltaTime)
         {
-            if (nextRouteIndex >= traversalRoute.Count)
+            if (!traversalStarted)
             {
-                finishRemaining -= deltaTime;
+                openingRemaining -= deltaTime;
 
-                if (finishRemaining <= 0f)
-                    EndBlink();
+                if (openingRemaining > 0f)
+                    return;
 
+                BeginTraversal();
                 return;
             }
 
-            bounceRemaining -= deltaTime;
+            if (!returnedToSigil)
+            {
+                if (nextRouteIndex < traversalRoute.Count)
+                {
+                    bounceRemaining -= deltaTime;
 
-            if (bounceRemaining > 0f)
+                    if (bounceRemaining > 0f)
+                        return;
+
+                    if (TryPerformNextBounce())
+                    {
+                        bounceRemaining = BounceInterval;
+                        return;
+                    }
+                }
+
+                ReturnToSigilCentre();
                 return;
+            }
+
+            finishRemaining -= deltaTime;
+
+            if (finishRemaining <= 0f)
+                EndBlink();
+        }
+
+        protected override void OnDisable()
+        {
+            ReleaseInvulnerability();
+            ResetRuntimeState();
+
+            base.OnDisable();
+        }
+
+        private void BeginTraversal()
+        {
+            traversalStarted = true;
+            openingRemaining = 0f;
 
             if (!TryPerformNextBounce())
             {
-                nextRouteIndex = traversalRoute.Count;
-                finishRemaining = finishDelay;
+                ReturnToSigilCentre();
                 return;
             }
 
             bounceRemaining = BounceInterval;
         }
 
-        protected override void OnDisable()
+        private int ApplyOpeningControl(AutoTargetMover mover, Vector3 centre)
         {
-            ReleaseInvulnerability();
+            Health[] possibleTargets = FindObjectsByType<Health>(FindObjectsSortMode.None);
 
-            traversalRoute.Clear();
-            nextRouteIndex = 0;
-            bounceRemaining = 0f;
-            finishRemaining = 0f;
+            int controlledCount = 0;
 
-            base.OnDisable();
+            foreach (Health target in possibleTargets)
+            {
+                if (!IsValidTarget(mover, target, centre, OpeningControlRadius))
+                {
+                    continue;
+                }
+
+                bool moved = KnockbackResolver.TryApply(Owner, target, OpeningKnockbackDistance, OpeningKnockbackSpeed);
+
+                bool stunned = StunRuntime.Apply(Owner, target, OpeningStunDuration, AbilityName);
+
+                if (moved || stunned)
+                    controlledCount++;
+            }
+
+            return controlledCount;
         }
 
         private bool HasValidTarget(AutoTargetMover mover)
@@ -156,18 +231,18 @@ namespace MiniCrawler.Abilities
 
             foreach (Health target in possibleTargets)
             {
-                if (IsValidTarget(mover, target, origin))
+                if (IsValidTarget(mover, target, origin, SearchRadius))
+                {
                     return true;
+                }
             }
 
             return false;
         }
 
-        private bool BuildTraversalRoute(AutoTargetMover mover)
+        private bool BuildTraversalRoute(AutoTargetMover mover, Vector3 origin)
         {
             traversalRoute.Clear();
-
-            Vector3 origin = Owner.transform.position;
 
             List<Health> candidates = new();
 
@@ -175,8 +250,10 @@ namespace MiniCrawler.Abilities
 
             foreach (Health target in possibleTargets)
             {
-                if (IsValidTarget(mover, target, origin))
+                if (IsValidTarget(mover, target, origin, SearchRadius))
+                {
                     candidates.Add(target);
+                }
             }
 
             if (candidates.Count == 0)
@@ -194,6 +271,7 @@ namespace MiniCrawler.Abilities
                 {
                     traversalRoute.Add(currentTarget);
                     routePosition = currentTarget.transform.position;
+
                     candidates.RemoveAt(currentTargetIndex);
                 }
             }
@@ -233,7 +311,9 @@ namespace MiniCrawler.Abilities
                 float distanceSquared = offset.sqrMagnitude;
 
                 if (distanceSquared <= greatestDistanceSquared)
+                {
                     continue;
+                }
 
                 greatestDistanceSquared = distanceSquared;
 
@@ -285,7 +365,7 @@ namespace MiniCrawler.Abilities
 
             Vector3 destination = targetPosition - approachDirection * arrivalOffset;
 
-            destination.y = previousPosition.y;
+            destination.y = sigilCentre.y;
 
             Owner.transform.position = destination;
 
@@ -293,16 +373,9 @@ namespace MiniCrawler.Abilities
             {
                 DamageResolver.ApplyDamage(Owner, target, Damage, AbilityName);
             }
-
-            if (target.IsDead)
-                return;
-
-            KnockbackResolver.TryApplyDirectional(Owner, target, approachDirection, KnockbackDistance, KnockbackSpeed);
-
-            StunRuntime.Apply(Owner, target, StunDuration, AbilityName);
         }
 
-        private bool IsValidTarget(AutoTargetMover mover, Health target, Vector3 origin)
+        private bool IsValidTarget(AutoTargetMover mover, Health target, Vector3 origin, float radius)
         {
             if (Owner == null || mover == null || target == null || target.IsDead || target.gameObject == Owner)
             {
@@ -320,17 +393,33 @@ namespace MiniCrawler.Abilities
 
             offset.y = 0f;
 
-            return offset.sqrMagnitude <= SearchRadius * SearchRadius;
+            return offset.sqrMagnitude <= radius * radius;
+        }
+
+        private void ReturnToSigilCentre()
+        {
+            if (returnedToSigil || Owner == null)
+            {
+                return;
+            }
+
+            ForcedMotion forcedMotion = Owner.GetComponent<ForcedMotion>();
+
+            forcedMotion?.Clear();
+
+            Owner.transform.position = sigilCentre;
+
+            returnedToSigil = true;
+            finishRemaining = finishDelay;
         }
 
         private void EndBlink()
         {
-            ReleaseInvulnerability();
+            if (!returnedToSigil)
+                ReturnToSigilCentre();
 
-            traversalRoute.Clear();
-            nextRouteIndex = 0;
-            bounceRemaining = 0f;
-            finishRemaining = 0f;
+            ReleaseInvulnerability();
+            ResetRuntimeState();
 
             EndExecution();
         }
@@ -347,6 +436,21 @@ namespace MiniCrawler.Abilities
             invulnerabilityActive = false;
         }
 
+        private void ResetRuntimeState()
+        {
+            traversalRoute.Clear();
+
+            sigilCentre = Vector3.zero;
+
+            nextRouteIndex = 0;
+            openingRemaining = 0f;
+            bounceRemaining = 0f;
+            finishRemaining = 0f;
+
+            traversalStarted = false;
+            returnedToSigil = false;
+        }
+
         private string InvulnerabilitySourceId => Definition != null ? $"Ability:{Definition.Id}" : $"Ability:{GetType().Name}";
 
         private float Evaluate(AbilityLevelValue value)
@@ -359,6 +463,8 @@ namespace MiniCrawler.Abilities
             Vector3 centre = Owner != null ? Owner.transform.position : transform.position;
 
             Gizmos.DrawWireSphere(centre, SearchRadius);
+
+            Gizmos.DrawWireSphere(centre, OpeningControlRadius);
         }
     }
 }

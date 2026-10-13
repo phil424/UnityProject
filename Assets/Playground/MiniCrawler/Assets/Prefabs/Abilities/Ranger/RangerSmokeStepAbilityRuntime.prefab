@@ -9,9 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8290116975709097207}
-  - component: {fileID: 106479004276224766}
+  - component: {fileID: 2652460516571822414}
   m_Layer: 0
-  m_Name: RangerBackstepAbilityRuntime
+  m_Name: RangerSmokeStepAbilityRuntime
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -32,7 +32,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &106479004276224766
+--- !u!114 &2652460516571822414
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -41,27 +41,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 5063621418869492215}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d2b04a85b354f134384c92cd9381ee4e, type: 3}
+  m_Script: {fileID: 11500000, guid: 03d5ec6791f2353409dae2078aff93e8, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Abilities.BackstepAbility
-  maximumDistance:
-    baseValue: 4
-    perLevel: 0.25
-  desiredSeparation:
-    baseValue: 5.5
-    perLevel: 0
-  speed:
+  m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Abilities.SmokeStepAbility
+  hopDistance:
+    baseValue: 1.25
+    perLevel: 0.05
+  hopSpeed:
     baseValue: 12
     perLevel: 0
-  controlRadius:
-    baseValue: 2.5
-    perLevel: 0.25
-  knockbackDistance:
-    baseValue: 2.5
-    perLevel: 0.25
-  knockbackSpeed:
-    baseValue: 10
-    perLevel: 0
-  stunDuration:
-    baseValue: 0.65
-    perLevel: 0.2
+  smokeRadius:
+    baseValue: 3
+    perLevel: 0.5
+  fearDuration:
+    baseValue: 2
+    perLevel: 0.5
+  lateralFunnelStrength: 0.35
+  funnelDeadZone: 0.75

@@ -28,6 +28,13 @@ namespace MiniCrawler.Progress
             if (knockbackStats == null)
                 knockbackStats = spawnedActor.AddComponent<KnockbackStats>();
 
+            ShieldCapacityStats shieldCapacityStats = spawnedActor.GetComponent<ShieldCapacityStats>();
+
+            if (shieldCapacityStats != null && spawnedActor.GetComponent<HitShieldRuntime>() == null)
+            {
+                spawnedActor.AddComponent<HitShieldRuntime>();
+            }
+
             float gearDamageBonus = build.WeaponLevel * definition.DamagePerWeaponLevel;
             float gearArmourBonus = build.ArmourLevel * definition.ArmourPerArmourLevel;
             float healthBonus = build.ArmourLevel * definition.HealthPerArmourLevel + build.FlatMaxHealthBonus;
@@ -43,9 +50,14 @@ namespace MiniCrawler.Progress
             {
                 mover.ApplyRunMoveSpeedBonus(build.MoveSpeedPercentBonus);
             }
-            
+
             abilityStats.ApplyRunCooldownRecoveryBonus(build.AbilityCooldownRecoveryPercentBonus);
             knockbackStats.ApplyRunPowerBonus(build.KnockbackPowerPercentBonus);
+
+            if (shieldCapacityStats != null)
+            {
+                shieldCapacityStats.ApplyRunCapacityBonus(build.ShieldCapacityBonus);
+            }
 
             if (health != null)
             {

@@ -20,55 +20,89 @@ namespace MiniCrawler.Tools
             Approach,
             Threshold,
             OnTop,
-            ArriveWhilePursued
+            ArriveWhilePursued,
         }
 
         public enum EncounterStartMode
         {
             SpawnOnArrival,
-            PreSpawnFromStart
+            PreSpawnFromStart,
         }
 
         [Header("Workshop Runtime")]
-        [SerializeField] private StageDirector stageDirector;
-        [SerializeField] private EncounterDirectionController encounterDirection;
-        [SerializeField] private LevelEncounter encounter;
-        [SerializeField] private Transform partySpawnPoint;
+        [SerializeField]
+        private StageDirector stageDirector;
+
+        [SerializeField]
+        private EncounterDirectionController encounterDirection;
+
+        [SerializeField]
+        private LevelEncounter encounter;
+
+        [SerializeField]
+        private Transform partySpawnPoint;
 
         [Header("Test Party")]
-        [SerializeField] private PartyMemberDefinition partyMember;
-        [SerializeField] private EncounterWorkshopBuildConfiguration testBuild = new();
-        
+        [SerializeField]
+        private PartyMemberDefinition partyMember;
+
+        [SerializeField]
+        private EncounterWorkshopBuildConfiguration testBuild = new();
+
         [Header("Encounter Authoring")]
-        [SerializeField] private ActorDefinition[] authoringActorPalette = Array.Empty<ActorDefinition>();
-        
+        [SerializeField]
+        private ActorDefinition[] authoringActorPalette = Array.Empty<ActorDefinition>();
+
         [Header("Route Context")]
-        [SerializeField] private EncounterWorkshopRouteContext routeContext;
-        [SerializeField] private EncounterWorkshopRouteContext.ContextKind routeContextKind =
-            EncounterWorkshopRouteContext.ContextKind.Path;
+        [SerializeField]
+        private EncounterWorkshopRouteContext routeContext;
+
+        [SerializeField]
+        private EncounterWorkshopRouteContext.ContextKind routeContextKind = EncounterWorkshopRouteContext.ContextKind.Path;
 
         [Header("Scenario")]
-        [SerializeField] private ArrivalScenario arrivalScenario = ArrivalScenario.Approach;
-        [SerializeField] private EncounterStartMode encounterStartMode = EncounterStartMode.SpawnOnArrival;
-        [SerializeField] private Vector3 approachDirection = Vector3.forward;
-        [SerializeField, Min(1f)] private float approachDistance = 15f;
-        [SerializeField, Min(0.1f)] private float thresholdOffset = 0.5f;
+        [SerializeField]
+        private ArrivalScenario arrivalScenario = ArrivalScenario.Approach;
+
+        [SerializeField]
+        private EncounterStartMode encounterStartMode = EncounterStartMode.SpawnOnArrival;
+
+        [SerializeField]
+        private Vector3 approachDirection = Vector3.forward;
+
+        [SerializeField, Min(1f)]
+        private float approachDistance = 15f;
+
+        [SerializeField, Min(0.1f)]
+        private float thresholdOffset = 0.5f;
 
         [Header("Pursued Scenario")]
-        [SerializeField] private ActorDefinition pursuerDefinition;
-        [SerializeField, Min(1)] private int pursuerCount = 4;
-        [SerializeField, Min(0.5f)] private float pursuerDistance = 6f;
-        [SerializeField, Min(0f)] private float pursuerSpacing = 1.5f;
+        [SerializeField]
+        private ActorDefinition pursuerDefinition;
+
+        [SerializeField, Min(1)]
+        private int pursuerCount = 4;
+
+        [SerializeField, Min(0.5f)]
+        private float pursuerDistance = 6f;
+
+        [SerializeField, Min(0f)]
+        private float pursuerSpacing = 1.5f;
 
         [Header("Replay")]
-        [SerializeField] private bool autoStartOnPlay = true;
-        [SerializeField] private bool deterministicReplay = true;
-        [SerializeField] private int randomSeed = 12345;
+        [SerializeField]
+        private bool autoStartOnPlay = true;
+
+        [SerializeField]
+        private bool deterministicReplay = true;
+
+        [SerializeField]
+        private int randomSeed = 12345;
 
         private bool scenarioRunning;
         private bool encounterCompletionReported;
         private string status = "Waiting to start.";
-        
+
         private readonly List<ActorDefinition> resolvedAuthoringActors = new();
         private readonly List<RouteTagDefinition> resolvedRouteTags = new();
         private readonly EncounterWorkshopAuthoringPanel authoringPanel = new();
@@ -130,7 +164,7 @@ namespace MiniCrawler.Tools
                 return false;
 
             testBuild.EnsureFor(partyMember);
-            
+
             EnsureEncounterDraft();
             encounterDraft.ApplyRuntimeOverrides();
 
@@ -141,7 +175,7 @@ namespace MiniCrawler.Tools
 
             partySpawnPoint.position = CalculatePartyStartPosition();
 
-            RunStartConfiguration configuration = new(new[] { partyMember }, startingObjectives: null);
+            RunStartConfiguration configuration = new(new[] { partyMember }, startingObjectives: null, startingRewardRerolls: 0);
 
             if (!RunProgress.BeginRun(configuration))
             {
@@ -199,7 +233,7 @@ namespace MiniCrawler.Tools
             if (clearStatus)
                 status = "Stopped.";
         }
-        
+
         private bool ApplyRouteContext()
         {
             if (routeContext == null)
@@ -219,17 +253,13 @@ namespace MiniCrawler.Tools
 
         private bool ValidateConfiguration()
         {
-            if (stageDirector == null ||
-                encounterDirection == null ||
-                encounter == null ||
-                partySpawnPoint == null ||
-                partyMember == null)
+            if (stageDirector == null || encounterDirection == null || encounter == null || partySpawnPoint == null || partyMember == null)
             {
                 status = "Workshop configuration is incomplete.";
                 Debug.LogError(status, this);
                 return false;
             }
-            
+
             if (routeContext == null || !routeContext.IsConfigured)
             {
                 status = "Workshop Route Context is incomplete.";
@@ -290,12 +320,9 @@ namespace MiniCrawler.Tools
             if (encounter == null)
                 return Array.Empty<LevelSpawnGroup>();
 
-            LevelSpawnGroup[] groups =
-                new LevelSpawnGroup[encounter.SpawnGroups.Count];
+            LevelSpawnGroup[] groups = new LevelSpawnGroup[encounter.SpawnGroups.Count];
 
-            for (int i = 0;
-                i < encounter.SpawnGroups.Count;
-                i++)
+            for (int i = 0; i < encounter.SpawnGroups.Count; i++)
             {
                 groups[i] = encounter.SpawnGroups[i];
             }
@@ -314,7 +341,7 @@ namespace MiniCrawler.Tools
                 ArrivalScenario.Threshold => encounterDirection.ArrivalDistance + thresholdOffset,
                 ArrivalScenario.OnTop => 0f,
                 ArrivalScenario.ArriveWhilePursued => approachDistance,
-                _ => approachDistance
+                _ => approachDistance,
             };
 
             Vector3 position = anchor - direction * distance;
@@ -352,11 +379,7 @@ namespace MiniCrawler.Tools
                 float centredIndex = i - (pursuerCount - 1) * 0.5f;
                 Vector3 position = centre + right * centredIndex * pursuerSpacing;
 
-                GameObject pursuer = stageDirector.SpawnAmbientActor(
-                    pursuerDefinition,
-                    new Pose(position, Quaternion.LookRotation(travelDirection)),
-                    engagementRadius: 0.1f
-                );
+                GameObject pursuer = stageDirector.SpawnAmbientActor(pursuerDefinition, new Pose(position, Quaternion.LookRotation(travelDirection)), engagementRadius: 0.1f);
 
                 if (pursuer == null)
                     continue;
@@ -408,38 +431,33 @@ namespace MiniCrawler.Tools
             GUILayout.Label("ENCOUNTER WORKSHOP");
             GUILayout.Label($"Encounter: {(encounter != null ? encounter.DisplayName : "Missing")}");
             GUILayout.Label($"Status: {status}");
-            
+
             if (encounter != null && encounter.PhaseCount > 0)
             {
                 LevelEncounterPhase currentPhase = encounter.CurrentPhase;
                 string phaseName = currentPhase != null ? currentPhase.DisplayName : "Waiting";
 
-                GUILayout.Label(
-                    $"Phase: {encounter.CurrentPhaseNumber}/{encounter.PhaseCount}  {phaseName}"
-                );
+                GUILayout.Label($"Phase: {encounter.CurrentPhaseNumber}/{encounter.PhaseCount}  {phaseName}");
             }
-            
+
             DrawRouteContextControls();
 
             GUILayout.Space(6f);
             GUILayout.Label($"Arrival: {arrivalScenario}");
-            
-            float newApproachDistance =
-                numericControls.DrawFloat(
-                    "scenario.approachDistance",
-                    "Start Distance",
-                    approachDistance,
-                    1f,
-                    40f,
-                    sliderStep: 0.25f,
-                    labelWidth: 130f,
-                    sliderWidth: 210f,
-                    fieldWidth: 70f
-                );
 
-            if (!Mathf.Approximately(
-                    newApproachDistance,
-                    approachDistance))
+            float newApproachDistance = numericControls.DrawFloat(
+                "scenario.approachDistance",
+                "Start Distance",
+                approachDistance,
+                1f,
+                40f,
+                sliderStep: 0.25f,
+                labelWidth: 130f,
+                sliderWidth: 210f,
+                fieldWidth: 70f
+            );
+
+            if (!Mathf.Approximately(newApproachDistance, approachDistance))
             {
                 approachDistance = newApproachDistance;
             }
@@ -483,7 +501,7 @@ namespace MiniCrawler.Tools
 
             GUILayout.EndArea();
         }
-        
+
         private void DrawRouteContextControls()
         {
             GUILayout.Space(6f);
@@ -538,10 +556,7 @@ namespace MiniCrawler.Tools
             const float width = 430f;
             const float height = 385f;
 
-            GUILayout.BeginArea(
-                new Rect(Screen.width - width - 10f, 10f, width, height),
-                GUI.skin.box
-            );
+            GUILayout.BeginArea(new Rect(Screen.width - width - 10f, 10f, width, height), GUI.skin.box);
 
             GUILayout.Label("TEST BUILD");
             GUILayout.Label($"Preset: {testBuild.Preset}");
@@ -583,15 +598,7 @@ namespace MiniCrawler.Tools
             if (armourLevel != testBuild.ArmourLevel)
                 testBuild.SetArmourLevel(armourLevel);
 
-            int focusLevel = numericControls.DrawInt(
-                "build.focus",
-                "Focus",
-                testBuild.FocusLevel,
-                0,
-                testBuild.MaximumGearLevel,
-                labelWidth: 175f,
-                sliderWidth: 170f
-            );
+            int focusLevel = numericControls.DrawInt("build.focus", "Focus", testBuild.FocusLevel, 0, testBuild.MaximumGearLevel, labelWidth: 175f, sliderWidth: 170f);
 
             if (focusLevel != testBuild.FocusLevel)
                 testBuild.SetFocusLevel(focusLevel);
@@ -646,25 +653,20 @@ namespace MiniCrawler.Tools
             if (partyMember == null)
                 return;
 
-            float health = partyMember.BaseHealth +
-                           testBuild.ArmourLevel * partyMember.HealthPerArmourLevel;
+            float health = partyMember.BaseHealth + testBuild.ArmourLevel * partyMember.HealthPerArmourLevel;
 
-            float damage = partyMember.BaseDamage +
-                           testBuild.WeaponLevel * partyMember.DamagePerWeaponLevel;
+            float damage = partyMember.BaseDamage + testBuild.WeaponLevel * partyMember.DamagePerWeaponLevel;
 
-            float armour = partyMember.BaseArmour +
-                           testBuild.ArmourLevel * partyMember.ArmourPerArmourLevel;
+            float armour = partyMember.BaseArmour + testBuild.ArmourLevel * partyMember.ArmourPerArmourLevel;
 
-            float healing = partyMember.BaseHealing +
-                            testBuild.FocusLevel * partyMember.HealingPerFocusLevel;
+            float healing = partyMember.BaseHealing + testBuild.FocusLevel * partyMember.HealingPerFocusLevel;
 
-            string stats = healing > 0f
-                ? $"Expected Spawn: HP {health:0}   DMG {damage:0.#}   ARM {armour:0.#}   HEAL {healing:0.#}"
-                : $"Expected Spawn: HP {health:0}   DMG {damage:0.#}   ARM {armour:0.#}";
+            string stats =
+                healing > 0f ? $"Expected Spawn: HP {health:0}   DMG {damage:0.#}   ARM {armour:0.#}   HEAL {healing:0.#}" : $"Expected Spawn: HP {health:0}   DMG {damage:0.#}   ARM {armour:0.#}";
 
             GUILayout.Label(stats);
         }
-        
+
         private void InitializeEncounterDraft()
         {
             currentDefinition = null;
@@ -693,15 +695,9 @@ namespace MiniCrawler.Tools
 
             if (currentDefinition != null)
             {
-                if (!replacement.TryCaptureFromDefinition(
-                        encounter,
-                        currentDefinition,
-                        out string error))
+                if (!replacement.TryCaptureFromDefinition(encounter, currentDefinition, out string error))
                 {
-                    Debug.LogError(
-                        $"Could not reset Workshop Draft from '{currentDefinition.name}': {error}",
-                        this
-                    );
+                    Debug.LogError($"Could not reset Workshop Draft from '{currentDefinition.name}': {error}", this);
 
                     status = "Definition is no longer compatible with the Workshop scene.";
                     return;
@@ -717,7 +713,7 @@ namespace MiniCrawler.Tools
             RefreshAuthoringActorPalette();
             StartScenario();
         }
-        
+
         private void SaveEncounterDefinition()
         {
             EnsureEncounterDraft();
@@ -728,9 +724,7 @@ namespace MiniCrawler.Tools
                 return;
             }
 
-            if (!EncounterWorkshopAssetPersistence.Save(
-                    encounterDraft,
-                    currentDefinition))
+            if (!EncounterWorkshopAssetPersistence.Save(encounterDraft, currentDefinition))
             {
                 status = "Encounter Definition save failed or was cancelled.";
                 return;
@@ -743,8 +737,7 @@ namespace MiniCrawler.Tools
         {
             EnsureEncounterDraft();
 
-            EncounterDefinition saved =
-                EncounterWorkshopAssetPersistence.SaveAs(encounterDraft);
+            EncounterDefinition saved = EncounterWorkshopAssetPersistence.SaveAs(encounterDraft);
 
             if (saved == null)
             {
@@ -758,24 +751,16 @@ namespace MiniCrawler.Tools
 
         private void LoadEncounterDefinition()
         {
-            EncounterDefinition definition =
-                EncounterWorkshopAssetPersistence.Load();
+            EncounterDefinition definition = EncounterWorkshopAssetPersistence.Load();
 
             if (definition == null)
                 return;
 
             EncounterWorkshopDraft candidate = new();
 
-            if (!candidate.TryCaptureFromDefinition(
-                    encounter,
-                    definition,
-                    out string error))
+            if (!candidate.TryCaptureFromDefinition(encounter, definition, out string error))
             {
-                Debug.LogError(
-                    $"Encounter Definition '{definition.name}' is not compatible with " +
-                    $"the Workshop scene: {error}",
-                    this
-                );
+                Debug.LogError($"Encounter Definition '{definition.name}' is not compatible with " + $"the Workshop scene: {error}", this);
 
                 status = "Selected Definition is not compatible with this Workshop structure.";
                 return;
@@ -820,7 +805,7 @@ namespace MiniCrawler.Tools
             arrivalScenario = scenario;
             StartScenario();
         }
-        
+
         private void SelectRouteContext(EncounterWorkshopRouteContext.ContextKind kind)
         {
             if (routeContextKind == kind)
@@ -838,7 +823,7 @@ namespace MiniCrawler.Tools
             encounterStartMode = mode;
             StartScenario();
         }
-        
+
         private static string FormatRouteTags(IReadOnlyList<RouteTagDefinition> tags)
         {
             if (tags == null || tags.Count == 0)

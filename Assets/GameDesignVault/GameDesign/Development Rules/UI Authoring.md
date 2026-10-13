@@ -385,6 +385,44 @@ Do not use ambiguous instructions such as:
 
 when several Unity object types could satisfy the wording.
 
+
+### UI Instructions Must Be Sequential
+
+For substantial UI changes, instructions must follow the order in which the user performs actions inside Unity.
+
+Use separate explicit phases:
+
+1. Open the correct scene or prefab.
+2. Locate the existing hierarchy.
+3. Create, duplicate or move GameObjects.
+4. Configure parent containers.
+5. Configure child RectTransforms and LayoutElements.
+6. Configure Images, Buttons and TextMeshPro.
+7. Connect serialized references and UnityEvents.
+8. Restore intended active states.
+9. Save the scene or prefab.
+10. Verify the result.
+
+For every created or duplicated GameObject, state:
+- its exact parent;
+- its final name;
+- its sibling position when relevant;
+- the Unity menu action or duplication source;
+- required components;
+- components or callbacks to remove;
+- all relevant Inspector values.
+
+When modifying a component, distinguish values that should change from values that should remain untouched.
+
+After hierarchy work, present the expected final hierarchy in a tree.
+
+Do not combine hierarchy construction, layout configuration and reference wiring into one ambiguous instruction.
+
+If a LayoutGroup controls a child's dimension, explain that ownership before supplying sizing values.
+
+Never describe a UI operation merely as "add a button", "set up the text", "make it fit" or "wire the controller".
+  
+
 ## Complete TMP Configuration
 
 Whenever a TextMeshPro UI element is created or materially changed,

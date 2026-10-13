@@ -139,6 +139,32 @@ architecture is documented.
 A designer should not need to inspect source code to understand how to use an
 approved content-authoring workflow.
 
+
+## Documentation Change Instruction Format
+
+When the user is expected to update documentation locally, provide changes with the same precision as source-code edits.
+
+For every documentation change:
+
+1. Give the complete project-relative document path.
+2. Name the exact existing heading.
+3. State whether to insert, replace or delete content.
+4. Provide complete paste-ready Markdown.
+5. Identify obsolete text that must be removed.
+6. Explain the intended final document state.
+7. Identify any related documents that require consistency checks.
+
+Prefer complete coherent section replacements.
+
+When a document has become substantially stale, prefer a planned whole-document replacement over numerous scattered patches.
+
+Never require the user to infer where suggested Markdown belongs.
+
+Do not present a list of subjects to document as though it were a complete documentation-edit instruction.
+
+Keep normal documentation closure after focused implementation verification, except for the small preflight corrections required to establish accurate starting context.
+
+
 ## Documentation Impact
 
 At the end of a meaningful implementation step, assess separately:

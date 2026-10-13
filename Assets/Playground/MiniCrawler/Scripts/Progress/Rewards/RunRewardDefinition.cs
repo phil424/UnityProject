@@ -9,7 +9,7 @@ namespace MiniCrawler.Progress
         Uncommon,
         Rare,
         Epic,
-        Legendary
+        Legendary,
     }
 
     public abstract class RunRewardDefinition : ScriptableObject
@@ -21,7 +21,8 @@ namespace MiniCrawler.Progress
         public abstract RunUpgradeRarity Rarity { get; }
         public abstract RunRewardVector RewardVector { get; }
         public abstract bool IsConfigured { get; }
-        
+
+        public virtual string OfferDiversityKey => Id;
         public virtual bool AllowDuplicatePendingOffers => true;
 
         public abstract bool CanApply(PartyMemberDefinition member, RunBuild build);

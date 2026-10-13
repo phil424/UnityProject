@@ -7,16 +7,30 @@ namespace MiniCrawler.Progress
     public class RunUpgradeDefinition : RunRewardDefinition
     {
         [Header("Identity")]
-        [SerializeField] private string id;
-        [SerializeField] private string displayName;
-        [SerializeField] private Sprite icon;
+        [SerializeField]
+        private string id;
+
+        [SerializeField]
+        private string displayName;
+
+        [SerializeField]
+        private Sprite icon;
 
         [Header("Rarity")]
-        [SerializeField] private RunUpgradeRarity rarity = RunUpgradeRarity.Common;
+        [SerializeField]
+        private RunUpgradeRarity rarity = RunUpgradeRarity.Common;
 
         [Header("Effect")]
-        [SerializeField] private CharacterStatModifierType effectType;
-        [SerializeField] private float amount;
+        [SerializeField]
+        private CharacterStatModifierType effectType;
+
+        [SerializeField]
+        private float amount;
+
+        [Header("Eligibility")]
+        [Tooltip("Leave empty to allow any party member.")]
+        [SerializeField]
+        private PartyMemberDefinition[] eligibleMembers;
 
         public override string Id => string.IsNullOrWhiteSpace(id) ? name : id;
         public override string DisplayName => string.IsNullOrWhiteSpace(displayName) ? name : displayName;
@@ -24,6 +38,7 @@ namespace MiniCrawler.Progress
         public override Sprite Icon => icon;
         public override RunUpgradeRarity Rarity => rarity;
         public override RunRewardVector RewardVector => RunRewardVector.CharacterGrowth;
+        public override string OfferDiversityKey => $"CharacterGrowth:{(int)effectType}";
 
         public CharacterStatModifierType EffectType => effectType;
         public float Amount => amount;
@@ -32,7 +47,7 @@ namespace MiniCrawler.Progress
 
         public override bool CanApply(PartyMemberDefinition member, RunBuild build)
         {
-            return member != null && build != null && amount > 0f;
+            return member != null && build != null && amount > 0f && IsEligibleMember(member);
         }
 
         public override bool TryApply(PartyMemberDefinition member, RunBuild build)
@@ -42,6 +57,20 @@ namespace MiniCrawler.Progress
 
             build.ApplyExpeditionStatModifier(effectType, amount);
             return true;
+        }
+
+        private bool IsEligibleMember(PartyMemberDefinition member)
+        {
+            if (eligibleMembers == null || eligibleMembers.Length == 0)
+                return true;
+
+            foreach (PartyMemberDefinition eligible in eligibleMembers)
+            {
+                if (eligible != null && eligible.Id == member.Id)
+                    return true;
+            }
+
+            return false;
         }
 
         private void OnValidate()

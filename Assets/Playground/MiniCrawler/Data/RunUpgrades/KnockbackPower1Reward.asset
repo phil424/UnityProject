@@ -10,11 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5fc99cc2ad4c0294b9f5ab3362ba4ebf, type: 3}
-  m_Name: ReinforcedPlate
+  m_Name: KnockbackPower1Reward
   m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Progress.RunUpgradeDefinition
-  id: reinforced_plate
-  displayName: Reinforced Plate
-  description: Gain 2 armour.
+  id: reward_knockback_power_1
+  displayName: Knockback Power 1
   icon: {fileID: 0}
-  effectType: 3
-  amount: 2
+  rarity: 0
+  effectType: 6
+  amount: 15
+  eligibleMembers: []

@@ -86,6 +86,8 @@ authoring.
 
 ## 2. Character Stats & Expedition Buildcraft
 
+**Current development frontier — 3.0O4 Character Buildcraft Foundation & Content Review**
+
 Create a deliberate Character stat vocabulary and stronger temporary buildcraft
 foundation.
 
@@ -227,8 +229,6 @@ future autonomous Companions may reuse it.
 ---
 
 ## 6. Weapon Mods
-
-**Current development frontier**
 
 **Foundation implemented — further content expansion deferred**
 

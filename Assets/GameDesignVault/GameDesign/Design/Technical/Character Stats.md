@@ -74,11 +74,41 @@ Current Expedition stat modifiers include:
 - Movement Speed;
 - Basic Attack Speed;
 - Armour;
-- Max Health.
+- Max Health;
 - Ability Cooldown Recovery;
-- Knockback Power.
+- Knockback Power;
+- Shield Capacity.
 
 These survive Region / level transitions and disappear when the Expedition ends.
+
+## Shield Capacity
+
+Controls the maximum number of hit-based Shield layers an Actor may currently
+hold.
+
+Authored base capacity lives on actor-owned `ShieldCapacityStats`.
+
+Prepared Character Mastery and Expedition Character Growth rewards may increase
+that capacity through the shared `CharacterStatModifierType.ShieldCapacity`
+vocabulary.
+
+Current consumers:
+
+Ranger
+→ authored base Shield Capacity `3`.
+
+Expanded Guard
+→ Rare Character Growth Reward;
+→ Ranger-only;
+→ +1 temporary Expedition Shield Capacity.
+
+Persistent Mastery may later provide additional Shield Capacity through the same
+shared stat vocabulary.
+
+Shield layers themselves remain Runtime Actor state.
+
+Current Shield layers remain Runtime Actor state and are not stored in
+`RunBuild`.
 
 ## Runtime Temporary Modifiers
 
@@ -120,6 +150,25 @@ Character-wide survival capacity.
 ## Armour
 
 Character-wide flat incoming-damage reduction.
+
+Current working calculation:
+
+```
+positive incoming damage
+-
+effective flat Armour
+=
+final damage,
+```
+
+with a current minimum of 1 final damage for a positive damaging hit that has
+already passed Invulnerability and Shields.
+
+Therefore Armour may heavily mitigate a weak hit but does not currently erase it
+completely.
+
+This minimum remains Working and should be reassessed against a broader enemy /
+damage roster.
 
 ## Movement Speed
 

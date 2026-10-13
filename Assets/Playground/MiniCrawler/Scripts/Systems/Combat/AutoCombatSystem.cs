@@ -41,6 +41,15 @@ namespace MiniCrawler.Systems
                 return;
             }
 
+            FearRuntime fear = mover.GetComponent<FearRuntime>();
+
+            if (fear != null && fear.IsFeared)
+            {
+                actionState?.Cancel();
+                ResetPendingCombo(actionState);
+                return;
+            }
+
             if (!CombatEngagementState.AllowsCombat(mover.gameObject))
             {
                 ResetPendingCombo(actionState);

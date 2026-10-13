@@ -9,7 +9,7 @@ namespace MiniCrawler.Progress
     {
         Weapon,
         Armour,
-        Focus
+        Focus,
     }
 
     [Serializable]
@@ -25,26 +25,14 @@ namespace MiniCrawler.Progress
         public int ArmourLevel { get; private set; }
         public int FocusLevel { get; private set; }
 
-        public float FlatBasicAttackDamageBonus =>
-            GetEffectiveStatBonus(CharacterStatModifierType.FlatBasicAttackDamage);
-
-        public float MoveSpeedPercentBonus =>
-            GetEffectiveStatBonus(CharacterStatModifierType.MoveSpeedPercent);
-
-        public float BasicAttackSpeedPercentBonus =>
-            GetEffectiveStatBonus(CharacterStatModifierType.BasicAttackSpeedPercent);
-
-        public float FlatArmourBonus =>
-            GetEffectiveStatBonus(CharacterStatModifierType.FlatArmour);
-
-        public float FlatMaxHealthBonus =>
-            GetEffectiveStatBonus(CharacterStatModifierType.FlatMaxHealth);
-
-        public float AbilityCooldownRecoveryPercentBonus =>
-            GetEffectiveStatBonus(CharacterStatModifierType.AbilityCooldownRecoveryPercent);
-
-        public float KnockbackPowerPercentBonus =>
-            GetEffectiveStatBonus(CharacterStatModifierType.KnockbackPowerPercent);
+        public float FlatBasicAttackDamageBonus => GetEffectiveStatBonus(CharacterStatModifierType.FlatBasicAttackDamage);
+        public float MoveSpeedPercentBonus => GetEffectiveStatBonus(CharacterStatModifierType.MoveSpeedPercent);
+        public float BasicAttackSpeedPercentBonus => GetEffectiveStatBonus(CharacterStatModifierType.BasicAttackSpeedPercent);
+        public float FlatArmourBonus => GetEffectiveStatBonus(CharacterStatModifierType.FlatArmour);
+        public float FlatMaxHealthBonus => GetEffectiveStatBonus(CharacterStatModifierType.FlatMaxHealth);
+        public float AbilityCooldownRecoveryPercentBonus => GetEffectiveStatBonus(CharacterStatModifierType.AbilityCooldownRecoveryPercent);
+        public float KnockbackPowerPercentBonus => GetEffectiveStatBonus(CharacterStatModifierType.KnockbackPowerPercent);
+        public float ShieldCapacityBonus => GetEffectiveStatBonus(CharacterStatModifierType.ShieldCapacity);
 
         public IReadOnlyList<RunAbilityState> Abilities => abilities;
         public IReadOnlyList<RunWeaponModState> WeaponMods => weaponMods;
@@ -56,7 +44,7 @@ namespace MiniCrawler.Progress
                 GearSlot.Weapon => WeaponLevel,
                 GearSlot.Armour => ArmourLevel,
                 GearSlot.Focus => FocusLevel,
-                _ => 0
+                _ => 0,
             };
         }
 
@@ -178,7 +166,7 @@ namespace MiniCrawler.Progress
 
             return null;
         }
-        
+
         public RunWeaponModState CoreWeaponModState => GetWeaponModState(WeaponModStanceSlot.Core);
 
         public bool TryPrepareWeaponMod(WeaponModDefinition mod, WeaponModStanceSlot stanceSlot, int startingPreparedLevel = 0)
@@ -237,7 +225,7 @@ namespace MiniCrawler.Progress
             RunWeaponModState state = GetWeaponModState(mod);
             return state != null && state.TryIncreaseExpeditionLevel(amount);
         }
-        
+
         public bool TryCombineWeaponMods(WeaponModDefinition activeMod, WeaponModDefinition combinedMod)
         {
             if (activeMod == null || combinedMod == null || activeMod.Id == combinedMod.Id)

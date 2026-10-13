@@ -35,6 +35,20 @@ namespace MiniCrawler.Systems
                 if (stun != null && stun.IsStunned)
                     continue;
 
+                FearRuntime fear = actor.GetComponent<FearRuntime>();
+
+                if (fear != null && fear.IsFeared)
+                {
+                    AutoTargetMover fearMover = actor.GetComponent<AutoTargetMover>();
+
+                    if (fearMover != null && fearMover.isActiveAndEnabled)
+                    {
+                        MoveInDirection(actor.transform, fear.ResolveMovementDirection(actor.transform.position), fearMover.MoveSpeed);
+                    }
+
+                    continue;
+                }
+
                 AbilityExecutionState abilityExecutionState = actor.GetComponent<AbilityExecutionState>();
 
                 if (abilityExecutionState != null && abilityExecutionState.BlocksAutonomousActions)
@@ -82,6 +96,24 @@ namespace MiniCrawler.Systems
         private void ApplyForcedMotion(Transform actorTransform, ForcedMotion forcedMotion)
         {
             actorTransform.position += forcedMotion.ConsumeDisplacement(Time.deltaTime);
+        }
+
+        private void MoveInDirection(Transform moverTransform, Vector3 direction, float moveSpeed)
+        {
+            direction.y = 0f;
+
+            if (direction.sqrMagnitude <= 0.0001f || moveSpeed <= 0f)
+            {
+                return;
+            }
+
+            direction.Normalize();
+
+            Vector3 destination = moverTransform.position + direction;
+
+            moverTransform.position += direction * moveSpeed * Time.deltaTime;
+
+            FaceTarget(moverTransform, destination);
         }
 
         private void MoveTowardsTarget(AutoTargetMover mover, Health target)

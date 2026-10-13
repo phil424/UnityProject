@@ -54,15 +54,43 @@ Deprecated
 
 Do not quietly turn exploratory ideas into implementation requirements.
 
+
 # Development Step Structure
 
-Every meaningful implementation or housekeeping step follows the same delivery
-sequence.
+Every meaningful development step follows:
 
-The sequence exists to prevent implementation and documentation from drifting
-apart.
+1. Roadmap Check
+2. Progress Context & Implementation Contract
+3. Implementation
+4. Focused Verification
+5. Documentation Closure
+6. Checkpoint Decision
 
-## Phase 0 — Documentation Preflight & Cleanup
+## Roadmap Check
+
+Inspect the relevant current roadmap section before beginning implementation.
+
+If already correct, state:
+
+`Roadmap Check: Already current.`
+
+If stale, provide the exact minimal Markdown correction needed.
+
+Do not expand this stage into general documentation cleanup.
+
+## Documentation Preflight
+
+Inspect only the directly relevant Design, Technical and Guide documents.
+
+Identify contradictions or stale information that would affect implementation.
+
+Make minimal corrections when required.
+
+If nothing needs changing, state:
+
+`Documentation Preflight: No changes required.`
+
+Defer substantive documentation updates until verified closure.
 
 Before implementation instructions:
 
@@ -401,6 +429,174 @@ runtime-generated.
 
 Do not proceed to detailed styling when an earlier structural checkpoint is
 still incorrect.
+
+
+# Mandatory Implementation Tutorial Format
+
+Implementation instructions must be formatted as an executable, step-by-step tutorial rather than as a condensed implementation summary.
+
+## Required Opening
+
+Every meaningful development step begins with:
+
+1. Roadmap Check
+2. Current Progress Context
+3. Implementation Contract
+4. Implementation Steps
+5. Focused Verification
+6. Documentation Closure
+7. Checkpoint Decision
+
+The Implementation Contract must list:
+
+- Goal
+- Deliberately NOT included
+- Files CREATE
+- Files MODIFY
+- Files DELETE
+- Relevant Unity/Scene/Prefab/UI Work Contracts
+- Expected end state
+
+Use the explicit phrase:
+
+`Roadmap Check: Already current.`
+
+when no roadmap changes are needed.
+
+## Numbered Implementation Steps
+
+Break implementation into small, individually executable steps.
+
+Each substantial step should contain:
+
+### Step N — Descriptive Action
+
+**Purpose**
+Explain briefly what this change accomplishes and why it is needed.
+
+**File / Unity Location**
+Give the complete project-relative path or exact Unity hierarchy path.
+
+**Instructions**
+Provide literal operations in their required order.
+
+For code changes:
+1. Name the exact class and method.
+2. Show the current code to find.
+3. Specify whether to insert, replace or delete.
+4. Provide complete paste-ready replacement code.
+5. Identify every other affected call site.
+6. Show the expected final structure when useful.
+
+For Unity Editor changes:
+1. Name the scene or prefab to open.
+2. Identify the exact hierarchy object.
+3. Give literal menu or creation actions.
+4. Specify required component settings.
+5. Identify all serialized references and event listeners.
+6. Specify what to save and where.
+
+**Expected Result**
+Explain what should now exist, compile or appear.
+
+**Checkpoint**
+Provide a focused check that the user can perform before continuing.
+
+Do not combine several unrelated file changes or UI construction phases into one large numbered paragraph.
+
+## Code Completeness
+
+Do not use pseudocode when exact implementation code is required.
+
+Avoid:
+- "something like this";
+- "behaviour equivalent to";
+- "update the other methods similarly";
+- "wire up the button";
+- "configure the layout appropriately";
+- "repeat for the remaining calls".
+
+These phrases are only acceptable when followed by complete, explicit instructions identifying exactly what must be done.
+
+For manageable files, prefer complete replacement files.
+
+For larger files, use exact find/replace or insert-before/insert-after instructions.
+
+A partial code block must state whether it represents:
+- a complete method;
+- a complete class;
+- a replacement block;
+- or an insertion.
+
+Never present an incomplete method as a complete replacement.
+
+## Shared Contract Completeness
+
+Before recommending a shared signature/type change, inspect the actual project for consumers.
+
+List all affected project-owned call sites.
+
+Include exact edits for those sites within the same implementation sequence.
+
+Do not intentionally defer predictable compiler repairs to a later troubleshooting phase.
+
+## Visual and Inspector Instructions
+
+When configuring a Unity object, give the actual values for all relevant properties.
+
+Distinguish:
+- explicitly set;
+- preserve existing value;
+- leave Unity default;
+- not applicable.
+
+When duplicating an existing object, identify inherited components, callbacks and references that must be removed, preserved or changed.
+
+Never assume the duplicated object has safe default wiring.
+
+## Step Granularity
+
+Prefer one coherent operation or tightly related set of operations per numbered step.
+
+Use substeps for complex operations.
+
+For substantial UI work, separate:
+- hierarchy construction;
+- reference wiring;
+- layout configuration;
+- visual styling;
+- runtime validation.
+
+Avoid giant numbered paragraphs containing multiple independent tasks.
+
+## Verification Placement
+
+Include verification at meaningful dependency boundaries.
+
+Examples:
+- after shared C# changes: compile;
+- after hierarchy migration: inspect hierarchy;
+- after reference wiring: check Inspector references;
+- after layout configuration: inspect appearance;
+- after runtime integration: test actual behaviour.
+
+Verification must describe the expected observable result.
+
+Do not use "test that it works" as an acceptance criterion.
+
+## Completion
+
+Do not claim implementation is complete merely because all instructions have been supplied.
+
+The user performs the work and validates the result locally.
+
+Distinguish clearly between:
+- instructions provided;
+- implementation reported complete;
+- behaviour verified;
+- documentation closed;
+- authoritative checkpoint accepted.
+  
 
 # Diagnose Problems from Evidence
 

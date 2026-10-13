@@ -10,24 +10,42 @@ namespace MiniCrawler.UI
     public class PendingRewardsUI : MonoBehaviour
     {
         [Header("References")]
-        [SerializeField] private RunDirector runDirector;
-        [SerializeField] private Button pendingRewardsButton;
-        [SerializeField] private TMP_Text pendingRewardsButtonText;
+        [SerializeField]
+        private RunDirector runDirector;
+
+        [SerializeField]
+        private Button pendingRewardsButton;
+
+        [SerializeField]
+        private TMP_Text pendingRewardsButtonText;
 
         [Header("Reward Overlay")]
-        [SerializeField] private GameObject rewardOverlay;
-        [SerializeField] private Transform offerRoot;
-        [SerializeField] private RunUpgradeOfferCardUI offerCardPrefab;
-        [SerializeField] private Button closeButton;
-        [SerializeField] private TMP_Text rewardTitleText;
+        [SerializeField]
+        private GameObject rewardOverlay;
+
+        [SerializeField]
+        private Transform offerRoot;
+
+        [SerializeField]
+        private RunUpgradeOfferCardUI offerCardPrefab;
+
+        [SerializeField]
+        private Button closeButton;
+
+        [SerializeField]
+        private TMP_Text rewardTitleText;
+
+        [SerializeField]
+        private Button rerollButton;
+
+        [SerializeField]
+        private TMP_Text rerollButtonText;
 
         private readonly List<RunUpgradeOfferCardUI> offerCards = new();
 
         private bool pausedByPendingRewards;
 
-        private bool IsInCombat =>
-            runDirector != null &&
-            runDirector.State == RunDirector.RunFlowState.InLevel;
+        private bool IsInCombat => runDirector != null && runDirector.State == RunDirector.RunFlowState.InLevel;
 
         private void Start()
         {
@@ -39,6 +57,9 @@ namespace MiniCrawler.UI
 
             if (closeButton != null)
                 closeButton.onClick.AddListener(ClosePendingRewards);
+
+            if (rerollButton != null)
+                rerollButton.onClick.AddListener(HandleRerollClicked);
 
             RunProgress.Changed += Refresh;
 
@@ -63,7 +84,33 @@ namespace MiniCrawler.UI
             if (closeButton != null)
                 closeButton.onClick.RemoveListener(ClosePendingRewards);
 
+            if (rerollButton != null)
+                rerollButton.onClick.RemoveListener(HandleRerollClicked);
+
             ResumeIfNeeded();
+        }
+
+        private void HandleRerollClicked()
+        {
+            if (runDirector == null || !runDirector.TryRerollPendingReward())
+            {
+                Debug.LogWarning("Could not reroll pending reward.");
+            }
+        }
+
+        private void RefreshRerollPresentation()
+        {
+            int remaining = runDirector != null ? runDirector.RewardRerollsRemaining : 0;
+
+            if (rerollButtonText != null)
+            {
+                rerollButtonText.text = $"REROLL ({remaining})";
+            }
+
+            if (rerollButton != null)
+            {
+                rerollButton.interactable = IsInCombat && RunProgress.HasPendingRewardChoice && runDirector != null && runDirector.CanRerollPendingReward;
+            }
         }
 
         public void OpenPendingRewards()
@@ -74,9 +121,7 @@ namespace MiniCrawler.UI
             if (rewardOverlay == null)
                 return;
 
-            pausedByPendingRewards =
-                SimulationPause.Instance != null &&
-                !SimulationPause.IsPaused;
+            pausedByPendingRewards = SimulationPause.Instance != null && !SimulationPause.IsPaused;
 
             if (pausedByPendingRewards)
                 SimulationPause.Instance.Pause();
@@ -115,8 +160,9 @@ namespace MiniCrawler.UI
         {
             int pendingCount = RunProgress.PendingRewardChoiceCount;
             bool showButton = IsInCombat && pendingCount > 0;
-            
+
             RefreshRewardTitle();
+            RefreshRerollPresentation();
 
             if (pendingRewardsButton != null)
                 pendingRewardsButton.gameObject.SetActive(showButton);
@@ -135,7 +181,7 @@ namespace MiniCrawler.UI
             if (rewardOverlay != null && rewardOverlay.activeSelf)
                 RebuildOfferCards();
         }
-        
+
         private void RefreshRewardTitle()
         {
             if (rewardTitleText == null)

@@ -58,6 +58,31 @@ Prefer extending existing seams over:
 
 Give explicit file paths and literal Unity Editor instructions where applicable.
 
+## Instruction Quality Contract
+
+All implementation guidance must be written as a detailed, beginner-followable, hands-on tutorial grounded in the inspected project.
+
+The user performs all implementation locally. The assistant supplies the instructions, exact code, Unity Editor actions, verification procedures and documentation changes.
+
+Never substitute an architectural outline, task checklist or pseudocode for complete implementation instructions.
+
+For every meaningful change:
+- explain what is being changed and why;
+- identify the exact file or Unity object;
+- identify the precise existing location;
+- provide complete paste-ready code or unambiguous replacements;
+- include all affected call sites and serialized references;
+- describe Unity Editor actions literally, including relevant component settings;
+- show the expected final result;
+- provide a focused verification checkpoint.
+
+Do not assume the user knows which menu, Inspector field, hierarchy object or existing code block an abbreviated instruction refers to.
+
+Prefer smaller, individually verifiable tutorial steps over dense numbered paragraphs.
+
+Do not sacrifice executable detail merely to keep a response short.
+  
+
 # 3. Mandatory Development Step Structure
 
 Every meaningful implementation or housekeeping step follows this sequence:

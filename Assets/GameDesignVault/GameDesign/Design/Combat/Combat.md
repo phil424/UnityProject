@@ -281,6 +281,25 @@ They remain available if later mechanics establish a clear need.
 ### Questions
 - Status power?
 
+# Defensive Damage Order
+
+Current resolved defensive order:
+
+Invulnerability
+→ Shield
+→ Armour
+→ Health.
+
+Invulnerability may reject a damaging hit completely.
+
+A hit-based Shield may consume a Shield hit and reject Health damage completely.
+
+If a positive damaging hit reaches Armour, flat Armour reduces that damage but
+the current working rule preserves at least 1 final damage.
+
+This minimum-damage rule remains subject to reassessment as enemy damage profiles
+expand.
+
 # Status Effects
 
 ## Stun
@@ -313,19 +332,71 @@ Reapplication is non-additive.
 A new Stun may refresh the remaining control window, but repeated hits do not
 sum their full durations together.
 
-Current first consumers:
+Current representative consumers:
 
 Punchy Whirlwind
 → radial Knockback + Stun.
 
-Ranger Backstep
-→ departure Knockback + Stun.
+Ranger Power Shot
+→ projectile Knockback + Stun.
 
 The foundation does not yet forcibly interrupt every already-running
 `ActorAbility` execution.
 
 Extend that behaviour only when concrete enemy/player Ability interactions make
 it necessary.
+
+## Fear
+
+**Status: Implemented Foundation**
+
+Fear is temporary Runtime Actor control.
+
+While Feared, the current implementation prevents:
+
+- autonomous basic attacks;
+- autonomous support actions;
+- new active Ability activation.
+
+Unlike Stun, Fear does not prevent movement.
+
+Instead, normal autonomous movement is temporarily replaced by an authored Fear
+movement direction.
+
+The first consumer is Ranger Smoke Step.
+
+Smoke Step uses directional Fear:
+
+primary movement
+→ opposite Ranger's hop direction.
+
+secondary movement
+→ lateral convergence toward the centre corridor of that direction.
+
+This allows Fear to create tactical enemy positioning rather than merely
+disabling targets.
+
+Feared actors retain their normal Move Speed.
+
+Current control priority is:
+
+Forced Motion
+→ Stun
+→ Fear
+→ normal autonomous behaviour.
+
+If Stun and Fear overlap, Stun temporarily prevents movement and remaining Fear
+may continue after Stun expires.
+
+Reapplying Fear refreshes the remaining control window without additively
+stacking full durations.
+
+A newer Fear application may replace the active movement directive.
+
+The current foundation does not forcibly interrupt every already-running
+`ActorAbility` execution.
+
+Extend that behaviour only when concrete Ability interactions require it.
 
 ## Hit-Based Shields
 
@@ -362,7 +433,13 @@ Current first consumer:
 
 Ranger Guard.
 
-Guard may add additional Shield layers on later activations.
+Ranger currently has an authored base Shield Capacity of 3.
+
+Guard may add additional Shield layers on later activations but cannot exceed
+the Actor's current Shield Capacity.
+
+Shield Capacity may be increased through the shared Character stat progression
+vocabulary.
 
 Shield stacks remain Runtime Actor state and are not stored in persistent or
 Expedition build progression.
@@ -373,9 +450,9 @@ Shield hit.
 Do not introduce damage-type exceptions until concrete gameplay demonstrates a
 need.
 
-Dedicated Shield player-facing presentation is not implemented yet.
+The Party Health HUD displays current / maximum Shield count.
 
-`HitShieldRuntime.Changed` provides the runtime seam for future presentation.
+`HitShieldRuntime.Changed` provides the runtime seam for Shield presentation.
 
 ## Healing Over Time
 

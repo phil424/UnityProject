@@ -32,10 +32,7 @@ namespace MiniCrawler.Progress
 
         public bool CanSelectPartyMember(PartyMemberDefinition definition)
         {
-            return definition != null &&
-                   characterRoster != null &&
-                   characterRoster.Contains(definition) &&
-                   PersistentProgression.IsCharacterUnlocked(definition);
+            return definition != null && characterRoster != null && characterRoster.Contains(definition) && PersistentProgression.IsCharacterUnlocked(definition);
         }
 
         public bool SetSinglePartyMember(PartyMemberDefinition definition)
@@ -100,9 +97,9 @@ namespace MiniCrawler.Progress
             Changed?.Invoke();
         }
 
-        public RunStartConfiguration CreateConfiguration()
+        public RunStartConfiguration CreateConfiguration(int startingRewardRerolls)
         {
-            return new RunStartConfiguration(selectedParty, selectedObjectives);
+            return new RunStartConfiguration(selectedParty, selectedObjectives, startingRewardRerolls);
         }
     }
 }

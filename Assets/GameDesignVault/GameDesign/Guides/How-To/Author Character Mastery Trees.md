@@ -127,6 +127,91 @@ Use Unity Undo / Ctrl+Z to revert accidental movement.
 Canvas Size belongs to the selected Character's
 `CharacterMasteryDefinition`.
 
+# Tree Membership
+
+Mastery-node assets and Mastery-tree membership are separate concepts.
+
+A node may exist as a ScriptableObject asset without currently belonging to the
+selected Character's Mastery tree.
+
+## Add Existing Node
+
+In the right-hand Tree panel, assign an existing
+`CharacterMasteryNodeDefinition` to:
+
+`Existing Node`
+
+then choose:
+
+`Add Existing Node`.
+
+The asset is added to the selected Character's
+`CharacterMasteryDefinition`.
+
+Its existing authored identity, gameplay fields, prerequisites, costs and tree
+position are preserved.
+
+## Remove From Tree
+
+Select a node and use:
+
+`Content Actions`
+→ `Remove From Tree`.
+
+This removes the node from the selected Character's Mastery Definition but does
+not delete its ScriptableObject asset.
+
+Prerequisite references to that node inside the current tree are removed.
+
+If the node is a Weapon Mastery stance used by a Mastery Combination, that direct
+combination reference is cleared.
+
+The surviving combination is not silently deleted.
+
+Validation should then be used to decide whether the combination should be
+repaired or removed.
+
+Removal is Undo-compatible.
+
+# Deleting Nodes
+
+Select a node and use:
+
+`Content Actions`
+→ `Delete Node Asset...`.
+
+This is a deliberately destructive operation.
+
+The Workbench:
+
+1. removes the node from the current Mastery tree;
+2. cleans in-tree prerequisite references;
+3. clears direct Mastery-combination references;
+4. saves those reference changes;
+5. permanently deletes the node ScriptableObject asset.
+
+The deletion requires explicit confirmation.
+
+Permanent asset deletion is not treated as an Undo operation.
+
+Use `Remove From Tree` instead when content may be reused or redesigned later.
+
+# Missing Reference Cleanup
+
+When the selected Mastery contains broken/null node or prerequisite references,
+the Tree panel exposes:
+
+`Clean Missing Reference(s)`.
+
+This is an explicit repair operation.
+
+The Workbench does not silently mutate authored collections during ordinary
+validation.
+
+Only broken/null references are removed.
+
+Valid Mastery content is preserved.
+
 # Related Content
 
 Relevant Mastery nodes expose navigation to referenced content.
@@ -195,16 +280,18 @@ Unity's normal asset dirty state, Undo and GUID behaviour remain authoritative.
 
 # Manual Escape Hatch
 
-All generated content remains normally editable through Unity's Project window
-and Inspector.
+All generated Mastery content remains normally editable through Unity's Project
+window and Inspector.
 
-Use the manual path for:
+Normal creation, tree membership, node removal, missing-reference cleanup and
+node deletion should use the Content Workbench.
+
+Use the manual Project / Inspector path for:
 
 - exact diagnosis;
 - unusual repairs;
-- deleting assets;
-- Mastery Definition membership repair;
-- advanced related-content editing.
+- advanced related-content editing;
+- situations not represented by the normal Workbench workflow.
 
 # Runtime Validation
 

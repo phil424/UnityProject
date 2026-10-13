@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "00 - Core/What is the game/Narrative Framework.md",
+                "file": "Development Rules/Abilities and Buildcraft.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Narrative Framework"
+              "title": "Abilities and Buildcraft"
             }
           }
         ]
@@ -188,24 +188,29 @@
   },
   "active": "57c7e95b4b97b861",
   "lastOpenFiles": [
+    "Development Rules/Workflow and Validation.md",
+    "Development Rules/Documentation.md",
+    "Development Rules/UI Authoring.md",
+    "Core Instructions - Always Follow.md",
     "ProjectManagement/Roadmap.md",
-    "Design/Technical/Projectile Combat.md",
+    "Design/Technical/Rewards and Pending Choices.md",
+    "ProjectManagement/O4 Buildcraft Inventory.md",
+    "Guides/How-To/Author Run Rewards.md",
+    "Design/Technical/Character Stats.md",
+    "Design/Rewards.md",
+    "Guides/How-To/Author Character Mastery Trees.md",
+    "ProjectManagement/O4 Buildcraft Inventory.md.meta",
+    "ProjectManagement/Active Feature Programme.md",
     "Design/Combat/Combat.md",
     "Design/Characters/Abilities.md",
+    "00 - Core/What is the game/Narrative Framework.md",
+    "Design/Technical/Projectile Combat.md",
     "Guides/How-To/Author Abilities.md",
     "Guides/How-To/Author Abilities.md.meta",
-    "00 - Core/What is the game/Narrative Framework.md",
     "00 - Core/What is the game/What The Game Actually Is.md",
     "Design/Characters/Characters.md",
     "Guides/How-To/Author Run Rewards.md.meta",
-    "Guides/How-To/Author Run Rewards.md",
-    "Design/Technical/Rewards and Pending Choices.md",
-    "Guides/How-To/Author Character Mastery Trees.md",
     "Design/Technical/Character Mastery.md",
-    "ProjectManagement/Active Feature Programme.md",
-    "Development Rules/Workflow and Validation.md",
-    "Core Instructions - Always Follow.md",
-    "Design/Technical/Character Stats.md",
     "Design/Weapon Mods.md",
     "Guides/How-To.meta",
     "Guides.meta",
@@ -216,13 +221,8 @@
     "Design/Progression.md",
     "Design/Technical/Preparation Frontend.md",
     "Design/Technical/Weapon Mods.md",
-    "Design/Rewards.md",
     "Design/Buildcraft.md",
     "Design/Technical/Weapon Mods.md.meta",
-    "Design/Weapon Mods.md.meta",
-    "Design/Technical/Playable Character Roster.md",
-    "Development Rules/Documentation.md",
-    "Development Rules.md",
-    "Design/Technical/Projectile Combat.md.meta"
+    "Design/Weapon Mods.md.meta"
   ]
 }

@@ -17,3 +17,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: a30d591748da61d48ad5596fba6f4028, type: 2}
   - {fileID: 11400000, guid: a93edd529799a6d47bd29f2fe2536cd6, type: 2}
   - {fileID: 11400000, guid: 3a32bbad9a8290e438d50a4685602e15, type: 2}
+  commonRarityWeight: 60
+  uncommonRarityWeight: 25
+  rareRarityWeight: 10
+  epicRarityWeight: 4
+  legendaryRarityWeight: 1

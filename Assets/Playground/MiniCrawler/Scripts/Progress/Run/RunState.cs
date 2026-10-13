@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
-using MiniCrawler.Core;
 using MiniCrawler.Abilities;
+using MiniCrawler.Core;
 using MiniCrawler.Expedition;
 using UnityEngine;
 
@@ -21,6 +21,7 @@ namespace MiniCrawler.Progress
         public int Level3ResourcesEarned { get; private set; }
         public WorldClockState WorldClock { get; } = new();
         public WorldEventState WorldEvents { get; } = new();
+        public int RewardRerollsRemaining { get; private set; }
 
         public IReadOnlyList<PartyMemberDefinition> SelectedParty => selectedParty;
         public IReadOnlyList<PendingRewardChoice> PendingRewardChoices => pendingRewardChoices;
@@ -37,7 +38,9 @@ namespace MiniCrawler.Progress
         {
             if (configuration == null)
                 return;
-            
+
+            RewardRerollsRemaining = configuration.StartingRewardRerolls;
+
             foreach (ExpeditionObjectiveDefinition definition in configuration.Objectives)
             {
                 if (definition == null)
@@ -68,11 +71,7 @@ namespace MiniCrawler.Progress
                 RunBuild build = GetBuild(member);
                 PersistentMemberProgress persistentProgress = PersistentProgression.GetMemberProgress(member);
 
-                build.InitializeGearLevels(
-                    persistentProgress.WeaponLevel,
-                    persistentProgress.ArmourLevel,
-                    persistentProgress.FocusLevel
-                );
+                build.InitializeGearLevels(persistentProgress.WeaponLevel, persistentProgress.ArmourLevel, persistentProgress.FocusLevel);
 
                 build.InitializeStartingAbilities(member.StartingAbilities);
                 PersistentProgression.ApplyMasteryToBuild(member, build);
@@ -87,7 +86,7 @@ namespace MiniCrawler.Progress
             Currency += amount;
             TotalCurrencyEarned += amount;
         }
-        
+
         public int GetPersistentResourceEarned(PersistentResourceTier tier)
         {
             return tier switch
@@ -95,7 +94,7 @@ namespace MiniCrawler.Progress
                 PersistentResourceTier.Level1 => Level1ResourcesEarned,
                 PersistentResourceTier.Level2 => Level2ResourcesEarned,
                 PersistentResourceTier.Level3 => Level3ResourcesEarned,
-                _ => 0
+                _ => 0,
             };
         }
 
@@ -138,7 +137,7 @@ namespace MiniCrawler.Progress
 
             return build;
         }
-        
+
         public bool TryAcquireAbility(PartyMemberDefinition definition, AbilityDefinition ability)
         {
             if (!IsSelected(definition) || ability == null)
@@ -171,7 +170,7 @@ namespace MiniCrawler.Progress
 
             return true;
         }
-        
+
         public bool HasPendingOffer(PartyMemberDefinition member, RunRewardDefinition reward)
         {
             if (member == null || reward == null)
@@ -214,7 +213,37 @@ namespace MiniCrawler.Progress
 
             return true;
         }
-        
+
+        public bool TryRerollCurrentPendingReward(IEnumerable<RunUpgradeOffer> replacementOffers)
+        {
+            if (RewardRerollsRemaining <= 0 || CurrentPendingRewardChoice == null || replacementOffers == null)
+            {
+                return false;
+            }
+
+            PendingRewardChoice replacement = new(replacementOffers, CurrentPendingRewardChoice.Context);
+
+            if (!replacement.IsValid || replacement.OfferCount != CurrentPendingRewardChoice.OfferCount)
+            {
+                return false;
+            }
+
+            foreach (RunUpgradeOffer offer in replacement.Offers)
+            {
+                if (!IsSelected(offer.Member))
+                    return false;
+            }
+
+            if (!CurrentPendingRewardChoice.ReplaceOffers(replacement.Offers))
+            {
+                return false;
+            }
+
+            RewardRerollsRemaining--;
+
+            return true;
+        }
+
         public bool TryAddObjectiveProgress(ExpeditionObjectiveDefinition definition, int amount)
         {
             if (definition == null || amount <= 0)

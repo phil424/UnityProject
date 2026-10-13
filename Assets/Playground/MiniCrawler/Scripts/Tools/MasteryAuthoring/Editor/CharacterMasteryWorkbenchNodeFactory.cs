@@ -59,7 +59,7 @@ namespace MiniCrawler.Tools.MasteryAuthoring
 
             ConfigureNewNode(node, displayName, id, treePosition);
 
-            AddNodeToMastery(mastery, node);
+            CharacterMasteryWorkbenchContentUtility.AddNodeToTree(mastery, node);
 
             AssetDatabase.SaveAssets();
 
@@ -183,24 +183,6 @@ namespace MiniCrawler.Tools.MasteryAuthoring
 
             serialized.ApplyModifiedPropertiesWithoutUndo();
             EditorUtility.SetDirty(node);
-        }
-
-        private static void AddNodeToMastery(CharacterMasteryDefinition mastery, CharacterMasteryNodeDefinition node)
-        {
-            Undo.RecordObject(mastery, "Add Character Mastery Node");
-
-            SerializedObject serialized = new(mastery);
-
-            SerializedProperty nodes = serialized.FindProperty("nodes");
-
-            int index = nodes.arraySize;
-
-            nodes.InsertArrayElementAtIndex(index);
-
-            nodes.GetArrayElementAtIndex(index).objectReferenceValue = node;
-
-            serialized.ApplyModifiedProperties();
-            EditorUtility.SetDirty(mastery);
         }
     }
 }

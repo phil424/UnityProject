@@ -1598,9 +1598,9 @@ real Expedition play.
 
 The current presentation is functional rather than final visual polish.
 
-## 3.0O2 — Weapon Mods
+## 3.0O2 — Weapon Mods ✅
 
-**Status: Active**
+**Status: Complete**
 
 Develop the shared Weapon Mod system.
 
@@ -2076,9 +2076,9 @@ After O2E:
 
 Then close 3.0O2 and activate 3.0O3 — Abilities.
 
-## 3.0O3 — Abilities
+## 3.0O3 — Abilities ✅
 
-**Status: Active**
+**Status: Complete**
 
 Before substantially expanding Ability content, establish the unified content
 authoring surface that future Character / Mastery / Reward / Ability content
@@ -2173,9 +2173,9 @@ inspect compatibility / eligibility context.
 
 Avoid returning to an ever-growing central list.
 
-### 3.0O3B — Ability System Reassessment & Expansion
+### 3.0O3B — Ability System Reassessment & Expansion ✅
 
-**Status: Active**
+**Status: Complete**
 
 Reassess the existing Ability architecture against the current Character,
 Mastery, Reward and Expedition design before expanding content.
@@ -2268,9 +2268,9 @@ Ranger Power Shot is a strong current candidate because its projectile
 architecture already supports meaningful directional / multi-target expansion,
 but the final content choice should follow the Ability authoring audit.
 
-#### 3.0O3B4 — Core Ability Content Review
+#### 3.0O3B4 — Core Ability Content Review ✅
 
-**Status: Active**
+**Status: Complete**
 
 The playable Character core-kit direction is now locked at the behavioural level.
 
@@ -2291,7 +2291,7 @@ Signature
 → Power Shot.
 
 Utility
-→ Backstep.
+→ Smoke Step.
 
 Sustain
 → Guard.
@@ -2391,41 +2391,397 @@ Ranger Power Shot:
 - Fan Volley remains the current Evolution and should be adapted around the
   three-shot burst rather than discarded.
 
-##### 3.0O3B4D — Comparative Core-Kit Playtest
+##### 3.0O3B4D — Comparative Core-Kit Playtest ✅
+
+**Status: Complete**
+
+Initial comparative playtesting confirmed that Ranger's overall core-kit identity
+is enjoyable and worthwhile, while exposing several concrete corrections before
+the Ability programme can close.
+
+Punchy also exposed Signature / Sustain issues that require a focused correction
+pass before final comparative validation.
+
+###### 3.0O3B4D1 — Ranger Playtest Corrections ✅
+
+**Status: Complete**
+
+Address the Ranger issues demonstrated during the first comparative playtest.
+
+Shield progression:
+
+- Ranger begins with a maximum Shield capacity of 3;
+- Shield capacity is distinct from Shields granted per Guard activation;
+- current / maximum Shields require player-facing HUD presentation;
+- Shield Capacity joins the shared Character stat vocabulary so persistent
+  Mastery and Expedition rewards may increase the cap;
+- actual permanent Mastery / Reward placement should be decided during
+  buildcraft review rather than invented during this correction pass.
+
+Smoke Step:
+
+- replaces the previous long-distance Backstep design;
+- preserve the emergency ranged-disengagement role;
+- Ranger performs only a short hop away from the immediate threat;
+- a smoke effect is conceptually created at Ranger's departure position;
+- nearby enemies become Feared rather than Knocked Back / Stunned;
+- Fear prevents attacks, support actions and new Ability activations;
+- Feared enemies remain mobile;
+- their primary movement direction is opposite Ranger's hop direction;
+- a weaker lateral steering force guides them toward the centre line of that
+  direction;
+- this should turn scattered close-range enemies into a narrower retreating
+  formation that Ranger can exploit with Power Shot;
+- normal combat resumes when Fear expires;
+- the failed route-constrained / safe-destination Backstep experiments should be
+  removed rather than retained as parallel tactical-navigation infrastructure.
+
+Power Shot:
+
+- the three-shot burst remains;
+- the fan spread becomes the baseline firing pattern;
+- piercing, Knockback and Stun remain;
+- Fan Volley is parked from normal Reward generation because playtesting showed
+  its spread behaviour belongs in the baseline Ability;
+- preserve the Fan Volley proof assets for later redesign / reassessment.
+
+###### 3.0O3B4D2 — Punchy Playtest Corrections ✅
+
+**Status: Complete**
+
+Correct the Punchy issues identified during comparative playtesting.
+
+Blink:
+
+- activation position becomes the fixed Sigil Centre for the cast;
+- create an opening radial Knockback + strong Stun window;
+- traverse valid enemies from that created space;
+- damage is delivered during traversal;
+- Punchy remains invulnerable throughout the sequence;
+- return to the exact activation position when traversal completes.
+
+War Cry:
+
+- substantially reduce its excessive early cooldown;
+- preserve stronger low-Health healing / Armour identity;
+- prevent flat Armour from making weak valid attacks completely harmless.
+
+Global Armour working rule:
+
+after Invulnerability and Shields,
+a positive damaging hit that reaches Armour should currently deal at least
+1 Health damage.
+
+This minimum-damage rule remains subject to reassessment once the enemy roster
+contains broader damage profiles.
+
+Whirlwind remains unchanged initially because the first playtest found the
+Ability itself enjoyable.
+
+Reassess Whirlwind only after Blink and War Cry are corrected.
+
+###### 3.0O3B4D3 — Comparative Core-Kit Re-test ✅
+
+**Status: Complete**
+
+Comparative re-testing passed.
+
+Punchy and Ranger now present distinct, useful core kits.
+
+Punchy:
+
+Blink
+→ Signature battlefield control / traversal / return.
+
+Whirlwind
+→ immediate close-range breathing room.
+
+War Cry
+→ reactive recovery and Armour.
+
+Ranger:
+
+Power Shot
+→ ranged formation payoff.
+
+Smoke Step
+→ disengagement plus tactical enemy herding.
+
+Guard
+→ persistent Shield defence plus healing over time.
+
+The corrected kits are sufficiently coherent to move from isolated Ability
+review into whole-Character buildcraft integration.
+
+Re-test Punchy and Ranger after the evidence-driven corrections.
+
+Close O3B only when:
+
+- each core button solves a distinct useful combat problem;
+- Ranger remains spatially coherent with authored Encounter geography;
+- Shield progression is readable and bounded;
+- baseline Power Shot is immediately satisfying;
+- Blink reads clearly as Punchy's Signature;
+- War Cry creates a useful survival decision without trivialising incoming
+  damage.
+
+## 3.0O4 — Character Buildcraft Foundation & Content Review
 
 **Status: Active**
 
-Play Punchy and Ranger as complete Character packages.
+Move from isolated Character / Weapon Mastery / Ability foundations into a
+coherent buildcraft game.
+
+The current architecture supports several useful progression systems, but much
+of the actual Reward and Mastery content remains prototype-scale.
+
+Strengthen the buildcraft foundation and content in deliberate stages before
+performing the final integrated review.
+
+### 3.0O4A — Buildcraft Inventory & Classification ✅
+
+**Status: Complete**
+
+Establish a trustworthy map of the current buildcraft surface.
+
+Classify:
+
+- Character-specific content;
+- shared / generic content;
+- reusable runtime primitives;
+- persistent progression;
+- Expedition progression;
+- Reward delivery;
+- current authoring support;
+- prototype / placeholder content;
+- missing content paths.
+
+Do not expand content during this step.
+
+### 3.0O4B — Buildcraft Authoring Hygiene ✅
+
+**Status: Complete**
+
+Remove authoring friction before substantially increasing content volume.
+
+Keep the Content Workbench as an editor for the real project assets rather than
+creating a second content database.
+
+#### 3.0O4B1 — Mastery Content Lifecycle Tools ✅
+
+**Status: Complete**
+
+Improve normal Mastery authoring so content can be safely iterated without
+manual ScriptableObject-list repair.
+
+Implement:
+
+- Add Existing Node;
+- Remove From Tree without deleting the node asset;
+- Delete Node Asset with explicit confirmation;
+- automatic prerequisite cleanup when a node leaves the tree;
+- cleanup of direct Mastery-combination references;
+- explicit cleanup of missing serialized node / prerequisite references;
+- Undo support for non-destructive membership changes;
+- non-obstructive validation after each operation.
+
+Permanent asset deletion remains explicitly destructive and is not treated as an
+Undo operation.
+
+#### 3.0O4B2 — Reward Content Lifecycle Tools ✅
+
+**Status: Complete**
+
+Bring the same lifecycle quality to Run Reward authoring.
 
 Review:
 
-- whether each button solves a distinct combat problem;
-- whether Signature / Utility / Sustain are readable in actual combat;
-- whether shared combat primitives still produce distinct Character identities;
-- whether damage versus control versus survival buildcraft has meaningful room
-  to grow;
-- whether any prototype content should be retired before O4.
+- deleting Reward assets through the Workbench;
+- removing all Set memberships before deletion;
+- deleting Reward Set assets safely;
+- clear distinction between membership removal and asset deletion;
+- explicit confirmation for destructive operations;
+- validation and selection recovery after content changes.
 
-Close O3B only after both Character kits are coherent enough for broader
-buildcraft integration testing.
+### 3.0O4C — Run Reward Foundation & Balance Pass
 
-## 3.0O4 — Character Buildcraft Integration Review
+**Status: Active**
 
-Play the Character / Weapon Mod / Ability systems together.
+Turn the current prototype Reward pool into a meaningful Expedition buildcraft
+layer.
+
+#### 3.0O4C1 — Rarity Generation Foundation ✅
+
+**Status: Complete**
+
+Make Reward rarity affect actual offer generation.
+
+Introduce an authorable Catalogue rarity profile.
+
+Reward selection should:
+
+1. build the normal eligible candidate pool;
+2. determine which rarity tiers are represented by those candidates;
+3. roll a rarity using the Catalogue profile;
+4. select an eligible Reward from that rarity;
+5. remove that offer from the current choice;
+6. repeat until the requested offer count is reached.
+
+Unavailable rarity tiers should not consume probability.
+
+Adding more Rewards of one rarity should not by itself increase that rarity's
+overall chance of being rolled.
+
+Initial working profile:
+
+- Common: 60;
+- Uncommon: 25;
+- Rare: 10;
+- Epic: 4;
+- Legendary: 1.
+
+These are balance values rather than permanent design constants.
+
+#### 3.0O4C2 — Character Growth Reward Rebuild ✅
+
+**Status: Complete**
+
+Replace the current exaggerated prototype Character Growth pool with a broader,
+coherently balanced first production pass.
+
+Establish:
+
+- rarity/value expectations;
+- safe generic picks;
+- offensive development;
+- defensive development;
+- utility development;
+- build-directed stats;
+- Shield Capacity progression where useful;
+- multiple Rewards per useful stat where appropriate.
+
+Do not make every Reward build-defining.
+
+A healthy pool should contain both reliable general value and stronger
+directional opportunities.
+
+#### 3.0O4C3 — Reward Choice Quality & Rerolls ✅
+
+**Status: Complete**
+
+Improve the quality of individual Reward decisions.
 
 Review:
-- whether Mods and Abilities occupy distinct useful roles;
-- whether different Characters genuinely feel different;
-- whether temporary buildcraft still creates meaningful variation;
-- whether cross-character progression remains desirable;
-- whether the current stat vocabulary is sufficient.
+
+- duplicate / repetitive choice pressure;
+- offer diversity;
+- Reward eligibility;
+- pending-choice rerolls;
+- Expedition-owned reroll count;
+- reroll presentation;
+- avoiding immediate repetition where enough alternatives exist.
+
+Rerolls should regenerate the same Reward source / vector rather than changing
+what kind of Reward was earned.
+
+#### 3.0O4C4 — Reward Balance Playtest
+
+**Status: Active**
+
+Play several Expeditions using the rebuilt Reward pool.
+
+Confirm that:
+
+- Common Rewards remain useful;
+- higher rarities feel exciting rather than mandatory;
+- generic safe picks remain worthwhile;
+- directional Rewards support emerging builds;
+- Reward choices do not repeatedly collapse into one obvious answer;
+- rerolls improve agency without guaranteeing ideal builds;
+- temporary Reward progression remains meaningfully weaker than a completed
+  build at expedition start.
+
+### 3.0O4D — Shared Expedition Ability Pool
+
+**Status: Planned**
+
+Expand Ability-vector Rewards with reusable Expedition-acquired Abilities that
+are not part of a Character's three core Ability roles.
+
+Candidate directions include:
+
+- area lightning / storm pressure;
+- Fear / control effects;
+- offensive shared Abilities;
+- defensive shared Abilities;
+- utility shared Abilities.
+
+Individual player-facing Ability designs remain subject to explicit design
+review before implementation.
+
+### 3.0O4E — Character Mastery Progression Foundation
+
+**Status: Planned**
+
+Strengthen persistent Character progression.
+
+Review:
+
+- rankable / multi-level Mastery nodes;
+- increasing costs across ranks;
+- prepared Ability starting levels;
+- prepared Weapon Mastery levels;
+- Character stat progression;
+- branch structure;
+- persistent versus Expedition power;
+- resource-tier pacing.
+
+One-time unlock nodes should remain available where they better suit the
+content.
+
+### 3.0O4F — Punchy & Ranger Mastery Expansion
+
+**Status: Planned**
+
+Use the improved Mastery foundation to replace prototype-scale trees with larger
+coherent Character progression.
+
+Punchy and Ranger should gain:
+
+- meaningful early choices;
+- distinct branches;
+- generic-stat development;
+- Character-specific development;
+- Ability development;
+- Weapon Mastery development;
+- multiple worthwhile progression routes.
+
+Prototype content should be replaced or retired where it no longer represents
+the intended game.
+
+### 3.0O4G — Integrated Buildcraft Playtest & Balance
+
+**Status: Planned**
+
+Play developed Punchy and Ranger Expeditions using the expanded Reward and
+Mastery content.
+
+Confirm that:
+
+- preparation establishes direction;
+- Expedition Rewards substantially develop that direction;
+- safe generic choices remain useful;
+- build-defining choices create meaningful pivots;
+- Weapon Masteries and Abilities retain distinct roles;
+- several builds are viable;
+- Characters remain recognisably different;
+- Reward rarity and rerolls improve decisions rather than trivialising them.
 
 ### 3.0O Review Gate
 
-> Do Characters, Weapon Mods and Abilities create enough identity and flexibility
-> to justify expanding their content?
-
-Later O/P work may be reshaped based on this answer.
+> Do Characters, Weapon Masteries, Abilities, Rewards and Mastery progression
+> now create enough identity, choice and flexibility to justify moving the
+> development frontier into richer combat content?
 
 ---
 

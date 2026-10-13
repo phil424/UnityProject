@@ -14,9 +14,14 @@ namespace MiniCrawler.Combat
 
         private readonly List<ShieldLayer> shieldLayers = new();
 
+        private ShieldCapacityStats capacityStats;
+
         public event Action<HitShieldRuntime> Changed;
 
         public int ShieldCount => shieldLayers.Count;
+        public int Capacity => capacityStats != null ? capacityStats.Capacity : int.MaxValue;
+
+        public int AvailableCapacity => capacityStats != null ? Mathf.Max(0, Capacity - ShieldCount) : int.MaxValue;
 
         public int HitsRemainingInCurrentShield => shieldLayers.Count > 0 ? shieldLayers[0].HitsRemaining : 0;
 
@@ -35,6 +40,11 @@ namespace MiniCrawler.Combat
 
         public bool HasShields => shieldLayers.Count > 0;
 
+        private void OnEnable()
+        {
+            BindCapacity();
+        }
+
         public bool AddShields(GameObject source, int shieldCount, int hitsPerShield, string actionName)
         {
             shieldCount = Mathf.Max(0, shieldCount);
@@ -43,7 +53,12 @@ namespace MiniCrawler.Combat
             if (shieldCount <= 0 || hitsPerShield <= 0)
                 return false;
 
-            for (int i = 0; i < shieldCount; i++)
+            int allowedCount = capacityStats != null ? Mathf.Min(shieldCount, AvailableCapacity) : shieldCount;
+
+            if (allowedCount <= 0)
+                return false;
+
+            for (int i = 0; i < allowedCount; i++)
             {
                 shieldLayers.Add(new ShieldLayer { HitsRemaining = hitsPerShield });
             }
@@ -52,10 +67,12 @@ namespace MiniCrawler.Combat
 
             string sourceName = source != null ? source.name : "Unknown";
 
+            string capacityText = capacityStats != null ? $"{ShieldCount}/{Capacity}" : ShieldCount.ToString();
+
             Debug.Log(
-                $"[Shield] {name} gained {shieldCount} shield(s) from {sourceName} "
+                $"[Shield] {name} gained {allowedCount} shield(s) from {sourceName} "
                     + $"[{actionName}] with {hitsPerShield} hit(s) each | "
-                    + $"Shields {ShieldCount} | Total Hits {TotalHitsRemaining}."
+                    + $"Shields {capacityText} | Total Hits {TotalHitsRemaining}."
             );
 
             return true;
@@ -81,13 +98,35 @@ namespace MiniCrawler.Combat
 
             string result = shieldBroken ? "Shield broke" : $"Current Shield {currentShield.HitsRemaining} hit(s) remaining";
 
-            Debug.Log($"[Shield] {name} absorbed {sourceName} [{actionName}] | " + $"{result} | Shields {ShieldCount} | Total Hits {TotalHitsRemaining}.");
+            string capacityText = capacityStats != null ? $"{ShieldCount}/{Capacity}" : ShieldCount.ToString();
+
+            Debug.Log($"[Shield] {name} absorbed {sourceName} [{actionName}] | " + $"{result} | Shields {capacityText} | Total Hits {TotalHitsRemaining}.");
 
             return true;
         }
 
+        private void BindCapacity()
+        {
+            if (capacityStats != null)
+                capacityStats.Changed -= HandleCapacityChanged;
+
+            capacityStats = GetComponent<ShieldCapacityStats>();
+
+            if (capacityStats != null)
+                capacityStats.Changed += HandleCapacityChanged;
+        }
+
+        private void HandleCapacityChanged(ShieldCapacityStats changedStats)
+        {
+            Changed?.Invoke(this);
+        }
+
         private void OnDisable()
         {
+            if (capacityStats != null)
+                capacityStats.Changed -= HandleCapacityChanged;
+
+            capacityStats = null;
             shieldLayers.Clear();
         }
     }

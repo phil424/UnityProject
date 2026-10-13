@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: acb822e4e9f902a459d3037f11c8a3d5, type: 3}
-  m_Name: RangerBackstep
+  m_Name: RangerSmokeStep
   m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Abilities.AbilityDefinition
-  id: ranger_backstep
-  displayName: Backstep
+  id: ranger_smoke_step
+  displayName: Smoke Step
   icon: {fileID: 0}
   maxLevel: 5
   cooldown:

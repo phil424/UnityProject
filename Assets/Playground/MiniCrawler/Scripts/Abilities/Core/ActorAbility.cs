@@ -56,7 +56,8 @@ namespace MiniCrawler.Abilities
 
         public bool IsInitialized => owner != null && definition != null;
 
-        public bool CanActivateNow => IsInitialized && isActiveAndEnabled && !SimulationPause.IsPaused && IsOwnerAlive() && !IsOwnerStunned() && IsReady && !IsExecuting && CanActivateAbility();
+        public bool CanActivateNow =>
+            IsInitialized && isActiveAndEnabled && !SimulationPause.IsPaused && IsOwnerAlive() && !IsOwnerStunned() && !IsOwnerFeared() && IsReady && !IsExecuting && CanActivateAbility();
 
         public event Action<ActorAbility> Activated;
 
@@ -210,6 +211,16 @@ namespace MiniCrawler.Abilities
             StunRuntime stun = owner.GetComponent<StunRuntime>();
 
             return stun != null && stun.IsStunned;
+        }
+
+        private bool IsOwnerFeared()
+        {
+            if (owner == null)
+                return false;
+
+            FearRuntime fear = owner.GetComponent<FearRuntime>();
+
+            return fear != null && fear.IsFeared;
         }
 
         [ContextMenu("Debug/Try Activate")]

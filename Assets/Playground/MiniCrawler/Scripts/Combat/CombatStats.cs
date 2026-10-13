@@ -53,11 +53,7 @@ namespace MiniCrawler.Combat
 
         public float FlatArmour => Mathf.Max(0f, flatArmour + gearArmourBonus + runArmourBonus + GetRuntimeFlatArmourBonus());
 
-        public float AttackTimer
-        {
-            get;
-            set;
-        }
+        public float AttackTimer { get; set; }
 
         public void ApplyGearBonuses(float damageBonus, float armourBonus)
         {
@@ -74,7 +70,10 @@ namespace MiniCrawler.Combat
 
         public float CalculateDamageTaken(float incomingDamage)
         {
-            return Mathf.Max(0f, incomingDamage - FlatArmour);
+            if (incomingDamage <= 0f)
+                return 0f;
+
+            return Mathf.Max(1f, incomingDamage - FlatArmour);
         }
 
         private float GetRuntimeAttackSpeedBonus()

@@ -42,6 +42,14 @@ namespace MiniCrawler.Systems
                 return;
             }
 
+            FearRuntime fear = action.GetComponent<FearRuntime>();
+
+            if (fear != null && fear.IsFeared)
+            {
+                action.Cancel();
+                return;
+            }
+
             action.Advance(Time.deltaTime);
 
             if (action.ShouldApplyImpact)

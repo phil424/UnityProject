@@ -11,10 +11,14 @@ namespace MiniCrawler.Progress
         public IReadOnlyList<PartyMemberDefinition> Party => party;
         public IReadOnlyList<ExpeditionObjectiveDefinition> Objectives => objectives;
 
+        public int StartingRewardRerolls { get; }
+
         public bool IsValid => party.Count > 0;
 
-        public RunStartConfiguration(IEnumerable<PartyMemberDefinition> startingParty, IEnumerable<ExpeditionObjectiveDefinition> startingObjectives)
+        public RunStartConfiguration(IEnumerable<PartyMemberDefinition> startingParty, IEnumerable<ExpeditionObjectiveDefinition> startingObjectives, int startingRewardRerolls)
         {
+            StartingRewardRerolls = startingRewardRerolls > 0 ? startingRewardRerolls : 0;
+
             if (startingParty != null)
             {
                 foreach (PartyMemberDefinition member in startingParty)

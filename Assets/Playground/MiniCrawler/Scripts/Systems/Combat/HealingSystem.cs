@@ -38,6 +38,11 @@ namespace MiniCrawler.Systems
             if (stun != null && stun.IsStunned)
                 return;
 
+            FearRuntime fear = supporter.GetComponent<FearRuntime>();
+
+            if (fear != null && fear.IsFeared)
+                return;
+
             supporter.HealTimer = Mathf.Max(0f, supporter.HealTimer - Time.deltaTime);
 
             AbilityExecutionState abilityExecutionState = supporter.GetComponent<AbilityExecutionState>();

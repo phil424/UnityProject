@@ -54,16 +54,20 @@ MonoBehaviour:
     baseValue: 0.14
     perLevel: -0.005
   arrivalOffset: 0.35
+  openingDelay: 0.15
   finishDelay: 0.1
+  openingControlRadius:
+    baseValue: 3.5
+    perLevel: 0.5
+  openingKnockbackDistance:
+    baseValue: 2.5
+    perLevel: 0.5
+  openingKnockbackSpeed:
+    baseValue: 10
+    perLevel: 0
+  openingStunDuration:
+    baseValue: 1.25
+    perLevel: 0.35
   damage:
     baseValue: 5
     perLevel: 2
-  knockbackDistance:
-    baseValue: 1.25
-    perLevel: 0.25
-  knockbackSpeed:
-    baseValue: 10
-    perLevel: 0
-  stunDuration:
-    baseValue: 0.6
-    perLevel: 0.2
