@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Development Rules/Abilities and Buildcraft.md",
+                "file": "ProjectManagement/Roadmap.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Abilities and Buildcraft"
+              "title": "Roadmap"
             }
           }
         ]
@@ -188,24 +188,28 @@
   },
   "active": "57c7e95b4b97b861",
   "lastOpenFiles": [
+    "Design/Technical/Ability Loadout and Runtime.md.meta",
+    "Design/UI-UX.md",
+    "Design/Technical/Ability Loadout and Runtime.md",
+    "Design/Characters/Abilities.md",
+    "ProjectManagement/Roadmap.md",
+    "Guides/How-To/Author Abilities.md",
+    "Design/Rewards.md",
+    "Design/Technical/Character Stats.md",
+    "Design/Technical/Rewards and Pending Choices.md",
+    "Development Rules/Abilities and Buildcraft.md",
     "Development Rules/Workflow and Validation.md",
     "Development Rules/Documentation.md",
     "Development Rules/UI Authoring.md",
     "Core Instructions - Always Follow.md",
-    "ProjectManagement/Roadmap.md",
-    "Design/Technical/Rewards and Pending Choices.md",
     "ProjectManagement/O4 Buildcraft Inventory.md",
     "Guides/How-To/Author Run Rewards.md",
-    "Design/Technical/Character Stats.md",
-    "Design/Rewards.md",
     "Guides/How-To/Author Character Mastery Trees.md",
     "ProjectManagement/O4 Buildcraft Inventory.md.meta",
     "ProjectManagement/Active Feature Programme.md",
     "Design/Combat/Combat.md",
-    "Design/Characters/Abilities.md",
     "00 - Core/What is the game/Narrative Framework.md",
     "Design/Technical/Projectile Combat.md",
-    "Guides/How-To/Author Abilities.md",
     "Guides/How-To/Author Abilities.md.meta",
     "00 - Core/What is the game/What The Game Actually Is.md",
     "Design/Characters/Characters.md",
@@ -215,13 +219,9 @@
     "Guides/How-To.meta",
     "Guides.meta",
     "Guides/How-To/Author Character Mastery Trees.md.meta",
-    "Design/UI-UX.md",
     "Guides/How-To",
     "Guides",
     "Design/Progression.md",
-    "Design/Technical/Preparation Frontend.md",
-    "Design/Technical/Weapon Mods.md",
-    "Design/Buildcraft.md",
     "Design/Technical/Weapon Mods.md.meta",
     "Design/Weapon Mods.md.meta"
   ]

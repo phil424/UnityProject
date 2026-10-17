@@ -66,7 +66,7 @@ Do not add new stat types without a real gameplay consumer.
 
 ## Expedition Modifiers
 
-`RunBuild` owns temporary Character progression for one expedition.
+`RunBuild` owns temporary Character progression for one Expedition.
 
 Current Expedition stat modifiers include:
 
@@ -76,10 +76,16 @@ Current Expedition stat modifiers include:
 - Armour;
 - Max Health;
 - Ability Cooldown Recovery;
+- Ability Damage;
+- Ability Area Size;
 - Knockback Power;
 - Shield Capacity.
 
-These survive Region / level transitions and disappear when the Expedition ends.
+Prepared and Expedition modifiers use the same shared
+`CharacterStatModifierType` vocabulary.
+
+They survive Region / level transitions and disappear when the Expedition ends
+unless a modifier originated from prepared persistent progression.
 
 ## Shield Capacity
 
@@ -209,6 +215,78 @@ Current consumer:
 
 Ability cooldown recovery remains actor-generic and does not depend directly on
 player `RunBuild`.
+
+## Ability Damage
+
+Actor-wide percentage modifier for damage explicitly produced by compatible
+Abilities.
+
+Current formula:
+
+Effective Ability Damage
+=
+Authored Ability Damage × (1 + Ability Damage Percent / 100).
+
+Current runtime consumer:
+
+`ActorAbility`
+→ shared `ResolveAbilityDamage(...)`
+→ actor-owned `AbilityStats`.
+
+Concrete damaging Abilities opt into this shared helper.
+
+Current consumers include:
+
+- Blink;
+- Whirlwind;
+- Charge;
+- Projectile Shot;
+- Power Shot / Piercing Projectile Shot.
+
+Basic Attacks do not use this calculation.
+
+General Runtime outgoing-damage modifiers are applied separately through the
+existing `DamageResolver` seam and may therefore affect both Basic Attack and
+Ability damage when that temporary effect is intentionally universal.
+
+## Ability Area Size
+
+Actor-wide percentage modifier for compatible Ability effect geometry.
+
+Current formula:
+
+Effective Linear Ability Size = Authored Size × (1 + Ability Area Size Percent / 100).
+
+Current runtime consumer:
+
+`ActorAbility`
+→ shared `ResolveAbilityAreaSize(...)`
+→ actor-owned `AbilityStats`.
+
+Current representative consumers:
+
+Whirlwind
+→ activation/effect radius.
+
+Blink
+→ opening control radius.
+
+Smoke Step
+→ smoke/Fear radius.
+
+Ability Area Size is deliberately opt-in.
+
+It does not automatically alter:
+
+- targeting/search distance;
+- movement distance;
+- projectile travel range;
+- projectile hit radius;
+- Basic Attack range;
+- Knockback distance.
+
+This prevents one broad percentage stat from accidentally changing unrelated
+mechanics merely because they are expressed as distances or radii.
 
 ## Knockback Power
 

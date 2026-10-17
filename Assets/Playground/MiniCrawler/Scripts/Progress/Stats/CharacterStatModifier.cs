@@ -13,6 +13,8 @@ namespace MiniCrawler.Progress
         AbilityCooldownRecoveryPercent,
         KnockbackPowerPercent,
         ShieldCapacity,
+        AbilityDamagePercent,
+        AbilityAreaSizePercent,
     }
 
     internal sealed class CharacterStatModifierSet
@@ -49,6 +51,8 @@ namespace MiniCrawler.Progress
                 CharacterStatModifierType.AbilityCooldownRecoveryPercent => $"Recover ability cooldowns {formattedAmount}% faster.",
                 CharacterStatModifierType.KnockbackPowerPercent => $"Increase outgoing knockback and pull distance by {formattedAmount}%.",
                 CharacterStatModifierType.ShieldCapacity => $"Increase maximum Shields by {formattedAmount}.",
+                CharacterStatModifierType.AbilityDamagePercent => $"Abilities deal {formattedAmount}% more damage.",
+                CharacterStatModifierType.AbilityAreaSizePercent => $"Increase compatible Ability area size by {formattedAmount}%.",
                 _ => "Unknown stat modifier.",
             };
         }

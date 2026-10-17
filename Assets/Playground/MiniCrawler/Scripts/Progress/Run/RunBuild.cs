@@ -16,7 +16,10 @@ namespace MiniCrawler.Progress
     public sealed class RunBuild
     {
         public const int MaxWeaponModStances = 4;
+        public const int MaxExpeditionAbilitySlots = 3;
+
         private readonly List<RunAbilityState> abilities = new();
+        private readonly RunAbilityState[] expeditionAbilitySlots = new RunAbilityState[MaxExpeditionAbilitySlots];
         private readonly List<RunWeaponModState> weaponMods = new();
         private readonly CharacterStatModifierSet preparedStatModifiers = new();
         private readonly CharacterStatModifierSet expeditionStatModifiers = new();
@@ -31,10 +34,13 @@ namespace MiniCrawler.Progress
         public float FlatArmourBonus => GetEffectiveStatBonus(CharacterStatModifierType.FlatArmour);
         public float FlatMaxHealthBonus => GetEffectiveStatBonus(CharacterStatModifierType.FlatMaxHealth);
         public float AbilityCooldownRecoveryPercentBonus => GetEffectiveStatBonus(CharacterStatModifierType.AbilityCooldownRecoveryPercent);
+        public float AbilityDamagePercentBonus => GetEffectiveStatBonus(CharacterStatModifierType.AbilityDamagePercent);
+        public float AbilityAreaSizePercentBonus => GetEffectiveStatBonus(CharacterStatModifierType.AbilityAreaSizePercent);
         public float KnockbackPowerPercentBonus => GetEffectiveStatBonus(CharacterStatModifierType.KnockbackPowerPercent);
         public float ShieldCapacityBonus => GetEffectiveStatBonus(CharacterStatModifierType.ShieldCapacity);
 
         public IReadOnlyList<RunAbilityState> Abilities => abilities;
+        public IReadOnlyList<RunAbilityState> ExpeditionAbilitySlots => expeditionAbilitySlots;
         public IReadOnlyList<RunWeaponModState> WeaponMods => weaponMods;
 
         public int GetLevel(GearSlot slot)
@@ -80,10 +86,12 @@ namespace MiniCrawler.Progress
 
             foreach (AbilityLoadoutEntry entry in startingAbilities)
             {
-                if (entry?.Ability == null)
+                if (entry?.Ability == null || entry.Role == CharacterAbilityRole.Unassigned || HasAbility(entry.Ability) || GetPreparedAbilityState(entry.Role) != null)
+                {
                     continue;
+                }
 
-                TryAcquireAbility(entry.Ability, entry.Level);
+                abilities.Add(new RunAbilityState(entry.Ability, entry.Level, entry.Role));
             }
         }
 
@@ -92,7 +100,11 @@ namespace MiniCrawler.Progress
             if (ability == null || HasAbility(ability))
                 return false;
 
-            abilities.Add(new RunAbilityState(ability, startingLevel));
+            RunAbilityState state = new(ability, startingLevel);
+            abilities.Add(state);
+
+            AutoAssignExpeditionAbility(state);
+
             return true;
         }
 
@@ -165,6 +177,104 @@ namespace MiniCrawler.Progress
             }
 
             return null;
+        }
+
+        public RunAbilityState GetPreparedAbilityState(CharacterAbilityRole role)
+        {
+            if (role == CharacterAbilityRole.Unassigned)
+                return null;
+
+            foreach (RunAbilityState state in abilities)
+            {
+                if (state != null && state.PreparedRole == role)
+                    return state;
+            }
+
+            return null;
+        }
+
+        public RunAbilityState GetExpeditionAbilityState(int slotIndex)
+        {
+            if (slotIndex < 0 || slotIndex >= MaxExpeditionAbilitySlots)
+                return null;
+
+            return expeditionAbilitySlots[slotIndex];
+        }
+
+        public bool IsAbilityActive(AbilityDefinition ability)
+        {
+            RunAbilityState state = GetAbilityState(ability);
+
+            if (state == null)
+                return false;
+
+            if (state.IsPreparedCore)
+                return true;
+
+            return FindExpeditionAbilitySlot(state) >= 0;
+        }
+
+        public bool TrySetExpeditionAbilitySlot(int slotIndex, AbilityDefinition ability)
+        {
+            if (slotIndex < 0 || slotIndex >= MaxExpeditionAbilitySlots)
+                return false;
+
+            RunAbilityState currentState = expeditionAbilitySlots[slotIndex];
+
+            if (ability == null)
+            {
+                if (currentState == null)
+                    return false;
+
+                expeditionAbilitySlots[slotIndex] = null;
+                return true;
+            }
+
+            RunAbilityState requestedState = GetAbilityState(ability);
+
+            if (requestedState == null || requestedState.IsPreparedCore)
+                return false;
+
+            int existingSlotIndex = FindExpeditionAbilitySlot(requestedState);
+
+            if (existingSlotIndex == slotIndex)
+                return false;
+
+            if (existingSlotIndex >= 0)
+                expeditionAbilitySlots[existingSlotIndex] = currentState;
+
+            expeditionAbilitySlots[slotIndex] = requestedState;
+
+            return true;
+        }
+
+        private void AutoAssignExpeditionAbility(RunAbilityState state)
+        {
+            if (state == null || state.IsPreparedCore || FindExpeditionAbilitySlot(state) >= 0)
+                return;
+
+            for (int i = 0; i < expeditionAbilitySlots.Length; i++)
+            {
+                if (expeditionAbilitySlots[i] != null)
+                    continue;
+
+                expeditionAbilitySlots[i] = state;
+                return;
+            }
+        }
+
+        private int FindExpeditionAbilitySlot(RunAbilityState state)
+        {
+            if (state == null)
+                return -1;
+
+            for (int i = 0; i < expeditionAbilitySlots.Length; i++)
+            {
+                if (expeditionAbilitySlots[i] == state)
+                    return i;
+            }
+
+            return -1;
         }
 
         public RunWeaponModState CoreWeaponModState => GetWeaponModState(WeaponModStanceSlot.Core);

@@ -16,6 +16,10 @@ namespace MiniCrawler.Abilities
         [SerializeField]
         private Sprite icon;
 
+        [Header("Classification")]
+        [SerializeField]
+        private AbilityElement elements;
+
         [Header("Levels")]
         [SerializeField]
         [Min(1)]
@@ -34,9 +38,16 @@ namespace MiniCrawler.Abilities
 
         public Sprite Icon => icon;
 
+        public AbilityElement Elements => elements;
+
         public int MaxLevel => maxLevel;
 
         public GameObject RuntimePrefab => runtimePrefab;
+
+        public bool HasElement(AbilityElement element)
+        {
+            return element != AbilityElement.None && (elements & element) == element;
+        }
 
         public int ClampLevel(int level)
         {

@@ -157,7 +157,7 @@ For each offer slot it:
 3. sums the Catalogue weights for those represented tiers;
 4. performs a weighted rarity roll;
 5. selects one eligible offer from the chosen rarity;
-6. removes that offer;
+6. removes all candidates belonging to the same per-Character OfferDiversityKey group;
 7. repeats for the next slot.
 
 A rarity with no eligible candidates contributes no weight to that roll.

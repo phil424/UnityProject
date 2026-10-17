@@ -35,6 +35,7 @@ namespace MiniCrawler.Tools.ContentAuthoring
             DrawSection("Identity");
             DrawProperty(serialized, "displayName");
             DrawProperty(serialized, "icon");
+            DrawProperty(serialized, "elements");
 
             EditorGUILayout.Space(8);
 

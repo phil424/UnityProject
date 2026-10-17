@@ -52,6 +52,9 @@ namespace MiniCrawler.Progress
             }
 
             abilityStats.ApplyRunCooldownRecoveryBonus(build.AbilityCooldownRecoveryPercentBonus);
+            abilityStats.ApplyRunAbilityDamageBonus(build.AbilityDamagePercentBonus);
+            abilityStats.ApplyRunAbilityAreaSizeBonus(build.AbilityAreaSizePercentBonus);
+
             knockbackStats.ApplyRunPowerBonus(build.KnockbackPowerPercentBonus);
 
             if (shieldCapacityStats != null)

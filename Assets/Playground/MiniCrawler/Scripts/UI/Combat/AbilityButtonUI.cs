@@ -1,5 +1,6 @@
 using MiniCrawler.Abilities;
 using MiniCrawler.Core;
+using MiniCrawler.Progress;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -15,29 +16,23 @@ namespace MiniCrawler.UI
 
         private Button button;
         private PartyMemberDefinition ownerDefinition;
+        private RunAbilityState abilityState;
         private ActorAbility ability;
-        
+        private string slotLabel;
+
         public PartyMemberDefinition OwnerDefinition => ownerDefinition;
         public ActorAbility Ability => ability;
 
         private void Awake()
         {
-            button =
-                GetComponent<Button>();
-
-            button.onClick.AddListener(
-                HandleClicked
-            );
+            button = GetComponent<Button>();
+            button.onClick.AddListener(HandleClicked);
         }
 
         private void OnDestroy()
         {
             if (button != null)
-            {
-                button.onClick.RemoveListener(
-                    HandleClicked
-                );
-            }
+                button.onClick.RemoveListener(HandleClicked);
         }
 
         private void Update()
@@ -45,16 +40,12 @@ namespace MiniCrawler.UI
             Refresh();
         }
 
-        public void Bind(
-            PartyMemberDefinition definition,
-            ActorAbility actorAbility
-        )
+        public void Bind(PartyMemberDefinition definition, string displaySlotLabel, RunAbilityState state, ActorAbility actorAbility)
         {
-            ownerDefinition =
-                definition;
-
-            ability =
-                actorAbility;
+            ownerDefinition = definition;
+            slotLabel = displaySlotLabel;
+            abilityState = state;
+            ability = actorAbility;
 
             Refresh();
         }
@@ -65,7 +56,6 @@ namespace MiniCrawler.UI
                 return;
 
             ability.TryActivate();
-
             Refresh();
         }
 
@@ -74,39 +64,41 @@ namespace MiniCrawler.UI
             if (button == null)
                 return;
 
-            string ownerName =
-                ownerDefinition != null
-                    ? ownerDefinition.DisplayName
-                    : "Unknown";
-
-            if (ability == null)
+            if (abilityState?.Definition == null)
             {
-                button.interactable =
-                    false;
+                button.interactable = false;
 
                 if (labelText != null)
                 {
-                    labelText.text =
-                        $"{ownerName}\n" +
-                        "Ability unavailable";
+                    labelText.text = $"{slotLabel}\n" + "EMPTY";
                 }
 
                 return;
             }
 
-            string state = ability.IsExecuting ? "EXECUTING" : ability.IsReady
-                        ? "READY" : $"{ability.CooldownRemaining:0.0}s";
+            if (ability == null)
+            {
+                button.interactable = false;
+
+                if (labelText != null)
+                {
+                    labelText.text = $"{slotLabel}\n" + $"{abilityState.Definition.DisplayName} Lv.{abilityState.Level}\n" + "UNAVAILABLE";
+                }
+
+                return;
+            }
+
+            string stateText =
+                ability.IsExecuting ? "EXECUTING"
+                : ability.IsReady ? "READY"
+                : $"{ability.CooldownRemaining:0.0}s";
 
             if (labelText != null)
             {
-                labelText.text =
-                    $"{ownerName}\n" +
-                    $"{ability.DisplayName} Lv.{ability.Level}\n" +
-                    state;
+                labelText.text = $"{slotLabel}\n" + $"{ability.DisplayName} Lv.{ability.Level}\n" + stateText;
             }
 
-            button.interactable =
-                ability.CanActivateNow;
+            button.interactable = ability.CanActivateNow;
         }
     }
 }

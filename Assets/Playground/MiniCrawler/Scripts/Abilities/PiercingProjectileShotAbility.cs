@@ -68,7 +68,7 @@ namespace MiniCrawler.Abilities
         public float BurstShotInterval => Mathf.Max(0.01f, burstShotInterval);
         public int BurstShotCount => Mathf.Max(1, burstShotCount);
         public float RecoveryDuration => Mathf.Max(0f, Evaluate(recoveryDuration));
-        public float Damage => Mathf.Max(0f, Evaluate(damage));
+        public float Damage => ResolveAbilityDamage(Evaluate(damage));
         public float HitRadius => Mathf.Max(0.05f, Evaluate(hitRadius));
         public int MaximumTargetsHit => Mathf.Max(1, Mathf.RoundToInt(Evaluate(maximumTargetsHit)));
         public float KnockbackDistance => Mathf.Max(0f, Evaluate(knockbackDistance));

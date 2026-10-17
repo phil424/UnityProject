@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using MiniCrawler.Abilities;
 using MiniCrawler.Core;
+using MiniCrawler.Progress;
 using MiniCrawler.Systems;
 using UnityEngine;
 
@@ -13,20 +14,23 @@ namespace MiniCrawler.UI
         private StageDirector stageDirector;
 
         [SerializeField]
-        private Transform entryRoot;
+        private Transform preparedEntryRoot;
+
+        [SerializeField]
+        private Transform expeditionEntryRoot;
 
         [SerializeField]
         private AbilityButtonUI abilityButtonPrefab;
 
-        private readonly List<AbilityButtonUI>
-            entries = new();
+        private readonly List<AbilityButtonUI> entries = new();
+
+        private PartyMemberDefinition currentDefinition;
+        private GameObject currentActor;
 
         private void OnEnable()
         {
             if (stageDirector == null)
-            {
                 stageDirector = StageDirector.Instance;
-            }
 
             if (stageDirector == null)
                 return;
@@ -45,51 +49,104 @@ namespace MiniCrawler.UI
                 stageDirector.LevelCleared -= HandleLevelCleared;
             }
 
+            currentDefinition = null;
+            currentActor = null;
+
             ClearEntries();
         }
 
         private void HandlePartyMemberSpawned(PartyMemberDefinition definition, GameObject actor)
         {
-            AddMissingAbilityEntries(definition, actor);
+            if (!IsDisplayedMember(definition))
+                return;
+
+            currentDefinition = definition;
+            currentActor = actor;
+
+            RebuildEntries();
         }
 
         private void HandlePartyMemberRuntimeChanged(PartyMemberDefinition definition, GameObject actor)
         {
-            AddMissingAbilityEntries(definition, actor);
-        }
-
-        private void AddMissingAbilityEntries(PartyMemberDefinition definition, GameObject actor)
-        {
-            if (definition == null || actor == null || entryRoot == null || abilityButtonPrefab == null)
+            if (!IsDisplayedMember(definition))
                 return;
 
-            ActorAbility[] abilities = actor.GetComponentsInChildren<ActorAbility>(false);
+            currentDefinition = definition;
+            currentActor = actor;
+
+            RebuildEntries();
+        }
+
+        private bool IsDisplayedMember(PartyMemberDefinition definition)
+        {
+            if (definition == null)
+                return false;
+
+            if (RunProgress.SelectedParty.Count <= 0)
+                return true;
+
+            PartyMemberDefinition selected = RunProgress.SelectedParty[0];
+
+            return selected != null && selected.Id == definition.Id;
+        }
+
+        private void RebuildEntries()
+        {
+            ClearEntries();
+
+            if (currentDefinition == null || currentActor == null || preparedEntryRoot == null || expeditionEntryRoot == null || abilityButtonPrefab == null)
+            {
+                return;
+            }
+
+            RunBuild build = RunProgress.GetBuild(currentDefinition);
+
+            CreateEntry(preparedEntryRoot, "SIGNATURE", build.GetPreparedAbilityState(CharacterAbilityRole.Signature));
+
+            CreateEntry(preparedEntryRoot, "UTILITY", build.GetPreparedAbilityState(CharacterAbilityRole.Utility));
+
+            CreateEntry(preparedEntryRoot, "SUSTAIN", build.GetPreparedAbilityState(CharacterAbilityRole.Sustain));
+
+            for (int i = 0; i < RunBuild.MaxExpeditionAbilitySlots; i++)
+            {
+                CreateEntry(expeditionEntryRoot, $"EXPEDITION {i + 1}", build.GetExpeditionAbilityState(i));
+            }
+        }
+
+        private void CreateEntry(Transform root, string slotLabel, RunAbilityState abilityState)
+        {
+            AbilityButtonUI entry = Instantiate(abilityButtonPrefab, root);
+
+            ActorAbility runtimeAbility = abilityState?.Definition != null ? FindRuntimeAbility(currentActor, abilityState.Definition) : null;
+
+            entry.Bind(currentDefinition, slotLabel, abilityState, runtimeAbility);
+
+            entries.Add(entry);
+        }
+
+        private static ActorAbility FindRuntimeAbility(GameObject actor, AbilityDefinition definition)
+        {
+            if (actor == null || definition == null)
+                return null;
+
+            ActorAbility[] abilities = actor.GetComponentsInChildren<ActorAbility>(true);
 
             foreach (ActorAbility ability in abilities)
             {
-                if (ability == null || HasEntryFor(ability))
-                    continue;
-
-                AbilityButtonUI entry = Instantiate(abilityButtonPrefab, entryRoot);
-                entry.Bind(definition, ability);
-
-                entries.Add(entry);
-            }
-        }
-
-        private bool HasEntryFor(ActorAbility ability)
-        {
-            foreach (AbilityButtonUI entry in entries)
-            {
-                if (entry != null && entry.Ability == ability)
-                    return true;
+                if (ability?.Definition != null && ability.Definition.Id == definition.Id)
+                {
+                    return ability;
+                }
             }
 
-            return false;
+            return null;
         }
 
         private void HandleLevelCleared()
         {
+            currentDefinition = null;
+            currentActor = null;
+
             ClearEntries();
         }
 

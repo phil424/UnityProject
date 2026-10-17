@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using MiniCrawler.Abilities;
 using MiniCrawler.Combat;
 using MiniCrawler.Core;
 using MiniCrawler.Progress;
@@ -55,6 +56,10 @@ namespace MiniCrawler.Systems
 
         [SerializeField, Min(0)]
         private int startingRewardRerolls = 1;
+
+        [Header("Debug Ability Loadout")]
+        [SerializeField]
+        private AbilityDefinition[] debugLoadoutAbilities;
 
         private RunSetup setup;
 
@@ -270,6 +275,21 @@ namespace MiniCrawler.Systems
             return true;
         }
 
+        public bool TrySetExpeditionAbilitySlot(PartyMemberDefinition member, int slotIndex, AbilityDefinition ability)
+        {
+            if (state != RunFlowState.InLevel || !RunProgress.HasActiveRun || RunProgress.HasPendingRewardChoice || !SimulationPause.IsPaused)
+            {
+                return false;
+            }
+
+            if (!RunProgress.TrySetExpeditionAbilitySlot(member, slotIndex, ability))
+                return false;
+
+            RefreshLivePartyMember(member);
+
+            return true;
+        }
+
         private void RefreshLivePartyMember(PartyMemberDefinition member)
         {
             if (member == null || stageDirector == null || RunProgress.CurrentRun == null)
@@ -477,6 +497,39 @@ namespace MiniCrawler.Systems
             {
                 Debug.LogWarning("The current level could not award an Ability reward choice.");
             }
+        }
+
+        [ContextMenu("Debug/Acquire Next Loadout Test Ability")]
+        private void DebugAcquireNextLoadoutTestAbility()
+        {
+            if (!Application.isPlaying || state != RunFlowState.InLevel || !RunProgress.HasActiveRun || RunProgress.SelectedParty.Count <= 0)
+            {
+                Debug.LogWarning("A loadout test Ability can only be acquired during an active level.");
+                return;
+            }
+
+            PartyMemberDefinition member = RunProgress.SelectedParty[0];
+            RunBuild build = RunProgress.GetBuild(member);
+
+            if (debugLoadoutAbilities == null)
+                return;
+
+            foreach (AbilityDefinition ability in debugLoadoutAbilities)
+            {
+                if (ability == null || build.HasAbility(ability))
+                    continue;
+
+                if (!RunProgress.TryAcquireAbility(member, ability))
+                    continue;
+
+                RefreshLivePartyMember(member);
+
+                Debug.Log($"[Debug] Acquired loadout test Ability " + $"'{ability.DisplayName}' for '{member.DisplayName}'.", this);
+
+                return;
+            }
+
+            Debug.Log("[Debug] No additional configured loadout test Abilities are available.", this);
         }
 
         [ContextMenu("Debug/Apply Party Overdrive")]

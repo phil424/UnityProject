@@ -25,6 +25,98 @@ Rules:
 - player can interrupt autonomous attacks
 - precision should not transform the game into a twitch action RPG.
 
+# Ability Stats & Elemental Identity
+
+**Status: Confirmed Design / D1 Implemented Foundation**
+
+Ability damage is intentionally separate from autonomous Basic Attack damage.
+
+Current distinction:
+
+Basic Attack Damage
+→ affects autonomous Basic Attack damage.
+
+Ability Damage
+→ affects damage explicitly produced by compatible Active Abilities and future
+Passive Abilities.
+
+Ability-authored damage remains the base value.
+
+Effective Ability damage follows:
+
+authored Ability / level damage
+→ Ability Damage modifier
+→ compatible universal runtime outgoing-damage modifiers
+→ target mitigation.
+
+Ability Damage does not implicitly scale from Basic Attack Damage.
+
+This separation supports:
+
+- Basic Attack-focused builds;
+- Ability-focused builds;
+- hybrid builds;
+- control/utility builds that do not need either damage direction equally.
+
+## Ability Area Size
+
+Ability Area Size modifies compatible effect geometry.
+
+Current representative consumers include:
+
+- Whirlwind's radial effect;
+- Blink's opening control pulse;
+- Smoke Step's Fear area.
+
+Ability Area Size operates on compatible authored linear dimensions such as
+radius or width.
+
+It does not automatically affect:
+
+- Ability targeting/search range;
+- movement distance;
+- projectile travel range;
+- projectile collision radius;
+- Basic Attack range;
+- Knockback distance.
+
+Concrete Ability behaviour explicitly opts appropriate geometry into Ability Area
+Size.
+
+## Elemental Identity
+
+Abilities may declare zero, one or several elemental identities.
+
+Current elemental vocabulary:
+
+- Earth;
+- Wind;
+- Lightning;
+- Fire;
+- Ice;
+- Water;
+- Light.
+
+`None` represents neutral or currently-unclassified Ability content.
+
+Elemental identity currently exists for:
+
+- content identity;
+- authoring;
+- presentation;
+- future synergy/buildcraft classification.
+
+It does not currently imply:
+
+- elemental damage conversion;
+- resistance;
+- weakness;
+- status application;
+- automatic gameplay modifiers.
+
+Multi-element identity is supported for future content such as a Fire / Earth
+Ability without requiring a second Ability type or duplicated definition.
+
 # Ability Evolution
 Core rule:
 > Finding an already-owned ability should create an opportunity to transform it.
@@ -227,28 +319,106 @@ Dedicated Shield HUD / VFX presentation remains future presentation work.
 
 ## Core Versus Expedition Abilities
 
-The three core roles define what a Character brings into an Expedition.
+**Status: Confirmed / Implemented Active-Loadout Foundation**
 
-They do not impose a hard three-Ability limit on the completed Expedition build.
+A playable Character currently has six simultaneously active Ability positions.
 
-Additional Abilities may still be acquired through Expedition rewards.
+These are divided into two groups.
+
+### Prepared Core Abilities
+
+Each Character begins an Expedition with three Prepared/Core Active Abilities:
+
+1. Signature;
+    
+2. Utility;
+    
+3. Sustain.
+    
+
+These roles belong to the Character's prepared loadout rather than to the  
+`AbilityDefinition` itself.
+
+Prepared Core Abilities remain fixed for the duration of the current  
+Expedition.
+
+Future persistent Mastery development may unlock alternative starting options  
+for these roles, but that selection occurs during Preparation rather than  
+through live Expedition swapping.
+
+### Expedition Active Abilities
+
+The current Expedition provides three additional Active Ability positions:
+
+1. Expedition Slot 1;
+    
+2. Expedition Slot 2;
+    
+3. Expedition Slot 3.
+    
+
+Acquired Expedition Abilities automatically fill empty Expedition positions.
+
+Once all three positions are occupied, further acquired Abilities remain owned  
+by the current RunBuild but are not automatically active.
 
 Therefore:
 
-Character core
-→ Signature / Utility / Sustain.
+Ability ownership  
+!=  
+active-slot assignment.
 
-Expedition build
-→ core Abilities
-+
-additional acquired Abilities
-+
-levels
-+
-Evolutions.
+A RunBuild may own more than three Expedition Abilities.
 
-This distinction preserves strong Character identity while allowing Ability
-buildcraft to expand during the Expedition.
+Only three may be active simultaneously.
+
+### Expedition Swapping
+
+Owned Expedition Abilities may be reassigned between the three Expedition  
+positions through the deliberate Ability Loadout interface.
+
+Swapping occurs while normal combat simulation is paused.
+
+Prepared/Core positions cannot be changed through this interface.
+
+Unslotting an Expedition Ability does not remove:
+
+- ownership;
+    
+- Ability level;
+    
+- acquired Evolutions;
+    
+- other Run-owned Ability development.
+    
+
+The Ability may be slotted again later in the same Expedition.
+
+### Runtime Reconstruction
+
+Runtime Actors reconstruct Ability state from RunBuild.
+
+Owned Ability runtime instances may exist without being currently active.
+
+Active Prepared/Core and Expedition Ability runtimes are enabled.
+
+Owned but unslotted Expedition Ability runtimes are disabled.
+
+The active loadout survives Region transitions because slot assignment belongs  
+to RunBuild.
+
+Temporary Expedition ownership and slot assignment disappear when the  
+Expedition ends.
+
+### Long-Term Active/Passive Distinction
+
+The six-position model applies to manually activated Active Abilities.
+
+Future Passive Abilities are a separate buildcraft concept and do not consume  
+these Active Ability positions.
+
+This preserves meaningful Active Ability capacity decisions while still  
+supporting deeper automated Passive builds later.
 
 # Punchy Ability Development
 

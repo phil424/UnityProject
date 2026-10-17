@@ -371,19 +371,19 @@ selection probability.
 
 Character Growth is temporary Expedition stat development.
 
-The active first production pool contains:
+The active Character Growth pool contains:
 
-23 Character Growth Rewards.
+32 Character Growth Rewards.
 
 Current rarity distribution:
 
-| Rarity | Rewards |
-| --- | ---: |
-| Common | 7 |
-| Uncommon | 7 |
-| Rare | 6 |
-| Epic | 3 |
-| Legendary | 0 |
+| Rarity    | Rewards |
+| --------- | ------: |
+| Common    |       9 |
+| Uncommon  |       9 |
+| Rare      |       9 |
+| Epic      |       5 |
+| Legendary |       0 |
 
 There is deliberately no Legendary Character Growth reward in the current pass.
 
@@ -410,6 +410,8 @@ Directional development
 Examples:
 
 - Ability Cooldown Recovery;
+- Ability Damage;
+- Ability Area Size;
 - Basic Attack Speed;
 - Knockback Power.
 
@@ -482,6 +484,34 @@ Uncommon
 Rare
 → +30%.
 
+Ability Damage:
+
+Common
+→ +10%.
+
+Uncommon
+→ +20%.
+
+Rare
+→ +35%.
+
+Epic
+→ +50%.
+
+Ability Area Size:
+
+Common
+→ +10%.
+
+Uncommon
+→ +20%.
+
+Rare
+→ +30%.
+
+Epic
+→ +45%.
+
 Armour:
 
 Common
@@ -489,6 +519,9 @@ Common
 
 Uncommon
 → +1.
+
+Rare
+→ +1.5.
 
 Epic
 → +2.
@@ -514,6 +547,89 @@ These are Working balance values.
 
 Their purpose is to provide a coherent first playable economy for further
 playtesting rather than define permanent final balance.
+
+## O4C4 Balance Playtest Outcome
+
+**Status: Initial Playtest Complete / Detailed Balance Deferred**
+
+The first structured Character Growth balance pass produced:
+
+|Area|Result|
+|---|---|
+|Common Reward usefulness|Mixed|
+|Rarity power|Good|
+|Build direction|Problem|
+|Choice quality|Mixed|
+|Reroll quality|Good|
+|Progression balance|Mixed|
+
+The playtest confirmed that Reward rarity and rerolls currently provide a useful foundation.
+
+It also exposed that individual Character Growth stats cannot yet be judged confidently in isolation.
+
+In particular, some directional stats may function correctly without yet feeling sufficiently meaningful because their gameplay value depends on wider systems such as:
+
+- Ability interactions;
+    
+- enemy behaviour and combat roles;
+    
+- encounter pressure;
+    
+- positioning value;
+    
+- additional future Character stats;
+    
+- presentation and feedback;
+    
+- broader build combinations.
+    
+
+Knockback Power is an example: increased displacement is observable, but the value of creating that additional space depends heavily on the surrounding combat and buildcraft ecosystem.
+
+The current Character Growth values therefore remain Working rather than final.
+
+Detailed tuning of individual stats, additional stat directions and the overall relationship between preparation and Expedition growth is deliberately deferred until the prototype contains a broader representative set of:
+
+- Expedition Abilities;
+    
+- persistent Mastery development;
+    
+- Character-specific buildcraft;
+    
+- enemy/combat content;
+    
+- build interactions.
+    
+
+This work should be revisited during the later integrated buildcraft and balance pass rather than blocking broader prototype development now.
+
+## O4C4 Initial Balance Finding
+
+**Status: Verified / Detailed Balance Deferred**
+
+The first structured Character Growth balance pass found:
+
+| Area | Result |
+| --- | --- |
+| Common Reward usefulness | Mixed |
+| Rarity power | Good |
+| Build direction | Problem |
+| Choice quality | Mixed |
+| Reroll quality | Good |
+| Progression balance | Mixed |
+
+This is not currently treated as a request for isolated numerical retuning.
+
+The playtest demonstrated that several Character Growth stats need a broader
+gameplay ecosystem before their value can be judged properly.
+
+For example, Knockback Power visibly creates additional space but does not yet
+have enough surrounding setup/payoff interactions to make that space reliably
+feel like a complete build direction.
+
+Detailed assessment is therefore deferred until O4G after the prototype contains
+a broader Ability pool, additional Character stats, Active/Passive buildcraft,
+Mastery development and richer combat interactions.
 
 ## Stacking
 

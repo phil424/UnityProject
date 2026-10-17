@@ -128,6 +128,26 @@ namespace MiniCrawler.Abilities
             cooldownRemaining = 0f;
         }
 
+        protected float ResolveAbilityDamage(float baseDamage)
+        {
+            if (baseDamage <= 0f)
+                return 0f;
+
+            AbilityStats stats = owner != null ? owner.GetComponent<AbilityStats>() : null;
+
+            return stats != null ? stats.GetModifiedAbilityDamage(baseDamage) : baseDamage;
+        }
+
+        protected float ResolveAbilityAreaSize(float baseSize)
+        {
+            if (baseSize <= 0f)
+                return 0f;
+
+            AbilityStats stats = owner != null ? owner.GetComponent<AbilityStats>() : null;
+
+            return stats != null ? stats.GetModifiedAbilityAreaSize(baseSize) : baseSize;
+        }
+
         public bool HasEvolution(AbilityEvolutionDefinition evolution)
         {
             if (evolution == null)

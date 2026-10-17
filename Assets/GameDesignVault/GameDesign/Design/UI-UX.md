@@ -140,23 +140,94 @@ Document current layout vision.
 - major boss meter on HUD.
 
 # Ability HUD
-Current visual concept:
+
+**Status: Implemented Functional Six-Slot Foundation**
+
+The combat Ability HUD now represents six fixed Active Ability positions.
+
+Current functional structure:
+
 ```
-      Ability
-   Ability Ability
- Utility Core Sustain
-      Portrait
+Prepared/Core
+[ Signature ] [ Utility ] [ Sustain ]
+
+Expedition
+[ Slot 1 ]    [ Slot 2 ]  [ Slot 3 ]
 ```
 
-Not literal final geometry.
+The final visual composition may later return to the intended  
+chevron/diamond-style presentation.
 
-Document:
-- innate visually central
-- ability count unresolved
-- autocast indicator potentially available
-- cooldown readability
-- ability state readability
-- pending/cast information.
+The current two-row layout exists to make the gameplay model explicit while the  
+Ability system is still being expanded.
+
+## Prepared/Core Row
+
+The first row always represents:
+
+- Signature;
+    
+- Utility;
+    
+- Sustain.
+    
+
+These positions are established before the Expedition and remain fixed during  
+the run.
+
+## Expedition Row
+
+The second row represents the three currently active Expedition Abilities.
+
+Empty positions remain visible.
+
+This communicates remaining Ability capacity rather than allowing the HUD to  
+grow unpredictably as Abilities are acquired.
+
+## Ability Loadout
+
+The `ABILITY LOADOUT` control opens a deliberate paused build-management  
+surface.
+
+It allows the player to:
+
+- inspect currently-owned Expedition Abilities;
+    
+- identify slotted and unslotted Abilities;
+    
+- assign an owned Ability to an Expedition position;
+    
+- swap two active Expedition Abilities;
+    
+- deliberately empty a position.
+    
+
+Prepared/Core Abilities cannot be changed from this surface.
+
+Ability ownership is therefore visually distinct from current Active-slot  
+assignment.
+
+## Current Presentation Priorities
+
+The functional HUD must communicate:
+
+- slot identity;
+    
+- Ability identity;
+    
+- current Ability level;
+    
+- readiness;
+    
+- cooldown;
+    
+- executing state;
+    
+- empty Expedition capacity.
+    
+
+Final icon-driven styling, cooldown masks, elemental presentation and the  
+planned diamond/chevron composition remain later presentation work.
 
 # Weapon Mod HUD
 

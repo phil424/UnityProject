@@ -146,6 +146,14 @@ namespace MiniCrawler.Progress
             return GetBuild(definition).TryAcquireAbility(ability);
         }
 
+        public bool TrySetExpeditionAbilitySlot(PartyMemberDefinition definition, int slotIndex, AbilityDefinition ability)
+        {
+            if (!IsSelected(definition))
+                return false;
+
+            return GetBuild(definition).TrySetExpeditionAbilitySlot(slotIndex, ability);
+        }
+
         public bool EnqueueRewardChoice(IEnumerable<RunUpgradeOffer> offers, RunRewardContext context)
         {
             if (offers == null)

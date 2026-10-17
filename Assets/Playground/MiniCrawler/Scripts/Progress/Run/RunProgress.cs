@@ -113,6 +113,19 @@ namespace MiniCrawler.Progress
             return acquired;
         }
 
+        public static bool TrySetExpeditionAbilitySlot(PartyMemberDefinition definition, int slotIndex, AbilityDefinition ability)
+        {
+            if (CurrentRun == null)
+                return false;
+
+            bool changed = CurrentRun.TrySetExpeditionAbilitySlot(definition, slotIndex, ability);
+
+            if (changed)
+                Changed?.Invoke();
+
+            return changed;
+        }
+
         public static bool TryAddObjectiveProgress(ExpeditionObjectiveDefinition definition, int amount)
         {
             if (CurrentRun == null)

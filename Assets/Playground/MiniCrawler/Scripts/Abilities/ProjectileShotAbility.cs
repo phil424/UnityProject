@@ -31,7 +31,7 @@ namespace MiniCrawler.Abilities
         public float Range => Mathf.Max(0.1f, Evaluate(range));
         public float WindupDuration => Mathf.Max(0f, Evaluate(windupDuration));
         public float RecoveryDuration => Mathf.Max(0f, Evaluate(recoveryDuration));
-        public float Damage => Mathf.Max(0f, Evaluate(damage));
+        public float Damage => ResolveAbilityDamage(Evaluate(damage));
 
         protected override bool CanActivateAbility()
         {

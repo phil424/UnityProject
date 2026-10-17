@@ -15,26 +15,25 @@ namespace MiniCrawler.Progress
                 if (abilityState?.Definition == null)
                     continue;
 
-                ActorAbility existingAbility = FindRuntimeAbility(spawnedActor, abilityState.Definition);
-
-                if (existingAbility != null)
-                {
-                    existingAbility.ApplyProgressionState(abilityState.Level, abilityState.Evolutions);
-                    continue;
-                }
-
-                ActorAbility runtimeAbility = abilityState.Definition.CreateRuntime(
-                    spawnedActor,
-                    abilityState.Level,
-                    abilityState.Evolutions
-                );
+                ActorAbility runtimeAbility = FindRuntimeAbility(spawnedActor, abilityState.Definition);
 
                 if (runtimeAbility == null)
                 {
-                    Debug.LogWarning(
-                        $"Could not create runtime ability '{abilityState.Definition.DisplayName}' for '{spawnedActor.name}'."
-                    );
+                    runtimeAbility = abilityState.Definition.CreateRuntime(spawnedActor, abilityState.Level, abilityState.Evolutions);
                 }
+                else
+                {
+                    runtimeAbility.ApplyProgressionState(abilityState.Level, abilityState.Evolutions);
+                }
+
+                if (runtimeAbility == null)
+                {
+                    Debug.LogWarning($"Could not create runtime ability " + $"'{abilityState.Definition.DisplayName}' " + $"for '{spawnedActor.name}'.");
+
+                    continue;
+                }
+
+                runtimeAbility.enabled = build.IsAbilityActive(abilityState.Definition);
             }
         }
 

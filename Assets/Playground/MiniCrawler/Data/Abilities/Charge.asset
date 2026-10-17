@@ -15,6 +15,7 @@ MonoBehaviour:
   id: Charge
   displayName: Charge
   icon: {fileID: 0}
+  elements: 0
   maxLevel: 5
   cooldown:
     baseValue: 5

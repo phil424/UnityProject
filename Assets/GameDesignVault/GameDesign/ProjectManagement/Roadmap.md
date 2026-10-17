@@ -2603,9 +2603,9 @@ Review:
 - explicit confirmation for destructive operations;
 - validation and selection recovery after content changes.
 
-### 3.0O4C — Run Reward Foundation & Balance Pass
+### 3.0O4C — Run Reward Foundation & Balance Pass ✅
 
-**Status: Active**
+**Status: Complete**
 
 Turn the current prototype Reward pool into a meaningful Expedition buildcraft
 layer.
@@ -2684,98 +2684,388 @@ Review:
 Rerolls should regenerate the same Reward source / vector rather than changing
 what kind of Reward was earned.
 
-#### 3.0O4C4 — Reward Balance Playtest
+#### 3.0O4C4 — Reward Balance Playtest ✅
+
+**Status: Complete / Detailed Balance Deferred**
+
+Completed the first structured playtest of the rebuilt Character Growth Reward
+pool.
+
+Initial findings:
+
+- Common Reward usefulness was mixed;
+- rarity power felt good;
+- build direction remained a problem;
+- choice quality was mixed;
+- reroll quality felt good;
+- progression balance remained mixed.
+
+The pass established that several individual Character Growth stats cannot yet
+be judged usefully in isolation.
+
+Some stats function correctly without yet producing sufficiently meaningful
+gameplay decisions because their value depends on the wider Ability, enemy,
+combat and buildcraft ecosystem.
+
+Detailed stat tuning is therefore deliberately deferred.
+
+Do not block broader prototype development on isolated numerical Reward changes.
+
+Revisit:
+
+- individual stat value and gameplay feedback;
+- broader Character-stat vocabulary;
+- preparation versus Expedition power;
+- directional Reward quality;
+- stat / Ability interactions;
+
+during the later integrated O4G buildcraft pass after the Ability and Mastery
+systems contain substantially more representative content.
+
+### 3.0O4D — Elemental Ability & Active/Passive Buildcraft Expansion
 
 **Status: Active**
 
-Play several Expeditions using the rebuilt Reward pool.
+Purpose:
 
-Confirm that:
+Turn Abilities from a small proof set into a substantial Expedition buildcraft
+axis.
 
-- Common Rewards remain useful;
-- higher rarities feel exciting rather than mandatory;
-- generic safe picks remain worthwhile;
-- directional Rewards support emerging builds;
-- Reward choices do not repeatedly collapse into one obvious answer;
-- rerolls improve agency without guaranteeing ideal builds;
-- temporary Reward progression remains meaningfully weaker than a completed
-  build at expedition start.
+O4D establishes:
 
-### 3.0O4D — Shared Expedition Ability Pool
+- shared elemental Active Abilities;
+- Ability-oriented Character stats;
+- three additional Expedition Active Ability positions;
+- explicit Active Ability loadout ownership;
+- Ability selection and swapping;
+- reusable combat primitives required by the Ability pool;
+- Passive Abilities that consume no Active position;
+- enough Ability content for materially different Expedition builds.
+
+Target Active loadout:
+
+Prepared Core
+- Signature
++ Utility
++ Sustain
+
+plus:
+
+Expedition Active
+- Slot 1
++ Slot 2
++ Slot 3.
+
+Maximum simultaneously active Abilities:
+
+6.
+
+Ability ownership and active-slot assignment are distinct concepts.
+
+A RunBuild may own an Expedition Ability without that Ability currently occupying
+one of the three Expedition Active positions.
+
+Passive Abilities are separate from Active Abilities.
+
+Passive Ability
+→ automatically active while owned
+→ consumes no Active Ability position
+→ may be continuous, periodic, reactive or event-driven.
+
+#### 3.0O4D1 — Ability Damage, Area & Element Foundation ✅
+
+**Status: Complete**
+
+Establish the first shared Ability-oriented Character-stat semantics.
+
+Implement:
+
+- Ability Damage;
+- Ability Area Size;
+- actor-generic Ability stat application;
+- Prepared + Expedition modifier support;
+- runtime reconstruction;
+- Character Growth Reward support;
+- elemental Ability identity.
+
+Confirmed damage semantics:
+
+Basic Attack Damage
+→ autonomous Basic Attack damage.
+
+Ability Damage
+→ damage explicitly produced by Active and future Passive Abilities.
+
+Ability base damage remains authored by the Ability and its level.
+
+Ability Damage does not implicitly scale from Basic Attack Damage.
+
+Universal outgoing-damage modifiers may still affect both where explicitly
+intended.
+
+Ability Area Size modifies compatible linear area dimensions such as:
+
+- radial effect radius;
+- aura radius;
+- effect width where explicitly opted in.
+
+It does not automatically modify:
+
+- movement distance;
+- projectile travel range;
+- Basic Attack range;
+- Knockback distance;
+- targeting/search range;
+- projectile collision leniency.
+
+Elemental identity initially supports:
+
+- Ability identity;
+- authoring;
+- presentation;
+- future synergies.
+
+Do not introduce elemental resistances or a universal elemental damage system
+during D1.
+
+#### 3.0O4D2 — Active Ability Capacity, Loadout & Swapping ✅
+
+**Status: Complete**
+
+Establish:
+
+- three Prepared/Core Active positions;
+- three Expedition Active positions;
+- RunBuild Ability ownership separate from active-slot assignment;
+- automatic assignment into empty Expedition positions;
+- owned-but-unslotted Expedition Abilities;
+- paused/build-time Ability swapping;
+- a fixed six-position Ability HUD;
+- empty Expedition-slot presentation;
+- safe runtime refresh after acquisition, levelling or swapping.
+
+Prepared/Core positions remain fixed during the Expedition.
+
+Expedition positions may be changed deliberately outside normal live combat.
+
+Unslotted owned Abilities retain their Run-owned levels and development.
+
+#### 3.0O4D3 — Shared Ability Combat Primitives
+
+**Status: Active**
+
+Implement only generic primitives required by approved Ability content.
+
+Initial requirements:
+
+Root
+→ prevents normal navigation while still allowing forced movement to resolve.
+
+Temporary Basic Attack Range
+→ supports Wind-based Basic Attack transformation.
+
+Temporary Basic Attack Penetration
+→ allows compatible Basic Attacks to affect additional aligned targets without
+assuming projectile-only behaviour.
+
+Enemy-group targeting
+→ resolves useful hostile-group centres for Abilities such as Earthshatter.
+
+Prefer extending existing combat, movement, projectile and runtime-modifier
+seams rather than creating parallel systems.
+
+#### 3.0O4D4 — Elemental Active Ability Wave 1
 
 **Status: Planned**
 
-Expand Ability-vector Rewards with reusable Expedition-acquired Abilities that
-are not part of a Character's three core Ability roles.
+Implement the first three confirmed shared elemental Expedition Abilities.
 
-Candidate directions include:
+Earthshatter — Earth
+→ rush toward a useful hostile-group centre
+→ damage + Knockback enemies contacted during movement
+→ land with a burst of Ability damage + radial Knockback
+→ Root surviving affected enemies after forced motion resolves.
 
-- area lightning / storm pressure;
-- Fear / control effects;
-- offensive shared Abilities;
-- defensive shared Abilities;
-- utility shared Abilities.
+Wind Whip — Wind
+→ temporary Basic Attack Speed increase
+→ temporary Basic Attack Range increase
+→ temporary Movement Speed increase
+→ Basic Attacks gain additional penetration.
 
-Individual player-facing Ability designs remain subject to explicit design
-review before implementation.
+Storm Field — Lightning
+→ mobile storm centred on the Character
+→ persists for an authored duration
+→ repeatedly strikes valid enemies inside the area
+→ deals Ability damage.
 
-### 3.0O4E — Character Mastery Progression Foundation
+#### 3.0O4D5 — Elemental Active Ability Wave 2
+
+**Status: Planned / Designs Working**
+
+Current Working candidates:
+
+Flame Wake — Fire
+→ movement leaves damaging burning ground.
+
+Glacial Aegis — Ice
+→ defensive protection with local frost payoff.
+
+Tidal Vortex — Water
+→ persistent battlefield-control effect that groups enemies.
+
+Each design remains subject to explicit player-facing design approval before
+implementation.
+
+#### 3.0O4D6 — Elemental Active Ability Wave 3
+
+**Status: Planned / Designs Working**
+
+Expand toward approximately nine meaningful shared Expedition Active Abilities.
+
+Current Working candidates:
+
+Ember Wisps — Fire
+→ temporary autonomous offensive entities.
+
+Solar Brand — Light
+→ mark a priority target and build toward an area payoff.
+
+Meteorfall — Fire / Earth
+→ delayed high-impact area strike rewarding setup and enemy control.
+
+The target is a varied buildcraft pool rather than an arbitrary Ability count.
+
+#### 3.0O4D7 — Passive Ability Foundation
 
 **Status: Planned**
 
-Strengthen persistent Character progression.
+Introduce Expedition-owned Passive Abilities separately from Active Abilities.
+
+Passive Abilities:
+
+- require no manual activation;
+- consume no Active Ability position;
+- remain active while owned and valid;
+- may be continuous, periodic, reactive or defensive;
+- reset with the Expedition unless a later persistent system explicitly prepares
+  them.
+
+Working first-content directions:
+
+- Static Discharge;
+- Permafrost Aura;
+- Earthen Ward;
+- Cinder Retort.
+
+The architecture should support deep builds that increasingly automate offence,
+defence and battlefield control without making early Expeditions hands-off by
+default.
+
+#### 3.0O4D8 — Ability Reward Pool & Integrated Ability Playtest
+
+**Status: Planned**
+
+Verify:
+
+- both Characters can acquire shared elemental Abilities;
+- shared Abilities behave correctly on different actors;
+- three additional Expedition Active positions are enforced;
+- owned but unslotted Abilities retain Run development;
+- loadout swapping behaves predictably;
+- Passive Abilities consume no Active positions;
+- Ability Damage and Area Size produce useful build decisions;
+- duplicate ownership behaves correctly;
+- Ability choices create different Expedition directions;
+- the six-position HUD remains readable;
+- temporary Ability state survives Region transitions;
+- Expedition Ability ownership resets correctly.
+
+### 3.0O4E — Prepared Ability Selection & Persistent Ability Unlocks
+
+**Status: Planned**
+
+Connect Character Mastery to starting-Ability choice.
+
+Characters retain three Prepared/Core roles:
+
+- Signature;
+- Utility;
+- Sustain.
+
+Ability definitions remain actor-generic and do not permanently own those roles.
+
+Character Mastery
+→ unlocks an Ability as a prepared option for a Character / role.
+
+Preparation
+→ selects among unlocked options.
+
+New Expedition
+→ snapshots that prepared loadout into RunBuild.
+
+Develop:
+
+- persistent prepared-Ability unlock ownership;
+- Character / role compatibility;
+- selected starting loadout persistence;
+- Preparation UI for selecting unlocked options;
+- locked/unlocked presentation.
+
+### 3.0O4F — Character Mastery Progression & Punchy/Ranger Expansion
+
+**Status: Planned**
+
+Strengthen persistent Mastery and replace prototype-scale Punchy/Ranger trees.
 
 Review:
 
-- rankable / multi-level Mastery nodes;
-- increasing costs across ranks;
+- rankable Mastery nodes;
+- increasing costs;
 - prepared Ability starting levels;
+- prepared Ability unlocks;
 - prepared Weapon Mastery levels;
-- Character stat progression;
-- branch structure;
-- persistent versus Expedition power;
+- Character stats;
+- Ability-oriented stats;
+- Character-specific progression;
 - resource-tier pacing.
 
-One-time unlock nodes should remain available where they better suit the
-content.
-
-### 3.0O4F — Punchy & Ranger Mastery Expansion
-
-**Status: Planned**
-
-Use the improved Mastery foundation to replace prototype-scale trees with larger
-coherent Character progression.
-
-Punchy and Ranger should gain:
-
-- meaningful early choices;
-- distinct branches;
-- generic-stat development;
-- Character-specific development;
-- Ability development;
-- Weapon Mastery development;
-- multiple worthwhile progression routes.
-
-Prototype content should be replaced or retired where it no longer represents
-the intended game.
+Punchy and Ranger should gain several meaningful progression routes rather than
+one obvious linear path.
 
 ### 3.0O4G — Integrated Buildcraft Playtest & Balance
 
 **Status: Planned**
 
-Play developed Punchy and Ranger Expeditions using the expanded Reward and
-Mastery content.
+Play developed Punchy and Ranger Expeditions using:
+
+- Character Growth;
+- Active Abilities;
+- Passive Abilities;
+- Active Ability loadouts;
+- Weapon Masteries;
+- prepared Ability choices;
+- Character Mastery.
 
 Confirm that:
 
-- preparation establishes direction;
-- Expedition Rewards substantially develop that direction;
+- preparation establishes direction without completing the build;
+- Expedition Rewards develop or pivot that direction;
+- three Core plus three Expedition Active positions create meaningful capacity
+  decisions;
+- Passive Abilities provide useful automation;
+- elemental Abilities create distinct gameplay;
+- Ability Damage and Area Size support Ability-focused builds;
+- Basic Attack, Ability, control, defensive and hybrid builds can coexist;
+- individual Character Growth stats provide meaningful gameplay value;
+- the stat vocabulary is broad enough for the builds now supported;
 - safe generic choices remain useful;
 - build-defining choices create meaningful pivots;
 - Weapon Masteries and Abilities retain distinct roles;
 - several builds are viable;
 - Characters remain recognisably different;
-- Reward rarity and rerolls improve decisions rather than trivialising them.
+- rarity and rerolls improve decisions rather than trivialising them.
+
+Use O4G to revisit the balance issues intentionally deferred from O4C4.
 
 ### 3.0O Review Gate
 

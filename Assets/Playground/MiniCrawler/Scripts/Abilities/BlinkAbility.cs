@@ -68,7 +68,7 @@ namespace MiniCrawler.Abilities
         public int MaximumBounces => Mathf.Max(1, Mathf.RoundToInt(Evaluate(maximumBounces)));
         public float BounceInterval => Mathf.Max(0.05f, Evaluate(bounceInterval));
 
-        public float OpeningControlRadius => Mathf.Max(0.1f, Evaluate(openingControlRadius));
+        public float OpeningControlRadius => Mathf.Max(0.1f, ResolveAbilityAreaSize(Evaluate(openingControlRadius)));
 
         public float OpeningKnockbackDistance => Mathf.Max(0f, Evaluate(openingKnockbackDistance));
 
@@ -76,7 +76,7 @@ namespace MiniCrawler.Abilities
 
         public float OpeningStunDuration => Mathf.Max(0f, Evaluate(openingStunDuration));
 
-        public float Damage => Mathf.Max(0f, Evaluate(damage));
+        public float Damage => ResolveAbilityDamage(Evaluate(damage));
 
         protected override bool CanActivateAbility()
         {

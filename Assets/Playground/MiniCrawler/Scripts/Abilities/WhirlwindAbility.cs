@@ -50,8 +50,8 @@ namespace MiniCrawler.Abilities
         [SerializeField]
         private List<EvolutionBehaviourBinding> evolutionBehaviours = new();
 
-        public float ActivationRadius => Mathf.Max(0.1f, Evaluate(activationRadius));
-        public float Damage => Mathf.Max(0f, Evaluate(damage));
+        public float ActivationRadius => Mathf.Max(0.1f, ResolveAbilityAreaSize(Evaluate(activationRadius)));
+        public float Damage => ResolveAbilityDamage(Evaluate(damage));
         public float KnockbackDistance => Mathf.Max(0f, Evaluate(knockbackDistance));
         public float KnockbackSpeed => Mathf.Max(0f, Evaluate(knockbackSpeed));
         public float StunDuration => Mathf.Max(0f, Evaluate(stunDuration));

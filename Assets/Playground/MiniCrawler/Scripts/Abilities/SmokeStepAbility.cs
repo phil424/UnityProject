@@ -36,7 +36,7 @@ namespace MiniCrawler.Abilities
 
         public float HopSpeed => Mathf.Max(0f, Evaluate(hopSpeed));
 
-        public float SmokeRadius => Mathf.Max(0.1f, Evaluate(smokeRadius));
+        public float SmokeRadius => Mathf.Max(0.1f, ResolveAbilityAreaSize(Evaluate(smokeRadius)));
 
         public float FearDuration => Mathf.Max(0f, Evaluate(fearDuration));
 

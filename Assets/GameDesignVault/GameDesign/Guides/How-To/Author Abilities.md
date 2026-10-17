@@ -45,6 +45,44 @@ A Character may use an Ability as:
 
 without that role becoming part of the Ability's generic identity.
 
+# Elemental Identity
+
+Ability Definitions may author one or several elemental identities.
+
+In:
+
+Tools
+→ MiniCrawler
+→ Content Workbench
+→ Abilities
+
+select an Ability and use:
+
+Identity
+→ Elements.
+
+Current options:
+
+- Earth;
+- Wind;
+- Lightning;
+- Fire;
+- Ice;
+- Water;
+- Light.
+
+Leave the field as `None` for neutral or currently-unclassified Ability content.
+
+Several elements may be selected for genuinely multi-element content.
+
+Element currently describes content identity only.
+
+It does not automatically add elemental damage, resistance, weakness or status
+effects.
+
+Only assign an element when the Ability's implemented player-facing behaviour
+actually supports that identity.
+
 # Ability Library
 
 The Ability workspace discovers the project's real `AbilityDefinition` assets.

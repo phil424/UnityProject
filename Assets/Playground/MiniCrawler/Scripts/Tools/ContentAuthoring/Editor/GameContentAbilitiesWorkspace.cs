@@ -222,7 +222,11 @@ namespace MiniCrawler.Tools.ContentAuthoring
 
             GUI.Label(title, ability.DisplayName, EditorStyles.boldLabel);
 
-            string detailText = coreUsage != null ? $"{coreUsage.Role} • Starting Lv.{coreUsage.Level}" : GameContentAbilityUtility.GetRuntimeBehaviourLabel(ability);
+            string elementLabel = ability.Elements == AbilityElement.None ? "Neutral" : ability.Elements.ToString().Replace(", ", " / ");
+
+            string usageLabel = coreUsage != null ? $"{coreUsage.Role} • Starting Lv.{coreUsage.Level}" : GameContentAbilityUtility.GetRuntimeBehaviourLabel(ability);
+
+            string detailText = $"{elementLabel} • {usageLabel}";
 
             GUI.Label(detail, detailText, EditorStyles.miniLabel);
         }
