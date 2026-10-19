@@ -193,28 +193,106 @@ RunBuild slot mutation
 
 `AbilityHUD` presents six fixed Active positions.
 
-Prepared row:
+Prepared group:
 
 1. Signature;
-    
 2. Utility;
-    
 3. Sustain.
-    
 
-Expedition row:
+Expedition group:
 
 1. Expedition Slot 1;
-    
 2. Expedition Slot 2;
-    
 3. Expedition Slot 3.
-    
 
 Empty Expedition positions remain visible.
 
-The HUD no longer grows by simply discovering additional ActorAbility  
-components.
+`AbilityHUD` remains responsible for slot ordering and for resolving each
+RunAbilityState to its live ActorAbility instance.
+
+`AbilityButtonUI` is responsible for the presentation of one position.
+
+The current button presentation uses:
+
+- a diamond frame/background;
+- the resolved Ability icon;
+- current Ability level;
+- resolved Ability display name;
+- cooldown countdown;
+- radial cooldown wash.
+
+Cooldown fill uses:
+
+`ActorAbility.CooldownFractionRemaining`.
+
+The value represents the fraction of the effective cooldown still remaining.
+
+`1`
+→ full cooldown.
+
+`0`
+→ ready.
+
+Ability presentation uses:
+
+`ActorAbility.DisplayName`
+and
+`ActorAbility.DisplayIcon`.
+
+These already resolve presentation-replacing Evolutions through
+`AbilityPresentationResolver`.
+
+The HUD therefore does not contain Ability-specific icon or name rules.
+
+## Chevron Layout
+
+Each three-slot Ability group is arranged by
+`ThreeSlotChevronLayoutGroup`.
+
+Direct-child order is semantic:
+
+Child 0
+→ top-centre.
+
+Child 1
+→ lower-left.
+
+Child 2
+→ lower-right.
+
+Current geometry:
+
+- slot size: `108`;
+- horizontal centre offset: `60`;
+- vertical centre offset: `54`.
+
+The Expedition and Prepared/Core groups are stacked with `-54` vertical layout
+spacing.
+
+Matching the stack overlap to the internal vertical offset preserves one
+consistent staggered lattice across all six diamonds.
+
+## Diamond Input Geometry
+
+`AbilityButtonUI` implements `ICanvasRaycastFilter`.
+
+Unity layout still uses a rectangular AbilityButtonUI RectTransform.
+
+Pointer interaction instead uses a diamond test based on the local point:
+
+`abs(x) / halfWidth + abs(y) / halfHeight <= 1`.
+
+A small authored inset keeps adjacent diamond boundaries from sharing the same
+pointer region.
+
+Only the AbilityButtonUI root Image should participate in raycasting.
+
+Child icon, cooldown and TMP Graphics use:
+
+`Raycast Target = Off`.
+
+This prevents the deliberately staggered HUD layout from producing overlapping
+rectangular click regions.
 
 # Lifetime Rules
 
@@ -247,8 +325,6 @@ The current implementation does not yet provide:
 - drag-and-drop loadout interaction;
     
 - hotkey/controller slot rebinding;
-    
-- final Ability HUD visual treatment.
     
 
 Those remain later roadmap work.

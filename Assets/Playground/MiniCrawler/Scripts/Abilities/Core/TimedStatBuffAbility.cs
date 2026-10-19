@@ -7,22 +7,48 @@ namespace MiniCrawler.Abilities
     public class TimedStatBuffAbility : ActorAbility
     {
         [Header("Timed Stat Buff")]
-        [SerializeField] private AbilityLevelValue duration;
-        [SerializeField] private AbilityLevelValue outgoingDamagePercentBonus;
-        [SerializeField] private AbilityLevelValue attackSpeedPercentBonus;
-        [SerializeField] private AbilityLevelValue moveSpeedPercentBonus;
-        [SerializeField] private AbilityLevelValue flatArmourBonus;
+        [SerializeField]
+        private AbilityLevelValue duration;
+
+        [SerializeField]
+        private AbilityLevelValue outgoingDamagePercentBonus;
+
+        [SerializeField]
+        private AbilityLevelValue attackSpeedPercentBonus;
+
+        [SerializeField]
+        private AbilityLevelValue moveSpeedPercentBonus;
+
+        [SerializeField]
+        private AbilityLevelValue flatArmourBonus;
+
+        [Header("Basic Attack Shape")]
+        [SerializeField]
+        private AbilityLevelValue basicAttackRangePercentBonus = new();
+
+        [SerializeField]
+        private AbilityLevelValue basicAttackPenetrationBonus = new();
 
         [Header("Activation")]
-        [SerializeField] private AbilityLevelValue activationLockDuration;
+        [SerializeField]
+        private AbilityLevelValue activationLockDuration;
 
         private float activationLockRemaining;
 
         public float Duration => Mathf.Max(0.1f, Evaluate(duration));
+
         public float OutgoingDamagePercentBonus => Mathf.Max(0f, Evaluate(outgoingDamagePercentBonus));
+
         public float AttackSpeedPercentBonus => Mathf.Max(0f, Evaluate(attackSpeedPercentBonus));
+
         public float MoveSpeedPercentBonus => Mathf.Max(0f, Evaluate(moveSpeedPercentBonus));
+
         public float FlatArmourBonus => Mathf.Max(0f, Evaluate(flatArmourBonus));
+
+        public float BasicAttackRangePercentBonus => Evaluate(basicAttackRangePercentBonus);
+
+        public int BasicAttackPenetrationBonus => Mathf.Max(0, Mathf.RoundToInt(Evaluate(basicAttackPenetrationBonus)));
+
         public float ActivationLockDuration => Mathf.Max(0f, Evaluate(activationLockDuration));
 
         protected override bool CanActivateAbility()
@@ -31,6 +57,7 @@ namespace MiniCrawler.Abilities
                 return false;
 
             RuntimeStatModifiers modifiers = Owner.GetComponent<RuntimeStatModifiers>();
+
             return modifiers == null || !modifiers.HasModifier(ModifierSourceId);
         }
 
@@ -42,12 +69,16 @@ namespace MiniCrawler.Abilities
             float lockDuration = ActivationLockDuration;
 
             if (lockDuration > 0f && !BeginExecution())
+            {
                 return false;
+            }
 
             RuntimeStatModifiers modifiers = Owner.GetComponent<RuntimeStatModifiers>();
 
             if (modifiers == null)
+            {
                 modifiers = Owner.AddComponent<RuntimeStatModifiers>();
+            }
 
             bool applied = modifiers.ApplyOrRefresh(
                 ModifierSourceId,
@@ -55,7 +86,9 @@ namespace MiniCrawler.Abilities
                 OutgoingDamagePercentBonus,
                 AttackSpeedPercentBonus,
                 MoveSpeedPercentBonus,
-                FlatArmourBonus
+                FlatArmourBonus,
+                BasicAttackRangePercentBonus,
+                BasicAttackPenetrationBonus
             );
 
             if (!applied)
@@ -67,9 +100,14 @@ namespace MiniCrawler.Abilities
             activationLockRemaining = lockDuration;
 
             Debug.Log(
-                $"[Ability] {Owner.name} activated {AbilityName} for {Duration:0.##}s | " +
-                $"Damage +{OutgoingDamagePercentBonus:0.#}% | Attack Speed +{AttackSpeedPercentBonus:0.#}% | " +
-                $"Move Speed +{MoveSpeedPercentBonus:0.#}% | Armour +{FlatArmourBonus:0.#}."
+                $"[Ability] {Owner.name} activated "
+                    + $"{AbilityName} for {Duration:0.##}s | "
+                    + $"Damage +{OutgoingDamagePercentBonus:0.#}% | "
+                    + $"Attack Speed +{AttackSpeedPercentBonus:0.#}% | "
+                    + $"Move Speed +{MoveSpeedPercentBonus:0.#}% | "
+                    + $"Armour +{FlatArmourBonus:0.#} | "
+                    + $"Attack Range +{BasicAttackRangePercentBonus:0.#}% | "
+                    + $"Penetration +{BasicAttackPenetrationBonus}."
             );
 
             return true;
@@ -79,11 +117,11 @@ namespace MiniCrawler.Abilities
         {
             activationLockRemaining -= deltaTime;
 
-            if (activationLockRemaining <= 0f)
-            {
-                activationLockRemaining = 0f;
-                EndExecution();
-            }
+            if (activationLockRemaining > 0f)
+                return;
+
+            activationLockRemaining = 0f;
+            EndExecution();
         }
 
         protected override void OnDisable()
@@ -92,8 +130,7 @@ namespace MiniCrawler.Abilities
             base.OnDisable();
         }
 
-        private string ModifierSourceId =>
-            Definition != null ? $"Ability:{Definition.Id}" : $"Ability:{GetType().Name}";
+        private string ModifierSourceId => Definition != null ? $"Ability:{Definition.Id}" : $"Ability:{GetType().Name}";
 
         private float Evaluate(AbilityLevelValue value)
         {

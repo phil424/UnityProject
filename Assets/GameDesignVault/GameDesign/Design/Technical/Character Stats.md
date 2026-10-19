@@ -124,13 +124,14 @@ Short-duration effects belong to runtime actor state.
 
 Examples:
 - temporary outgoing damage;
-- temporary Attack Speed;
+- temporary Basic Attack Speed;
 - temporary Movement Speed;
-- temporary Armour.
+- temporary Armour;
+- temporary Basic Attack Range;
+- temporary Basic Attack Penetration.
 
 Temporary effects must not permanently mutate `RunBuild` or authored prefab
 values.
-
 # Application
 
 Current player Character reconstruction flow:
@@ -196,7 +197,60 @@ Does not imply Ability cooldown recovery.
 
 Autonomous basic-attack reach.
 
-Base support exists; normal Expedition modification requires further work.
+Base range remains authored on `CombatStats`.
+
+Temporary Runtime modifiers may increase or decrease effective Basic Attack
+Range.
+
+Current formula:
+
+Effective Basic Attack Range = Base Attack Range × (1 + Runtime Range Percent / 100).
+
+Normal combat movement adjusts its stopping distance by the difference between
+base and effective Attack Range.
+
+This preserves each Actor's existing authored spacing while allowing temporary
+range effects to make the Character genuinely fight from farther away.
+
+Basic Attack Range remains separate from:
+
+- Ability range;
+- Ability Area Size;
+- projectile hit radius;
+- targeting/search radius.
+
+It is currently a Runtime modifier rather than a normal Character Growth stat.
+
+## Basic Attack Penetration
+
+Temporary Basic Attack Penetration allows one Basic Attack to affect additional
+targets aligned beyond its primary target.
+
+The current value represents:
+
+additional targets.
+
+Therefore:
+
+`0`
+→ primary target only.
+
+`1`
+→ primary + one additional target.
+
+`2`
+→ primary + two additional targets.
+
+Melee Basic Attacks use the shared
+`BasicAttackPenetrationResolver`.
+
+Projectile Basic Attacks preserve their projectile delivery and are promoted to
+or extended as piercing delivery through `ProjectileLauncher`.
+
+This stat is intentionally Basic-Attack-specific.
+
+Ability projectiles do not inherit Basic Attack Penetration unless their own
+Ability behaviour explicitly provides piercing.
 
 ## Ability Cooldown Recovery
 
@@ -204,9 +258,7 @@ Actor-wide modifier for active Ability cooldown duration.
 
 Current formula:
 
-Effective Cooldown
-=
-Base Cooldown / (1 + Cooldown Recovery Percent / 100)
+Effective Cooldown = Base Cooldown / (1 + Cooldown Recovery Percent / 100)
 
 This is deliberately distinct from Basic Attack Speed.
 
@@ -223,9 +275,7 @@ Abilities.
 
 Current formula:
 
-Effective Ability Damage
-=
-Authored Ability Damage × (1 + Ability Damage Percent / 100).
+Effective Ability Damage = Authored Ability Damage × (1 + Ability Damage Percent / 100).
 
 Current runtime consumer:
 

@@ -30,6 +30,11 @@ namespace MiniCrawler.Systems
                     continue;
                 }
 
+                RootRuntime root = actor.GetComponent<RootRuntime>();
+
+                if (root != null && root.IsRooted)
+                    continue;
+
                 StunRuntime stun = actor.GetComponent<StunRuntime>();
 
                 if (stun != null && stun.IsStunned)
@@ -140,15 +145,24 @@ namespace MiniCrawler.Systems
 
         private float GetStoppingDistance(AutoTargetMover mover)
         {
-            if (mover.CurrentIntent != TargetIntent.Support)
+            if (mover.CurrentIntent == TargetIntent.Support)
+            {
+                SupportStats supportStats = mover.GetComponent<SupportStats>();
+
+                if (supportStats == null)
+                    return mover.SupportStoppingDistance;
+
+                return Mathf.Min(mover.SupportStoppingDistance, supportStats.HealRange);
+            }
+
+            CombatStats combatStats = mover.GetComponent<CombatStats>();
+
+            if (combatStats == null)
                 return mover.CombatStoppingDistance;
 
-            SupportStats supportStats = mover.GetComponent<SupportStats>();
+            float rangeDifference = combatStats.AttackRange - combatStats.BaseAttackRange;
 
-            if (supportStats == null)
-                return mover.SupportStoppingDistance;
-
-            return Mathf.Min(mover.SupportStoppingDistance, supportStats.HealRange);
+            return Mathf.Max(0.1f, mover.CombatStoppingDistance + rangeDifference);
         }
 
         private void FaceTarget(Transform moverTransform, Vector3 destination)

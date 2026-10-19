@@ -106,7 +106,8 @@ namespace MiniCrawler.Systems
                     projectileAction.Projectile,
                     action.gameObject,
                     ProjectileDelivery.Targeted(target),
-                    new ProjectileImpactPayload(damage, attackerStats.AttackName)
+                    new ProjectileImpactPayload(damage, attackerStats.AttackName),
+                    isBasicAttack: true
                 );
 
                 return ProjectileLauncher.Launch(request) != null;
@@ -116,7 +117,21 @@ namespace MiniCrawler.Systems
 
             DamageResolver.ApplyDamage(action.gameObject, target, damage, attackerStats.AttackName);
 
-            return target.CurrentHealth < healthBefore;
+            bool connected = target.CurrentHealth < healthBefore;
+
+            if (connected && attackerStats.BasicAttackPenetrationBonus > 0)
+            {
+                BasicAttackPenetrationResolver.ResolveAdditionalMeleeHits(
+                    action.gameObject,
+                    target,
+                    damage,
+                    attackerStats.AttackName,
+                    attackerStats.AttackRange,
+                    attackerStats.BasicAttackPenetrationBonus
+                );
+            }
+
+            return connected;
         }
     }
 }

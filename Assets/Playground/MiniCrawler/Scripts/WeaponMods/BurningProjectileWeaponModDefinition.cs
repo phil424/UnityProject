@@ -66,7 +66,7 @@ namespace MiniCrawler.WeaponMods
                 $"{DisplayName} Burn"
             );
 
-            ProjectileLaunchRequest request = new(projectileAction.Projectile, context.Source, ProjectileDelivery.Targeted(context.Target), impact);
+            ProjectileLaunchRequest request = new(projectileAction.Projectile, context.Source, ProjectileDelivery.Targeted(context.Target), impact, isBasicAttack: true);
 
             connected = ProjectileLauncher.Launch(request) != null;
             return true;
@@ -106,7 +106,7 @@ namespace MiniCrawler.WeaponMods
                 $"{DisplayName} Burn"
             );
 
-            ProjectileLaunchRequest request = new(projectileAction.Projectile, context.Source, delivery, impact);
+            ProjectileLaunchRequest request = new(projectileAction.Projectile, context.Source, delivery, impact, isBasicAttack: true);
 
             connected = ProjectileLauncher.Launch(request) != null;
             return true;

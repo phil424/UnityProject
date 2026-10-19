@@ -1,5 +1,4 @@
 using MiniCrawler.Abilities;
-using MiniCrawler.Core;
 using MiniCrawler.Progress;
 using TMPro;
 using UnityEngine;
@@ -8,19 +7,34 @@ using UnityEngine.UI;
 namespace MiniCrawler.UI
 {
     [RequireComponent(typeof(Button))]
-    public class AbilityButtonUI : MonoBehaviour
+    public class AbilityButtonUI : MonoBehaviour, ICanvasRaycastFilter
     {
-        [Header("Display")]
+        [Header("Ability")]
         [SerializeField]
-        private TMP_Text labelText;
+        private Image iconImage;
+
+        [Header("Cooldown")]
+        [SerializeField]
+        private Image cooldownWashImage;
+
+        [SerializeField]
+        private TMP_Text cooldownText;
+
+        [Header("Labels")]
+        [SerializeField]
+        private TMP_Text levelText;
+
+        [SerializeField]
+        private TMP_Text abilityNameText;
+
+        [Header("Interaction")]
+        [SerializeField, Min(0f)]
+        private float raycastInset = 2f;
 
         private Button button;
-        private PartyMemberDefinition ownerDefinition;
         private RunAbilityState abilityState;
         private ActorAbility ability;
-        private string slotLabel;
 
-        public PartyMemberDefinition OwnerDefinition => ownerDefinition;
         public ActorAbility Ability => ability;
 
         private void Awake()
@@ -37,17 +51,37 @@ namespace MiniCrawler.UI
 
         private void Update()
         {
-            Refresh();
+            RefreshRuntimeState();
         }
 
-        public void Bind(PartyMemberDefinition definition, string displaySlotLabel, RunAbilityState state, ActorAbility actorAbility)
+        public void Bind(RunAbilityState state, ActorAbility actorAbility)
         {
-            ownerDefinition = definition;
-            slotLabel = displaySlotLabel;
             abilityState = state;
             ability = actorAbility;
 
-            Refresh();
+            RefreshPresentation();
+            RefreshRuntimeState();
+        }
+
+        public bool IsRaycastLocationValid(Vector2 screenPoint, Camera eventCamera)
+        {
+            RectTransform rectTransform = (RectTransform)transform;
+
+            if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(rectTransform, screenPoint, eventCamera, out Vector2 localPoint))
+            {
+                return false;
+            }
+
+            Rect rect = rectTransform.rect;
+            Vector2 centeredPoint = localPoint - rect.center;
+
+            float halfWidth = Mathf.Max(0.01f, rect.width * 0.5f - raycastInset);
+
+            float halfHeight = Mathf.Max(0.01f, rect.height * 0.5f - raycastInset);
+
+            float normalizedDistance = Mathf.Abs(centeredPoint.x) / halfWidth + Mathf.Abs(centeredPoint.y) / halfHeight;
+
+            return normalizedDistance <= 1f;
         }
 
         private void HandleClicked()
@@ -56,49 +90,89 @@ namespace MiniCrawler.UI
                 return;
 
             ability.TryActivate();
-            Refresh();
+            RefreshRuntimeState();
         }
 
-        private void Refresh()
+        private void RefreshPresentation()
+        {
+            if (abilityState?.Definition == null)
+            {
+                if (iconImage != null)
+                {
+                    iconImage.sprite = null;
+                    iconImage.enabled = false;
+                }
+
+                if (levelText != null)
+                    levelText.text = string.Empty;
+
+                if (abilityNameText != null)
+                    abilityNameText.text = "EMPTY";
+
+                return;
+            }
+
+            Sprite displayIcon = ability != null ? ability.DisplayIcon : abilityState.Definition.Icon;
+
+            string displayName = ability != null ? ability.DisplayName : abilityState.Definition.DisplayName;
+
+            if (iconImage != null)
+            {
+                iconImage.sprite = displayIcon;
+                iconImage.enabled = displayIcon != null;
+            }
+
+            if (levelText != null)
+                levelText.text = $"Lv.{abilityState.Level}";
+
+            if (abilityNameText != null)
+                abilityNameText.text = displayName;
+        }
+
+        private void RefreshRuntimeState()
         {
             if (button == null)
                 return;
 
-            if (abilityState?.Definition == null)
+            if (abilityState?.Definition == null || ability == null)
             {
                 button.interactable = false;
 
-                if (labelText != null)
+                if (cooldownWashImage != null)
                 {
-                    labelText.text = $"{slotLabel}\n" + "EMPTY";
+                    cooldownWashImage.fillAmount = 0f;
+                    cooldownWashImage.enabled = false;
                 }
 
-                return;
-            }
-
-            if (ability == null)
-            {
-                button.interactable = false;
-
-                if (labelText != null)
-                {
-                    labelText.text = $"{slotLabel}\n" + $"{abilityState.Definition.DisplayName} Lv.{abilityState.Level}\n" + "UNAVAILABLE";
-                }
+                if (cooldownText != null)
+                    cooldownText.text = string.Empty;
 
                 return;
-            }
-
-            string stateText =
-                ability.IsExecuting ? "EXECUTING"
-                : ability.IsReady ? "READY"
-                : $"{ability.CooldownRemaining:0.0}s";
-
-            if (labelText != null)
-            {
-                labelText.text = $"{slotLabel}\n" + $"{ability.DisplayName} Lv.{ability.Level}\n" + stateText;
             }
 
             button.interactable = ability.CanActivateNow;
+
+            float cooldownFraction = ability.CooldownFractionRemaining;
+            bool coolingDown = cooldownFraction > 0f;
+
+            if (cooldownWashImage != null)
+            {
+                cooldownWashImage.fillAmount = cooldownFraction;
+                cooldownWashImage.enabled = coolingDown;
+            }
+
+            if (cooldownText != null)
+            {
+                cooldownText.text = coolingDown ? FormatCooldown(ability.CooldownRemaining) : string.Empty;
+            }
+        }
+
+        private static string FormatCooldown(float seconds)
+        {
+            if (seconds >= 10f)
+                return Mathf.CeilToInt(seconds).ToString();
+
+            return seconds.ToString("0.0");
         }
     }
 }

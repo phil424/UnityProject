@@ -117,7 +117,24 @@ namespace MiniCrawler.Systems
                 return;
             }
 
+            float healthBefore = target.CurrentHealth;
+
             DamageResolver.ApplyDamage(mover.gameObject, target, attackerStats.Damage, attackerStats.AttackName);
+
+            bool connected = target.CurrentHealth < healthBefore;
+
+            if (connected && attackerStats.BasicAttackPenetrationBonus > 0)
+            {
+                BasicAttackPenetrationResolver.ResolveAdditionalMeleeHits(
+                    mover.gameObject,
+                    target,
+                    attackerStats.Damage,
+                    attackerStats.AttackName,
+                    attackerStats.AttackRange,
+                    attackerStats.BasicAttackPenetrationBonus
+                );
+            }
+
             attackerStats.AttackTimer = attackerStats.AttackCooldown;
         }
 

@@ -83,6 +83,47 @@ effects.
 Only assign an element when the Ability's implemented player-facing behaviour
 actually supports that identity.
 
+# Ability Icon
+
+Every player-facing Active Ability should author an icon.
+
+In:
+
+Tools
+→ MiniCrawler
+→ Content Workbench
+→ Abilities
+
+select the Ability and use:
+
+Identity
+→ Icon.
+
+The icon is used by the combat diamond Ability HUD.
+
+Prefer:
+
+- square source artwork;
+- a clear silhouette;
+- strong readability at approximately 40 × 40 displayed pixels;
+- minimal tiny detail;
+- transparent backgrounds where appropriate.
+
+The current prototype icon library lives under:
+
+`Assets/Playground/MiniCrawler/Assets/Imported Assets/Icons/TechTree_Abilities/`
+
+and contains 48 × 48 pixel-art sprites suitable for temporary/prototype Ability
+presentation.
+
+Final Ability artwork may replace these later without changing runtime or HUD
+architecture.
+
+Presentation-replacing Ability Evolutions may author their own icon.
+
+If an Evolution replaces presentation but has no icon, the underlying Ability
+icon remains the fallback.
+
 # Ability Library
 
 The Ability workspace discovers the project's real `AbilityDefinition` assets.

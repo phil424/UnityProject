@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Abilities.AbilityDefinition
   id: ranger_guard
   displayName: Guard
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 5d6887f68546cc24a9eb8cc5a62a7ac7, type: 3}
+  elements: 0
   maxLevel: 5
   cooldown:
     baseValue: 8

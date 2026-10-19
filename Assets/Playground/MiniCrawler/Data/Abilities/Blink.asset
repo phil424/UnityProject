@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Abilities.AbilityDefinition
   id: blink
   displayName: Blink
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 84a29a1079366734aafce920b98995fe, type: 3}
+  elements: 0
   maxLevel: 5
   cooldown:
     baseValue: 8

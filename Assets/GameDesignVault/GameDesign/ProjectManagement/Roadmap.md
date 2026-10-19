@@ -2850,9 +2850,47 @@ Expedition positions may be changed deliberately outside normal live combat.
 
 Unslotted owned Abilities retain their Run-owned levels and development.
 
-#### 3.0O4D3 — Shared Ability Combat Primitives
+#### 3.0O4D2A — Diamond Ability HUD Presentation ✅
 
-**Status: Active**
+**Status: Complete**
+
+Replace the temporary text-heavy six-slot Ability HUD presentation with the
+intended compact icon-driven diamond presentation.
+
+The six-slot gameplay model remains unchanged:
+
+Prepared/Core
+→ Signature
++ Utility
++ Sustain
+
+Expedition
+→ Slot 1
++ Slot 2
++ Slot 3.
+
+Each occupied Ability position should communicate primarily through:
+
+- a central Ability icon;
+- current Ability level;
+- a small Ability name;
+- cooldown countdown;
+- a faded cooldown wash that recedes as the Ability becomes ready.
+
+Empty Expedition positions remain visibly present.
+
+The combat HUD should no longer display large slot-role/status text inside each
+Ability button.
+
+The current bottom-centre Ability HUD position remains Working during this pass
+so the new visual language can be assessed before wider Combat HUD
+repositioning.
+
+Do not reposition or redesign the Weapon Mod HUD during D2A.
+
+#### 3.0O4D3 — Shared Ability Combat Primitives ✅
+
+**Status: Complete**
 
 Implement only generic primitives required by approved Ability content.
 
@@ -2876,7 +2914,7 @@ seams rather than creating parallel systems.
 
 #### 3.0O4D4 — Elemental Active Ability Wave 1
 
-**Status: Planned**
+**Status: Active**
 
 Implement the first three confirmed shared elemental Expedition Abilities.
 

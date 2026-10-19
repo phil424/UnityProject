@@ -26,18 +26,29 @@ namespace MiniCrawler.Combat
 
         private float gearDamageBonus;
         private float gearArmourBonus;
-
         private float runBasicAttackDamageBonus;
-
         private float runBasicAttackSpeedPercentBonus;
-
         private float runArmourBonus;
 
         public string AttackName => attackName;
 
         public float Damage => damage + gearDamageBonus + runBasicAttackDamageBonus;
 
-        public float AttackRange => attackRange;
+        public float BaseAttackRange => attackRange;
+
+        public float AttackRange
+        {
+            get
+            {
+                float rangeBonus = GetRuntimeBasicAttackRangePercentBonus();
+
+                float multiplier = Mathf.Max(0.1f, 1f + rangeBonus / 100f);
+
+                return Mathf.Max(0.1f, attackRange * multiplier);
+            }
+        }
+
+        public int BasicAttackPenetrationBonus => Mathf.Max(0, GetRuntimeBasicAttackPenetrationBonus());
 
         public float AttackCooldown
         {
@@ -58,13 +69,16 @@ namespace MiniCrawler.Combat
         public void ApplyGearBonuses(float damageBonus, float armourBonus)
         {
             gearDamageBonus = Mathf.Max(0f, damageBonus);
+
             gearArmourBonus = Mathf.Max(0f, armourBonus);
         }
 
         public void ApplyRunBonuses(float basicAttackDamageBonus, float basicAttackSpeedPercentBonus, float armourBonus)
         {
             runBasicAttackDamageBonus = Mathf.Max(0f, basicAttackDamageBonus);
+
             runBasicAttackSpeedPercentBonus = Mathf.Max(0f, basicAttackSpeedPercentBonus);
+
             runArmourBonus = Mathf.Max(0f, armourBonus);
         }
 
@@ -79,13 +93,29 @@ namespace MiniCrawler.Combat
         private float GetRuntimeAttackSpeedBonus()
         {
             RuntimeStatModifiers modifiers = GetComponent<RuntimeStatModifiers>();
+
             return modifiers != null ? modifiers.AttackSpeedPercentBonus : 0f;
         }
 
         private float GetRuntimeFlatArmourBonus()
         {
             RuntimeStatModifiers modifiers = GetComponent<RuntimeStatModifiers>();
+
             return modifiers != null ? modifiers.FlatArmourBonus : 0f;
+        }
+
+        private float GetRuntimeBasicAttackRangePercentBonus()
+        {
+            RuntimeStatModifiers modifiers = GetComponent<RuntimeStatModifiers>();
+
+            return modifiers != null ? modifiers.BasicAttackRangePercentBonus : 0f;
+        }
+
+        private int GetRuntimeBasicAttackPenetrationBonus()
+        {
+            RuntimeStatModifiers modifiers = GetComponent<RuntimeStatModifiers>();
+
+            return modifiers != null ? modifiers.BasicAttackPenetrationBonus : 0;
         }
 
         private void OnValidate()

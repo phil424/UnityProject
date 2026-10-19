@@ -101,25 +101,23 @@ namespace MiniCrawler.UI
 
             RunBuild build = RunProgress.GetBuild(currentDefinition);
 
-            CreateEntry(preparedEntryRoot, "SIGNATURE", build.GetPreparedAbilityState(CharacterAbilityRole.Signature));
+            CreateEntry(preparedEntryRoot, build.GetPreparedAbilityState(CharacterAbilityRole.Signature));
 
-            CreateEntry(preparedEntryRoot, "UTILITY", build.GetPreparedAbilityState(CharacterAbilityRole.Utility));
+            CreateEntry(preparedEntryRoot, build.GetPreparedAbilityState(CharacterAbilityRole.Utility));
 
-            CreateEntry(preparedEntryRoot, "SUSTAIN", build.GetPreparedAbilityState(CharacterAbilityRole.Sustain));
+            CreateEntry(preparedEntryRoot, build.GetPreparedAbilityState(CharacterAbilityRole.Sustain));
 
             for (int i = 0; i < RunBuild.MaxExpeditionAbilitySlots; i++)
-            {
-                CreateEntry(expeditionEntryRoot, $"EXPEDITION {i + 1}", build.GetExpeditionAbilityState(i));
-            }
+                CreateEntry(expeditionEntryRoot, build.GetExpeditionAbilityState(i));
         }
 
-        private void CreateEntry(Transform root, string slotLabel, RunAbilityState abilityState)
+        private void CreateEntry(Transform root, RunAbilityState abilityState)
         {
             AbilityButtonUI entry = Instantiate(abilityButtonPrefab, root);
 
             ActorAbility runtimeAbility = abilityState?.Definition != null ? FindRuntimeAbility(currentActor, abilityState.Definition) : null;
 
-            entry.Bind(currentDefinition, slotLabel, abilityState, runtimeAbility);
+            entry.Bind(abilityState, runtimeAbility);
 
             entries.Add(entry);
         }

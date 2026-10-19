@@ -13,27 +13,23 @@ namespace MiniCrawler.Combat
         private sealed class ActiveModifier
         {
             public string SourceId;
-
             public float RemainingDuration;
-
             public float OutgoingDamagePercentBonus;
-
             public float AttackSpeedPercentBonus;
-
             public float MoveSpeedPercentBonus;
-
             public float FlatArmourBonus;
+            public float BasicAttackRangePercentBonus;
+            public int BasicAttackPenetrationBonus;
         }
 
         private readonly List<ActiveModifier> activeModifiers = new();
 
         public float OutgoingDamagePercentBonus { get; private set; }
-
         public float AttackSpeedPercentBonus { get; private set; }
-
         public float MoveSpeedPercentBonus { get; private set; }
-
         public float FlatArmourBonus { get; private set; }
+        public float BasicAttackRangePercentBonus { get; private set; }
+        public int BasicAttackPenetrationBonus { get; private set; }
 
         public bool HasModifier(string sourceId)
         {
@@ -43,9 +39,7 @@ namespace MiniCrawler.Combat
             foreach (ActiveModifier modifier in activeModifiers)
             {
                 if (modifier.SourceId == sourceId)
-                {
                     return true;
-                }
             }
 
             return false;
@@ -67,7 +61,16 @@ namespace MiniCrawler.Combat
             return true;
         }
 
-        public bool ApplyOrRefresh(string sourceId, float duration, float outgoingDamagePercentBonus, float attackSpeedPercentBonus, float moveSpeedPercentBonus, float flatArmourBonus)
+        public bool ApplyOrRefresh(
+            string sourceId,
+            float duration,
+            float outgoingDamagePercentBonus,
+            float attackSpeedPercentBonus,
+            float moveSpeedPercentBonus,
+            float flatArmourBonus,
+            float basicAttackRangePercentBonus = 0f,
+            int basicAttackPenetrationBonus = 0
+        )
         {
             if (string.IsNullOrWhiteSpace(sourceId) || duration <= 0f)
             {
@@ -84,14 +87,12 @@ namespace MiniCrawler.Combat
             }
 
             modifier.RemainingDuration = duration;
-
             modifier.OutgoingDamagePercentBonus = outgoingDamagePercentBonus;
-
             modifier.AttackSpeedPercentBonus = attackSpeedPercentBonus;
-
             modifier.MoveSpeedPercentBonus = moveSpeedPercentBonus;
-
             modifier.FlatArmourBonus = flatArmourBonus;
+            modifier.BasicAttackRangePercentBonus = basicAttackRangePercentBonus;
+            modifier.BasicAttackPenetrationBonus = Mathf.Max(0, basicAttackPenetrationBonus);
 
             RecalculateTotals();
 
@@ -103,9 +104,7 @@ namespace MiniCrawler.Combat
             foreach (ActiveModifier modifier in activeModifiers)
             {
                 if (modifier.SourceId == sourceId)
-                {
                     return modifier;
-                }
             }
 
             return null;
@@ -127,12 +126,9 @@ namespace MiniCrawler.Combat
                 modifier.RemainingDuration -= Time.deltaTime;
 
                 if (modifier.RemainingDuration > 0f)
-                {
                     continue;
-                }
 
                 activeModifiers.RemoveAt(index);
-
                 changed = true;
             }
 
@@ -143,12 +139,11 @@ namespace MiniCrawler.Combat
         private void RecalculateTotals()
         {
             OutgoingDamagePercentBonus = 0f;
-
             AttackSpeedPercentBonus = 0f;
-
             MoveSpeedPercentBonus = 0f;
-
             FlatArmourBonus = 0f;
+            BasicAttackRangePercentBonus = 0f;
+            BasicAttackPenetrationBonus = 0;
 
             foreach (ActiveModifier modifier in activeModifiers)
             {
@@ -159,13 +154,16 @@ namespace MiniCrawler.Combat
                 MoveSpeedPercentBonus += modifier.MoveSpeedPercentBonus;
 
                 FlatArmourBonus += modifier.FlatArmourBonus;
+
+                BasicAttackRangePercentBonus += modifier.BasicAttackRangePercentBonus;
+
+                BasicAttackPenetrationBonus += modifier.BasicAttackPenetrationBonus;
             }
         }
 
         private void OnDisable()
         {
             activeModifiers.Clear();
-
             RecalculateTotals();
         }
     }

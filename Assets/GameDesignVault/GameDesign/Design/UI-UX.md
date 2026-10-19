@@ -141,93 +141,167 @@ Document current layout vision.
 
 # Ability HUD
 
-**Status: Implemented Functional Six-Slot Foundation**
+**Status: Implemented Diamond Six-Slot Presentation**
 
-The combat Ability HUD now represents six fixed Active Ability positions.
+The combat Ability HUD represents six fixed Active Ability positions.
 
-Current functional structure:
+Current structure:
 
-```
 Prepared/Core
-[ Signature ] [ Utility ] [ Sustain ]
+→ Signature
++ Utility
++ Sustain
 
 Expedition
-[ Slot 1 ]    [ Slot 2 ]  [ Slot 3 ]
-```
+→ Slot 1
++ Slot 2
++ Slot 3.
 
-The final visual composition may later return to the intended  
-chevron/diamond-style presentation.
+The current functional HUD presents these as two groups of three compact diamond
+Ability controls.
 
-The current two-row layout exists to make the gameplay model explicit while the  
-Ability system is still being expanded.
+The overall Combat HUD position remains Working and may move later after the
+Ability and Weapon Mod presentations are assessed together.
 
-## Prepared/Core Row
+## Diamond Ability Presentation
 
-The first row always represents:
+Each occupied Ability position prioritises:
 
-- Signature;
-    
-- Utility;
-    
-- Sustain.
-    
+Ability icon
+→ primary recognition.
 
-These positions are established before the Expedition and remain fixed during  
-the run.
+Ability level
+→ small `Lv.X` text.
 
-## Expedition Row
+Ability name
+→ small supporting text beneath the icon.
 
-The second row represents the three currently active Expedition Abilities.
+Cooldown
+→ numeric remaining time displayed over the icon.
 
-Empty positions remain visible.
+Cooldown state
+→ dark translucent radial wash that recedes as the Ability becomes ready.
 
-This communicates remaining Ability capacity rather than allowing the HUD to  
-grow unpredictably as Abilities are acquired.
+When the Ability becomes ready:
+
+- the cooldown wash disappears;
+- the numeric countdown disappears;
+- the icon remains unobscured.
+
+Large role/status labels such as `SIGNATURE`, `UTILITY`, `READY` and
+`EXPEDITION 1` are not displayed inside the combat button.
+
+The Prepared/Core versus Expedition distinction is communicated by the two HUD
+groups rather than repeated on every Ability.
+
+## Empty Expedition Positions
+
+Empty Expedition positions remain visible as empty diamonds.
+
+They communicate remaining run-level Ability capacity.
+
+An empty position displays:
+
+- no Ability icon;
+- no level;
+- no cooldown;
+- a small `EMPTY` label.
+
+## Ability Artwork
+
+Combat HUD artwork comes from the Ability's authored presentation.
+
+Base Ability:
+`AbilityDefinition.Icon`.
+
+Presentation-replacing Evolution:
+`AbilityEvolutionDefinition.Icon`.
+
+Runtime presentation resolves through `AbilityPresentationResolver`, so evolved
+Abilities may replace both their displayed name and icon without changing the
+HUD implementation.
 
 ## Ability Loadout
 
-The `ABILITY LOADOUT` control opens a deliberate paused build-management  
-surface.
+The existing `ABILITY LOADOUT` control remains beneath the active Ability
+presentation.
 
-It allows the player to:
+It opens the paused Expedition loadout-management surface and allows owned
+Expedition Abilities to be slotted, swapped or unslotted.
 
-- inspect currently-owned Expedition Abilities;
-    
-- identify slotted and unslotted Abilities;
-    
-- assign an owned Ability to an Expedition position;
-    
-- swap two active Expedition Abilities;
-    
-- deliberately empty a position.
-    
+Prepared/Core Abilities remain fixed during the Expedition.
 
-Prepared/Core Abilities cannot be changed from this surface.
+## Current Boundary
 
-Ability ownership is therefore visually distinct from current Active-slot  
-assignment.
+The diamond presentation is now the intended functional Ability-button language.
 
-## Current Presentation Priorities
+Future UI work may still refine:
 
-The functional HUD must communicate:
+- exact Combat HUD placement;
+- frame/art treatment;
+- elemental colouring;
+- input prompts;
+- animation/pulse feedback;
+- deeper cooldown polish.
 
-- slot identity;
-    
-- Ability identity;
-    
-- current Ability level;
-    
-- readiness;
-    
-- cooldown;
-    
-- executing state;
-    
-- empty Expedition capacity.
-    
+Do not return to the previous large rectangular text-button presentation.
 
-Final icon-driven styling, cooldown masks, elemental presentation and the  
-planned diamond/chevron composition remain later presentation work.
+## Chevron Composition
+
+The six Active Ability positions use two vertically stacked three-slot chevrons.
+
+Expedition group:
+
+- Slot 1 → top-centre;
+- Slot 2 → lower-left;
+- Slot 3 → lower-right.
+
+Prepared/Core group:
+
+- Signature → top-centre;
+- Utility → lower-left;
+- Sustain → lower-right.
+
+The Ability cluster is anchored on the left side of the Combat HUD above the
+Character / targeting controls rather than at bottom-centre.
+
+This preserves the large central combat viewing area.
+
+The current functional slot geometry uses approximately:
+
+- 108 × 108 slot footprints;
+- 60 horizontal centre offset;
+- 54 vertical centre offset.
+
+The visible diamond nearly fills that footprint.
+
+A future Weapon Mod chevron may extend the same spatial language upward, but
+Weapon Mod presentation remains unchanged for now.
+
+The vertical stack uses `-54` spacing between the two chevron groups.
+
+This intentionally matches the per-chevron `54` vertical offset.
+
+The diagonal relationship is therefore consistent both inside a three-slot
+chevron and across the boundary between Expedition and Prepared/Core groups.
+
+Do not tighten the inter-group overlap independently from the chevron's own
+vertical offset.
+
+## Pointer Interaction
+
+The rectangular RectTransform used by Unity layout is not the Ability's clickable
+shape.
+
+`AbilityButtonUI` performs diamond-shaped raycast filtering.
+
+Clicks outside the visible diamond but inside its rectangular layout footprint
+are rejected.
+
+This allows neighbouring staggered diamonds to remain visually compact without
+one button stealing pointer input from another.
+
+Controller bindings remain future work.
 
 # Weapon Mod HUD
 

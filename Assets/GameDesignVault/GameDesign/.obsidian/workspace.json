@@ -188,14 +188,16 @@
   },
   "active": "57c7e95b4b97b861",
   "lastOpenFiles": [
-    "Design/Technical/Ability Loadout and Runtime.md.meta",
-    "Design/UI-UX.md",
+    "Design/Technical/Targeting, Tactics and Encounter Direction.md",
+    "Design/Technical/Projectile Combat.md",
+    "Design/Technical/Character Stats.md",
     "Design/Technical/Ability Loadout and Runtime.md",
-    "Design/Characters/Abilities.md",
+    "Design/UI-UX.md",
     "ProjectManagement/Roadmap.md",
     "Guides/How-To/Author Abilities.md",
+    "Design/Technical/Ability Loadout and Runtime.md.meta",
+    "Design/Characters/Abilities.md",
     "Design/Rewards.md",
-    "Design/Technical/Character Stats.md",
     "Design/Technical/Rewards and Pending Choices.md",
     "Development Rules/Abilities and Buildcraft.md",
     "Development Rules/Workflow and Validation.md",
@@ -209,7 +211,6 @@
     "ProjectManagement/Active Feature Programme.md",
     "Design/Combat/Combat.md",
     "00 - Core/What is the game/Narrative Framework.md",
-    "Design/Technical/Projectile Combat.md",
     "Guides/How-To/Author Abilities.md.meta",
     "00 - Core/What is the game/What The Game Actually Is.md",
     "Design/Characters/Characters.md",
@@ -222,7 +223,6 @@
     "Guides/How-To",
     "Guides",
     "Design/Progression.md",
-    "Design/Technical/Weapon Mods.md.meta",
-    "Design/Weapon Mods.md.meta"
+    "Design/Technical/Weapon Mods.md.meta"
   ]
 }

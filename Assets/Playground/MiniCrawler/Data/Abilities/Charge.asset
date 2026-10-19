@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Abilities.AbilityDefinition
   id: Charge
   displayName: Charge
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 114104cb8f1e12a4292636dfdd2b6618, type: 3}
   elements: 0
   maxLevel: 5
   cooldown:

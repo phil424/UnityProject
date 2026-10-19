@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Abilities.AbilityDefinition
   id: war_cry
   displayName: War Cry
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: b45cd637b74521b499a7551b66006bc5, type: 3}
+  elements: 0
   maxLevel: 5
   cooldown:
     baseValue: 8

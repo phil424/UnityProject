@@ -135,6 +135,35 @@ owns:
 This prevents launch/setup responsibilities from accumulating inside the live
 projectile component.
 
+## Temporary Basic Attack Penetration
+
+`ProjectileLaunchRequest` distinguishes Basic Attack projectile delivery from
+Ability projectile delivery.
+
+When a Basic Attack launch occurs while its source has temporary Basic Attack
+Penetration:
+
+Targeted
+→ may be promoted to Targeted Piercing.
+
+Targeted Piercing
+→ receives additional maximum hits.
+
+Directional Basic Attack delivery
+→ receives additional maximum hits.
+
+The existing impact payload remains unchanged.
+
+Therefore temporary penetration composes with:
+
+- ordinary Basic Attack projectiles;
+- Piercing Weapon Mods;
+- Burn projectile payloads;
+- Knockback projectile payloads.
+
+Ability projectile launches remain unaffected because they are not marked as
+Basic Attacks.
+
 # Projectile Runtime
 
 `ProjectileRuntime`

@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Abilities.AbilityDefinition
   id: Rage
   displayName: Rage
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 540a2ff902a7be541a042d806dda1f96, type: 3}
+  elements: 0
   maxLevel: 5
   cooldown:
     baseValue: 10

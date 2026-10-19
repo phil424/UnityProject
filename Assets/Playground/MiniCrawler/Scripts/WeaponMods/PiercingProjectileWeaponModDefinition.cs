@@ -56,7 +56,7 @@ namespace MiniCrawler.WeaponMods
 
             ProjectileDelivery delivery = ProjectileDelivery.TargetedPiercing(context.Target, stats.AttackRange, mover.TargetFactionId, hitRadius, GetMaximumTargetsHit(context.ModLevel));
 
-            ProjectileLaunchRequest request = new(projectileAction.Projectile, context.Source, delivery, new ProjectileImpactPayload(currentDamage, actionName));
+            ProjectileLaunchRequest request = new(projectileAction.Projectile, context.Source, delivery, new ProjectileImpactPayload(currentDamage, actionName), isBasicAttack: true);
 
             connected = ProjectileLauncher.Launch(request) != null;
             return true;

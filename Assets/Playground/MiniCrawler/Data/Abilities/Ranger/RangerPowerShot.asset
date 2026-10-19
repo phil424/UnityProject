@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Abilities.AbilityDefinition
   id: ranger_power_shot
   displayName: Power Shot
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 72c9084047a70ec43a6e00aabf8e1e72, type: 3}
+  elements: 0
   maxLevel: 5
   cooldown:
     baseValue: 6

@@ -410,6 +410,31 @@ Answers:
 
 A target policy should be composable rather than represented by one giant enum.
 
+## Combat Target Group Query
+
+`CombatTargetGroupQuery` provides actor-generic hostile-group resolution for
+Abilities and other combat systems that require a useful cluster position.
+
+Inputs include:
+
+- source Actor;
+- target faction;
+- search radius;
+- group radius.
+
+The query:
+
+1. collects valid engaged hostile targets inside search range;
+2. evaluates a local group around each candidate anchor;
+3. prefers the group containing the most valid targets;
+4. breaks equal-count ties by distance from the source;
+5. returns the average world position of the selected group.
+
+The query does not activate an Ability or move an Actor.
+
+Concrete gameplay such as Earthshatter decides what to do with the returned
+centre.
+
 ## Action Policy / Tactics
 
 Answers:
@@ -431,6 +456,32 @@ Action selection should remain separate from target selection.
 The chosen action is executed through the appropriate gameplay system.
 
 Decision logic should not duplicate ability / attack / healing implementation.
+
+## Root
+
+`RootRuntime` is a Runtime Actor control effect.
+
+Root:
+
+- prevents normal navigation;
+- prevents autonomous target movement;
+- does not itself cancel or prevent attacks;
+- does not block ForcedMotion.
+
+Movement priority is:
+
+Forced Motion
+→ Root
+→ other normal/control movement processing.
+
+If a rooted Actor is currently undergoing ForcedMotion, the Root duration does
+not count down until that forced movement has finished.
+
+This allows effects such as:
+
+Knockback
+→ displacement completes
+→ remaining Root duration controls the Actor afterward.
 
 # Hero Target Resolution
 

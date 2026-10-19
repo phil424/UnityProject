@@ -48,6 +48,22 @@ namespace MiniCrawler.Abilities
 
         public float CooldownRemaining => cooldownRemaining;
 
+        public float CooldownFractionRemaining
+        {
+            get
+            {
+                if (cooldownRemaining <= 0f)
+                    return 0f;
+
+                float totalCooldown = Cooldown;
+
+                if (totalCooldown <= 0f)
+                    return 0f;
+
+                return Mathf.Clamp01(cooldownRemaining / totalCooldown);
+            }
+        }
+
         public bool IsReady => cooldownRemaining <= 0f;
 
         public bool IsExecuting { get; private set; }
