@@ -10,12 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2ebb4e56a45969c4f9668a30bbb88ea5, type: 3}
-  m_Name: RageUnlock
+  m_Name: LearnWindWhipReward
   m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Progress.AbilityUnlockRewardDefinition
-  id: RageUnlock
-  displayName: Learn Rage
+  id: reward_learn_wind_whip
+  displayName: Learn Wind Whip
   icon: {fileID: 0}
   rarity: 2
-  ability: {fileID: 11400000, guid: 849fcf761b398c746bf22254d5faa518, type: 2}
-  eligibleMembers:
-  - {fileID: 11400000, guid: 94ccbd35cf205c04e9c36e071d00de96, type: 2}
+  ability: {fileID: 11400000, guid: 2d17e0ca4ba216748aa621d00398646d, type: 2}
+  eligibleMembers: []

@@ -89,49 +89,78 @@ unless a modifier originated from prepared persistent progression.
 
 ## Shield Capacity
 
-Controls the maximum number of hit-based Shield layers an Actor may currently
-hold.
+Shield Capacity controls the maximum number of hit-based Shield layers that may
+exist simultaneously on an Actor.
 
-Authored base capacity lives on actor-owned `ShieldCapacityStats`.
+Runtime representation:
 
-Prepared Character Mastery and Expedition Character Growth rewards may increase
-that capacity through the shared `CharacterStatModifierType.ShieldCapacity`
-vocabulary.
+`ShieldCapacityStats`
+→ capacity.
 
-Current consumers:
+`HitShieldRuntime`
+→ active Shield layers.
 
-Ranger
-→ authored base Shield Capacity `3`.
+Current base capacity:
 
-Expanded Guard
-→ Rare Character Growth Reward;
-→ Ranger-only;
-→ +1 temporary Expedition Shield Capacity.
+`3`.
 
-Persistent Mastery may later provide additional Shield Capacity through the same
-shared stat vocabulary.
+Expedition Shield Capacity modifiers may increase that value where the Reward is
+eligible.
 
-Shield layers themselves remain Runtime Actor state.
+## Source-Aware Shield Layers
 
-Current Shield layers remain Runtime Actor state and are not stored in
-`RunBuild`.
+Shield layers may record:
+
+- their creating GameObject;
+- a stable source ID;
+- their creating action name.
+
+`HitShieldRuntime` raises `ShieldBroken` when one complete Shield layer is
+consumed.
+
+The event reports both:
+
+- the Shield layer's source identity;
+- the attack that broke it.
+
+This allows reactive systems to respond only to Shields they actually created.
+
+Current representative consumer:
+
+Glacial Aegis
+→ adds source-identified Glacial Shields
+→ listens for break events matching its own source ID
+→ triggers Frost Nova.
+
+Guard continues using normal Shield layers and does not trigger Glacial Aegis.
+
+Owned Ability cleanup may remove Shield layers belonging to that Ability's source
+ID when the Ability is disabled/unslotted.
 
 ## Runtime Temporary Modifiers
 
-Short-duration effects belong to runtime actor state.
+Short-duration Character effects belong to Runtime Actor state.
 
-`RuntimeStatModifiers` currently supports effects such as Rage.
+`RuntimeStatModifiers` currently supports temporary effects including:
 
-Examples:
-- temporary outgoing damage;
-- temporary Basic Attack Speed;
-- temporary Movement Speed;
-- temporary Armour;
-- temporary Basic Attack Range;
-- temporary Basic Attack Penetration.
+- outgoing damage;
+- Basic Attack Speed;
+- Movement Speed;
+- Armour;
+- Basic Attack Range;
+- Basic Attack Penetration.
 
-Temporary effects must not permanently mutate `RunBuild` or authored prefab
-values.
+Wind Whip is the current representative player-facing consumer.
+
+Temporary Runtime effects must not permanently mutate:
+
+- authored Character values;
+- Ability Definitions;
+- RunBuild Character-stat progression.
+
+When the temporary source expires or is removed, the effective Character values
+return to the RunBuild/authored baseline.
+
 # Application
 
 Current player Character reconstruction flow:
@@ -277,27 +306,26 @@ Current formula:
 
 Effective Ability Damage = Authored Ability Damage × (1 + Ability Damage Percent / 100).
 
-Current runtime consumer:
+Current runtime seam:
 
 `ActorAbility`
-→ shared `ResolveAbilityDamage(...)`
+→ `ResolveAbilityDamage(...)`
 → actor-owned `AbilityStats`.
 
-Concrete damaging Abilities opt into this shared helper.
-
-Current consumers include:
+Current representative consumers include:
 
 - Blink;
 - Whirlwind;
-- Charge;
-- Projectile Shot;
-- Power Shot / Piercing Projectile Shot.
+- Earthshatter contact damage;
+- Earthshatter landing damage;
+- Power Shot / Piercing Projectile Shot;
+- Storm Field pulse damage.
 
-Basic Attacks do not use this calculation.
+Basic Attacks do not use Ability Damage.
 
 General Runtime outgoing-damage modifiers are applied separately through the
-existing `DamageResolver` seam and may therefore affect both Basic Attack and
-Ability damage when that temporary effect is intentionally universal.
+existing damage pipeline and may affect both Basic Attack and Ability damage
+when that effect is intentionally universal.
 
 ## Ability Area Size
 
@@ -307,13 +335,13 @@ Current formula:
 
 Effective Linear Ability Size = Authored Size × (1 + Ability Area Size Percent / 100).
 
-Current runtime consumer:
+Runtime seam:
 
 `ActorAbility`
-→ shared `ResolveAbilityAreaSize(...)`
+→ `ResolveAbilityAreaSize(...)`
 → actor-owned `AbilityStats`.
 
-Current representative consumers:
+Current representative consumers include:
 
 Whirlwind
 → activation/effect radius.
@@ -324,36 +352,54 @@ Blink
 Smoke Step
 → smoke/Fear radius.
 
+Earthshatter
+→ rush contact radius;
+→ landing shockwave radius.
+
+Storm Field
+→ persistent field radius.
+
 Ability Area Size is deliberately opt-in.
 
 It does not automatically alter:
 
 - targeting/search distance;
 - movement distance;
-- projectile travel range;
-- projectile hit radius;
+- projectile travel distance;
+- projectile collision radius;
 - Basic Attack range;
-- Knockback distance.
+- Knockback distance;
+- Earthshatter group-search radius;
+- Earthshatter rush distance.
 
-This prevents one broad percentage stat from accidentally changing unrelated
-mechanics merely because they are expressed as distances or radii.
+Concrete Abilities explicitly decide which geometry represents their scalable
+effect area.
 
 ## Knockback Power
 
-Controls outgoing forced-motion distance produced through the generic knockback
+Controls outgoing forced-motion distance produced through the shared Knockback
 pipeline.
 
 Current behaviour:
 
-- scales outgoing knockback distance;
+- scales outgoing Knockback distance;
 - scales compatible pull distance;
 - does not scale forced-motion speed;
-- does not alter Charge's own travel distance;
-- propagated motion inherits the already-modified source motion rather than
-  applying Knockback Power a second time.
+- does not alter an Ability's own self-movement distance;
+- propagated motion inherits already-modified source motion rather than applying
+  Knockback Power a second time.
 
-Current consumer:
-`KnockbackResolver` through actor-owned `KnockbackStats`.
+Current representative consumers include:
+
+Whirlwind
+→ radial Knockback / compatible pull behaviour.
+
+Earthshatter
+→ rush-contact displacement;
+→ landing shockwave displacement.
+
+Knockback Power therefore becomes more meaningful as Abilities create additional
+setup/payoff interactions around enemy positioning.
 
 # Important Invariants
 

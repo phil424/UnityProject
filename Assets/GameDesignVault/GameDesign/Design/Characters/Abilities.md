@@ -117,6 +117,145 @@ It does not currently imply:
 Multi-element identity is supported for future content such as a Fire / Earth
 Ability without requiring a second Ability type or duplicated definition.
 
+# Shared Elemental Expedition Abilities
+
+**Status: Waves 1–2 Implemented / Balance Working**
+
+Shared elemental Abilities are actor-generic Expedition buildcraft content.
+
+Current implemented pool:
+
+| Element | Ability | Primary role |
+| --- | --- | --- |
+| Earth | Earthshatter | Aggressive movement / burst / Knockback / Root |
+| Wind | Wind Whip | Temporary Basic Attack transformation |
+| Lightning | Storm Field | Mobile persistent area damage |
+| Fire | Wall of Flames | Persistent positional Burn barrier |
+| Ice | Glacial Aegis | Reactive Shields / Frost damage / Slow |
+| Water | Tidal Vortex | Persistent world-space enemy grouping |
+
+All six may currently be acquired by either playable Character.
+
+Only three Expedition Active Abilities may be equipped simultaneously.
+
+## Earthshatter — Earth
+
+Earthshatter resolves a useful hostile group, rushes toward it, damages and
+displaces enemies contacted during travel, then creates a landing shockwave.
+
+Surviving enemies successfully displaced by the landing impact receive Root.
+
+Primary interactions:
+
+- Ability Damage;
+- Ability Area Size;
+- Knockback Power;
+- Ability Cooldown Recovery.
+
+## Wind Whip — Wind
+
+Wind Whip temporarily transforms autonomous Basic Attacks.
+
+While active:
+
+- Basic Attack Speed increases;
+- Movement Speed increases;
+- Basic Attack Range increases;
+- Basic Attacks gain additional Penetration.
+
+It does not currently provide generic outgoing damage or Armour.
+
+## Storm Field — Lightning
+
+Storm Field creates a timed mobile damage field centred on the Character.
+
+The Character remains free to move and Basic Attack.
+
+Enemies currently inside the field receive repeated Ability-damage pulses.
+
+Primary interactions:
+
+- Ability Damage;
+- Ability Area Size;
+- Ability Cooldown Recovery.
+
+## Wall of Flames — Fire
+
+Wall of Flames creates a persistent stationary fire barrier across the current
+hostile approach direction.
+
+The wall is deliberately useful with the current simple autonomous navigation,
+where hostile actors commonly move directly toward the Character.
+
+Enemies occupying the wall receive Burn.
+
+Burn continues briefly after an enemy leaves the wall.
+
+Repeated wall contact refreshes the same Burn without resetting its tick rhythm.
+
+Primary interactions:
+
+- Ability Damage increases Burn tick damage;
+- Ability Area Size increases wall length and thickness;
+- Ability Cooldown Recovery increases availability.
+
+Wall placement/search distance does not scale from Ability Area Size.
+
+The earlier Flame Wake movement-trail concept is deferred until movement and
+pathing become sophisticated enough for player movement decisions to make that
+design consistently valuable.
+
+## Glacial Aegis — Ice
+
+Glacial Aegis grants source-identified Shield layers.
+
+When a Glacial Aegis Shield specifically breaks, the Character releases a Frost
+Nova.
+
+The Frost Nova:
+
+- deals Ability damage;
+- affects enemies inside its scalable radius;
+- applies temporary Slow.
+
+Other Shield sources such as Guard do not trigger Glacial Aegis.
+
+Primary interactions:
+
+- Shield Capacity;
+- Ability Damage;
+- Ability Area Size;
+- Ability Cooldown Recovery.
+
+Slow affects normal movement and does not reduce ForcedMotion speed.
+
+## Tidal Vortex — Water
+
+Tidal Vortex resolves a useful hostile group and captures that group's
+world-space centre.
+
+The Vortex remains at that captured location for its authored duration.
+
+Repeated pulses pull valid enemies inside its radius toward the centre.
+
+Tidal Vortex currently deals no direct damage.
+
+Its primary purpose is battlefield setup and grouping.
+
+Primary interactions:
+
+- Ability Area Size increases Vortex radius;
+- Knockback Power increases pull distance;
+- Ability Cooldown Recovery increases availability.
+
+The fixed-position identity deliberately distinguishes Tidal Vortex from:
+
+Storm Field
+→ follows the Character.
+
+Whirlwind
+→ immediate Character-centred control.
+
 # Ability Evolution
 Core rule:
 > Finding an already-owned ability should create an opportunity to transform it.
@@ -237,8 +376,6 @@ enemy formation setup
 
 rather than long-distance Ranger repositioning.
 
-Charge remains valid reusable Ability content but is no longer one of Punchy's
-planned three core roles.
 ## Sustain
 
 Provides a reliable survival intervention.

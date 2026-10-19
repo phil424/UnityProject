@@ -142,27 +142,55 @@ approved content-authoring workflow.
 
 ## Documentation Change Instruction Format
 
-When the user is expected to update documentation locally, provide changes with the same precision as source-code edits.
+Documentation maintenance should be supplied in complete coherent replacement
+units.
+
+The normal unit is a headed Markdown section.
 
 For every documentation change:
 
-1. Give the complete project-relative document path.
-2. Name the exact existing heading.
-3. State whether to insert, replace or delete content.
-4. Provide complete paste-ready Markdown.
-5. Identify obsolete text that must be removed.
-6. Explain the intended final document state.
-7. Identify any related documents that require consistency checks.
+1. give the complete project-relative document path;
+2. name the exact heading involved;
+3. state whether the complete section is being replaced, inserted or deleted;
+4. identify the boundary using the next equal-or-higher-level heading;
+5. provide complete paste-ready Markdown;
+6. explain the intended final state where clarification is useful.
 
-Prefer complete coherent section replacements.
+Preferred operations:
 
-When a document has become substantially stale, prefer a planned whole-document replacement over numerous scattered patches.
+### Replace
 
-Never require the user to infer where suggested Markdown belongs.
+Replace:
 
-Do not present a list of subjects to document as though it were a complete documentation-edit instruction.
+`## Existing Section`
 
-Keep normal documentation closure after focused implementation verification, except for the small preflight corrections required to establish accurate starting context.
+through immediately before:
+
+`## Next Section`
+
+with the supplied complete section.
+
+### Insert
+
+Insert a complete headed section immediately before or after a named existing
+heading.
+
+### Delete
+
+Delete the complete obsolete headed section.
+
+Do not present a list of individual sentences, paragraphs or search terms that
+the user must independently locate throughout the document when a complete
+section replacement can express the intended result.
+
+When several sections of a document are stale or contradictory, prefer a
+planned whole-document replacement.
+
+Small isolated factual corrections may still be given as direct value/text
+replacements when that is genuinely simpler.
+
+Documentation closure should describe verified implementation rather than the
+original implementation plan.
 
 
 ## Documentation Impact

@@ -35,7 +35,7 @@ The Preparation screen uses the actual gameplay world as its presentation.
 
 Broad composition:
 
-``` text
+```text
 ┌──────────────────────────────────────────┬─────────────────────┐
 │                                          │                     │
 │             LIVE GAME WORLD              │   PREPARATION UI    │
@@ -47,6 +47,7 @@ Broad composition:
 │                  ~2/3                    │        ~1/3         │
 └──────────────────────────────────────────┴─────────────────────┘
 ```
+
 
 ## Character Unlock Presentation
 

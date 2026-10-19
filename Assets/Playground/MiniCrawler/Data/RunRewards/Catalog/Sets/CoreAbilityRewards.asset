@@ -13,4 +13,9 @@ MonoBehaviour:
   m_Name: CoreAbilityRewards
   m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Progress.RunRewardSetDefinition
   rewards:
-  - {fileID: 11400000, guid: 2904d326533f9104fbae33755a5c83cc, type: 2}
+  - {fileID: 11400000, guid: 1830e74096f248b4199b38188aa37875, type: 2}
+  - {fileID: 11400000, guid: 1ddaaea6117cd924abb68839be80c90c, type: 2}
+  - {fileID: 11400000, guid: 4da4bf7866346094e978f600a02868f5, type: 2}
+  - {fileID: 11400000, guid: 93e389a4e2ba3bf47ad22ca88a8c5a1c, type: 2}
+  - {fileID: 11400000, guid: fa140264bcff67749aa74aba1db95718, type: 2}
+  - {fileID: 11400000, guid: 4be84d534b900d6479baa9c37bee3f65, type: 2}

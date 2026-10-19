@@ -483,6 +483,38 @@ Knockback
 → displacement completes
 → remaining Root duration controls the Actor afterward.
 
+## Slow
+
+`SlowRuntime` is a temporary Runtime Actor control effect.
+
+Slow modifies normal movement speed through the existing
+`RuntimeStatModifiers` seam.
+
+Current behaviour:
+
+Effective normal movement = normal movement × (1 - Slow Percent / 100).
+
+Slow does not alter:
+
+- ForcedMotion distance;
+- ForcedMotion speed;
+- Knockback;
+- pull speed;
+- attack speed;
+- Ability cooldown.
+
+The current generic Slow status uses a maximum authored reduction below complete
+immobilisation.
+
+Root remains the separate control effect for preventing normal movement
+entirely.
+
+Current representative consumer:
+
+Glacial Aegis
+→ Frost Nova
+→ Slow nearby enemies.
+
 # Hero Target Resolution
 
 Working target resolution:

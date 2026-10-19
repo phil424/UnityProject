@@ -338,46 +338,97 @@ scene / prefab / asset authoring when practical.
 
 ## Exact Code Edit Locations
 
-For partial-file edits:
+Code instructions should operate on coherent replacement units.
 
-- name the exact file;
-- name the enclosing method / property / class;
-- show a unique existing code block to find;
-- show the exact replacement or exact insertion point;
-- include enough surrounding context to distinguish similar call sites.
+Preferred order:
 
-Avoid instructions such as:
+1. replace a complete manageable file;
+2. otherwise replace a complete method / constructor / property / coherent type;
+3. insert a complete new member immediately before or after a named existing
+   member;
+4. remove a complete obsolete member.
 
-> update the normal call
+For a complete-member replacement:
 
-or:
+- give the exact project-relative file path;
+- name the enclosing class;
+- name the complete member being replaced;
+- show a unique existing signature or opening block to identify it;
+- explicitly state that the whole member is being replaced;
+- provide the complete paste-ready replacement.
 
-> add this near the reward code
+For new code:
 
-when multiple plausible locations exist.
+- provide the complete member;
+- identify the exact existing member it belongs before or after.
 
-Prefer:
+For deletion:
 
-> In `HandleLevelFinished(bool won)`, find:
->
-> `GenerateRunUpgradeOffers();`
->
-> replace it with:
->
-> `GenerateRunRewardOffers();`
+- name the complete member to remove;
+- explain why no remaining callers should depend on it.
+
+Do not normally require the user to make several scattered statement-level
+changes inside one method when supplying a complete replacement method would be
+clearer.
+
+Tiny one-line literal changes remain acceptable when they are genuinely simpler
+than replacing a whole member.
+
+Examples:
+
+Good:
+
+> In `RunDirector.cs`, replace the complete
+> `TryRerollPendingReward()` method with:
+
+Good:
+
+> Immediately after the complete `Refresh()` method, insert this complete
+> `RefreshRerollPresentation()` method:
+
+Avoid:
+
+> Change line A, then find another line lower down in the same method, then add
+> these two lines near the end.
+
+The goal is for each edit to have one obvious start boundary and one obvious end
+boundary.
 
 ## Documentation Edit Locations
 
-Documentation instructions follow the same standard.
+Documentation instructions use complete coherent sections as the normal edit
+unit.
 
-Always identify:
+Every documentation instruction must identify:
 
 - the exact document;
-- the exact heading;
-- whether text is being inserted before, after or replacing another block;
-- the final Markdown to use.
+- the exact existing heading;
+- whether the complete section is being replaced, inserted or removed;
+- the exact boundary of the operation;
+- the complete final Markdown.
 
-Do not require the user to decide where a design paragraph belongs.
+For section replacement, use wording such as:
+
+> Replace the complete `## Current Ability Rewards` section through immediately
+> before `## Current Weapon Mastery Rewards` with:
+
+For insertion, use wording such as:
+
+> Insert this complete section immediately after `## Expedition Ability
+> Ownership` and before `# Runtime Application`:
+
+For deletion, identify the complete obsolete heading and remove that whole
+section.
+
+Do not require the user to hunt through one document changing individual
+sentences in several locations when coherent section replacement can achieve the
+same result.
+
+When a document is broadly stale, recommend a deliberate whole-document
+replacement instead of a long sequence of partial patches.
+
+Tiny factual corrections remain acceptable only when a larger replacement would
+clearly create unnecessary churn.
 
 ## Compile Failures After Instructions
 

@@ -2597,6 +2597,7 @@ GameObject:
   - component: {fileID: 82840392}
   - component: {fileID: 82840395}
   - component: {fileID: 82840396}
+  - component: {fileID: 82840397}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -2647,7 +2648,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 10
+  orthographic size: 6
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -2737,6 +2738,18 @@ MonoBehaviour:
   stageDirector: {fileID: 846909436}
   followOrigin: {fileID: 1272413006}
   followSharpness: 8
+--- !u!114 &82840397
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 82840391}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75e85509a3399004fa29f303aeeaf0a9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Presentation.CameraFramingOffset
 --- !u!1 &84369589
 GameObject:
   m_ObjectHideFlags: 0
@@ -6264,6 +6277,13 @@ MonoBehaviour:
   enemyWanderPauseMaxSeconds: 3
   routeArrivalDistance: 0.35
   cameraFollowSharpness: 6
+  preparationVisibleViewport:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 0.6667
+    height: 1
+  cameraFramingTransitionSeconds: 0
   immortalityArmourBonus: 1000000
 --- !u!4 &303177178
 Transform:
@@ -106671,12 +106691,13 @@ MonoBehaviour:
   runRewardOfferCount: 3
   startingRewardRerolls: 1
   debugLoadoutAbilities:
-  - {fileID: 11400000, guid: 1be37d506ffc32745b4aa495ddd5a29c, type: 2}
-  - {fileID: 11400000, guid: 849fcf761b398c746bf22254d5faa518, type: 2}
+  - {fileID: 11400000, guid: 2d17e0ca4ba216748aa621d00398646d, type: 2}
+  - {fileID: 11400000, guid: 36973dda82bc75f4ca55916654df4481, type: 2}
   - {fileID: 11400000, guid: 920b72562bef35a4c9c718dfedd1eef9, type: 2}
   - {fileID: 11400000, guid: c7185abc97cb0354e98b28a44789d51f, type: 2}
   - {fileID: 11400000, guid: 00d7eb2c41cb9b74fa2b0030d76d21f0, type: 2}
   - {fileID: 11400000, guid: e42e19ef7e9317646a5357737269ec8e, type: 2}
+  - {fileID: 11400000, guid: f4fa4d6d0a3df734083c11bba080de2b, type: 2}
 --- !u!114 &1773141662
 MonoBehaviour:
   m_ObjectHideFlags: 0

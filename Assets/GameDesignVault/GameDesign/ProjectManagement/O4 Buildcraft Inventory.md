@@ -50,22 +50,22 @@ shared Character stat.
 
 Current reusable combat primitives include:
 
-| Primitive | Current representative use |
-| --- | --- |
-| Damage | Basic Attacks / Abilities / projectiles |
-| Projectile delivery | Ranger attacks and Power Shot |
-| Piercing | Ranger projectile content |
-| Forced Motion | Charge / Knockback |
-| Knockback | Whirlwind / Blink / Power Shot / Weapon Mastery |
-| Stun | Whirlwind / Blink / Power Shot |
-| Fear | Smoke Step |
-| Invulnerability | Blink |
-| Hit Shields | Guard |
-| Healing Over Time | Guard |
-| Direct Healing | War Cry |
-| Temporary Armour | War Cry |
-| Temporary stat modifiers | Rage / debug effects |
-| Burning | Fire Weapon Mastery |
+| Primitive                | Current representative use                      |
+| ------------------------ | ----------------------------------------------- |
+| Damage                   | Basic Attacks / Abilities / projectiles         |
+| Projectile delivery      | Ranger attacks and Power Shot                   |
+| Piercing                 | Ranger projectile content                       |
+| Forced Motion            | Earthshatter / Knockback                        |
+| Knockback                | Whirlwind / Blink / Power Shot / Weapon Mastery |
+| Stun                     | Whirlwind / Blink / Power Shot                  |
+| Fear                     | Smoke Step                                      |
+| Invulnerability          | Blink                                           |
+| Hit Shields              | Guard                                           |
+| Healing Over Time        | Guard                                           |
+| Direct Healing           | War Cry                                         |
+| Temporary Armour         | War Cry                                         |
+| Temporary stat modifiers | Wind Whip / debug effects                          |
+| Burning                  | Fire Weapon Mastery                             |
 
 These are generic runtime vocabulary.
 
@@ -91,18 +91,22 @@ Character ownership is separate from Ability behaviour.
 
 ## Current Ability Library
 
-Primary Ability definitions currently present:
+Current implemented Ability definitions:
 
-| Ability | Current Character use | Current content status |
+| Ability | Current use | Element / Role |
 | --- | --- | --- |
-| Blink | Punchy Signature | Core |
-| Whirlwind | Punchy Utility | Core |
-| War Cry | Punchy Sustain | Core; shared authored content |
-| Power Shot | Ranger Signature | Core |
-| Smoke Step | Ranger Utility | Core |
-| Guard | Ranger Sustain | Core |
-| Rage | Optional Expedition Ability | Active Reward currently Punchy-only |
-| Charge | None in current core kits | Reusable / inactive content |
+| Blink | Punchy Signature | Neutral movement / control |
+| Whirlwind | Punchy Utility | Neutral radial control |
+| War Cry | Punchy Sustain | Neutral sustain / temporary combat support |
+| Power Shot | Ranger Signature | Neutral ranged burst |
+| Smoke Step | Ranger Utility | Neutral movement / Fear control |
+| Guard | Ranger Sustain | Neutral Shields / healing |
+| Earthshatter | Shared Expedition Ability | Earth movement / burst / Knockback / Root |
+| Wind Whip | Shared Expedition Ability | Wind Basic-Attack transformation |
+| Storm Field | Shared Expedition Ability | Lightning mobile persistent AoE |
+
+Wave 1 shared elemental Abilities are actor-generic and available to both
+current playable Characters through Expedition Ability Rewards.
 
 Existing Evolution proof assets:
 
@@ -110,6 +114,16 @@ Existing Evolution proof assets:
 | --- | --- |
 | Fan Volley | Parked; baseline fan behaviour moved into Power Shot |
 | Vortex | Parked from normal Reward generation |
+
+Charge and Rage have been retired as current Ability content.
+
+Their useful architectural roles were superseded by:
+
+Charge
+→ Earthshatter.
+
+Rage
+→ Wind Whip.
 
 # Reward Architecture
 
@@ -264,20 +278,30 @@ Active default catalogue:
 
 | Reward | Rarity | Eligibility |
 | --- | --- | --- |
-| Learn Rage | Rare | Punchy |
+| Learn Earthshatter | Rare | Any playable Character |
+| Learn Wind Whip | Rare | Any playable Character |
+| Learn Storm Field | Rare | Any playable Character |
 
 Current result:
 
 Punchy
-→ has one active Expedition Ability-acquisition Reward.
+→ may acquire any Wave 1 shared elemental Expedition Ability.
 
 Ranger
-→ has no currently eligible Ability-acquisition Reward in the active catalogue.
+→ may acquire any Wave 1 shared elemental Expedition Ability.
 
-Parked Ability Reward assets include:
+Owned Expedition Abilities automatically occupy empty Expedition Active
+positions.
 
-- Fan Volley;
-- Vortex.
+When all three Expedition Active positions are occupied, additional owned
+Abilities remain available for loadout swapping rather than expanding the combat
+HUD indefinitely.
+
+The retired Punchy-only Learn Rage proof Reward is no longer part of the active
+catalogue.
+
+Parked Evolution Reward assets remain outside normal Reward generation unless
+explicitly reactivated later.
 
 ## Current Weapon Mastery Rewards
 
@@ -570,33 +594,72 @@ finished persistent progression tree.
 
 ## Existing
 
-Rage is the only active additional Expedition Ability Reward.
+The first implemented shared elemental Expedition Ability wave contains:
 
-Its current Reward eligibility restricts it to Punchy.
+Earthshatter — Earth
+→ movement / burst / Knockback / Root.
 
-Charge exists as reusable Ability content but is not currently part of the active
-Reward catalogue.
+Wind Whip — Wind
+→ temporary Basic Attack Speed / Range / Movement Speed / Penetration
+transformation.
 
-## Missing
+Storm Field — Lightning
+→ mobile persistent Ability-damage area.
 
-There is not yet a meaningful shared Expedition Ability pool.
+All three are:
 
-Future shared Ability content should provide run-specific build directions
-without replacing the Character's Signature / Utility / Sustain identity.
+- actor-generic;
+- available to Punchy;
+- available to Ranger;
+- Expedition-owned;
+- compatible with the three Expedition Active positions;
+- temporary and removed when the Expedition ends.
 
-Candidate areas for later design include:
+Current shared buildcraft interactions include:
 
-- area damage;
-- periodic lightning / storm effects;
-- control;
-- Fear;
-- defensive effects;
-- movement;
-- utility;
-- other designed gameplay roles.
+Ability Damage
+→ Earthshatter damage;
+→ Storm Field pulse damage.
 
-These remain future O4D design work rather than current implementation
-requirements.
+Ability Area Size
+→ Earthshatter contact / landing geometry;
+→ Storm Field radius.
+
+Knockback Power
+→ Earthshatter displacement.
+
+Basic Attack-oriented development
+→ interacts strongly with Wind Whip.
+
+## Next Expansion
+
+The next shared Active Ability wave should broaden gameplay roles rather than
+produce more variations of direct damage.
+
+Current Working candidates:
+
+Flame Wake — Fire
+→ movement-created persistent danger / damage.
+
+Glacial Aegis — Ice
+→ reactive defence with frost payoff.
+
+Tidal Vortex — Water
+→ persistent battlefield grouping / control.
+
+These remain Working player-facing designs until explicitly approved.
+
+Later expansion should continue adding:
+
+- positional interactions;
+- defence;
+- setup / payoff;
+- automated effects;
+- battlefield control;
+- hybrid Basic Attack / Ability build directions.
+
+Passive Abilities remain a later O4D step and do not consume Active Ability
+positions.
 
 # O4 Action Register
 

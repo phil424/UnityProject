@@ -15,33 +15,67 @@ namespace MiniCrawler.Presentation
         private const string ImmortalityModifierId = "PreparationShowcaseImmortality";
 
         [Header("World")]
-        [SerializeField] private Camera gameplayCamera;
-        [SerializeField] private Transform showcaseOrigin;
-        [SerializeField] private GameObject combatFeedbackRoot;
-        [SerializeField] private AmbientRouteGraph routeGraph;
+        [SerializeField]
+        private Camera gameplayCamera;
+
+        [SerializeField]
+        private Transform showcaseOrigin;
+
+        [SerializeField]
+        private GameObject combatFeedbackRoot;
+
+        [SerializeField]
+        private AmbientRouteGraph routeGraph;
 
         [Header("Enemies")]
-        [SerializeField] private ActorDefinition[] enemyPool;
-        [SerializeField, Min(1)] private int initialEnemyCount = 6;
-        [SerializeField, Min(1)] private int maxLivingEnemies = 8;
-        [SerializeField, Min(0.1f)] private float spawnIntervalMin = 1f;
-        [SerializeField, Min(0.1f)] private float spawnIntervalMax = 2f;
-        [SerializeField, Min(0f)] private float routeSpawnScatterRadius = 0.4f;
+        [SerializeField]
+        private ActorDefinition[] enemyPool;
+
+        [SerializeField, Min(1)]
+        private int initialEnemyCount = 6;
+
+        [SerializeField, Min(1)]
+        private int maxLivingEnemies = 8;
+
+        [SerializeField, Min(0.1f)]
+        private float spawnIntervalMin = 1f;
+
+        [SerializeField, Min(0.1f)]
+        private float spawnIntervalMax = 2f;
+
+        [SerializeField, Min(0f)]
+        private float routeSpawnScatterRadius = 0.4f;
 
         [Header("Enemy Ambient Behaviour")]
-        [SerializeField, Min(0.1f)] private float enemyEngagementRadius = 3.5f;
-        [SerializeField, Min(0f)] private float enemyWanderRadius = 2.5f;
-        [SerializeField, Min(0f)] private float enemyWanderPauseMinSeconds = 1f;
-        [SerializeField, Min(0f)] private float enemyWanderPauseMaxSeconds = 3f;
+        [SerializeField, Min(0.1f)]
+        private float enemyEngagementRadius = 3.5f;
+
+        [SerializeField, Min(0f)]
+        private float enemyWanderRadius = 2.5f;
+
+        [SerializeField, Min(0f)]
+        private float enemyWanderPauseMinSeconds = 1f;
+
+        [SerializeField, Min(0f)]
+        private float enemyWanderPauseMaxSeconds = 3f;
 
         [Header("Route Travel")]
-        [SerializeField, Min(0.1f)] private float routeArrivalDistance = 0.35f;
+        [SerializeField, Min(0.1f)]
+        private float routeArrivalDistance = 0.35f;
 
         [Header("Camera")]
-        [SerializeField, Min(0f)] private float cameraFollowSharpness = 6f;
+        [SerializeField, Min(0f)]
+        private float cameraFollowSharpness = 6f;
+
+        [SerializeField]
+        private Rect preparationVisibleViewport = new(0f, 0f, 0.6667f, 1f);
+
+        [SerializeField, Min(0f)]
+        private float cameraFramingTransitionSeconds;
 
         [Header("Showcase Character")]
-        [SerializeField, Min(0f)] private float immortalityArmourBonus = 1000000f;
+        [SerializeField, Min(0f)]
+        private float immortalityArmourBonus = 1000000f;
 
         private readonly List<GameObject> spawnedEnemies = new();
         private readonly List<AmbientRouteSegment> validSegments = new();
@@ -49,8 +83,11 @@ namespace MiniCrawler.Presentation
         private PartyMemberDefinition currentDefinition;
         private GameObject showcaseCharacter;
 
+        private CameraFramingOffset cameraFraming;
+
         private Vector3 savedCameraPosition;
         private Quaternion savedCameraRotation;
+        private Vector2 savedViewportCenter = new(0.5f, 0.5f);
         private Vector3 cameraOffset;
 
         private bool savedCombatFeedbackState;
@@ -95,15 +132,24 @@ namespace MiniCrawler.Presentation
 
             ClearActors();
 
+            if (cameraFraming != null)
+            {
+                cameraFraming.SetViewportCenter(savedViewportCenter, 0f);
+            }
+
             if (gameplayCamera != null)
             {
                 gameplayCamera.transform.position = savedCameraPosition;
+
                 gameplayCamera.transform.rotation = savedCameraRotation;
             }
 
             if (combatFeedbackRoot != null)
+            {
                 combatFeedbackRoot.SetActive(savedCombatFeedbackState);
+            }
 
+            cameraFraming = null;
             currentDefinition = null;
             running = false;
         }
@@ -128,40 +174,58 @@ namespace MiniCrawler.Presentation
         private void LateUpdate()
         {
             if (!running || gameplayCamera == null || showcaseCharacter == null)
+            {
                 return;
+            }
 
-            Vector3 targetPosition = showcaseCharacter.transform.position + cameraOffset;
+            Vector3 focusPoint = showcaseCharacter.transform.position;
+
+            Vector3 framingWorldOffset = cameraFraming != null ? cameraFraming.ResolveWorldOffset(focusPoint) : Vector3.zero;
+
+            Vector3 targetPosition = focusPoint + cameraOffset + framingWorldOffset;
 
             if (cameraFollowSharpness <= 0f)
             {
                 gameplayCamera.transform.position = targetPosition;
+
                 return;
             }
 
             float interpolation = 1f - Mathf.Exp(-cameraFollowSharpness * Time.deltaTime);
-            gameplayCamera.transform.position =
-                Vector3.Lerp(gameplayCamera.transform.position, targetPosition, interpolation);
+
+            gameplayCamera.transform.position = Vector3.Lerp(gameplayCamera.transform.position, targetPosition, interpolation);
         }
 
         private void BeginShowcase()
         {
             if (gameplayCamera == null || showcaseOrigin == null || routeGraph == null)
             {
-                Debug.LogError(
-                    $"{nameof(PreparationCombatShowcase)} requires a Camera, Showcase Origin and Ambient Route Graph.",
-                    this
-                );
+                Debug.LogError($"{nameof(PreparationCombatShowcase)} requires " + "a Camera, Showcase Origin and Ambient Route Graph.", this);
 
                 return;
             }
 
             savedCameraPosition = gameplayCamera.transform.position;
+
             savedCameraRotation = gameplayCamera.transform.rotation;
-            cameraOffset = gameplayCamera.transform.position - showcaseOrigin.position;
+
+            cameraFraming = gameplayCamera.GetComponent<CameraFramingOffset>();
+
+            savedViewportCenter = cameraFraming != null ? cameraFraming.CurrentViewportCenter : new Vector2(0.5f, 0.5f);
+
+            Vector3 existingFramingWorldOffset = cameraFraming != null ? cameraFraming.ResolveWorldOffset(showcaseOrigin.position) : Vector3.zero;
+
+            cameraOffset = gameplayCamera.transform.position - showcaseOrigin.position - existingFramingWorldOffset;
+
+            if (cameraFraming != null)
+            {
+                cameraFraming.SetVisibleViewport(preparationVisibleViewport, cameraFramingTransitionSeconds);
+            }
 
             if (combatFeedbackRoot != null)
             {
                 savedCombatFeedbackState = combatFeedbackRoot.activeSelf;
+
                 combatFeedbackRoot.SetActive(false);
             }
 
@@ -170,19 +234,12 @@ namespace MiniCrawler.Presentation
 
         private void SpawnCharacter()
         {
-            if (currentDefinition?.ActorDefinition == null ||
-                SimulationSpawner.Instance == null ||
-                showcaseOrigin == null)
+            if (currentDefinition?.ActorDefinition == null || SimulationSpawner.Instance == null || showcaseOrigin == null)
             {
                 return;
             }
 
-            showcaseCharacter = SimulationSpawner.Instance.Spawn(
-                currentDefinition.ActorDefinition,
-                showcaseOrigin.position,
-                showcaseOrigin.rotation,
-                gameObject
-            );
+            showcaseCharacter = SimulationSpawner.Instance.Spawn(currentDefinition.ActorDefinition, showcaseOrigin.position, showcaseOrigin.rotation, gameObject);
 
             if (showcaseCharacter == null)
                 return;
@@ -201,11 +258,7 @@ namespace MiniCrawler.Presentation
             PersistentMemberProgress persistentProgress = PersistentProgression.GetMemberProgress(currentDefinition);
 
             RunBuild build = new();
-            build.InitializeGearLevels(
-                persistentProgress.WeaponLevel,
-                persistentProgress.ArmourLevel,
-                persistentProgress.FocusLevel
-            );
+            build.InitializeGearLevels(persistentProgress.WeaponLevel, persistentProgress.ArmourLevel, persistentProgress.FocusLevel);
             build.InitializeStartingAbilities(currentDefinition.StartingAbilities);
             PersistentProgression.ApplyMasteryToBuild(currentDefinition, build);
 
@@ -218,23 +271,12 @@ namespace MiniCrawler.Presentation
             if (modifiers == null)
                 modifiers = showcaseCharacter.AddComponent<RuntimeStatModifiers>();
 
-            modifiers.ApplyOrRefresh(
-                ImmortalityModifierId,
-                86400f,
-                0f,
-                0f,
-                0f,
-                immortalityArmourBonus
-            );
+            modifiers.ApplyOrRefresh(ImmortalityModifierId, 86400f, 0f, 0f, 0f, immortalityArmourBonus);
         }
 
         private void SpawnEnemy()
         {
-            if (SimulationSpawner.Instance == null ||
-                showcaseCharacter == null ||
-                enemyPool == null ||
-                enemyPool.Length == 0 ||
-                !TryGetRouteSpawnPose(out Pose pose))
+            if (SimulationSpawner.Instance == null || showcaseCharacter == null || enemyPool == null || enemyPool.Length == 0 || !TryGetRouteSpawnPose(out Pose pose))
             {
                 return;
             }
@@ -244,12 +286,7 @@ namespace MiniCrawler.Presentation
             if (definition == null)
                 return;
 
-            GameObject spawned = SimulationSpawner.Instance.Spawn(
-                definition,
-                pose.position,
-                pose.rotation,
-                gameObject
-            );
+            GameObject spawned = SimulationSpawner.Instance.Spawn(definition, pose.position, pose.rotation, gameObject);
 
             if (spawned == null)
                 return;
@@ -270,7 +307,7 @@ namespace MiniCrawler.Presentation
 
             wanderer.Configure(routeGraph, routeArrivalDistance);
         }
-        
+
         private void ConfigureAmbientEnemy(GameObject enemy, Vector3 homePosition)
         {
             if (enemy == null)
@@ -281,13 +318,7 @@ namespace MiniCrawler.Presentation
             if (ambientEnemy == null)
                 ambientEnemy = enemy.AddComponent<AmbientEnemy>();
 
-            ambientEnemy.Configure(
-                homePosition,
-                enemyEngagementRadius,
-                enemyWanderRadius,
-                enemyWanderPauseMinSeconds,
-                enemyWanderPauseMaxSeconds
-            );
+            ambientEnemy.Configure(homePosition, enemyEngagementRadius, enemyWanderRadius, enemyWanderPauseMinSeconds, enemyWanderPauseMaxSeconds);
         }
 
         private bool TryGetRouteSpawnPose(out Pose pose)
@@ -331,10 +362,7 @@ namespace MiniCrawler.Presentation
             Vector2 scatter = Random.insideUnitCircle * routeSpawnScatterRadius;
             position += new Vector3(scatter.x, 0f, scatter.y);
 
-            pose = new Pose(
-                position,
-                Quaternion.Euler(0f, Random.Range(0f, 360f), 0f)
-            );
+            pose = new Pose(position, Quaternion.Euler(0f, Random.Range(0f, 360f), 0f));
 
             return true;
         }
@@ -437,22 +465,40 @@ namespace MiniCrawler.Presentation
         private void OnValidate()
         {
             initialEnemyCount = Mathf.Max(1, initialEnemyCount);
+
             maxLivingEnemies = Mathf.Max(initialEnemyCount, maxLivingEnemies);
 
             spawnIntervalMin = Mathf.Max(0.1f, spawnIntervalMin);
+
             spawnIntervalMax = Mathf.Max(0.1f, spawnIntervalMax);
 
             routeSpawnScatterRadius = Mathf.Max(0f, routeSpawnScatterRadius);
 
             enemyEngagementRadius = Mathf.Max(0.1f, enemyEngagementRadius);
+
             enemyWanderRadius = Mathf.Max(0f, enemyWanderRadius);
+
             enemyWanderPauseMinSeconds = Mathf.Max(0f, enemyWanderPauseMinSeconds);
+
             enemyWanderPauseMaxSeconds = Mathf.Max(enemyWanderPauseMinSeconds, enemyWanderPauseMaxSeconds);
 
             routeArrivalDistance = Mathf.Max(0.1f, routeArrivalDistance);
 
             immortalityArmourBonus = Mathf.Max(0f, immortalityArmourBonus);
+
             cameraFollowSharpness = Mathf.Max(0f, cameraFollowSharpness);
+
+            cameraFramingTransitionSeconds = Mathf.Max(0f, cameraFramingTransitionSeconds);
+
+            float viewportX = Mathf.Clamp01(preparationVisibleViewport.x);
+
+            float viewportY = Mathf.Clamp01(preparationVisibleViewport.y);
+
+            float viewportWidth = Mathf.Clamp(preparationVisibleViewport.width, 0.01f, 1f - viewportX);
+
+            float viewportHeight = Mathf.Clamp(preparationVisibleViewport.height, 0.01f, 1f - viewportY);
+
+            preparationVisibleViewport = new Rect(viewportX, viewportY, viewportWidth, viewportHeight);
         }
     }
 }

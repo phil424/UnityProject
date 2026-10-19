@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: acb822e4e9f902a459d3037f11c8a3d5, type: 3}
-  m_Name: Rage
+  m_Name: WallofFlames
   m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Abilities.AbilityDefinition
-  id: Rage
-  displayName: Rage
-  icon: {fileID: 21300000, guid: 540a2ff902a7be541a042d806dda1f96, type: 3}
-  elements: 0
+  id: wall_of_flames
+  displayName: Wall of Flames
+  icon: {fileID: 21300000, guid: 9e38a25c597be7c49a72e20919e1a8fb, type: 3}
+  elements: 8
   maxLevel: 5
   cooldown:
-    baseValue: 10
-    perLevel: 0.5
-  runtimePrefab: {fileID: 4783916421021302817, guid: ce2cf27ac9d2c5045858a34c6e6d0792, type: 3}
+    baseValue: 14
+    perLevel: -0.5
+  runtimePrefab: {fileID: 2310489565894875392, guid: a0d9b553252a90b4d89d2ae711860ec9, type: 3}

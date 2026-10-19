@@ -2912,9 +2912,9 @@ Enemy-group targeting
 Prefer extending existing combat, movement, projectile and runtime-modifier
 seams rather than creating parallel systems.
 
-#### 3.0O4D4 — Elemental Active Ability Wave 1
+#### 3.0O4D4 — Elemental Active Ability Wave 1 ✅
 
-**Status: Active**
+**Status: Complete**
 
 Implement the first three confirmed shared elemental Expedition Abilities.
 
@@ -2938,25 +2938,102 @@ Storm Field — Lightning
 
 #### 3.0O4D5 — Elemental Active Ability Wave 2
 
-**Status: Planned / Designs Working**
+**Status: Active — Designs Confirmed**
 
-Current Working candidates:
+Expand the shared elemental Expedition Ability pool from three to six
+mechanically distinct Active Abilities.
 
-Flame Wake — Fire
-→ movement leaves damaging burning ground.
+##### Wall of Flames — Fire
 
-Glacial Aegis — Ice
-→ defensive protection with local frost payoff.
+**Status: Confirmed**
 
-Tidal Vortex — Water
-→ persistent battlefield-control effect that groups enemies.
+Role:
 
-Each design remains subject to explicit player-facing design approval before
-implementation.
+persistent positional damage / approach denial.
+
+Activation:
+
+resolve the current hostile approach direction
+→ create a stationary Wall of Flames across that path
+→ wall persists for an authored duration
+→ enemies entering or remaining inside the wall are set on fire
+→ Burn continues briefly after leaving the wall.
+
+The wall should deliberately work with the current simple autonomous movement
+model, where hostile actors commonly approach the Character directly.
+
+Wall of Flames should not currently require sophisticated player pathing or
+enemy navigation decisions.
+
+Build interactions:
+
+- Ability Damage increases Burn damage;
+- Ability Area Size increases wall length / thickness;
+- Ability Cooldown Recovery increases availability.
+
+The earlier Flame Wake movement-trail concept remains a possible future design
+to revisit when autonomous movement and pathing become substantially richer.
+
+##### Glacial Aegis — Ice
+
+**Status: Confirmed**
+
+Role:
+
+reactive defence / control.
+
+Activation:
+
+gain Glacial Shield layers
+→ when one of those specific shield layers breaks
+→ release a Frost Nova around the Character
+→ nearby enemies take Ability damage
+→ affected enemies are Slowed.
+
+Required shared foundations:
+
+- source-aware Shield layers / Shield-break notification;
+- generic temporary Slow.
+
+Build interactions:
+
+- Shield Capacity controls how many Shields can coexist;
+- Ability Damage increases Frost Nova damage;
+- Ability Area Size increases Frost Nova radius;
+- Ability Cooldown Recovery increases availability.
+
+##### Tidal Vortex — Water
+
+**Status: Confirmed**
+
+Role:
+
+persistent fixed-position battlefield grouping.
+
+Activation:
+
+resolve a useful hostile group
+→ capture that world-space centre
+→ create a temporary Tidal Vortex there
+→ repeatedly pull nearby enemies toward the centre.
+
+The Vortex remains at its captured world position rather than following the
+Character.
+
+Direct damage should remain absent or negligible during this first
+implementation so battlefield control remains its primary identity.
+
+Build interactions:
+
+- Ability Area Size increases Vortex radius;
+- Knockback Power increases pull distance;
+- Ability Cooldown Recovery increases availability.
+
+Wave 2 implementation may begin.
 
 #### 3.0O4D6 — Elemental Active Ability Wave 3
 
-**Status: Planned / Designs Working**
+**Status: Active / Designs Working**
 
 Expand toward approximately nine meaningful shared Expedition Active Abilities.
 

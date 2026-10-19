@@ -81,6 +81,72 @@ Do not assume the user knows which menu, Inspector field, hierarchy object or ex
 Prefer smaller, individually verifiable tutorial steps over dense numbered paragraphs.
 
 Do not sacrifice executable detail merely to keep a response short.
+
+## Coherent Replacement Unit Rule
+
+Implementation instructions should prefer complete coherent replacement units
+over scattered edits.
+
+The user should not normally need to hunt through one method, class or document
+making several unrelated line-level changes.
+
+### Code
+
+Preferred edit order:
+
+manageable file
+→ replace the complete file;
+
+otherwise
+→ replace the complete affected method, constructor, property, enum or other
+coherent member.
+
+New members should be provided as complete paste-ready units and inserted
+immediately before or after a clearly named existing member.
+
+When removing obsolete behaviour, remove the complete obsolete member where
+practical rather than deleting individual statements from several locations.
+
+Avoid multiple scattered edits inside the same method when replacing that
+method completely would be clearer and safer.
+
+Tiny literal corrections such as one numeric value, one Inspector value or one
+unambiguous identifier are exempt when a larger replacement would create
+unnecessary churn.
+
+### Documentation
+
+The normal documentation edit unit is a complete headed section.
+
+Prefer:
+
+replace section
+→ from its heading through immediately before the next heading of equal or
+higher level;
+
+insert section
+→ place the complete new headed section immediately before or after a clearly
+named existing heading;
+
+remove section
+→ remove the complete obsolete headed section.
+
+Do not ask the user to locate and modify several individual sentences or
+paragraphs throughout a document when one coherent section replacement can
+express the final intended state.
+
+When many sections of one document have become stale, prefer a deliberate
+whole-document replacement.
+
+### Purpose
+
+This rule exists to make implementation instructions:
+
+- easier to execute;
+- easier to verify;
+- harder to apply partially;
+- easier to recover across conversations;
+- less laborious when maintaining the living documentation.
   
 
 # 3. Mandatory Development Step Structure

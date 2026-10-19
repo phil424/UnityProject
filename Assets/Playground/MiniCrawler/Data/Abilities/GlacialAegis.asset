@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: acb822e4e9f902a459d3037f11c8a3d5, type: 3}
-  m_Name: Charge
+  m_Name: GlacialAegis
   m_EditorClassIdentifier: MiniCrawler.Runtime::MiniCrawler.Abilities.AbilityDefinition
-  id: Charge
-  displayName: Charge
-  icon: {fileID: 21300000, guid: 114104cb8f1e12a4292636dfdd2b6618, type: 3}
-  elements: 0
+  id: glacial_aegis
+  displayName: Glacial Aegis
+  icon: {fileID: 21300000, guid: e821043036857f941896d10fa9277b9c, type: 3}
+  elements: 16
   maxLevel: 5
   cooldown:
-    baseValue: 5
-    perLevel: -0.25
-  runtimePrefab: {fileID: 8031831577697040250, guid: 0d0045980f6190a4c9ba7dee96adb0ca, type: 3}
+    baseValue: 16
+    perLevel: -0.5
+  runtimePrefab: {fileID: 6538618109300398029, guid: a27fcd2236b619f459e574517a1ffc49, type: 3}

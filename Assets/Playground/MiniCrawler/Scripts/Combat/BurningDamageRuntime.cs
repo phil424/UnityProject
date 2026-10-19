@@ -12,15 +12,18 @@ namespace MiniCrawler.Combat
         private GameObject source;
         private float damagePerTick;
         private float tickInterval;
-        private float duration;
-        private float elapsed;
-        private float nextTick;
+        private float remainingDuration;
+        private float tickRemaining;
         private string actionName;
+
+        public float RemainingDuration => Mathf.Max(0f, remainingDuration);
 
         public static bool Apply(GameObject source, Health target, float damagePerTick, float tickInterval, float duration, string actionName)
         {
             if (target == null || target.IsDead || damagePerTick <= 0f || tickInterval <= 0f || duration <= 0f)
+            {
                 return false;
+            }
 
             BurningDamageRuntime runtime = target.GetComponent<BurningDamageRuntime>();
 
@@ -39,14 +42,32 @@ namespace MiniCrawler.Combat
 
         private void Configure(GameObject damageSource, float tickDamage, float interval, float burnDuration, string burnActionName)
         {
+            string resolvedActionName = string.IsNullOrWhiteSpace(burnActionName) ? "Burn" : burnActionName;
+
+            float resolvedInterval = Mathf.Max(0.05f, interval);
+
+            float resolvedDuration = Mathf.Max(resolvedInterval, burnDuration);
+
+            bool refreshingSameEffect = enabled && source == damageSource && actionName == resolvedActionName && remainingDuration > 0f;
+
             source = damageSource;
             damagePerTick = Mathf.Max(0f, tickDamage);
-            tickInterval = Mathf.Max(0.05f, interval);
-            duration = Mathf.Max(tickInterval, burnDuration);
-            actionName = string.IsNullOrWhiteSpace(burnActionName) ? "Burn" : burnActionName;
+            tickInterval = resolvedInterval;
+            actionName = resolvedActionName;
 
-            elapsed = 0f;
-            nextTick = tickInterval;
+            if (refreshingSameEffect)
+            {
+                remainingDuration = Mathf.Max(remainingDuration, resolvedDuration);
+
+                tickRemaining = Mathf.Clamp(tickRemaining, 0.01f, tickInterval);
+            }
+            else
+            {
+                remainingDuration = resolvedDuration;
+
+                tickRemaining = tickInterval;
+            }
+
             enabled = true;
         }
 
@@ -61,16 +82,23 @@ namespace MiniCrawler.Combat
                 return;
             }
 
-            elapsed = Mathf.Min(duration, elapsed + Time.deltaTime);
+            float deltaTime = Time.deltaTime;
 
-            while (nextTick <= elapsed + 0.0001f && !health.IsDead)
+            remainingDuration = Mathf.Max(0f, remainingDuration - deltaTime);
+
+            tickRemaining -= deltaTime;
+
+            while (tickRemaining <= 0f && remainingDuration > 0f && !health.IsDead)
             {
                 DamageResolver.ApplyDamage(source, health, damagePerTick, actionName);
-                nextTick += tickInterval;
+
+                tickRemaining += tickInterval;
             }
 
-            if (health.IsDead || elapsed >= duration)
+            if (health.IsDead || remainingDuration <= 0f)
+            {
                 Destroy(this);
+            }
         }
     }
 }

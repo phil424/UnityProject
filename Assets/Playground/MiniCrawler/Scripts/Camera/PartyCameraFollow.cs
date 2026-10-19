@@ -22,12 +22,18 @@ namespace MiniCrawler.Presentation
 
         private readonly List<GameObject> trackedPartyActors = new();
 
+        private Camera cameraComponent;
+        private CameraFramingOffset framingOffset;
+
         private Vector3 followOffset;
 
         private bool hasFollowOffset;
 
         private void Awake()
         {
+            cameraComponent = GetComponent<Camera>();
+            framingOffset = GetComponent<CameraFramingOffset>();
+
             CaptureFollowOffset();
         }
 
@@ -88,7 +94,7 @@ namespace MiniCrawler.Presentation
             if (!TryGetPartyCentre(out Vector3 centre))
                 return;
 
-            Vector3 desiredPosition = centre + followOffset;
+            Vector3 desiredPosition = centre + followOffset + ResolveFramingWorldOffset(centre);
 
             if (followSharpness <= 0f)
             {
@@ -97,6 +103,7 @@ namespace MiniCrawler.Presentation
             }
 
             float interpolation = 1f - Mathf.Exp(-followSharpness * Time.deltaTime);
+
             transform.position = Vector3.Lerp(transform.position, desiredPosition, interpolation);
         }
 
@@ -109,10 +116,10 @@ namespace MiniCrawler.Presentation
 
             trackedPartyActors.Add(actor);
 
-            if (TryGetPartyCentre(out Vector3 centre))
-            {
-                transform.position = centre + followOffset;
-            }
+            if (!TryGetPartyCentre(out Vector3 centre))
+                return;
+
+            transform.position = centre + followOffset + ResolveFramingWorldOffset(centre);
         }
 
         private void HandleLevelCleared()
@@ -181,7 +188,19 @@ namespace MiniCrawler.Presentation
                 return;
             }
 
-            transform.position = followOrigin.position + followOffset;
+            Vector3 focusPoint = followOrigin.position;
+
+            transform.position = focusPoint + followOffset + ResolveFramingWorldOffset(focusPoint);
+        }
+
+        private Vector3 ResolveFramingWorldOffset(Vector3 focusPoint)
+        {
+            if (framingOffset == null || cameraComponent == null)
+            {
+                return Vector3.zero;
+            }
+
+            return framingOffset.ResolveWorldOffset(focusPoint);
         }
 
         private void OnValidate()
