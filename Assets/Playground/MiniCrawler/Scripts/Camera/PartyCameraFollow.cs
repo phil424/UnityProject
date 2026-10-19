@@ -6,8 +6,7 @@ using UnityEngine;
 namespace MiniCrawler.Presentation
 {
     [DisallowMultipleComponent]
-    public class PartyCameraFollow :
-        MonoBehaviour
+    public class PartyCameraFollow : MonoBehaviour
     {
         [Header("References")]
         [SerializeField]
@@ -21,8 +20,7 @@ namespace MiniCrawler.Presentation
         [Min(0f)]
         private float followSharpness = 8f;
 
-        private readonly List<GameObject>
-            trackedPartyActors = new();
+        private readonly List<GameObject> trackedPartyActors = new();
 
         private Vector3 followOffset;
 
@@ -37,16 +35,12 @@ namespace MiniCrawler.Presentation
         {
             if (stageDirector == null)
             {
-                stageDirector =
-                    StageDirector.Instance;
+                stageDirector = StageDirector.Instance;
             }
 
             if (stageDirector == null)
             {
-                Debug.LogError(
-                    "PartyCameraFollow requires " +
-                    "a StageDirector."
-                );
+                Debug.LogError("PartyCameraFollow requires " + "a StageDirector.");
 
                 enabled = false;
 
@@ -55,10 +49,7 @@ namespace MiniCrawler.Presentation
 
             if (followOrigin == null)
             {
-                Debug.LogError(
-                    "PartyCameraFollow requires " +
-                    "a Follow Origin."
-                );
+                Debug.LogError("PartyCameraFollow requires " + "a Follow Origin.");
 
                 enabled = false;
 
@@ -70,11 +61,9 @@ namespace MiniCrawler.Presentation
                 CaptureFollowOffset();
             }
 
-            stageDirector.PartyMemberSpawned +=
-                HandlePartyMemberSpawned;
+            stageDirector.PartyMemberSpawned += HandlePartyMemberSpawned;
 
-            stageDirector.LevelCleared +=
-                HandleLevelCleared;
+            stageDirector.LevelCleared += HandleLevelCleared;
 
             ResetToFollowOrigin();
         }
@@ -84,11 +73,9 @@ namespace MiniCrawler.Presentation
             if (stageDirector == null)
                 return;
 
-            stageDirector.PartyMemberSpawned -=
-                HandlePartyMemberSpawned;
+            stageDirector.PartyMemberSpawned -= HandlePartyMemberSpawned;
 
-            stageDirector.LevelCleared -=
-                HandleLevelCleared;
+            stageDirector.LevelCleared -= HandleLevelCleared;
         }
 
         private void LateUpdate()
@@ -113,34 +100,18 @@ namespace MiniCrawler.Presentation
             transform.position = Vector3.Lerp(transform.position, desiredPosition, interpolation);
         }
 
-        private void HandlePartyMemberSpawned(
-            PartyMemberDefinition definition,
-            GameObject actor
-        )
+        private void HandlePartyMemberSpawned(PartyMemberDefinition definition, GameObject actor)
         {
-            if (
-                actor == null ||
-                trackedPartyActors.Contains(
-                    actor
-                )
-            )
+            if (actor == null || trackedPartyActors.Contains(actor))
             {
                 return;
             }
 
-            trackedPartyActors.Add(
-                actor
-            );
+            trackedPartyActors.Add(actor);
 
-            if (
-                TryGetPartyCentre(
-                    out Vector3 centre
-                )
-            )
+            if (TryGetPartyCentre(out Vector3 centre))
             {
-                transform.position =
-                    centre +
-                    followOffset;
+                transform.position = centre + followOffset;
             }
         }
 
@@ -151,35 +122,25 @@ namespace MiniCrawler.Presentation
             ResetToFollowOrigin();
         }
 
-        private bool TryGetPartyCentre(
-            out Vector3 centre
-        )
+        private bool TryGetPartyCentre(out Vector3 centre)
         {
             centre = Vector3.zero;
 
             int livingCount = 0;
 
-            foreach (
-                GameObject actor
-                in trackedPartyActors
-            )
+            foreach (GameObject actor in trackedPartyActors)
             {
                 if (actor == null)
                     continue;
 
-                Health health =
-                    actor.GetComponent<Health>();
+                Health health = actor.GetComponent<Health>();
 
-                if (
-                    health != null &&
-                    health.IsDead
-                )
+                if (health != null && health.IsDead)
                 {
                     continue;
                 }
 
-                centre +=
-                    actor.transform.position;
+                centre += actor.transform.position;
 
                 livingCount++;
             }
@@ -194,21 +155,11 @@ namespace MiniCrawler.Presentation
 
         private void RemoveMissingActors()
         {
-            for (
-                int index =
-                    trackedPartyActors.Count - 1;
-                index >= 0;
-                index--
-            )
+            for (int index = trackedPartyActors.Count - 1; index >= 0; index--)
             {
-                if (
-                    trackedPartyActors[index] ==
-                    null
-                )
+                if (trackedPartyActors[index] == null)
                 {
-                    trackedPartyActors.RemoveAt(
-                        index
-                    );
+                    trackedPartyActors.RemoveAt(index);
                 }
             }
         }
@@ -218,35 +169,24 @@ namespace MiniCrawler.Presentation
             if (followOrigin == null)
                 return;
 
-            followOffset =
-                transform.position -
-                followOrigin.position;
+            followOffset = transform.position - followOrigin.position;
 
             hasFollowOffset = true;
         }
 
         private void ResetToFollowOrigin()
         {
-            if (
-                followOrigin == null ||
-                !hasFollowOffset
-            )
+            if (followOrigin == null || !hasFollowOffset)
             {
                 return;
             }
 
-            transform.position =
-                followOrigin.position +
-                followOffset;
+            transform.position = followOrigin.position + followOffset;
         }
 
         private void OnValidate()
         {
-            followSharpness =
-                Mathf.Max(
-                    0f,
-                    followSharpness
-                );
+            followSharpness = Mathf.Max(0f, followSharpness);
         }
     }
 }
