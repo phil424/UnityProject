@@ -2936,9 +2936,9 @@ Storm Field — Lightning
 → repeatedly strikes valid enemies inside the area
 → deals Ability damage.
 
-#### 3.0O4D5 — Elemental Active Ability Wave 2
+#### 3.0O4D5 — Elemental Active Ability Wave 2 ✅
 
-**Status: Active — Designs Confirmed**
+**Status: Complete**
 
 Expand the shared elemental Expedition Ability pool from three to six
 mechanically distinct Active Abilities.
